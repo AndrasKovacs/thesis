@@ -1,0 +1,143 @@
+
+-- On left adjoints of substitutions
+--------------------------------------------------------------------------------
+
+We want to show that for each (R : Sub Ω Δ) signature morphism there is an L ⊣
+⟦R⟧. Here ⟦R⟧ : ⟦Ω⟧ → ⟦Δ⟧ is a functor between categories of algebras.
+
+Let's assume that in the theory of signatures (ToS), types are closed under ⊤ and
+Σ. This will allow us to work with types instead of telescopes. Our ToS has
+an U closed under Id and infinitary function, plus we have the usual inductive and
+external functions. So we have infinitary QIITs with possibly recursive equations.
+
+We write sets of algebras as -ᴬ : Con → Set and homomorphisms as -ᴹ : (Γ : Con) → Γᴬ → Γᴬ → Set.
+Likewise, for σ : Sub Γ Δ, we have σᴬ : Γᴬ → Δᴬ as action of ⟦σ⟧ on objects.
+
+To get the desired adjunction, it's enough to show that for every (δ : Δᴬ), the
+comma category δ/⟦R⟧ has an initial object. We construct this by finding a
+signature Ω' such that ⟦Ω'⟧ ~ δ/⟦R⟧, and we already know that there's an initial
+algebra for every signature. The components of δ/⟦R⟧ are:
+
+  Lδ : Ωᴬ
+  η  : Δᴹ δ (Rᴬ Lδ)
+
+(Lδ : Ωᴬ) is clearly represented by the Ω signature.
+
+(η : Δᴹ Lδ (⟦R⟧ Lδ)) is less obvious. For this need to show that "heterogeneous"
+homomorphisms of algebras can be written as signatures. It's heterogeneous
+because the domain is an algebra internal to the Set model -ᴬ of ToS, and the
+codomain is an algebra internal to the syntactic slice model ToS/Ω. Let's define
+an interpretation of signatures, and call it -~ to avoid collision with -ᴹ.
+
+Contexts are relations:
+  (Γ : Con)~  : Γᴬ → Sub Ω Γ → Ty Ω
+
+Types are dependent relations:
+  (A : Ty Γ)~ : {γ₀ : Γᴬ}{γ₁ : Sub Ω Γ}(γ₀₁ : Tm Ω (Γ~ γ₀ γ₁)) → Aᴬ γ₀ → Tm Ω (A[γ₁]) → Ty Ω
+
+Sub & Tm preserve ~ :
+  (σ : Sub Γ Δ)~ : ∀ {γ₀ γ₁} → Tm Ω (Γ~ γ₀ γ₁) → Tm Ω (Δ~ (σᴬ γ₀) (σ ∘ γ₁))
+  (t : Tm Γ A)~  : ∀ {γ₀ γ₁}(γ₀₁ : Tm Ω (Γ~ γ₀ γ₁)) → Tm Ω (A~ γ₀₁ (tᴬ γ₀) (t[γ₁]))
+
+We use ⊤ and Σ in ToS to interpret contexts:
+
+  ∙~       _        _        := ⊤
+  (Γ ▶ A)~ (γ₀, α₀) (γ₁, α₁) := (γ₀₁ : Γ~ γ₀ γ₁)×(A~ γ₀₁ α₀ α₁)
+
+The rest of the CwF should be straightforward. Up to this point, there is
+nothing surprising compared to the -ᴹ interpretation of signatures. Probably
+there is a fancy & more abstract way of doing the same, by having ⟦_⟧ target any
+sufficiently structured CwF instead of Set, and adding some magic. I'll stick to
+the more direct definitions here.
+
+We interpret the universe in ToS as an external function type.
+
+  U~ : ∀ {γ₀ γ₁} γ₀₁ → Uᴬ γ₀ → Tm Ω (U[γ₁]) → Ty Ω
+     : ∀ {γ₀ γ₁} γ₀₁ → Set → Tm Ω U → Ty Ω
+
+  U~ _ A b := A →ᵉˣᵗ El b
+
+El becomes an Id type:
+
+  (El a)~ : ∀ {γ₀ γ₁} γ₀₁ → (El a)ᴬ γ₀ → Tm Ω (El (a[γ₁])) → Ty Ω
+          : ∀ {γ₀ γ₁} γ₀₁ → aᴬ γ₀ → Tm Ω (El (a[γ₁])) → Ty Ω
+
+  (El a)~ γ₀₁ α₀ α₁ := El (Id (a[γ₀]) (a~ γ₀₁ α₀) α₁)
+
+     where
+       a : Tm Γ U
+       a~ : ∀ γ₀₁ → Tm Ω (U~ γ₀₁ (aᴬ γ₀) (a[γ₁]))
+          : ∀ γ₀₁ → Tm Ω (aᴬ γ₀ →ᵉˣᵗ El (a[γ₁]))
+
+Inductive functions are pointwise related:
+
+  (Π a B)~ : ∀ γ₀₁ → (Π a B)ᴬ γ₀ → Tm Ω (Π (a[γ₁]) (B[γ₁↑])) → Ty Ω
+           : ∀ γ₀₁ → ((α : aᴬ γ₀) → Bᴬ (γ₀, α)) → Tm Ω (Π (a[γ₁]) (B[γ₁↑])) → Ty Ω
+    we have
+      a~ γ₀₁ : Tm Ω (aᴬ γ₀ →ᵉˣᵗ El (a[γ₁]))
+
+  (Π a B)~ γ₀₁ f₀ f₁ := (α : aᴬ γ₀) →ᵉˣᵗ B~ (γ₀₁, Refl) (f₀ α) (f₁ @ (a~ γ₀₁ α))
+
+External functions:
+
+  ((α : A) →ᵉˣᵗ B α)~ : ∀ γ₀₁ → ((α : A) → (B α)ᴬ γ₀) → Tm Ω ((α : A) →ᵉˣᵗ (B α)[γ₁]) → Ty Ω
+  ((α : A) →ᵉˣᵗ B α)~ γ₀₁ f₀ f₁ := (α : A) →ᵉˣᵗ (B α)~ γ₀₁ (f₀ α) (f₁ @ α)
+
+Identities:
+
+  Id a t u : Tm Γ U
+  (Id a t u)~ : ∀ γ₀₁ → Tm Ω (U~ γ₀₁ ((Id a t u)ᴬ γ₀) ((Id a t u)[γ₁]))
+              : ∀ γ₀₁ → Tm Ω (U~ γ₀₁ (tᴬ γ₀ = uᴬ γ₀) (Id (a[γ₁]) (t[γ₁]) (u[γ₁])))
+              : ∀ γ₀₁ → Tm Ω ((tᴬ γ₀ = uᴬ γ₀) →ᵉˣᵗ El (Id (a[γ₁]) (t[γ₁]) (u[γ₁])))
+
+  (Id a t u)~ γ₀₁ := λ (p : tᴬ γ₀ = uᴬ γ₀). ...
+      given by
+        t~ γ₀₁ : Tm Ω (El (Id (a[γ₀]) (tᴬ γ₀) (t[γ₁])))
+        u~ γ₀₁ : Tm Ω (El (Id (a[γ₀]) (uᴬ γ₀) (u[γ₁])))
+        p      : tᴬ γ₀ = uᴬ γ₀
+        + equality reflection
+
+Infinitary functions:
+
+  ((α : A) →ⁱⁿᶠ b α)~ : ∀ γ₀₁ → Tm Ω (((α : A) → b α γ₀) →ᵉˣᵗ ((α : A) →ⁱⁿᶠ (b α)[γ₁]))
+  ((α : A) →ⁱⁿᶠ b α)~ γ₀₁ := λ (f : (α : A) → b α γ₀). λ (α : A). b~ γ₀₁ @ (f α)
+
+We're done. This is still exactly the same as the usual -ᴹ translation because ToS/Ω has
+the required function types, to abstract over external things as necessary.
+
+The same thing would work with two ToS/Ω algebras. But it would not work with an
+internal domain algebra and an external codomain algebra, because signature
+types can't return in external sets.
+
+The following remains to be shown: for each (γ : Γᴬ)(ω : Ωᴬ)(σ : Sub Ω Γ),
+((Γ~ γ σ)ᴬ ω) is in bijection with Γᴹ γ (σᴬ ω). It could be strict equality as well if that works out.
+
+This should be fairly obvious and we could prove it by an additional induction over signatures.
+
+Going back to the comma category:
+
+  Lδ : Ωᴬ
+  η  : Δᴹ δ (Rᴬ Lδ)
+
+Now we define the signature Ω' for δ/⟦R⟧:
+
+  Lδ : Ω        -- with Ω unfolded to a signature
+  η  : Δ~ δ R   -- recall that R : Sub Ω Δ
+
+Algebras for this are in (LΔ : Ωᴬ)×((Δ~ δ R)ᴬ LΔ) which is the same as (LΔ : Ωᴬ)×(Δᴹ δ (Rᴬ Lδ)).
+
+So we have reproduced at least the objects of δ/⟦R⟧. We should also show that
+the morphisms of δ/⟦R⟧ are the same as the morphisms of ⟦Ω'⟧.
+
+(δ/⟦R⟧)((ω₀, η₀), (ω₁, η₁)) consists of
+
+  ω₀₁ : Ωᴹ ω₀ ω₁
+  η₀₁ : Rᴬ ω₀₁ ∘ η₀ = η₁ ∘ Rᴬ ω₀₁ η₁
+
+Ω'ᴹ (ω₀, η₀) (ω₁, η₁) consists of
+
+  ω₀₁ : Ωᴹ ω₀ ω₁
+  η₀₁ : (Δ~ δ R)ᴹ ω₀₁ η₀ η₁
+
+This would also require some busywork to check. It's clear to me though that it works. Again, probably
+there's some magic which would allow us to compress the checking obligations.

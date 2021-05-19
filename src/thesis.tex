@@ -1,0 +1,531 @@
+\documentclass[12pt,a4paper,twoside]{book}
+
+%% build: latexmk -pdf -pvc thesis.tex
+
+%% Packages
+%% --------------------------------------------------------------------------------
+
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathpartir}
+\usepackage{scalerel}
+\usepackage{stmaryrd}
+\usepackage{authblk}
+\usepackage{todonotes}
+\presetkeys{todonotes}{inline}{}
+\usepackage{bm}
+
+%% \bibliographystyle{IEEEtran}
+\bibliographystyle{alpha}
+
+\theoremstyle{remark}
+\newtheorem{notation}{Notation}
+
+\theoremstyle{definition}
+\newtheorem{mydefinition}{Definition}
+\newtheorem{myexample}{Example}
+\newtheorem{mylemma}{Lemma}
+
+%% Fonts and spacing
+%% --------------------------------------------------------------------------------
+\linespread{1.25}
+%% \geometry{left=3cm,right=2cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
+\geometry{left=4cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
+
+
+%% Abbrevs
+%% --------------------------------------------------------------------------------
+
+\newcommand{\mi}[1]{\mathit{#1}}
+\newcommand{\ms}[1]{\mathsf{#1}}
+
+\newcommand{\refl}{\mathsf{refl}}
+\newcommand{\id}{\mathsf{id}}
+\newcommand{\Con}{\mathsf{Con}}
+\newcommand{\Sub}{\mathsf{Sub}}
+\newcommand{\Tm}{\mathsf{Tm}}
+\newcommand{\Ty}{\mathsf{Ty}}
+\newcommand{\U}{\mathsf{U}}
+\newcommand{\El}{\mathsf{El}}
+\newcommand{\Id}{\mathsf{Id}}
+\newcommand{\proj}{\mathsf{proj}}
+\renewcommand{\tt}{\mathsf{tt}}
+\newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Lift}{\Uparrow}
+\newcommand{\ToS}{\mathsf{ToS}}
+\newcommand{\ext}{\triangleright}
+\newcommand{\emptycon}{\scaleobj{.75}\bullet}
+\newcommand{\Pii}{\Pi}
+\newcommand{\appi}{\mathsf{app}}
+\newcommand{\lami}{\mathsf{lam}}
+\newcommand{\Pie}{\Pi^{\mathsf{ext}}}
+\newcommand{\appe}{\mathsf{app^{ext}}}
+\newcommand{\lame}{\mathsf{lam^{ext}}}
+\newcommand{\Piinf}{\Pi^{\mathsf{inf}}}
+\newcommand{\appinf}{\mathsf{app^{inf}}}
+\newcommand{\laminf}{\mathsf{lam^{inf}}}
+\newcommand{\appitt}{\mathop{{\scriptstyle @}}}
+\newcommand{\Refl}{\mathsf{Refl}}
+\newcommand{\IdU}{\mathsf{IdU}}
+\newcommand{\ReflU}{\mathsf{ReflU}}
+\newcommand{\Sig}{\mathsf{Sig}}
+\newcommand{\ToSSig}{\mathsf{ToSSig}}
+\newcommand{\Inductive}{\mathsf{Inductive}}
+\newcommand{\Subtype}{\mathsf{Subtype}}
+\newcommand{\subtype}{\mathsf{subtype}}
+\newcommand{\NatSig}{\mathsf{NatSig}}
+\newcommand{\Sg}{\Sigma}
+\newcommand{\flCwF}{\mathsf{flCwF}}
+\newcommand{\Kfam}{\mathsf{K}}
+\newcommand{\p}{\mathsf{p}}
+\newcommand{\q}{\mathsf{q}}
+\newcommand{\K}{\mathsf{K}}
+\newcommand{\lamK}{\mathsf{lam}^{\K}}
+\newcommand{\appK}{\mathsf{app}^{\K}}
+\newcommand{\A}{\mathsf{A}}
+\newcommand{\D}{\mathsf{D}}
+\renewcommand{\S}{\mathsf{S}}
+\newcommand{\arri}{\Rightarrow}
+\newcommand{\arre}{\Rightarrow^{\mathsf{ext}}}
+\newcommand{\arrinf}{\Rightarrow^{\mathsf{inf}}}
+\newcommand{\syn}{\mathsf{syn}}
+\newcommand{\SynSig}{\mathsf{SynSig}}
+\newcommand{\bCon}{\boldsymbol{\Con}}
+\newcommand{\bTy}{\boldsymbol{\Ty}}
+\newcommand{\bSub}{\boldsymbol{\Sub}}
+\newcommand{\bTm}{\boldsymbol{\Tm}}
+\newcommand{\bGamma}{\boldsymbol{\Gamma}}
+\newcommand{\bDelta}{\boldsymbol{\Delta}}
+\newcommand{\bsigma}{\boldsymbol{\sigma}}
+\newcommand{\bdelta}{\boldsymbol{\delta}}
+\newcommand{\bepsilon}{\boldsymbol{\epsilon}}
+\newcommand{\bt}{\boldsymbol{t}}
+\newcommand{\bu}{\boldsymbol{u}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ba}{\boldsymbol{a}}
+\newcommand{\bb}{\boldsymbol{b}}
+\newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bid}{\boldsymbol{\id}}
+\newcommand{\bemptycon}{\boldsymbol{\emptycon}}
+\newcommand{\bSet}{\boldsymbol{\Set}}
+\newcommand{\bU}{\boldsymbol{\U}}
+\newcommand{\bEl}{\boldsymbol{\El}}
+\newcommand{\bPii}{\boldsymbol{\Pi}}
+\newcommand{\bPie}{\boldsymbol{\Pie}}
+\newcommand{\bPiinf}{\boldsymbol{\Piinf}}
+\newcommand{\bappi}{\boldsymbol{\mathsf{app}}}
+\newcommand{\blami}{\boldsymbol{\mathsf{lam}}}
+\newcommand{\bId}{\boldsymbol{\Id}}
+\newcommand{\bM}{\boldsymbol{\mathsf{M}}}
+\newcommand{\bT}{\boldsymbol{\mathsf{T}}}
+\newcommand{\bS}{\boldsymbol{\mathsf{S}}}
+\newcommand{\bP}{\boldsymbol{\mathsf{P}}}
+\newcommand{\bD}{\boldsymbol{\mathsf{D}}}
+\newcommand{\bI}{\boldsymbol{\mathsf{I}}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ulGamma}{\ul{\Gamma}}
+\newcommand{\ulDelta}{\ul{\Delta}}
+\newcommand{\ulgamma}{\ul{\gamma}}
+\newcommand{\ulOmega}{\ul{\Omega}}
+\newcommand{\uldelta}{\ul{\delta}}
+\newcommand{\ulsigma}{\ul{\sigma}}
+\newcommand{\ulnu}{\ul{\nu}}
+\newcommand{\ulepsilon}{\ul{\epsilon}}
+\newcommand{\ult}{\ul{t}}
+\newcommand{\ulu}{\ul{u}}
+\newcommand{\ulA}{\ul{A}}
+\newcommand{\ula}{\ul{a}}
+\newcommand{\ulB}{\ul{B}}
+\newcommand{\tos}{\mathsf{tos}}
+\newcommand{\coe}{\mathsf{coe}}
+\newcommand{\coh}{\mathsf{coh}}
+\newcommand{\llb}{\llbracket}
+\newcommand{\rrb}{\rrbracket}
+
+\newcommand{\Var}{\ms{Var}}
+\newcommand{\var}{\ms{var}}
+\newcommand{\app}{\ms{app}}
+\newcommand{\vz}{\ms{vz}}
+\newcommand{\vs}{\ms{vs}}
+\newcommand{\Alg}{\ms{Alg}}
+\newcommand{\Mor}{\ms{Mor}}
+\newcommand{\DispAlg}{\ms{DispAlg}}
+\newcommand{\Section}{\ms{Section}}
+
+%% --------------------------------------------------------------------------------
+
+\title{Title TBA}
+\date{2021 September}
+\author{András Kovács}
+
+%% --------------------------------------------------------------------------------
+
+\begin{document}
+\maketitle
+
+\frontmatter
+\tableofcontents{}
+
+
+\mainmatter
+
+\chapter{Introduction}
+
+\section{Specification and Semantics for Inductive Types}
+\section{Overview of the Thesis and Contributions}
+\section{Notation and Conventions}
+
+\chapter{Simple Inductive Signatures}
+\label{chap:simple-inductive-signatures}
+
+In this chapter, we take a look at a very simple notion of inductive
+signature. The motivation for doing so is to present the basic ideas of this
+thesis in the easiest possible setting. We also include a complete Agda
+formalization of the contents of this chapter, in less than 150 lines. Hopefully
+this provides intuition for the later chapters, which are greatly generalized
+and expanded compared to the current chapter, and which are not feasible (and
+probably not that useful) to present in full formal detail.
+
+\todo{potentially in intro}
+
+The mantra throughout this dissertation is the following: inductive types are
+specified by typing contexts in certain \emph{theories of signatures}.  For each
+class of inductive types, there is a corresponding theory of signatures, which
+is viewed as a proper type theory and comes equipped with an algebraic model
+theory. \emph{Semantics} of signatures is given by interpreting them in certain
+models of the theory of signatures. Semantics should at least provide a notion
+of induction principle for each signature, but usually we will provide more than
+that.
+
+\section{Theory of Signatures}
+\label{sec:simple-signatures}
+
+Generally, more expressive theories of signatures can describe a larger classes
+of inductive types. As we are aiming at minimalism right now, the current theory
+of signatures is as follows:
+
+\begin{mydefinition}The \emph{theory of signatures}, or ToS for short in the current chapter,
+  is a simple type theory equipped with the following features:
+  \begin{itemize}
+    \item An empty base type $\iota$.
+    \item A \emph{first-order function type} $\iota\!\to\!\blank$; this is a
+      function whose domain is fixed to be $\iota$. Moreover, first-order functions only
+      have neutral terms: there is application, but no $\lambda$-abstraction.
+  \end{itemize}
+\end{mydefinition}
+
+We can specify the full syntax using the following Agda-like inductive definitions.
+\begin{alignat*}{4}
+  & \Ty              &&: \Set           && \Var &&: \Con \to \Ty \to \Set \\
+  & \iota            &&: \Ty            && \vz  &&: \Var\,(\Gamma \ext A)\,A \\
+  & \iota\!\to\blank &&: \Ty \to \Ty    && \vs  &&: \Var\,\Gamma\,A \to \Var\,(\Gamma \ext B)\,A\\
+  & && && &&\\
+  & \Con             &&: \Set           && \Tm  &&: \Con \to \Ty \to \Set \\
+  & \emptycon        &&: \Con           && \var &&: \Var\,\Gamma\,A \to \Tm\,\Gamma\,A \\
+  & \blank\ext\blank &&: \Con \to \Ty \to \Con \hspace{2em} && \app &&: \Tm\,\Gamma\,(\iota\to A) \to \Tm\,\Gamma\,\iota
+                                                           \to \Tm\,\Gamma\,A
+\end{alignat*}
+Here, $\Con$ contexts are lists of types, and $\Var$ specifies well-typed De Bruijn indices, where
+$\vz$ represents the zero index, and $\vs$ takes the successor of an index.
+
+\begin{notation} We use capital Greek letters starting from $\Gamma$ to refer to contexts, $A$, $B$, $C$ to
+refer to types, and $t$, $u$, $v$ to refer to terms. In examples, we may use a
+nameful notation instead of De Bruijn indices. For example, we may write $x :
+\Tm\,(\emptycon \ext (x : \iota) \ext (y : \iota))\,\iota$ instead of $\var\,(\vs\,\vz)
+: \Tm\,(\emptycon \ext \iota \ext \iota)\,\iota$. Additionally, we may write
+$t\,u$ instead of $\app\,t\,u$ for $t$ and $u$ terms.
+\end{notation}
+
+\begin{mydefinition} \emph{Parallel substitutions} map variables to terms.
+\begin{alignat*}{3}
+&\Sub : \Con \to \Con \to \Set\\
+&\Sub\,\Gamma\,\Delta \equiv \{A\} \to \Var\,\Delta\,A \to \Tm\,\Gamma\,A
+\end{alignat*}
+We use $\sigma$ and $\delta$ to refer to substitutions. We also define the action of substitution
+on terms, by recursion on terms:
+\begin{alignat*}{3}
+  &\rlap{$\blank[\blank] : \Tm\,\Delta\,A \to \Sub\,\Gamma\,\Delta \to \Tm\,\Gamma\,A$}\\
+  &(\var\, x)   &&[ \sigma ] \equiv \sigma\,x\\
+  &(\app\,t\,u) &&[ \sigma ] \equiv \app\,(t[\sigma])\,(u[\sigma])
+\end{alignat*}
+The \emph{identity substitution} is defined simply as $\id \equiv \var$. It is easy to see that
+$t[\id] = t$ for all $t$.
+\end{mydefinition}
+
+\begin{myexample} We may write signatures for natural numbers and binary trees respectively as follows.
+\begin{alignat*}{3}
+  & \ms{NatSig}  &&\equiv \emptycon \ext (\mi{zero} : \iota) \ext (\mi{suc} : \iota \to \iota)\\
+  & \ms{TreeSig} &&\equiv \emptycon \ext (\mi{leaf} : \iota) \ext (\mi{node} : \iota \to \iota \to \iota)
+\end{alignat*}
+\end{myexample}
+
+In short, the current ToS allows inductive types which are
+\begin{itemize}
+\item \emph{Single-sorted}: this means that we have a single type constructior, corresponding to $\iota$.
+\item \emph{Closed}: signatures cannot refer to any externally existing type. For example, we cannot write a signature for ``lists of natural number'' in a direct fashion, since there is no way to refer to the type of natural numbers.
+\item \emph{Finitary}: inductive types corresponding to signatures are always
+  finitely branching trees. Being closed implies being finitary, since an
+  infinitely branching node would require some external type to index subtrees
+  with. For example, $\mi{node} : (\mathbb{N} \to \iota) \to \iota$ would
+  specify an infinite branching (if such type was allowed in ToS).
+\end{itemize}
+
+\emph{Remark.} We omit $\lambda$-expressions from ToS for the sake of
+simplicity: this causes terms to be always in normal form (neutral, to be
+precise), and thus we can skip talking about conversion rules. Later, starting
+from Chapter \ref{chap:fqiit} we include proper $\beta\eta$-rules in signature
+theories.
+
+\section{Semantics}
+\label{sec:simple-semantics}
+
+For each signature, we need to know what it means for a type theory to support
+the corresponding inductive type. For this, we need at least a notion of
+\emph{algebras}, which can be viewed as a bundle of all type and
+value constructors, and what it means for an algebra to support an
+\emph{induction principle}.  Additionally, we may want to know what it means to
+support a \emph{recursion principle}, which can be viewed as a non-dependent
+variant of induction. In the following, we define these notions by induction on
+ToS syntax.
+
+\subsection{Algebras}
+
+First, we calculate types of algebras. This is simply a standard interpretation
+into the $\Set$ universe. We define the following operations by induction; the
+$\blank^A$ name is overloaded for $\Con$, $\Ty$ and $\Tm$.
+\begin{alignat*}{3}
+& \hspace{-4em} \rlap{$\blank^A : \Ty \to \Set \to \Set$} \\
+& \hspace{-4em} \iota^A\,&&X \equiv X \\
+& \hspace{-4em} (\iota\to A)^A\,&&X \equiv X \to A^A\,X\\
+& \hspace{-4em} && \\
+& \hspace{-4em} \rlap{$\blank^A : \Con \to \Set \to \Set$}\\
+& \hspace{-4em} \rlap{$\Gamma^A\,X \equiv \{A : \Ty\} \to \Var\,\Gamma\,A \to A^A\,X$}\\
+& \hspace{-4em} && \\
+& \hspace{-4em} \rlap{$\blank^A : \Tm\,\Gamma\,A \to \{X : \Set\} \to \Gamma^A\,X \to A^A\,X$}\\
+& \hspace{-4em} (\var\,x)^A\,&&\gamma \equiv \gamma\,x\\
+& \hspace{-4em} (\app\,t\,u)^A\,&&\gamma \equiv t^A\,\gamma\,(u^A\,\gamma)\\
+& \hspace{-4em} && \\
+& \hspace{-4em} \rlap{$\blank^A : \Sub\,\Gamma\,\Delta \to \{X : \Set\} \to \Gamma^A\,X \to \Delta^A\,X$}\\
+& \hspace{-4em} \rlap{$\sigma^A\,\gamma\,x \equiv (\sigma\,x)^A\,\gamma$}
+\end{alignat*}
+Here, types and contexts depend on some $X : \Set$, which serves as the
+interpretation of $\iota$. We define $\Gamma^A$ as a product: for each variable
+in the context, we get a semantic type. This trick, along with the definition of
+$\Sub$, makes formalization a bit more compact. Terms and substitutions are
+interpreted as natural maps. Substitutions are interpreted by pointwise interpreting
+the contained terms.
+
+\begin{notation} We may write $\Gamma^A$ using notation for $\Sigma$-types. For example,
+we may write $(\mi{zero} : X) \times (\mi{suc} : X \to X)$ for the result of
+computing $\ms{NatSig}^A\,X$.
+\end{notation}
+
+Now, we get the notion of algebras as
+\begin{alignat*}{3}
+  & \Alg : \Con \to \Set_1 \\
+  & \Alg\,\Gamma \equiv (X : \Set) \times \Gamma^A\,X
+\end{alignat*}
+
+\begin{myexample} $\Alg\,\ms{NatSig}$ is computed to $(X : \Set)\times(\mi{zero} :
+X)\times(\mi{suc} : X \to X)$.
+\end{myexample}
+
+\subsection{Morphisms}
+
+Now, we compute notions of morphisms of algebras. In this case, morphisms are
+functions between underlying sets which preserve all specified structure. The
+interpretation for calculating morphisms is a \emph{proof-relevant logical
+relation interpretation} \cite{TODO} over the $\blank^A$ interpretation. The key
+part is the interpretation of types:
+\begin{alignat*}{3}
+  & \hspace{-4em}\rlap{$\blank^M : (A : \Ty)\{X_0\,X_1 : \Set\}(X^M : X_0 \to X_1) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
+  & \hspace{-4em}\iota^M\,&&X^M\,\alpha_0\,\,\alpha_1 \equiv X^M\,\alpha_0 = \alpha_1 \\
+  & \hspace{-4em}(\iota\to A)^M\,&&X^M\,\alpha_0\,\,\alpha_1 \equiv
+       (x : X_0) \to A^M\,X^M\,(\alpha_0\,x)\,(\alpha_1\,(X^M\,x))
+\end{alignat*}
+We again assume an interpretation for the base type $\iota$, as $X_0$, $X_1$ and
+$X^M : X_0 \to X_1$. $X^M$ is function between underlying sets of algebras, and
+$A^M$ computes what it means that $X^M$ preserves an operation with type $A$. At
+the base type, preservation is simply equality. At the first-order function
+type, preservation is a quantified statement over $X_0$. We define morphisms for
+$\Con$ pointwise:
+\begin{alignat*}{3}
+  &\Con^M : (\Gamma : \Con)\{X_0\,X_1 : \Set\} \to (X_0 \to X_1) \to \Gamma^A\,X_0 \to \Gamma^A\,X_1 \to \Set\\
+  &\Gamma^M\,X^M\,\gamma_0\,\gamma_1 \equiv
+    \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^M\,X^M\,(\gamma_0\,x)\,(\gamma_1\,x)
+\end{alignat*}
+For terms and substitutions, we get preservation statements, which are sometimes
+called \emph{fundamental lemmas} in discussions of logical relations \cite{TODO}.
+\begin{alignat*}{3}
+  & \hspace{-10em}\rlap{$\blank^M : (t : \Tm\,\Gamma\,A) \to \Gamma^M\,X^M\,\gamma_0\,\gamma_1 \to A^M\,X^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)$}\\
+  & \hspace{-10em}(\var\,x)^M    &&\gamma^M \equiv \gamma^M\,x \\
+  & \hspace{-10em}(\app\,t\,u)^M &&\gamma^M \equiv t^M\,\gamma^M\,(u^A\,\gamma_0)\\
+  & \hspace{-10em}&& \\
+  & \hspace{-10em}\rlap{$\blank^M : (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^M\,X^M\,\gamma_0\,\gamma_1 \to \Delta^M\,X^M\,(\sigma^A\,\gamma_0)\,(\sigma^A\,\gamma_1)$}\\
+  & \hspace{-10em} \rlap{$\sigma^M\, \gamma^M\,x = (\sigma\,x)^M\,\gamma^M$}
+\end{alignat*}
+The definition of $(\app\,t\,u)^M$ is well-typed by the induction hypothesis
+$u^M\,\gamma^M : X^M\,(u^A\,\gamma_0) = u^A\,\gamma_1$. We again pack up
+$\Gamma^M$ with the interpretation of $\iota$, to get notions of algebra
+morphisms:
+\begin{alignat*}{3}
+  & \Mor : (\Gamma : \Con) \to \Alg\,\Gamma \to \Alg\,\Gamma \to \Set \\
+  & \Mor\,\Gamma\,(X_0,\,\gamma_0)\,(X_1,\,\gamma_1) \equiv
+    (X^M : X_0 \to X_1) \times \Gamma^M\,X^M\,\gamma_0\,\gamma_1
+\end{alignat*}
+\begin{myexample} We have the following computation:
+\begin{alignat*}{3}
+  & \Mor\,\NatSig\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \equiv \\
+  & \hspace{2em}
+    (X^M : X_0 \to X_1) \times (X^M\,\mi{zero_0} = \mi{zero_1}) \times ((x : X_0) \to X^M\,(\mi{suc_0}\,x) = \mi{suc_1}\,(X^M\,x))
+\end{alignat*}
+\end{myexample}
+
+\paragraph{Morphisms vs.\ logical relations.}
+The above $\blank^M$ interpretation can be viewed as a special case of logical
+relations over the $\blank^A$ model: every morphism is a \emph{functional}
+logical relation, where the chosen relation between the underlying sets happens
+to be a function. Let us consider now the more general relational interpretation
+for types:
+\begin{alignat*}{3}
+  & \hspace{-0.5em}\rlap{$\blank^R : (A : \Ty)\{X_0\,X_1 : \Set\}(X^R : X_0 \to X_1 \to \Set) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
+  & \hspace{-0.5em}\iota^R\,&&X^R\,\alpha_0\,\,\alpha_1 \equiv X^R\,\alpha_0\,\alpha_1 \\
+  & \hspace{-0.5em}(\iota\to A)^R\,&&X^R\,\alpha_0\,\,\alpha_1 \equiv
+       (x_0 : X_0)(x_1 : X_1) \to X^R\,x_0\,x_1 \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,x_1)
+\end{alignat*}
+Here, functions are related if they map related inputs to related outputs. If we
+know that $X^M\,\alpha_0\,\alpha_1 \equiv (f\,\alpha_0 = \alpha_1)$ for some $f$
+function, we get
+\[
+  (x_0 : X_0)(x_1 : X_1) \to f\,x_0 = x_1 \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,x_1)
+\]
+Now, we can simply substitute along the input equality proof in the above type,
+to get the previous definition for $(\iota \to A)^M$:
+\[
+  (x_0 : X_0) \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,(f\,x_0))
+\]
+This substitution along the equation is called ``singleton contraction'' in the
+jargon of homotopy type theory \cite{TODO}. The ability to perform contraction
+here is at the heart of the \emph{strict positivity restriction} for inductive
+signatures. Strict positivity in our setting corresponds to only having
+first-order function types in signatures. If we allowed function domains to be
+an arbitrary $A$ type, we would only have a black-box $A^M\,X^M : A^A\,X_0 \to
+A^A\,X_1 \to \Set$ relation, and we would not be able to singleton contract.
+
+In Chapter \ref{chap:fqiit} we will expand on this. As a preliminary summary:
+although higher-order functions have relational interpretation, such relations
+do not generally compose. What we eventually aim to have is a \emph{category} of
+algebras and algebra morphisms, where morphisms properly compose. We need a
+\emph{directed} model of the theory of signatures, where every signature becomes
+a category of algebras. The way to achieve this, is to prohibit higher-order
+functions, thereby avoiding the polarity issues that prevent a directed
+interpretation for general function types.
+
+
+
+
+
+\subsection{Displayed Algebras}
+\subsection{Sections}
+
+\section{Term Algebras}
+\subsection{Weak Initiality}
+\subsection{Dependent Elimination}
+
+\section{Related and Alternative Approaches}
+%% \subsection{F-Algebras}
+%% \subsection{Polynomial Functors}
+
+\chapter{Semantics in Two-Level Type Theory}
+\label{chap:2ltt}
+
+Introduction: generalizing semantics, distinguishing strict and non-strict equations.
+Summary
+\begin{itemize}
+\item Formal syntax for TT as cwfs, type formers, universes
+\item Presheaf models for TT
+\item 2LTT
+\end{itemize}
+
+\section{Categories with Families}
+\label{sec:cwf}
+
+Describe and motivate cwfs for formal syntax. De bruijn indices, examples of
+representing stuff. Examples for type formers and universes. Copy from previous papers.
+
+\section{Presheaf Models of Type Theories}
+\label{sec:presheaf-models}
+
+\section{Two-Level Type Theory}
+\label{sec:2ltt}
+
+\subsection{Models}
+\subsection{Properties}
+
+\section{Simple Inductive Signatures}
+\subsection{Internal Semantics}
+\subsection{Strict and Weak Morphisms}
+\subsection{Internal Term Algebras}
+
+\begin{itemize}
+\item AMDS
+\item finite product semantics, computed examples
+\item Inner term algebras.
+\item Weak initiality
+\item Dependent elimination
+\end{itemize}
+
+\chapter{Finitary Quotient Inductive-Inductive Types}
+\label{chap:fqiit}
+
+\section{Theory of Signatures}
+\label{sec:fqiit-tos}
+
+\subsection{Models}
+\subsection{Examples}
+
+\section{Semantics}
+\label{sec:fqiit-semantics}
+\subsection{Finite Limit Cwfs}
+\subsection{Equivalence of Initiality and Induction}
+\subsection{Model of the Theory of Signatures}
+
+\section{Term Algebras}
+\subsection{Generic Term Algebras}
+\subsection{Induction for Term Algebras}
+\subsection{Church Encodings}
+\subsection{Awodey-Frey-Speight Encodings}
+
+\section{Left Adjoints of Signature Morphisms}
+
+\chapter{Infinitary Quotient Inductive-Inductive Types}
+\section{Theory of Signatures}
+\section{Term Algebras}
+
+\chapter{Levitation, Bootstrapping and Universe Levels}
+\section{Levitation for Closed QIITs}
+\section{Levitation for Infinitary QIITs}
+
+\chapter{Higher Inductive-Inductive Types}
+
+\section{Theory of Signatures}
+\section{Semantics}
+
+\chapter{Reductions}
+
+\section{Finitary Inductive Types}
+\section{Finitary Inductive-Inductive Types}
+\section{Closed Quotient Inductive-Inductive Types}
+
+\chapter{Conclusion}
+
+
+\backmatter
+\end{document}

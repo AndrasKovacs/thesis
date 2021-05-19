@@ -1,0 +1,146 @@
+
+
+Clarify stuff about univalent cats/cwfs and their displayed versions
+
+1. Univalent Cat
+
+   Obj : Type, Mor : Obj → Obj → hSet, univ : isEqv idtoiso
+
+
+2. Univ flcwf
+
+   Con, Sub is univ Cat,
+   Ty : Con → Type
+   Tm : (Γ : Con) → Ty A → Type
+
+       Tm Γ A ≃ (σ : Sub Γ (Γ ▶ A)) × (p ∘ σ = id)
+
+       t           ↦ ((id, t), refl)
+       ((σ, t), e) ↦
+
+   - strict type substitution equations
+   A[id]  ≡ A
+   A[σ∘δ] ≡ A[σ][δ]
+
+
+   what about type univalence?
+
+     A ≃ B := (t : Tm (Γ ▶ A) B[p], u : Tm (Γ ▶ B) A[p], t[p, u] = q, u[p, t] = q)
+
+     idtoiso : (A = B) → A ≃ B
+     idtoiso refl = (q, q, refl, refl)
+
+     univ : isEqv idtoiso
+
+     isotoid : A ≃ B → A = B
+     isotoid (t, u, _, _) =
+       t : Tm (Γ ▶ A) B[p]
+       u : Tm (Γ ▶ B) A[p]
+       t∘u = id
+       u∘t = id
+
+       (Γ ▶ A) ≃ (Γ ▶ B)
+
+       (p, t) : Sub (Γ ▶ A) (Γ ▶ B)
+       (p, u) : Sub (Γ ▶ B) (Γ ▶ A)
+
+       (Γ ▶ A) = (Γ ▶ B)  -- not derivable!
+
+-- Univ flCwf:
+
+   - Univ cat
+   - Ty : Con → U₀
+   - A[id]  ≡ A
+   - A[σ∘δ] ≡ A[σ][δ]
+   - Tm : (Γ : Con) → Ty Γ → U₀
+   - _▶_ : (Γ : Con) → Ty Γ → Con
+   - Sub Γ (Δ ▶ A) ≃ (σ : Sub Γ Δ) × Tm Γ A[σ]
+   - ∙ terminal
+   - type univ: isEqv idtotyiso
+
+   derivable :
+     - Tm is hSet
+     - functorial substitution for Tm
+
+   - Σ : (A : Ty Γ) → Ty (Γ ▶ A) → Ty Γ
+   - (Σ A B)[σ] ≡ Σ A[σ] B[σ∘p, q]
+   - Tm Γ (Σ A B) ≃ (t : Tm Γ A) × Tm Γ B[id,t]
+
+   - Id : Tm Γ A → Tm Γ A → Ty Γ
+   - (Id t u)[σ] ≡ Id t[σ] u[σ]
+   - Tm Γ (Id t u) ≃ (t = u)
+
+   - K : Con → Ty Γ
+   - (K Δ)[σ] ≡ K Δ
+   - Sub Γ Δ ≃ Tm Γ (K Δ)
+
+-- flcwf morphism
+--------------------------------------------------------------------------------
+
+-- F : SUB Γ Δ
+
+-- F preserves substitution strictly
+-- F preserves ∙ and _▶_ fibrantly
+
+-- F(A[σ]) ≡ (F A)[F σ]
+-- F(t[σ]) ≡
+
+
+QUESTION:
+
+  - what happpens if I say that type sub functoriality is strict? Does it still work?
+
+  - Can I just replace every single instance of hSet equality in QIIT paper with strict
+    equality?
+
+    I only used a) UIP b) funext there.
+    If (t ≡ u : A) then (t = u)
+    If (t = u : A) then not necessarily t ≡ u
+    Funext : (x : ^A) → f x ≡ g x
+
+  - Issues with full univalent semantics.
+
+  - in flcwf, A[σ∘δ] ≡ A[σ][δ] is not provable...
+
+  Pointed sets:
+
+    Con                 := (A : U₀) × (a : A)
+    Sub (A, a) (A', a') := (f : A → A') × (f a = a')
+    Ty (A, a)           := (Aᴰ : A → U₀) × Aᴰ a
+
+    _[_] : {Γ Δ : Con} → Ty Δ → Sub Γ Δ → Ty Γ
+    _[_] {A, a}{A', a'}(A'ᴰ, a'ᴰ : A'ᴰ a')(f, (e : f a = a')) :=
+      (Aᴰ := λ (a : A). A'ᴰ (f a)
+       aᴰ := tr A'ᴰ e⁻¹ a'ᴰ
+
+   Hence, substituting twice gives me double tr, but composite morphism is defined
+   with e ◾ e'
+
+   - Ask Ambrus about coherent cwfs
+   - I don't feel like fiddling with this
+
+   What goes wrong if I just have functoriality of type sub with inner equality?
+
+
+First check what happens with just univalent cat:
+
+UnivCat
+  Con  : U₀
+  Sub  : Con → Con → hSet
+  ...
+  univ : isEqv idtoiso
+
+σ : StrictFunctor Γ Δ
+  σ : Γ.Con → Δ.Con
+  σ : Γ.Sub Γ Δ → Δ.Sub (σ Γ) (σ δ)
+  σ Γ.id ≡ Δ.id
+  σ (σ ∘ δ) ≡ σ σ ∘ σ δ
+
+Con     := UnivCat
+Sub Γ Δ := StrictFunctor
+Ty Γ    := UnivDispCat Γ
+Tm Γ    := Section
+
+U := K (UnivCat of hSet)
+
+--------------------------------------------------------------------------------

@@ -1,0 +1,142 @@
+
+### Using 2LTT
+
+When giving semantics, it would be lame to be tied to Set or ETT types. Instead,
+we want to have algebras in any sufficiently structured category. There is a
+dumb solution, which is to say that we work in an *arbitrary* model of ETT
+instead of a particular one. However, that assumes too much; for example, lists
+already make sense in any finite product category, and we have no need for ETT
+type formers.
+
+At the same time, we don't want to directly work with finite product categories
+or cwfs, because that's too deeply embedded, and it would be formally tedious. For
+example, we don't have functions or universes when directly working in a plain cwf.
+We are forced to work in an "uncurried" style when talking about terms, which is not
+a good match for signature syntax, which is instead written in a curried style.
+
+The solution is to use the syntax of 2LTT, and return algebras in the inner
+level. Then, we can be flexible about the amount of assumptions we make about
+the inner theory, but still have convenient internal syntax.
+
+#### 1. Standard presheaf model
+
+  Con     := PSh C
+  Ty Γ    := PSh (Elems Γ)
+  Sub Γ Δ := Nat(Γ, Δ)
+  Tm Γ A  := Section(Γ, A)
+
+  Ty Γ :=
+    {|A|  : ∀ i. Γ i → Set
+     _<_> : ∀ i j. |A| j γ → (f : C.Sub i j) → |A| i (γ<f>)}
+
+  |Γ ▶ A| i := (γ : |Γ| i) × A i γ
+
+  set : Ty Γ
+  set {Γ} i γ := C.Ty i
+  (α : C.Ty j) <f : C.Sub i j> := α[f]
+
+  el : Tm Γ set → Ty Γ
+  |el a| i γ := C.Tm i (|a| i γ)
+  (t : C.Tm j (|a| j γ)) <f : C.Sub i j> := t[f]
+
+  pi : (a : Tm Γ set) → Ty (Γ ▶ el a) → Ty Γ
+  |pi a B| i γ := |B| (i C.▶ |a| i γ) (γ<p>, q)
+
+    |a| : ∀ i. (γ : |Γ i|) → |set| i γ
+        : ∀ i. |Γ i| → C.Ty i
+
+    |B| : ∀ i. |Γ ▶ el a| i → Set
+        : ∀ i. (γ : |Γ| i) × |el a| i γ → Set
+        : ∀ i. (γ : |Γ| i) × C.Tm i (|a| i γ) → Set
+
+    |B| (i C.▶ |a| i γ) :
+     (γ' : |Γ| (i C.▶ |a| i γ)) × C.Tm (i C.▶ |a| i γ) (|a| (i C.▶ |a| i γ) γ') → Set
+
+    |B| (i C.▶ |a| i γ)
+        (γ<p>, _ : C.Tm (i C.▶ |a| i γ) (|a| (i C.▶ |a| i γ) γ<p>))
+
+         q : C.Tm (i C.▶ |a| i γ) (|a| (i C.▶ |a| i γ) γ<p>)
+           : C.Tm (i C.▶ |a| i γ) (|a| i γ <p>)
+           : C.Tm (i C.▶ |a| i γ) (|a| (i C.▶ |a| i γ) γ<p>)
+
+  -- if 0 has a universe, then U₀ : Ty₀, ⇑U₀ : Set,   A : ⇑U₀,  ⇑A : Set
+
+  ⇑(A → B) ≃ ⇑A → ⇑B
+  ⇑(A × B) ≃ ⇑A × ⇑B
+
+-- Alternative 2LTT
+------------------------------------------------------------
+
+C.Ty : Ĉ.Con
+C.Tm : Ĉ.Ty C.Ty
+
+Ty₀ Γ   := Ĉ.Sub Γ C.Ty        (≡ Ĉ.Tm Γ (K C.Ty))
+Tm₀ Γ A := Ĉ.Tm Γ (C.Tm[A])
+
+Ty₁ Γ   := Ĉ.Ty Γ
+Tm₁ Γ A := Ĉ.Tm Γ A
+
+⇑ : Ty₀ Γ → Ty₁ Γ
+⇑ A := C.Tm[A]
+
+Tm₀ Γ A ≡ Tm₁ Γ (Lift A)   OK
+
+------------------------------------------------------------
+
+Ty₀ : Ty Γ
+Ty₀ := K C.Ty
+
+⇑ : Tm Γ Ty₀ → Ty Γ
+⇑ A := C.Tm[A]
+
+-- which one to use??
+
+-- assuming Russell univs on both levels:
+
+U₀ : Ty Γ
+U₀ := K C.Ty
+Ty₀ : Ty₁ Γ
+Tm₁ Γ Ty₀ ≃ Ty₀ Γ
+
+Π : (a : Ty₀ Γ) → Ty₁ (Γ ▶ ⇑a) → Ty₁ Γ
+|Π a B|ᵢ (γ : Γ i) := B (i ▶ aᵢγ) (γ<p>, q)
+
+-- perhaps ⇑ is better!
+
+------------------------------------------------------------
+
+  ∙ ▶ N : U ▶ El N ▶ N ⇒ El N
+
+  |(N : set)   × el N × (N → el N)| ∙
+  (N : C.Ty ∙) × |el N × (N → el N)| ∙
+  (N : C.Ty ∙) × C.Tm ∙ N × |N → el N|∙
+  (N : C.Ty ∙) × C.Tm ∙ N × |el N|(∙ ▶ N)
+  (N : C.Ty ∙) × C.Tm ∙ N × C.Tm (∙ ▶ N) N
+
+-- Finite product category
+------------------------------------------------------------
+
+C.Ty Γ := C.Con
+C.Tm Γ A := C.Sub Γ A
+C.▶ := C.×
+C.∙ := C.⊤
+
+  (N : C.Ty ∙) × C.Tm ∙ N × C.Tm (∙ ▶ N) N
+  (N : C.Con) × C.Sub ⊤ N × C.Sub (⊤ × N) N
+
+
+------------------------------------------------------------
+Closed QIIT + 2LTT
+------------------------------------------------------------
+
+- signatures are lvl1
+- semantics : lvl1 flcwfs
+
+Πext : (a : set) → (a → Ty Γ) → Ty Γ
+(Πext a B)ᴬ γ := (x : aᴬ γ) → (B x)ᴬ γ
+
+Eq : (a : Tm Γ U) → Tm Γ (El a) → Tm Γ (El a) → Ty Γ
+Tm Γ (Eq a t u) ≃ (t = u)
+(Eq a t u)ᴬ γ := (u γ = t γ)
+
+--------------------------------------------------------------------------------

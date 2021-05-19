@@ -1,0 +1,85 @@
+
+
+## Intro
+
+- intro
+- how to read
+- publications & contribution
+
+## Simple inductive signatures
+
+- Agda-like presentation
+- alg, mor, displ, section
+- term model, recursion
+
+## 2LTT
+
+- external params
+- generalized semantics (but possibly frugal)
+- plain ETT semantics a special case
+
+## Strict finitary QIITs
+
+- signatures (postpone bootstrap discussion, perhaps do as in IIT paper)
+  (finitary, with, sort equations, flcwfs)
+- semantics
+- induction ≃ initiality
+- term models
+  + Church encoding
+  + AFS encoding
+  + Predicative AFS encoding
+
+- CLOSED QIIT term models
+  + only cwf needed to support closed QIIT ToS
+  + reducing every closed QIIT to ToS in a *plain cwf*
+    * We assume an inner ToS QIIT
+    * We define a "lowering" map from outer ToS to innter ToS
+    * Term model by induction on *outer* ToS
+
+
+
+
+
+
+## Inifinitary QIITs
+
+- signatures
+- weak flcwf semantics
+- term models
+
+## Levitation, bootstrapping
+- levitating closed QIITs
+- levitating large infinitary QIITs
+
+## QII Structure identity
+- univalent cat model in 2LTT
+
+## HIITs
+- AMDS model in 2LTT
+- ? Frobenius path induction ?
+
+-- Reductions
+------------------------------------------------------------
+
+
+## Finitary induction to Nat
+
+## IIT reduction
+
+## Closed QIIT reduction
+
+## Infinitary
+
+Related work: Hugunin, Steenkamp QW
+
+-- Constructions
+--------------------------------------------------------------------------------
+
+- Left adjoints of substitutions
+- TODO: internal algebras
+- TODO: cwfs vs. signatures
+- TODO: local representability
+
+
+
+--------------------------------------------------------------------------------

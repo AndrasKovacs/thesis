@@ -1,0 +1,128 @@
+
+
+Intro
+
+Contribs
+Related work (summary)
+
+
+1. Simple inductive signatures
+
+AMDS + term algebra + eliminator
+
+vs.
+
+fixpoints & continuity    vs W-types
+
+- deeply embedded, Adamek theorem
+- Basic idea + generic programming applications
+- W-type encoding
+
+2. 2LTT
+
+- 1. finite product theory
+  (2LTT over finite product cat)
+    (N : Obj) × (zero : Mor ⊤ N) × (suc : Mor (⊤ × N) N)
+
+- 2. over cwf
+
+3. Finitary QIIT     (strict)
+
+  + strict sort equation
+  + 2LTT
+     - ToS : outer type
+     - inner TT : cwf
+     - flcwf
+
+  + term algebra:
+    - ToS in inner
+    - term algebra by induction on *outer* ToS (lowering from meta ToS to inner ToS)
+
+     (Γ : Con)ᵀ : Inner.Sub ↓Ω ↓Γ → Γᴬ
+
+    eliminator:
+      assume : ToSᴵ : ToSᴬ
+      elim   : (A : Ty ToSᴵ) →(meta) Tm ToSᴵ A
+
+                  f : (Γ : ToSᴵ.Con) → A.Con[Γ]
+
+                  (t : ToSᴵ.Tm Γ A) →
+
+   + Church + impredicative term algebra?
+            + predicative encoding
+
+4. Infinitary (weak)
+
+
+
+
+
+  Con := univalent flcwf
+
+           - univalent cat
+	   - Ty, Tm              A[id] ≡ A   A[σ∘δ] ≡ A[σ][δ]
+
+           - Σ A B [σ]
+
+
+
+
+5. HIIT
+
+  OPTIONAL
+  4.5 Univalent cat model for QIITs (TODO)
+    - inner : HoTT
+    - outer : ETT
+    - issue 1: no term algebra
+            2: no eq reflection in ToS (what else to put in ToS?)
+
+  4.6 AMDS model
+    - inner : cwf + Id + Π  (weak + strict morphism eq.)
+    - outer : ETT
+    - ToS outer
+
+
+-- cutoff
+--------------------------------------------------------------------------------
+
+6. Levitation & Bootstrapping
+
+  - 2 things:  - closed QIIT (NICE)
+  -            - infinitary QIIT  (modulo level)
+
+   Ambrus: omit infinitary levitation / levels
+  - Bootstrap + levels
+
+
+7. Constructions
+
+- Nat + Id + U --> finitary inductive types (can we drop inner U in 2LTT)
+- finitary IT  --> closed IIT
+- W-type       --> finitary open IIT        (term modellhez kell inf lambda! cikkben egyszerre inf app és lam nem működik)
+
+- initialitity conjecture
+- Brunerie initiality --> closed QIIT       (inner TT: Prop, PropExt, U, Id, Funext, Quotient + reduction: EqRefl)
+-                                           (elementary topos + NNO)
+- Related work: Steenkamp + Pitts QW types
+
+8. Applications
+
+- finite limits, slices ≃ Types,
+- Left adjoints
+- cwf-signature conversion (equivalence?)
+
+------------------------------------------------------------
+-- cwf + ToS      --> finitary QIIT
+-- algebraic cwf  --> finitary QIIT?
+
+--   algebraic cwf : cwf C , s.t. C = ⟦Ω⟧, where Ω : ToS.Con
+--
+
+
+-- Further work
+-- Long term project:
+--   X objektum X-ek kategóriájában (double X-ek)   (double category)
+--      double category:
+--          1. Cat signature, interpret it in cwf of Cats
+--          2. Double cat signature, interpret it in cwf of sets
+--
