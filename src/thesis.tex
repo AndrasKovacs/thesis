@@ -158,6 +158,7 @@
 \newcommand{\Mor}{\ms{Mor}}
 \newcommand{\DispAlg}{\ms{DispAlg}}
 \newcommand{\Section}{\ms{Section}}
+\newcommand{\Initial}{\ms{Initial}}
 
 %% --------------------------------------------------------------------------------
 
@@ -181,6 +182,7 @@
 \section{Specification and Semantics for Inductive Types}
 \section{Overview of the Thesis and Contributions}
 \section{Notation and Conventions}
+\label{sec:notation}
 
 \chapter{Simple Inductive Signatures}
 \label{chap:simple-inductive-signatures}
@@ -196,7 +198,7 @@ probably not that useful) to present in full formal detail.
 \todo{potentially in intro}
 
 The mantra throughout this dissertation is the following: inductive types are
-specified by typing contexts in certain \emph{theories of signatures}.  For each
+specified by typing contexts in certain \emph{theories of signatures}. For each
 class of inductive types, there is a corresponding theory of signatures, which
 is viewed as a proper type theory and comes equipped with an algebraic model
 theory. \emph{Semantics} of signatures is given by interpreting them in certain
@@ -212,7 +214,7 @@ of inductive types. As we are aiming at minimalism right now, the current theory
 of signatures is as follows:
 
 \begin{mydefinition}The \emph{theory of signatures}, or ToS for short in the current chapter,
-  is a simple type theory equipped with the following features:
+is a simple type theory equipped with the following features:
   \begin{itemize}
     \item An empty base type $\iota$.
     \item A \emph{first-order function type} $\iota\!\to\!\blank$; this is a
@@ -327,11 +329,12 @@ we may write $(\mi{zero} : X) \times (\mi{suc} : X \to X)$ for the result of
 computing $\ms{NatSig}^A\,X$.
 \end{notation}
 
-Now, we get the notion of algebras as
+\begin{mydefinition} We define \emph{algebras} as follows.
 \begin{alignat*}{3}
   & \Alg : \Con \to \Set_1 \\
   & \Alg\,\Gamma \equiv (X : \Set) \times \Gamma^A\,X
 \end{alignat*}
+\end{mydefinition}
 
 \begin{myexample} $\Alg\,\ms{NatSig}$ is computed to $(X : \Set)\times(\mi{zero} :
 X)\times(\mi{suc} : X \to X)$.
@@ -372,27 +375,45 @@ called \emph{fundamental lemmas} in discussions of logical relations \cite{TODO}
   & \hspace{-10em} \rlap{$\sigma^M\, \gamma^M\,x = (\sigma\,x)^M\,\gamma^M$}
 \end{alignat*}
 The definition of $(\app\,t\,u)^M$ is well-typed by the induction hypothesis
-$u^M\,\gamma^M : X^M\,(u^A\,\gamma_0) = u^A\,\gamma_1$. We again pack up
-$\Gamma^M$ with the interpretation of $\iota$, to get notions of algebra
-morphisms:
+$u^M\,\gamma^M : X^M\,(u^A\,\gamma_0) = u^A\,\gamma_1$.
+
+\begin{mydefinition}
+We again pack up $\Gamma^M$ with the interpretation of $\iota$, to get notions
+of \emph{algebra morphisms}:
 \begin{alignat*}{3}
   & \Mor : (\Gamma : \Con) \to \Alg\,\Gamma \to \Alg\,\Gamma \to \Set \\
   & \Mor\,\Gamma\,(X_0,\,\gamma_0)\,(X_1,\,\gamma_1) \equiv
     (X^M : X_0 \to X_1) \times \Gamma^M\,X^M\,\gamma_0\,\gamma_1
 \end{alignat*}
+\end{mydefinition}
 \begin{myexample} We have the following computation:
 \begin{alignat*}{3}
-  & \Mor\,\NatSig\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \equiv \\
-  & \hspace{2em}
-    (X^M : X_0 \to X_1) \times (X^M\,\mi{zero_0} = \mi{zero_1}) \times ((x : X_0) \to X^M\,(\mi{suc_0}\,x) = \mi{suc_1}\,(X^M\,x))
+  & \hspace{-5em}\rlap{$\Mor\,\NatSig\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \equiv$} \\
+           &(X^M : X_0 \to X_1) \\
+   \times\,&(X^M\,\mi{zero_0} = \mi{zero_1}) \\
+   \times\,&((x : X_0) \to X^M\,(\mi{suc_0}\,x) = \mi{suc_1}\,(X^M\,x))
 \end{alignat*}
 \end{myexample}
 
+\begin{mydefinition} We state \emph{initiality} as a predicate on algebras:
+\begin{alignat*}{3}
+  & \Initial : \Alg\,\Gamma \to \Set\\
+  & \Initial\,\gamma \equiv
+    (\gamma' : \Alg\,\Gamma) \to \ms{isContr}\,(\Mor\,\Gamma\,\gamma\,\gamma')
+\end{alignat*}
+Here $\ms{isContr}$ refers to unique existence. If we drop $\ms{isContr}$ from
+the definition, we get the notion of weak initiality, which corresponds to the
+recursion principle for $\Gamma$. Although we call this predicate $\Initial$, in
+this chapter we do not yet show that algebras form a category. We provide the
+extended semantics in Chapter \ref{chap:fqiit}, and the currently computed
+algebras and morphisms remain the same there.
+\end{mydefinition}
+
 \paragraph{Morphisms vs.\ logical relations.}
-The above $\blank^M$ interpretation can be viewed as a special case of logical
+The $\blank^M$ interpretation can be viewed as a special case of logical
 relations over the $\blank^A$ model: every morphism is a \emph{functional}
 logical relation, where the chosen relation between the underlying sets happens
-to be a function. Let us consider now the more general relational interpretation
+to be a function. Consider now a more general relational interpretation
 for types:
 \begin{alignat*}{3}
   & \hspace{-0.5em}\rlap{$\blank^R : (A : \Ty)\{X_0\,X_1 : \Set\}(X^R : X_0 \to X_1 \to \Set) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
@@ -416,10 +437,11 @@ jargon of homotopy type theory \cite{TODO}. The ability to perform contraction
 here is at the heart of the \emph{strict positivity restriction} for inductive
 signatures. Strict positivity in our setting corresponds to only having
 first-order function types in signatures. If we allowed function domains to be
-an arbitrary $A$ type, we would only have a black-box $A^M\,X^M : A^A\,X_0 \to
-A^A\,X_1 \to \Set$ relation, and we would not be able to singleton contract.
+arbitrary types, in the definition of $(A \to B)^M$ we would only have a
+black-box $A^M\,X^M : A^A\,X_0 \to A^A\,X_1 \to \Set$ relation, which is not
+known to be given as an equality.
 
-In Chapter \ref{chap:fqiit} we will expand on this. As a preliminary summary:
+In Chapter \ref{chap:fqiit} we expand on this. As a preliminary summary:
 although higher-order functions have relational interpretation, such relations
 do not generally compose. What we eventually aim to have is a \emph{category} of
 algebras and algebra morphisms, where morphisms properly compose. We need a
@@ -428,11 +450,60 @@ a category of algebras. The way to achieve this, is to prohibit higher-order
 functions, thereby avoiding the polarity issues that prevent a directed
 interpretation for general function types.
 
-
-
-
-
 \subsection{Displayed Algebras}
+
+At this point we do not yet have specification for induction principles (or
+dependent elimination principles). We use the term \emph{displayed algebra} to
+refer to ``dependent'' algebras, where every displayed algebra component lies
+over corresponding components in the base algebra. For the purpose of specifying
+induction, displayed algebras can be viewed as bundles of induction motives and
+methods.
+
+Displayed algebras over some $\gamma : \Alg\,\Gamma$ are equivalent to slices
+over $\gamma$ in the category of $\Gamma$-algebras; we show this in Chapter
+\ref{chap:fqiit}. A slice $f : \Sub\,\Gamma\,\gamma'\,\gamma$ maps elements of
+$\gamma$'s underlying set to elements in the base algebra. Why do we need
+displayed algebras, then? The reasons are twofold. First, we need to compute
+induction principles exactly, not merely up to isomorphisms, if we are to
+eventually implement inductive types in a mechanized setting. Second, displayed
+algebras naturally avoid some strictness issues: they support strictly
+functorial reindexing, unlike slice objects, whose pullbacks are functorial only
+up to isomorphism.
+
+For more illustration of using some displayed algebras in a type-theoretic
+setting, see \cite{TODO}. We adapt the term ``displayed algebra'' from ibid.\ as
+a generalization of displayed categories and functors.
+
+The displayed algebra interpretation is a \emph{logical predicate}
+interpretation, defined as follows.
+\begin{alignat*}{3}
+  & \rlap{$\blank^D : (A : \Ty)\{X\} \to (X \to \Set) \to A^A\,X \to \Set$}\\
+  & \iota^D\,       && X^D\,\alpha \equiv X^D\,\alpha \\
+  & (\iota\to A)^D\,&& X^D\,\alpha \equiv (x : X)(x^D : X^D\,x) \to A^D\,X^D\,(\alpha\,x)\\
+  & &&\\
+  & \rlap{$\blank^D : (\Gamma : \Con)\{X\} \to (X \to \Set) \to \Gamma^A\,X \to \Set$}\\
+  & \rlap{$\Gamma^D\,X^D\,\gamma \equiv
+       \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^D\,X^D\,(\gamma\,x)$}\\
+  & &&\\
+  & \rlap{$\blank^D : (t : \Tm\,\Gamma\,A)
+      \to \Gamma^D\,X^D\,\gamma \to A^D\,X^D\,(t^A\,\gamma)$}\\
+  & (\var\,x)^D\,&&\gamma^D \equiv \gamma^D\,x\\
+  & (\app\,t\,u)^D\,&&\gamma^D \equiv t^D\,\gamma^D\,(u^A\,\gamma)\,(u^D\,\gamma^D)\\
+  & &&\\
+  & \rlap{$\blank^D : (\sigma : \Sub\,\Gamma\,\Delta)
+      \to \Gamma^D\,X^D\,\gamma \to \Delta^D\,X^D\,(\sigma^A\,\gamma)$}\\
+  & \rlap{$\sigma^D\,\gamma^D\,x \equiv (\sigma\,x)^D\,\gamma^D$}
+\end{alignat*}
+Analogously to before, everything depends on a predicate interpretation $X^D : X
+\to \Set$ for $\iota$. For types, a predicate holds for a function if the
+function preserves predicates. The interpretation of terms is again a
+fundamental lemma, and we have pointwise definitions for contexts and
+substitutions, as usual.
+
+\begin{myexample} We have the following computation:
+\end{myexample}
+
+
 \subsection{Sections}
 
 \section{Term Algebras}

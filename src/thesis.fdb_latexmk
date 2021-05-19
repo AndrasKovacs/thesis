@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1621435976 "thesis.tex" "thesis.pdf" "thesis" 1621435977
+["pdflatex"] 1621456284 "thesis.tex" "thesis.pdf" "thesis" 1621456285
   "/etc/texmf/web2c/texmf.cnf" 1618147940 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
@@ -47,6 +47,7 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl12.pfb" 1248133631 34586 5a65dc15601f9c74fe3fb3f37b3b8b6f ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb" 1248133631 24393 3b7eb51a67a0a62aec5849271bdb9c2e ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1248133631 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb" 1248133631 36118 fad905eba93cff5bce1e185fe980a177 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb" 1248133631 35660 fb24af7afbadb71801619f1415838111 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
@@ -190,13 +191,13 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1618147992 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1618148037 8257353 dd90e85f28449b2a4ea6a1bd71dd16fc ""
-  "thesis.aux" 1621435977 9212 ad1e4abd7919556bf626fda738198ede "pdflatex"
-  "thesis.out" 1621435977 3725 e80b5012bb4735b9f34f0b88c31d21a4 "pdflatex"
-  "thesis.tex" 1621435975 21589 c7c7def66664e6af512b3c648ffa7727 ""
-  "thesis.toc" 1621435977 4661 04c60e067d56d223d69e9639bd135e6d "pdflatex"
+  "thesis.aux" 1621456285 9308 441c92beb448f458cfa61fceba6f1b9d "pdflatex"
+  "thesis.out" 1621456285 3725 e80b5012bb4735b9f34f0b88c31d21a4 "pdflatex"
+  "thesis.tex" 1621456284 25225 4d69842f3266d58adb3a5197fb35c7f7 ""
+  "thesis.toc" 1621456285 4666 0327c169dc9487d85ffd1ada67fe25be "pdflatex"
   (generated)
+  "thesis.out"
   "thesis.toc"
+  "thesis.aux"
   "thesis.pdf"
   "thesis.log"
-  "thesis.aux"
-  "thesis.out"

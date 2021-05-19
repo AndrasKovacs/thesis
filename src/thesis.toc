@@ -9,11 +9,11 @@
 \contentsline {subsection}{\numberline {2.2.2}Morphisms}{7}{subsection.2.2.2}%
 \contentsline {paragraph}{Morphisms vs.\ logical relations.}{8}{section*.3}%
 \contentsline {subsection}{\numberline {2.2.3}Displayed Algebras}{9}{subsection.2.2.3}%
-\contentsline {subsection}{\numberline {2.2.4}Sections}{9}{subsection.2.2.4}%
-\contentsline {section}{\numberline {2.3}Term Algebras}{9}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Weak Initiality}{9}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Dependent Elimination}{9}{subsection.2.3.2}%
-\contentsline {section}{\numberline {2.4}Related and Alternative Approaches}{9}{section.2.4}%
+\contentsline {subsection}{\numberline {2.2.4}Sections}{10}{subsection.2.2.4}%
+\contentsline {section}{\numberline {2.3}Term Algebras}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Weak Initiality}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Dependent Elimination}{10}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Related and Alternative Approaches}{10}{section.2.4}%
 \contentsline {chapter}{\numberline {3}Semantics in Two-Level Type Theory}{11}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Categories with Families}{11}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Presheaf Models of Type Theories}{12}{section.3.2}%

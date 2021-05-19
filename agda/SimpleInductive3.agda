@@ -66,7 +66,7 @@ Conᴹ Γ Xᴹ γ₀ γ₁ = ∀ {A} x → Tyᴹ A Xᴹ (γ₀ x) (γ₁ x)
 Tmᴹ : ∀ {Γ A}(t : Tm Γ A){X₀ X₁ Xᴹ}{γ₀ : Conᴬ Γ X₀}{γ₁ : Conᴬ Γ X₁}
       → Conᴹ Γ Xᴹ γ₀ γ₁ → Tyᴹ A Xᴹ (Tmᴬ t γ₀) (Tmᴬ t γ₁)
 Tmᴹ (var x)   γᴹ = γᴹ x
-Tmᴹ (app t u) γᴹ = {!Tmᴹ u γᴹ!} -- rewrite Tmᴹ u γᴹ ⁻¹ = Tmᴹ t γᴹ (Tmᴬ u _)
+Tmᴹ (app t u) γᴹ rewrite Tmᴹ u γᴹ ⁻¹ = Tmᴹ t γᴹ (Tmᴬ u _)
 
 Subᴹ : ∀ {Γ Δ}(σ : Sub Γ Δ){X₀ X₁ Xᴹ}{γ₀ : Conᴬ Γ X₀}{γ₁ : Conᴬ Γ X₁}
       → Conᴹ Γ Xᴹ γ₀ γ₁ → Conᴹ Δ Xᴹ (Subᴬ σ γ₀) (Subᴬ σ γ₁)
@@ -83,7 +83,7 @@ Conᴰ Γ Xᴰ γ = ∀ {A} x → Tyᴰ A Xᴰ (γ x)
 
 Tmᴰ : ∀ {Γ A}(t : Tm Γ A) → ∀ {X Xᴰ}{γ : Conᴬ Γ X} → Conᴰ Γ {X} Xᴰ γ → Tyᴰ A Xᴰ (Tmᴬ t γ)
 Tmᴰ (var x)   γᴰ = γᴰ x
-Tmᴰ (app t u) γᴰ = Tmᴰ t γᴰ _ (Tmᴰ u γᴰ)
+Tmᴰ (app t u) γᴰ = Tmᴰ t γᴰ (Tmᴬ u _) (Tmᴰ u γᴰ)
 
 Subᴰ : ∀ {Γ Δ}(σ : Sub Γ Δ) → ∀ {X Xᴰ}{γ : Conᴬ Γ X} → Conᴰ Γ {X} Xᴰ γ → Conᴰ Δ Xᴰ (Subᴬ σ γ)
 Subᴰ σ γᴰ {A} x = Tmᴰ (σ x) γᴰ
