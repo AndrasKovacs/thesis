@@ -77,7 +77,6 @@
 \newcommand{\ReflU}{\mathsf{ReflU}}
 \newcommand{\Sig}{\mathsf{Sig}}
 \newcommand{\ToSSig}{\mathsf{ToSSig}}
-\newcommand{\Inductive}{\mathsf{Inductive}}
 \newcommand{\Subtype}{\mathsf{Subtype}}
 \newcommand{\subtype}{\mathsf{subtype}}
 \newcommand{\NatSig}{\mathsf{NatSig}}
@@ -159,6 +158,7 @@
 \newcommand{\DispAlg}{\ms{DispAlg}}
 \newcommand{\Section}{\ms{Section}}
 \newcommand{\Initial}{\ms{Initial}}
+\newcommand{\Inductive}{\ms{Inductive}}
 
 %% --------------------------------------------------------------------------------
 
@@ -190,7 +190,7 @@
 In this chapter, we take a look at a very simple notion of inductive
 signature. The motivation for doing so is to present the basic ideas of this
 thesis in the easiest possible setting. We also include a complete Agda
-formalization of the contents of this chapter, in less than 150 lines. Hopefully
+formalization of the contents of this chapter, in less than 200 lines. Hopefully
 this provides intuition for the later chapters, which are greatly generalized
 and expanded compared to the current chapter, and which are not feasible (and
 probably not that useful) to present in full formal detail.
@@ -381,14 +381,13 @@ $u^M\,\gamma^M : X^M\,(u^A\,\gamma_0) = u^A\,\gamma_1$.
 We again pack up $\Gamma^M$ with the interpretation of $\iota$, to get notions
 of \emph{algebra morphisms}:
 \begin{alignat*}{3}
-  & \Mor : (\Gamma : \Con) \to \Alg\,\Gamma \to \Alg\,\Gamma \to \Set \\
-  & \Mor\,\Gamma\,(X_0,\,\gamma_0)\,(X_1,\,\gamma_1) \equiv
-    (X^M : X_0 \to X_1) \times \Gamma^M\,X^M\,\gamma_0\,\gamma_1
+  & \Mor : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Alg\,\Gamma \to \Set \\
+  & \Mor\,\{\Gamma\}\,(X_0,\,\gamma_0)\,(X_1,\,\gamma_1) \equiv (X^M : X_0 \to X_1) \times \Gamma^M\,X^M\,\gamma_0\,\gamma_1
 \end{alignat*}
 \end{mydefinition}
 \begin{myexample} We have the following computation:
 \begin{alignat*}{3}
-  & \hspace{-5em}\rlap{$\Mor\,\NatSig\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \equiv$} \\
+  & \hspace{-5em}\rlap{$\Mor\,\{\NatSig\}\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \equiv$} \\
            &(X^M : X_0 \to X_1) \\
    \times\,&(X^M\,\mi{zero_0} = \mi{zero_1}) \\
    \times\,&((x : X_0) \to X^M\,(\mi{suc_0}\,x) = \mi{suc_1}\,(X^M\,x))
@@ -397,11 +396,11 @@ of \emph{algebra morphisms}:
 
 \begin{mydefinition} We state \emph{initiality} as a predicate on algebras:
 \begin{alignat*}{3}
-  & \Initial : \Alg\,\Gamma \to \Set\\
-  & \Initial\,\gamma \equiv
+  & \Initial : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Set\\
+  & \Initial\,\{\Gamma\}\,\gamma \equiv
     (\gamma' : \Alg\,\Gamma) \to \ms{isContr}\,(\Mor\,\Gamma\,\gamma\,\gamma')
 \end{alignat*}
-Here $\ms{isContr}$ refers to unique existence. If we drop $\ms{isContr}$ from
+Here $\ms{isContr}$ refers to unique existence \cite{TODO}. If we drop $\ms{isContr}$ from
 the definition, we get the notion of weak initiality, which corresponds to the
 recursion principle for $\Gamma$. Although we call this predicate $\Initial$, in
 this chapter we do not yet show that algebras form a category. We provide the
@@ -463,16 +462,14 @@ Displayed algebras over some $\gamma : \Alg\,\Gamma$ are equivalent to slices
 over $\gamma$ in the category of $\Gamma$-algebras; we show this in Chapter
 \ref{chap:fqiit}. A slice $f : \Sub\,\Gamma\,\gamma'\,\gamma$ maps elements of
 $\gamma$'s underlying set to elements in the base algebra. Why do we need
-displayed algebras, then? The reasons are twofold. First, we need to compute
-induction principles exactly, not merely up to isomorphisms, if we are to
-eventually implement inductive types in a mechanized setting. Second, displayed
-algebras naturally avoid some strictness issues: they support strictly
-functorial reindexing, unlike slice objects, whose pullbacks are functorial only
-up to isomorphism.
+displayed algebras, then? The main reason is that if we are to eventually
+implement inductive types in a dependently typed language, we need to compute
+induction principles exactly, not merely up to isomorphisms.
 
 For more illustration of using some displayed algebras in a type-theoretic
-setting, see \cite{TODO}. We adapt the term ``displayed algebra'' from ibid.\ as
-a generalization of displayed categories and functors.
+setting, see \cite{displayedcats}. We adapt the term ``displayed algebra'' from
+ibid.\ as a generalization of displayed categories (and functors, natural
+transformations) to other algebraic structures.
 
 The displayed algebra interpretation is a \emph{logical predicate}
 interpretation, defined as follows.
@@ -497,14 +494,78 @@ interpretation, defined as follows.
 Analogously to before, everything depends on a predicate interpretation $X^D : X
 \to \Set$ for $\iota$. For types, a predicate holds for a function if the
 function preserves predicates. The interpretation of terms is again a
-fundamental lemma, and we have pointwise definitions for contexts and
-substitutions, as usual.
-
-\begin{myexample} We have the following computation:
+fundamental lemma, and we again have pointwise definitions for contexts and
+substitutions.
+\begin{mydefinition}[Displayed algebras]
+\begin{alignat*}{3}
+  & \DispAlg : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Set_1\\
+  & \DispAlg\,\{\Gamma\}\,(X,\,\gamma) \equiv (X^D : X \to \Set) \times \Gamma^D\,X^D\,\gamma
+\end{alignat*}
+\end{mydefinition}
+\begin{myexample} We have the following computation.
+\begin{alignat*}{3}
+  & \hspace{-5em}\rlap{$\DispAlg\,\{\ms{NatSig}\}\,(X,\,\mi{zero},\,\mi{suc}) \equiv$}\\
+              & (X^D &&: X \to \Set)\\
+      \times\,& (\mi{zero^D} &&: X^D\,\mi{zero})\\
+      \times\,& (\mi{suc^D} &&: (n : X) \to X^D\,n \to X^D\,(\mi{suc}\,n))
+\end{alignat*}
 \end{myexample}
 
-
 \subsection{Sections}
+
+Sections of displayed algebras are ``dependent'' analogues of algebra morphisms,
+where the codomain is displayed over the domain.
+
+\begin{alignat*}{3}
+  & \hspace{-6em}\rlap{$\blank^S : (A : \Ty)\{X\,X^D\}(X^S : (x : X) \to X^D) \to (\alpha : A^A\,X) \to A^D\,X^D\,\alpha \to \Set$}\\
+  & \hspace{-6em}\iota^S\,&&X^S\,\alpha\,\,\alpha^D \equiv X^S\,\alpha = \alpha^D \\
+  & \hspace{-6em}(\iota\to A)^S\,&&X^S\,\alpha\,\,\alpha^D \equiv
+  (x : X) \to A^S\,X^S\,(\alpha\,x)\,(\alpha^D\,(X^S\,x))\\
+  & \hspace{-6em}&&\\
+  &\hspace{-6em}\rlap{$\Con^S : (\Gamma : \Con)\{X\,X^D\}(X^S : (x : X) \to X^D) \to (\gamma : \Gamma^A\,X) \to \Gamma^D\,X^D\,\gamma \to \Set$}\\
+  &\hspace{-6em}\rlap{$\Gamma^S\,X^S\,\gamma_0\,\gamma_1 \equiv
+    \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^S\,X^S\,(\gamma_0\,x)\,(\gamma_1\,x)$}\\
+  & \hspace{-6em} && \\
+  & \hspace{-6em}\rlap{$\blank^S : (t : \Tm\,\Gamma\,A) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to A^S\,X^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)$}\\
+  & \hspace{-6em}(\var\,x)^S    &&\gamma^S \equiv \gamma^S\,x \\
+  & \hspace{-6em}(\app\,t\,u)^S &&\gamma^S \equiv t^S\,\gamma^S\,(u^A\,\gamma)\\
+  & \hspace{-6em}&& \\
+  & \hspace{-6em}\rlap{$\blank^S : (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to \Delta^S\,X^S\,(\sigma^A\,\gamma)\,(\sigma^A\,\gamma^D)$}\\
+  & \hspace{-6em} \rlap{$\sigma^S\, \gamma^S\,x = (\sigma\,x)^S\,\gamma^S$}
+\end{alignat*}
+
+\begin{mydefinition}[Displayed algebra sections (``sections'' in short)]
+\begin{alignat*}{3}
+  & \Section : \{\Gamma : \Con\} \to (\gamma : \Alg\,\Gamma) \to \DispAlg\,\gamma \to \Set\\
+  & \Section\,(X,\,\gamma)\,(X^D\,\gamma^D) \equiv (X^S : (x : X) \to X^D\,x) \times \Gamma^S\,X^S\,\gamma\,\gamma^D
+\end{alignat*}
+\end{mydefinition}
+\begin{myexample} We have the following computation.
+\begin{alignat*}{3}
+  & \hspace{-5em}\rlap{$\Section\,\{\ms{NatSig}\}\,(X,\,\mi{zero},\,\mi{suc})\,(X^D,\,\mi{zero^D},\,\mi{suc^D}) \equiv$}\\
+              & (X^S &&: (x : X) \to X^D\,x)\\
+      \times\,& (\mi{zero^S} &&: X^S\,\mi{zero} = \mi{zero^D})\\
+      \times\,& (\mi{suc^S} &&: (n : X) \to X^S\,(\mi{suc\,n}) = \mi{suc^D}\,n\,(X^S\,n))
+\end{alignat*}
+\end{myexample}
+
+\begin{mydefinition}[Induction]
+We define a predicate which holds if an algebra supports induction.
+\begin{alignat*}{3}
+  & \Inductive : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Set_1\\
+  & \Inductive\,\{\Gamma\}\,\gamma \equiv
+     (\gamma^D : \DispAlg\,\gamma) \to \Section\,\gamma\,\gamma^D
+\end{alignat*}
+\end{mydefinition}
+
+At this point we can observe that
+$\Inductive\,\{\ms{NatSig}\}\,(X,\,\ms{zero},\,\ms{suc})$ computes exactly to
+the usual induction principle for natural numbers. The input $\DispAlg$ is a
+bundle of the induction motive and the methods, and the output $\Section$
+contains the $X^S$ eliminator function together with its $\beta$ computation
+rules.
+
+
 
 \section{Term Algebras}
 \subsection{Weak Initiality}
@@ -597,6 +658,6 @@ representing stuff. Examples for type formers and universes. Copy from previous 
 
 \chapter{Conclusion}
 
-
+\bibliography{references}
 \backmatter
 \end{document}

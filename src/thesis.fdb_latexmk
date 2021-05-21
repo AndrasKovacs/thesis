@@ -1,5 +1,12 @@
 # Fdb version 3
-["pdflatex"] 1621456284 "thesis.tex" "thesis.pdf" "thesis" 1621456285
+["bibtex thesis"] 1621590082 "thesis.aux" "thesis.bbl" "thesis" 1621590790
+  "/usr/share/texlive/texmf-dist/bibtex/bst/base/alpha.bst" 1292289607 23907 a5f93555796fb564b924339521f10a7c ""
+  "references.bib" 1613986625 125964 4ef7884d096152a66b8f11e1747de87d ""
+  "thesis.aux" 1621590790 9384 f83cec87dd4cbef74df7214847b762b9 "pdflatex"
+  (generated)
+  "thesis.bbl"
+  "thesis.blg"
+["pdflatex"] 1621590790 "thesis.tex" "thesis.pdf" "thesis" 1621590790
   "/etc/texmf/web2c/texmf.cnf" 1618147940 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
@@ -191,13 +198,14 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1618147992 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1618148037 8257353 dd90e85f28449b2a4ea6a1bd71dd16fc ""
-  "thesis.aux" 1621456285 9308 441c92beb448f458cfa61fceba6f1b9d "pdflatex"
-  "thesis.out" 1621456285 3725 e80b5012bb4735b9f34f0b88c31d21a4 "pdflatex"
-  "thesis.tex" 1621456284 25225 4d69842f3266d58adb3a5197fb35c7f7 ""
-  "thesis.toc" 1621456285 4666 0327c169dc9487d85ffd1ada67fe25be "pdflatex"
+  "thesis.aux" 1621590790 9384 f83cec87dd4cbef74df7214847b762b9 "pdflatex"
+  "thesis.bbl" 1621590082 253 0907d95e7da26b08a58dc7e88ddbd959 "bibtex thesis"
+  "thesis.out" 1621590790 3725 e80b5012bb4735b9f34f0b88c31d21a4 "pdflatex"
+  "thesis.tex" 1621590788 28561 2c1d668f112943c61f61524c56215892 ""
+  "thesis.toc" 1621590790 4666 971f8aa8a81c2304a6ba4ea42ab1cf9b "pdflatex"
   (generated)
+  "thesis.log"
   "thesis.out"
+  "thesis.pdf"
   "thesis.toc"
   "thesis.aux"
-  "thesis.pdf"
-  "thesis.log"

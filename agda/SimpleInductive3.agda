@@ -102,6 +102,10 @@ Tmˢ : ∀ {Γ A}(t : Tm Γ A){X Xᴰ Xˢ}{γ : Conᴬ Γ X}{γᴰ : Conᴰ Γ X
 Tmˢ (var x)   γˢ = γˢ x
 Tmˢ (app t u) γˢ rewrite Tmˢ u γˢ ⁻¹ = Tmˢ t γˢ (Tmᴬ u _)
 
+Subˢ : ∀ {Γ Δ}(σ : Sub Γ Δ){X Xᴰ Xˢ}{γ : Conᴬ Γ X}{γᴰ : Conᴰ Γ Xᴰ γ}
+      → Conˢ Γ {X}{Xᴰ} Xˢ γ γᴰ → Conˢ Δ Xˢ (Subᴬ σ γ) (Subᴰ σ γᴰ)
+Subˢ σ γˢ x = Tmˢ (σ x) γˢ
+
 --------------------------------------------------------------------------------
 
 module _ (Ω : Con) where
