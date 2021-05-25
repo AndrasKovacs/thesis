@@ -1,7 +1,7 @@
 
 {-# OPTIONS --without-K --safe #-}
 
-module SimpleInductive3 where
+module SimpleInductive6 where
 
 open import Lib
 
@@ -128,59 +128,44 @@ module _ (Ω : Con) where
   Tmᵀ (var x)   ν = refl
   Tmᵀ (app t u) ν = Tmᵀ t ν ⊗ Tmᵀ u ν
 
-  Subᵀ : ∀ {Γ Δ}(σ : Sub Γ Δ)(ν : Sub Ω Γ) → Conᵀ Δ (σ ∘ ν) ≡ Subᴬ σ (Conᵀ Γ ν)
-  Subᵀ {Δ = ∙}     σ ν = {!!}
-  Subᵀ {Δ = Δ ▶ A} σ ν = {!!}
-
-{-
-  ιᵀ : Ty₀
-  ιᵀ = Tm₀ ↓Ω ι
-
-  Tyᵀ : (A : Ty) → Tm₀ ↓Ω ↓A ⇒ Tyᴬ A ιᵀ
-  Tyᵀ ι      t = t
-  Tyᵀ (ι⇒ A) t = λ u → Tyᵀ A (app t u)
-
-  Conᵀ : (Γ : Con) → Sub Ω Γ → Conᴬ Γ ιᵀ
-  Conᵀ Γ ν {A } x = Tyᵀ A (↓ (ν x))
-
-  -- Sub is better as first-order data on both levels (or not, b.c. we need fun anyway)
-
-  Tmᵀ : ∀ {Γ A}(t : Tm Γ A) → (ν : Sub Ω Γ) → Tyᵀ A (↓(t[ν])) ≡ Tmᴬ t (Conᵀ Γ ν)
-  Tmᵀ (var x)   ν = refl
-  Tmᵀ (app t u) ν = Tmᵀ t ν ⊗ Tmᵀ u ν
--}
+  Subᵀ : ∀ {Γ Δ}(σ : Sub Γ Δ)(ν : Sub Ω Γ) A x → Conᵀ Δ (σ ∘ ν) A x ≡ Subᴬ σ (Conᵀ Γ ν) A x
+  Subᵀ σ ν A x = Tmᵀ (σ A x) ν
 
   -- weak initiality
   module _ (X : Set)(ω : Conᴬ Ω X) where
 
+    ιᴿ : ιᵀ → X
+    ιᴿ t = Tmᴬ t ω
 
-  -- dependent elimination
-  -- (Xᴰ : ιᵀ ⇒ U)(ωᴰ : Conᴰ Ω Xᴰ (Conᵀ Ω id))
+    Tyᴿ : (A : Ty)(t : Tm Ω A) → Tyᴹ A ιᴿ (Tyᵀ A t) (Tmᴬ t ω)
+    Tyᴿ ι      t = refl
+    Tyᴿ (ι⇒ A) t = λ x₀ → Tyᴿ A (app t x₀)
+
+    Conᴿ : (Γ : Con)(ν : Sub Ω Γ) → Conᴹ Γ ιᴿ (Conᵀ Γ ν) (Subᴬ ν ω)
+    Conᴿ Γ ν A x = Tyᴿ A (ν A x)
+
+  -- induction
   module _ (Xᴰ : ιᵀ → Set)(ωᴰ : Conᴰ Ω Xᴰ (Conᵀ Ω id)) where
-{-
-    lem : (t : Tm Ω ι) → Tmᴬ t (Conᵀ Ω id) ≡ t  -- only works on meta terms!
 
-    ιᵉ : (t : Tm₀ ↓Ω ι) ⇒ El (Xᴰ t)
-    ιᵉ t = Tmᴰ t ωᴰ  -- evaluate Tm₀ + lem works on Tm₀ !!
-
--}
     lem : (t : Tm Ω ι) → Tmᴬ t (Conᵀ Ω id) ≡ t
     lem t = (Tmᵀ t id) ⁻¹ ◾ [id]
 
-    ιᵉ : ∀ t → Xᴰ t
+    ιᵉ : (t : Tm Ω ι) → Xᴰ t
     ιᵉ t = tr Xᴰ (lem t) (Tmᴰ t ωᴰ)
 
     Tyᵉ : (A : Ty)(t : Tm Ω A) → Tyˢ A ιᵉ (Tmᴬ t (Conᵀ Ω id)) (Tmᴰ t ωᴰ)
     Tyᵉ ι      t   =
         apd⁻¹ ιᵉ (lem t)
       ◾ J (λ y e → tr Xᴰ (e ⁻¹) (tr Xᴰ e (Tmᴰ t ωᴰ)) ≡ Tmᴰ t ωᴰ) refl _ (lem t)
-    Tyᵉ (ι⇒ A) t x =
+    Tyᵉ (ι⇒ A) t =
+       λ x →
        J (λ x' e → Tyˢ A ιᵉ (Tmᴬ t (Conᵀ Ω id) x') (Tmᴰ t ωᴰ x' (tr Xᴰ e (Tmᴰ x ωᴰ))))
          (Tyᵉ A (app t x))
-         _ (lem x)
+         x (lem x)
 
     Conᵉ : (Γ : Con)(ν : Sub Ω Γ) → Conˢ Γ ιᵉ (Subᴬ ν (Conᵀ Ω id)) (Subᴰ ν ωᴰ)
     Conᵉ Γ ν {A} x = Tyᵉ A (ν _ x)
+
 
 module _ (Ω : Con) where
 
@@ -196,16 +181,19 @@ module _ (Ω : Con) where
   Section : (ω : Alg) → DispAlg ω → Set
   Section (X , ω) (Xᴰ , ωᴰ) = ∃ λ Xˢ → Conˢ Ω Xˢ ω ωᴰ
 
-  InitAlg : Alg
-  InitAlg = ιᵀ Ω , Conᵀ Ω Ω id
+  TmAlg : Alg
+  TmAlg = ιᵀ Ω , Conᵀ Ω Ω id
 
-  Elim : (ωᴰ : DispAlg InitAlg) → Section InitAlg ωᴰ
+  Recursor : (ω : Alg) → Mor TmAlg ω
+  Recursor (X , ω) = ιᴿ Ω X ω , Conᴿ Ω X ω Ω id
+
+  Elim : (ωᴰ : DispAlg TmAlg) → Section TmAlg ωᴰ
   Elim (Xᴰ , ωᴰ) = ιᵉ Ω Xᴰ ωᴰ , Conᵉ Ω Xᴰ ωᴰ Ω id
 
 --------------------------------------------------------------------------------
 
 NatSig = ∙ ▶ ι ▶ ι⇒ ι
-NatSyn = InitAlg NatSig
+NatSyn = TmAlg NatSig
 Nat  = NatSyn .₁
 zero = NatSyn .₂ _ (vs vz)
 suc  = NatSyn .₂ _ vz

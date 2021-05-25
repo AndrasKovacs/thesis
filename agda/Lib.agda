@@ -20,6 +20,10 @@ open import Level
   renaming (zero to lz; suc to ls)
   public
 
+open import Data.Sum
+  using (_⊎_; inj₁; inj₂)
+  public
+
 infixl 4 _⊗_
 _⊗_ : ∀ {i j}{A : Set i}{B : Set j}{f g : A → B} → f ≡ g → ∀ {x y} → x ≡ y → f x ≡ g y
 _⊗_ refl refl = refl

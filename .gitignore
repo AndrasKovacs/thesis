@@ -1,0 +1,10 @@
+*.agdai
+*.eps
+*.bst
+*.bbl
+*.aux
+*.log
+*.fls
+*.blg
+*.fdb_latexmk
+*.out

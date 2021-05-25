@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,twoside]{book}
+\documentclass[12pt,a4paper,twoside,openany]{book}
 
 %% build: latexmk -pdf -pvc thesis.tex
 
@@ -19,6 +19,7 @@
 \usepackage{todonotes}
 \presetkeys{todonotes}{inline}{}
 \usepackage{bm}
+\usepackage{titlesec}
 
 %% \bibliographystyle{IEEEtran}
 \bibliographystyle{alpha}
@@ -38,11 +39,21 @@
 \geometry{left=4cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 
 
+\titleformat{\chapter}[display]
+  {\bfseries\Large}
+  {\filright\MakeUppercase{\chaptertitlename} \Huge\thechapter}
+  {1ex}
+  {\titlerule\vspace{1ex}\filleft}
+  [\vspace{1ex}\titlerule]
+
+
 %% Abbrevs
 %% --------------------------------------------------------------------------------
 
 \newcommand{\mi}[1]{\mathit{#1}}
 \newcommand{\ms}[1]{\mathsf{#1}}
+\newcommand{\mbb}[1]{\mathbb{#1}}
+\newcommand{\mbf}[1]{\mathbf{#1}}
 
 \newcommand{\refl}{\mathsf{refl}}
 \newcommand{\id}{\mathsf{id}}
@@ -159,10 +170,17 @@
 \newcommand{\Section}{\ms{Section}}
 \newcommand{\Initial}{\ms{Initial}}
 \newcommand{\Inductive}{\ms{Inductive}}
+\newcommand{\TmAlg}{\ms{TmAlg}}
+\newcommand{\Rec}{\ms{Rec}}
+\newcommand{\Ind}{\ms{Ind}}
+\newcommand{\Obj}{\ms{Obj}}
+\newcommand{\Nat}{\ms{Nat}}
+\newcommand{\Bool}{\ms{Bool}}
+
 
 %% --------------------------------------------------------------------------------
 
-\title{Title TBA}
+\title{Type-Theoretic Signatures for Inductive Types}
 \date{2021 September}
 \author{András Kovács}
 
@@ -182,6 +200,8 @@
 \section{Specification and Semantics for Inductive Types}
 \section{Overview of the Thesis and Contributions}
 \section{Notation and Conventions}
+\subsection{Metatheory}
+\subsection{Universes}
 \label{sec:notation}
 
 \chapter{Simple Inductive Signatures}
@@ -189,11 +209,11 @@
 
 In this chapter, we take a look at a very simple notion of inductive
 signature. The motivation for doing so is to present the basic ideas of this
-thesis in the easiest possible setting. We also include a complete Agda
-formalization of the contents of this chapter, in less than 200 lines. Hopefully
-this provides intuition for the later chapters, which are greatly generalized
-and expanded compared to the current chapter, and which are not feasible (and
-probably not that useful) to present in full formal detail.
+thesis in the easiest possible setting, with explicit definitions. The later
+chapters are greatly generalized and expanded compared to the current one, and
+are not feasible (and probably not that useful) to present in full formal
+detail. We also include a complete Agda formalization of the contents of this
+chapter, in less than 200 lines.
 
 \todo{potentially in intro}
 
@@ -203,8 +223,8 @@ class of inductive types, there is a corresponding theory of signatures, which
 is viewed as a proper type theory and comes equipped with an algebraic model
 theory. \emph{Semantics} of signatures is given by interpreting them in certain
 models of the theory of signatures. Semantics should at least provide a notion
-of induction principle for each signature, but usually we will provide more than
-that.
+of induction principle for each signature; in this chapter we provide a bit more
+than that, and substantially more in Chapters \ref{chap:fqiit} and \ref{chap:iqiit}.
 
 \section{Theory of Signatures}
 \label{sec:simple-signatures}
@@ -250,15 +270,19 @@ $t\,u$ instead of $\app\,t\,u$ for $t$ and $u$ terms.
 &\Sub : \Con \to \Con \to \Set\\
 &\Sub\,\Gamma\,\Delta \equiv \{A\} \to \Var\,\Delta\,A \to \Tm\,\Gamma\,A
 \end{alignat*}
-We use $\sigma$ and $\delta$ to refer to substitutions. We also define the action of substitution
-on terms, by recursion on terms:
+We use $\sigma$ and $\delta$ to refer to substitutions. We also recursively
+define the action of substitution on terms:
 \begin{alignat*}{3}
   &\rlap{$\blank[\blank] : \Tm\,\Delta\,A \to \Sub\,\Gamma\,\Delta \to \Tm\,\Gamma\,A$}\\
   &(\var\, x)   &&[ \sigma ] \equiv \sigma\,x\\
   &(\app\,t\,u) &&[ \sigma ] \equiv \app\,(t[\sigma])\,(u[\sigma])
 \end{alignat*}
-The \emph{identity substitution} is defined simply as $\id \equiv \var$. It is easy to see that
-$t[\id] = t$ for all $t$.
+The identity substitution $\id$ is defined simply as $\var$. It is easy to see that
+$t[\id] = t$ for all $t$. Substitution composition is as follows.
+\begin{alignat*}{3}
+  &\blank\!\circ\!\blank : \Sub\,\Delta\,\Xi \to \Sub\,\Gamma\,\Delta \to \Sub\,\Gamma\,\Xi\\
+  &(\sigma \circ \delta)\,x \equiv (\sigma\,x)[\delta]
+\end{alignat*}
 \end{mydefinition}
 
 \begin{myexample} We may write signatures for natural numbers and binary trees respectively as follows.
@@ -297,6 +321,9 @@ support a \emph{recursion principle}, which can be viewed as a non-dependent
 variant of induction. In the following, we define these notions by induction on
 ToS syntax.
 
+\emph{Remark.} We use the terms ``algebra'' and ``model'' synonymously throughout
+this thesis.
+
 \subsection{Algebras}
 
 First, we calculate types of algebras. This is simply a standard interpretation
@@ -324,9 +351,10 @@ $\Sub$, makes formalization a bit more compact. Terms and substitutions are
 interpreted as natural maps. Substitutions are interpreted by pointwise interpreting
 the contained terms.
 
-\begin{notation} We may write $\Gamma^A$ using notation for $\Sigma$-types. For example,
-we may write $(\mi{zero} : X) \times (\mi{suc} : X \to X)$ for the result of
-computing $\ms{NatSig}^A\,X$.
+\begin{notation}
+We may write values of $\Gamma^A$ using notation for $\Sigma$-types. For
+example, we may write $(\mi{zero} : X) \times (\mi{suc} : X \to X)$ for the
+result of computing $\ms{NatSig}^A\,X$.
 \end{notation}
 
 \begin{mydefinition} We define \emph{algebras} as follows.
@@ -400,19 +428,19 @@ of \emph{algebra morphisms}:
   & \Initial\,\{\Gamma\}\,\gamma \equiv
     (\gamma' : \Alg\,\Gamma) \to \ms{isContr}\,(\Mor\,\Gamma\,\gamma\,\gamma')
 \end{alignat*}
-Here $\ms{isContr}$ refers to unique existence \cite{TODO}. If we drop $\ms{isContr}$ from
-the definition, we get the notion of weak initiality, which corresponds to the
-recursion principle for $\Gamma$. Although we call this predicate $\Initial$, in
-this chapter we do not yet show that algebras form a category. We provide the
-extended semantics in Chapter \ref{chap:fqiit}, and the currently computed
-algebras and morphisms remain the same there.
+Here $\ms{isContr}$ refers to unique existence \cite{TODO}. If we drop
+$\ms{isContr}$ from the definition, we get the notion of weak initiality, which
+corresponds to the recursion principle for $\Gamma$. Although we call this
+predicate $\Initial$, in this chapter we do not yet show that algebras form a
+category. We provide the extended semantics in Chapter \ref{chap:fqiit}. The
+computed algebras and morphism there remain the same as in the current chapter.
 \end{mydefinition}
 
 \paragraph{Morphisms vs.\ logical relations.}
 The $\blank^M$ interpretation can be viewed as a special case of logical
 relations over the $\blank^A$ model: every morphism is a \emph{functional}
 logical relation, where the chosen relation between the underlying sets happens
-to be a function. Consider now a more general relational interpretation
+to be a function \cite{TODO}. Consider now a more general relational interpretation
 for types:
 \begin{alignat*}{3}
   & \hspace{-0.5em}\rlap{$\blank^R : (A : \Ty)\{X_0\,X_1 : \Set\}(X^R : X_0 \to X_1 \to \Set) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
@@ -443,7 +471,7 @@ known to be given as an equality.
 In Chapter \ref{chap:fqiit} we expand on this. As a preliminary summary:
 although higher-order functions have relational interpretation, such relations
 do not generally compose. What we eventually aim to have is a \emph{category} of
-algebras and algebra morphisms, where morphisms properly compose. We need a
+algebras and algebra morphisms, where morphisms do compose. We need a
 \emph{directed} model of the theory of signatures, where every signature becomes
 a category of algebras. The way to achieve this, is to prohibit higher-order
 functions, thereby avoiding the polarity issues that prevent a directed
@@ -451,12 +479,11 @@ interpretation for general function types.
 
 \subsection{Displayed Algebras}
 
-At this point we do not yet have specification for induction principles (or
-dependent elimination principles). We use the term \emph{displayed algebra} to
-refer to ``dependent'' algebras, where every displayed algebra component lies
-over corresponding components in the base algebra. For the purpose of specifying
-induction, displayed algebras can be viewed as bundles of induction motives and
-methods.
+At this point we do not yet have specification for induction principles. We use
+the term \emph{displayed algebra} to refer to ``dependent'' algebras, where
+every displayed algebra component lies over corresponding components in the base
+algebra. For the purpose of specifying induction, displayed algebras can be
+viewed as bundles of induction motives and methods.
 
 Displayed algebras over some $\gamma : \Alg\,\Gamma$ are equivalent to slices
 over $\gamma$ in the category of $\Gamma$-algebras; we show this in Chapter
@@ -558,22 +585,394 @@ We define a predicate which holds if an algebra supports induction.
 \end{alignat*}
 \end{mydefinition}
 
-At this point we can observe that
-$\Inductive\,\{\ms{NatSig}\}\,(X,\,\ms{zero},\,\ms{suc})$ computes exactly to
-the usual induction principle for natural numbers. The input $\DispAlg$ is a
-bundle of the induction motive and the methods, and the output $\Section$
-contains the $X^S$ eliminator function together with its $\beta$ computation
-rules.
-
-
+We can observe that $\Inductive\,\{\ms{NatSig}\}\,(X,\,\ms{zero},\,\ms{suc})$
+computes exactly to the usual induction principle for natural numbers. The input
+$\DispAlg$ is a bundle of the induction motive and the methods, and the output
+$\Section$ contains the $X^S$ eliminator function together with its $\beta$
+computation rules.
 
 \section{Term Algebras}
-\subsection{Weak Initiality}
-\subsection{Dependent Elimination}
 
-\section{Related and Alternative Approaches}
-%% \subsection{F-Algebras}
-%% \subsection{Polynomial Functors}
+In this section we show that if a type theory supports the inductive types comprising
+the theory of signatures, it also supports every inductive type which is described
+by the signatures.
+
+Note that we specified $\Tm$ and $\Sub$, but did not need either of them when
+specifying signatures, or when computing induction principles. That signatures
+do not depend on terms, is a property specific to simple signatures; this will
+not be the case in Chapter \ref{chap:fqiit} when we move to more general
+signatures. However, terms and substitutions are already useful here in the
+construction of term algebras.
+
+The idea is that terms in contexts comprise initial algebras. For example,
+$\Tm\,\ms{NatSig}\,\iota$ is the set of natural numbers (up to
+isomorphism). Informally, this is because the only way to construct terms is by
+applying the $\ms{suc}$ variable (given by $\var\,\vz$) finitely many times to
+the $\ms{zero}$ variable (given by $\var\,(\vs\,\vz)$).
+
+\begingroup
+\allowdisplaybreaks
+\begin{mydefinition}[Term algebras]
+Fix an $\Omega : \Con$. We abbreviate $\Tm\,\Omega\,\iota$ as $\ms{T}$; this will serve
+as the carrier set of the term algebra. We additionally define the following.
+\begin{alignat*}{3}
+  & \hspace{-5em}\rlap{$\blank^T : (A : \Ty) \to \Tm\,\Omega\,A \to A^A\,\ms{T}$} \\
+  & \hspace{-5em}\iota^T\,&&t \equiv t \\
+  & \hspace{-5em}(\iota\to A)^T\,&&t \equiv \lambda\,u.\,A^T\,(\app\,t\,u)\\
+  & \hspace{-5em}&& \\
+  & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con) \to \Sub\,\Omega\,\Gamma \to \Gamma^A\,\Gamma\,\ms{T}$}\\
+  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,x \equiv A^T\,(\nu\,x)$}\\
+  & \hspace{-5em}&& \\
+  & \hspace{-5em}\rlap{$\blank^T : (t : \Tm\,\Gamma\,A)(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,(t[\nu]) = t^A\,(\Gamma^T\,\nu)$}\\
+  & \hspace{-5em}(\var\,x)^T\,   &&\nu    \text{   holds by   } \refl\\
+  & \hspace{-5em}(\app\,t\,u)^T\,&&\nu \text {   holds by   } t^T\,\nu \text{   and   } u^T\,\nu\\
+  & \hspace{-5em}&& \\
+  & \hspace{-5em}\rlap{$\blank^T : (\sigma : \Sub\,\Gamma\,\Delta)(\nu : \Sub\,\Omega\,\Gamma)\{A\}(x : \Var\,\Delta\,A)$}\\
+  & \hspace{-3em}\rlap{$\to \Delta^T\,(\sigma \circ \nu)\,x = \sigma^A\,(\Gamma^T\,\nu)\,x$}\\
+  & \hspace{-5em}\rlap{$ \sigma^T\,\nu\,x \equiv (\sigma\,x)^T\,\nu$}
+\end{alignat*}
+Now we can define the term algebra for $\Omega$ itself:
+\begin{alignat*}{3}
+  & \TmAlg_{\Omega} : \Alg\,\Omega \\
+  & \TmAlg_{\Omega} \equiv \Omega^T\,\Omega\,\id
+\end{alignat*}
+\end{mydefinition}
+\endgroup
+
+In the interpretation for contexts, it is important that $\Omega$ is
+fixed, and we do induction on all $\Gamma$ contexts such that there is a
+$\Sub\,\Omega\,\Gamma$. It would not work to try to compute term algebras by
+direct induction on contexts, because we need to refer to the same $\ms{T}$ set
+in the interpretation of every type in a signature.
+
+The interpretation of types embeds terms as $A$-algebras. At the base type
+$\iota$, this embedding is simply the identity function, since $\iota^A\,\ms{T}
+\equiv \ms{T} \equiv \Tm\,\Omega\,\iota$. At function types we recursively proceed
+under a semantic $\lambda$. The interpretation of substitutions is analogous.
+
+The interpretations of terms and substitutions are coherence properties, which
+relate the term algebra construction to term evaluation in the $\blank^A$ model.
+For terms, if we pick $\nu \equiv \id$, we get $A^T\,t =
+t^A\,\TmAlg_{\Omega}$. The left side embeds $t$ in the term model via
+$\blank^T$, while the right hand side evaluates $t$ in the term model.
+
+A way to view the term algebra construction, is that we are working in a
+\emph{slice model} over the fixed $\Omega$, and every $\nu :
+\Sub\,\Omega\,\Gamma$ can be viewed as an internal $\Gamma$-algebra in this
+model. The term algebra construction demonstrates that
+every such internal algebra yields an external element of $\Gamma^A$. We will
+see in Section \ref{sec:fqiit-term-algebras} that we can construct term algebras
+from \emph{any} model of a ToS, not just the ToS syntax; but while term algebras
+constructed from ToS syntax are themselves initial algebras, in other cases they
+may not be initial.
+
+\subsection{Weak Initiality}
+We show that $\TmAlg_{\Omega}$ supports a recursion principle, i.e.\ it is weakly
+initial.
+
+\begin{mydefinition}[Recursor construction] We assume $(X,\,\omega) : \Alg\,\Omega$;
+recall that $X : \Set$ and $\omega : \Omega^A\,X$. We define $\ms{R} : \ms{T} \to X$
+as $\ms{R}\,t \equiv t^A\,\omega$. We additionally define the following.
+\begin{alignat*}{3}
+& \hspace{-6em}\rlap{$\blank^R : (A : \Ty)(t : \Tm\,\Omega\,A) \to A^M\,\ms{R}\,(A^T\,t)\,(t^A\,\omega)$}\\
+& \hspace{-6em}\iota^R\,&&t \equiv (\refl : t^A\,\omega = t^A\,\omega)\\
+& \hspace{-6em}(\iota\to A)^R\,&&t \equiv \lambda\,u.\,A^R\,(\app\,t\,u)\\
+& \hspace{-6em}&& \\
+& \hspace{-6em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
+& \hspace{-6em}\rlap{$\Gamma^R\,\nu\,x \equiv A^R\,(\nu\,x)$}
+\end{alignat*}
+We define the recursor for $\Omega$ as
+\begin{alignat*}{3}
+  & \Rec_{\Omega} : (\mi{alg} : \Alg\,\Omega) \to \Mor\,\TmAlg_{\Omega}\,\mi{alg}\\
+  & \Rec_{\Omega}\,(X,\,\omega) \equiv (\ms{R},\,\Omega^R\,\Omega\,\id)
+\end{alignat*}
+\end{mydefinition}
+
+In short, the way we get recursion is by evaluating terms in arbitrary
+$(X,\,\omega)$ algebras using $\blank^A$. The $\blank^R$ operation for types and
+contexts confirms that $\ms{R}$ preserves structure appropriately, so that
+$\ms{R}$ indeed yields algebra morphisms.
+
+We skip interpreting terms and substitutions by $\blank^R$. It is necessary to
+do so with more general signatures, but not in the current chapter.
+
+\subsection{Induction}
+
+We take the idea of the previous section a bit further. We have seen that
+recursion for term algebras is given by evaluation in the ``standard'' model
+$\blank^A$. Now, we show that induction for term algebras corresponds to
+evaluation in the logical predicate model $\blank^D$.
+
+\begin{mydefinition}[Eliminator construction]
+We assume $(X^D,\,\omega^D) : \DispAlg\,\TmAlg_\Omega$. Recall that $X^D :
+\ms{T} \to \Set$ and $\omega^D : \Omega^D\,X^D\,(\Omega^T\,\Omega\,\id)$. Like
+before, we first interpret the underlying set:
+\begin{alignat*}{3}
+  & \ms{E} : (t : \ms{T}) \to X^D\,t \\
+  & \ms{E}\,t \equiv t^D\,\omega^D
+\end{alignat*}
+However, this definition is not immediately well-typed, since $t^D\,\omega^D$
+has type $X^D\,(t^A\,(\Omega^T\,\Omega\,\id))$, so we have to show that
+$t^A\,(\Omega^T\,\Omega\,\id) = t$. This equation says that nothing happens if
+we evaluate a term with type $\iota$ in the term model. We get it from the
+$\blank^T$ interpretation of terms: $t^T\,\id : t[\id] =
+t^A\,(\Omega^T\,\Omega\,\id)$, and we also know that $t[\id] = t$. We interpret types
+and contexts as well:
+\begin{alignat*}{3}
+  & \hspace{-8em}\rlap{$\blank^E : (A : \Ty)(t : \Tm\,\Omega\,A) \to A^S\,\ms{E}\,(t^A\,(\Omega^T\,\Omega\,\id))\,(t^D\,\omega^D)$}\\
+  & \hspace{-8em}\iota^E\,&&t : (t^A\,(\Omega^T\,\Omega\,\id))^D\,\omega^D = t^D\,\omega^D\\
+  & \hspace{-8em}(\iota\to A)^E\,&&t \equiv \lambda\,u.\, A^E\,(\app\,t\,u)\\
+  & \hspace{-8em}&& \\
+  & \hspace{-8em}\rlap{$\blank^E : \Con : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^S\,\ms{E}\,(\nu^A\,(\Omega^T\,\Omega\,\id))\, (\nu^D\,\omega^D)$}\\
+  & \hspace{-8em}\rlap{$\Gamma^E\,\nu\,x \equiv A^E\,(\nu\,x)$}
+\end{alignat*}
+In $\iota^E$ we use the same equation as in the definition of $\ms{E}$. In
+$(\iota\to A)^E$ the definition is well-typed because of the same equation, but
+instantiated for the abstracted $u$ term this time. All of this amounts to some
+additional path induction and transport fiddling in the (intensional) Agda
+formalization. We get induction for $\Omega$ as below.
+\begin{alignat*}{3}
+  &\Ind_{\Omega} : (\mi{alg} : \DispAlg\,\TmAlg_\Omega) \to \Section\,\TmAlg_\Omega\,\mi{alg}\\
+  &\Ind_{\Omega}\,(X^D,\,\omega^D) \equiv (E,\, \Omega^E\,\Omega\,\id)
+\end{alignat*}
+\end{mydefinition}
+
+\section{Discussion}
+
+\subsection{Comparison to F-algebras}
+
+A well-known alternative way for treating inductive types in a generic way is to use
+certain cocontinuous endofunctors as a more semantic notion of signatures.
+
+For example, single-sorted finitary inductive types can be presented as
+endofunctors which preserve colimits of some ordinal-indexed chains. For
+instance, if we have an $\omega$-cocontinuous $F : \mbb{C} \to \mbb{C}$, then
+algebras are given as $(X : |\mbb{C}|) \times (\mbb{C}(F\,X,\,X))$, and
+morphisms as the obvious structure-preserving functions, and Adámek's theorem
+\cite{TODO} establishes the existence of initial algebras.
+
+An advantage of this approach is that we can describe different classes of
+signatures by choosing different $\mbb{C}$ categories:
+\begin{itemize}
+  \item If $\mbb{C}$ is $\mbf{Set}$, we get finitary inductive types.
+  \item If $\mbb{C}$ is $\mbf{Set}^I$ for some set $I$, we get indexed inductive types.
+  \item If $\mbb{C}$ is $\mbf{Set}/I$, we get inductive-recursive types.
+\end{itemize}
+
+Another advantage of $F$-algebras is that signatures are a fairly semantic
+notion: they make sense even if we have no syntactic presentation at hand. That
+said, often we do need syntactic signatures, for use in proof assistants, or
+just to have a convenient notation for a class of cocontinuous functors.
+
+An elegant way of carving out a large class of such functors is to
+consider polynomials as signatures. For example, when working in \textbf{Set}, a
+signature is an element of $(S : \Set) \times (P : S \to \Set)$, and $(S,\,P)$
+is interpreted as a functor as $X \mapsto (s : S) \times (P\,s \to X)$. The
+initial algebra is the W-type specified by $S$ shapes and $P$ positions. This
+yields infinitary inductive types as well.
+
+However, it is not known how to get \emph{inductive-inductive} signatures by
+picking the right $\mbb{C}$ category and a functor. In an inductive-inductive
+signature, there may be multiple sorts, which can be indexed over previously
+declared sorts. For example, in the signature for categories we have $\Obj :
+\Set$ and $\Mor : \Obj \to \Obj \to \Set$, indexed twice over $\Obj$. Some
+extensions are required to the idea of $F$-algebras:
+\begin{itemize}
+\item For inductive-inductive definitions with two sorts, Forsberg gives a
+      specification with two functors, and a considerably more complex notion of
+      algebras, involving dialgebras \cite{TODO}.
+\item For an arbitrary number of sorts, Altenkirch et al.\ \cite{TODO} use a ``list'' of
+      functors, specified mutually with categories of algebras: each functor has as
+      domain the semantic category of all previous sorts.
+\end{itemize}
+
+The functors-as-signatures approach gets significantly less convenient as we
+consider more general specifications. The approach of this thesis is the skip the
+middle ground between syntactic signatures and semantic categories of algebras:
+we treat syntactic signatures as a key component, and give direct semantic
+interpretation for them. Although we lose the semantic nature of $F$-algebras,
+our approach scales extremely well, all the way up to infinitary
+quotient-inductive-inductive types in Chapter \ref{chap:iqiit}, and to some
+extent to higher inductive-inductive types as well in Chapter \ref{chap:hiit}.
+
+If we look back at $\blank^A : \Con \to \Set \to \Set$, we may note that
+$\Gamma^A$ yields a functor, in fact the same functor (up to isomorphism) that
+we would get from an $F$-algebra presentation. However, this is a coincidence in
+the single-sorted case. With the $F$-algebra presentation, we can view $(X :
+|\mbb{C}|) \times (\mbb{C}(F\,X,\,X))$ as specifying the category of algebras as
+the total category of a displayed category (by viewing the $\Sigma$-type here as
+taking total categories; a $\Sigma$ in $\mbf{Cat}$). In our approach, we aim to
+get the displayed categories directly, without talking about functors.
+
+\subsection{Generic Programming}
+
+Let's consider now our signatures and term algebras in the context of generic
+programming. This is largely future work, and we don't elaborate it much. But we
+can draw some preliminary conclusions and make some comparisons.
+
+If a language can formalize inductive signatures and their semantics, that can
+be viewed as an implementation of generic programming over the described types.
+Compared to a purely mathematical motivation for this formalization, the
+requirements for practical generic programming are a bit more stringent.
+\begin{itemize}
+  \item \emph{Encoding overhead}: there should be an acceptable overhead in
+    program size and performance when using a generic representations.  Size
+    blowup can be an issue when writing proofs as well, when types and
+    expressions become too large to mentally parse.
+  \item \emph{Strictness properties}: generic representations should compute as
+    much as possible, ideally in exactly the same way as their non-generic
+    counterparts.
+\end{itemize}
+
+\paragraph{Fixpoints of functors.}There is a sizable literature
+of using fixpoints of functors in generic programming, mainly in Haskell
+\cite{TODO} and Agda \cite{TODO}. We give a minimal example below for an
+Agda-like implementation.
+
+We have an inductive syntax for some strictly positive functors, covering essentially the
+same signatures as $\Con$.
+\begin{alignat*}{3}
+  & \ms{Sig}                &&: \Set \\
+  & \ms{Id}                 &&: \ms{Sig} \\
+  & \ms{K\top}              &&: \ms{Sig} \\
+  & \blank\!\otimes\!\blank &&: \ms{Sig} \to \ms{Sig} \to \ms{Sig} \\
+  & \blank\!\oplus\!\blank  &&: \ms{Sig} \to \ms{Sig} \to \ms{Sig}
+\end{alignat*}
+
+$\ms{Id}$ codes the identity functor, and $\ms{K\top}$ codes the functor which
+is constantly $\top$. $\blank\!\otimes\!\blank$ and $\blank\!\oplus\!\blank$ are
+pointwise products and coproducts respectively. So we have the evident
+interpretation functions:
+\begin{alignat*}{3}
+  & \llbracket\blank\rrbracket &&: \ms{Sig} \to \Set \to \Set\\
+  & \ms{map} &&: (F : \ms{Sig}) \to (X_0 \to X_1) \to \llbracket F \rrbracket\,X_0 \to \llbracket F \rrbracket\,X_1
+\end{alignat*}
+In Haskell and Agda, the easiest way to get initial algebras is to directly define
+the inductive fixpoint for each assumed $F : \ms{Sig}$:
+\begin{alignat*}{3}
+  & \ms{Fix_F} &&: \Set \\
+  & \ms{con_F} &&: \llbracket F \rrbracket\,\ms{Fix_F} \to \ms{Fix_F}
+\end{alignat*}
+In Haskell, this definition is valid for arbitrary \emph{semantic} $F$ functor,
+because there is no termination checking, and thus no positivity checking. In
+Agda, the above definition is valid because the positivity checker looks inside
+the definition of $\llbracket\blank\rrbracket$ and lets it through. Next we establish
+weak initiality, by defining the recursor:
+\begin{alignat*}{3}
+  & \ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X \\
+  & \ms{rec}\,f\,(\ms{con}\,x) \equiv f\,(\ms{map}\,(\ms{rec}\,f)\,x)
+\end{alignat*}
+This is again fine in Haskell, but it unfortunately does not pass Agda's
+termination checker. There are several possible solutions, assuming that we
+stick to functors as signatures:
+\begin{enumerate}
+  \item Using \emph{sized types}\cite{TODO}. This is used in
+      \cite{TODO}. The drawback is dependence on an extra language feature which is
+      only supported in Agda, out of the major dependently typed languages.
+  \item Turning termination checking off.
+  \item Not using the direct inductive definition for fixpoints, and thereby not
+    being exposed to the whims of syntactical strict positivity checking in
+    Agda. Instead, defining initial algebras as sequential colimits, using
+    Adámek's theorem. This approach was taken by Ahrens, Matthes and Mörtberg in
+    \cite{TODO}. However, the encoding overhead of this approach is excessive, and
+    it is practically unusable for generic programming. Another drawback is that
+    defining colimits require quotient types, which is often not available natively
+    in systems.
+\end{enumerate}
+
+\paragraph{W-types.} Given a polynomial $(S,\,P) : (S : \Set) \times (S \to \Set)$,
+the corresponding W-type is inductively specified as below:
+\begin{alignat*}{3}
+  & \ms{W}_{S,\,P} &&: \Set \\
+  & \ms{sup} &&: (s : S) \to (P\,s \to \ms{W}_{S,\,P}) \to \ms{W}_{S,\,P}
+\end{alignat*}
+If we assume $\top$, $\bot$, $\Bool$, $\Pi$, $\Sigma$, $\ms{W}$-types, universes
+and an intensional identity type, a large class of inductive types can be
+derived, including all infinitary and finitary indexed inductive families; this
+was shown by Hugunin \cite{TODO}. The encoding also yields definitional
+$\beta$-rules for recursion and elimination. However, there is also significant
+encoding overhead here.
+\begin{itemize}
+  \item
+    First, there is a translation from more convenient signatures to $(S,\,P)$ polynomials.
+  \item Then, we take the $\ms{W}_{S\,P}$ type, but we need to additionally
+    restrict it to the \emph{canonical} elements by a predicate, as in $(x :
+    \ms{W}_{S\,P}) \times \ms{canonical}\,x$. This is required because the only
+    way to represent inductive branching is by functions, but functions
+    sometimes contain too many elements up to definitional equality. For
+    example, $\bot \to A$ has infinitely many definitonally distinct
+    inhabitants.
+\end{itemize}
+There is also a performance overhead imposed by the mandatory higher-order
+constructors. W-types are a great way to have a small basis in a formal setting,
+both in intensional and extensional type theories, but they are a bit too heavy
+for practical purposes.
+
+\paragraph{Term algebras.}
+The term algebras described in this chapter compare quite favorably. As we have
+seen, induction for term algebras can be defined in a small amount of easy code,
+without using sized types or quotients. It remains to be checked that term
+algebras are also practically usable.
+
+For practical usefulness, it makes sense to make a slight modification of
+terms. We switch to a \emph{spine neutral} definition. We mutually inductively
+define $\ms{Spine}$ and $\Tm$:
+\begin{alignat*}{3}
+  & \ms{Spine} &&: (\Gamma : \Con) \to \Ty \to \Ty \to \Set \\
+  & \epsilon &&: \{A\} \to \ms{Spine}\,\Gamma\,A\,A\\
+  & \blank\!,\!\blank &&: \{B\,C\} \to \Tm\,\Gamma\,\iota \to \ms{Spine}\,\Gamma\,B\,C \to \ms{Spine}\,\Gamma\,(\iota\to B)\,C\\
+  & \Tm  &&: \Con \to \Ty \to \Set \\
+  & \blank\$\blank &&: \{A\,B\} \to \Var\,\Gamma\,A \to \ms{Spine}\,\Gamma\,A\,B \to \Tm\,\Gamma\,B
+\end{alignat*}
+With this representation, a term is always a variable applied to a list of
+arguments. This can be useful, because the pattern matching implementation of
+the metalanguage ``knows'' about which constructors are possible, when matching
+on values of $\Tm\,\Gamma\,A$. Using this, we give here an ad-hoc definition of
+natural numbers in pseudo-Agda.
+\begin{alignat*}{3}
+  &\Nat : \Set && \ms{zero} &&\equiv \vz\,\$\,\epsilon\\
+  &\Nat \equiv \Tm\,(\emptycon\ext \iota\to \iota \ext \iota)\,\iota\hspace{2em} && \ms{suc}\,n &&\equiv \vs\,\vz\,\$\,(n,\,\epsilon)
+\end{alignat*}
+\begin{alignat*}{3}
+  &\hspace{-6.5em}\rlap{$\ms{NatElim} : (P : \Nat \to \Set) \to P\,\ms{zero}\to ((n : \Nat) \to P\,n \to P\,(\ms{suc}\,n))$}\\
+  &\hspace{-6.5em}\rlap{$\hspace{4em}\to (n : \Nat) \to P\,n$}\\
+  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vz\,\$\,\epsilon) &&\equiv \ms{pz}\\
+  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vs\,\vz\,\$\,(n,\,\epsilon)) &&\equiv
+    \ms{ps}\,n\,(\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,n)
+\end{alignat*}
+The actual Agda definition can be found in the supplementary formalization, and
+it is pretty much the same as above. We recover the exact same behavior with
+respect to pattern matching as with native inductive definitions.
+
+\todo{formalize Rec and Ind with spines in Agda}
+
+$\Rec_\Omega$ and $\Ind_\Omega$ can be adapted to spine neutral terms with minor
+adjustments. But what about the $\beta$-rules which they produce as part of
+their output, are they definitional (i.e.\ proven by $\refl$)? Informally, it is
+easy to see that any concrete definition of an eliminator like $\ms{NatElim}$
+enjoys definitional $\beta$. In this chapter we do not have a nice way of
+reasoning about definitional equalities. In the next chapter we develop such
+reasoning and show that an $\Ind_\Omega$ which is defined internally to an
+intensional theory (as in this chapter) only has propositional $\beta$-rules,
+but if it is defined in a metaprogramming layer, it has definitional $\beta$,
+even if we don't use spine neutral terms.
+
+The term algebra presentation can be easily extended to indexed families. In
+that case, signatures and terms are still definable with basic inductive
+families, without requiring quotients or complicated encodings; see Kaposi and
+von Raumer \cite{TODO}.
+
+The closest existing work is \emph{sum-of-products} generics by De Vries and Löh
+\cite{TODO}. There, signatures for functors are in a normal form: we cannot
+freely take products and coproducts, instead a signature looks very much like a
+$\Con$ in this chapter (except in an indexed form). The authors observe that
+several generic programming patterns are easier to express with normalized
+signatures. However, they still use explicit fixpoints as the way to get initial
+algebras.
+
+Hence, it remains future work to see how term algebras might be used in more
+practically-oriented generic programming.
+
 
 \chapter{Semantics in Two-Level Type Theory}
 \label{chap:2ltt}
@@ -630,15 +1029,18 @@ representing stuff. Examples for type formers and universes. Copy from previous 
 \subsection{Model of the Theory of Signatures}
 
 \section{Term Algebras}
+\label{sec:fqiit-term-algebras}
 \subsection{Generic Term Algebras}
 \subsection{Induction for Term Algebras}
-\subsection{Church Encodings}
-\subsection{Awodey-Frey-Speight Encodings}
+\subsection{Church Encoding}
+\subsection{Awodey-Frey-Speight Encoding}
 
 \section{Left Adjoints of Signature Morphisms}
 
 \chapter{Infinitary Quotient Inductive-Inductive Types}
+\label{chap:iqiit}
 \section{Theory of Signatures}
+\section{Semantics}
 \section{Term Algebras}
 
 \chapter{Levitation, Bootstrapping and Universe Levels}
@@ -646,6 +1048,7 @@ representing stuff. Examples for type formers and universes. Copy from previous 
 \section{Levitation for Infinitary QIITs}
 
 \chapter{Higher Inductive-Inductive Types}
+\label{chap:hiit}
 
 \section{Theory of Signatures}
 \section{Semantics}
