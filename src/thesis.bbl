@@ -1,9 +1,143 @@
-\begin{thebibliography}{AL19}
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{ACD{\etalchar{+}}18}
+
+\bibitem[AAC{\etalchar{+}}20]{allais20type}
+Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
+  McKinna.
+\newblock A type and scope safe universe of syntaxes with binding: Their
+  semantics and proofs.
+\newblock {\em CoRR}, abs/2001.11001, 2020.
+
+\bibitem[ACD{\etalchar{+}}18]{altenkirch18qiit}
+Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, Nicolai Kraus, and
+  Fredrik~Nordvall Forsberg.
+\newblock Quotient inductive-inductive types.
+\newblock In Christel Baier and Ugo~Dal Lago, editors, {\em Foundations of
+  Software Science and Computation Structures - 21st International Conference,
+  {FOSSACS} 2018, Held as Part of the European Joint Conferences on Theory and
+  Practice of Software, {ETAPS} 2018, Thessaloniki, Greece, April 14-20, 2018,
+  Proceedings}, volume 10803 of {\em Lecture Notes in Computer Science}, pages
+  293--310. Springer, 2018.
+
+\bibitem[ACKS19]{twolevel}
+Danil Annenkov, Paolo Capriotti, Nicolai Kraus, and Christian Sattler.
+\newblock Two-level type theory and applications.
+\newblock {\em ArXiv e-prints}, may 2019.
+
+\bibitem[AK79]{adamek}
+Jir{\'{\i}} Ad{\'{a}}mek and V{\'{a}}clav Koubek.
+\newblock Least fixed point of a functor.
+\newblock {\em J. Comput. Syst. Sci.}, 19(2):163--178, 1979.
 
 \bibitem[AL19]{displayedcats}
 Benedikt Ahrens and Peter~LeFanu Lumsdaine.
 \newblock {Displayed Categories}.
 \newblock {\em {Logical Methods in Computer Science}}, {Volume 15, Issue 1},
   March 2019.
+
+\bibitem[AMM19]{ahrens19from}
+Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
+\newblock From signatures to monads in unimath.
+\newblock {\em J. Autom. Reason.}, 63(2):285--318, 2019.
+
+\bibitem[AVW17]{abel17normalization}
+Andreas Abel, Andrea Vezzosi, and Th{\'{e}}o Winterhalter.
+\newblock Normalization by evaluation for sized dependent types.
+\newblock {\em Proc. {ACM} Program. Lang.}, 1({ICFP}):33:1--33:30, 2017.
+
+\bibitem[Awo18]{awodey18natural}
+Steve Awodey.
+\newblock Natural models of homotopy type theory.
+\newblock {\em Math. Struct. Comput. Sci.}, 28(2):241--286, 2018.
+
+\bibitem[BH11]{compdata}
+Patrick Bahr and Tom Hvitved.
+\newblock Compositional data types.
+\newblock In Jaakko J{\"{a}}rvi and Shin{-}Cheng Mu, editors, {\em Proceedings
+  of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
+  2011, Tokyo, Japan, September 19-21, 2011}, pages 83--94. {ACM}, 2011.
+
+\bibitem[Car78]{cartmellthesis}
+John Cartmell.
+\newblock {\em Generalised algebraic theories and contextual categories}.
+\newblock PhD thesis, Oxford University, 1978.
+
+\bibitem[dVL14]{sop}
+Edsko de~Vries and Andres L{\"{o}}h.
+\newblock True sums of products.
+\newblock In Jos{\'{e}}~Pedro Magalh{\~{a}}es and Tiark Rompf, editors, {\em
+  Proceedings of the 10th {ACM} {SIGPLAN} workshop on Generic programming,
+  {WGP} 2014, Gothenburg, Sweden, August 31, 2014}, pages 83--94. {ACM}, 2014.
+
+\bibitem[Dyb95]{Dybjer96internaltype}
+Peter Dybjer.
+\newblock Internal type theory.
+\newblock In Stefano Berardi and Mario Coppo, editors, {\em Types for Proofs
+  and Programs, International Workshop TYPES'95, Torino, Italy, June 5-8, 1995,
+  Selected Papers}, volume 1158 of {\em Lecture Notes in Computer Science},
+  pages 120--134. Springer, 1995.
+
+\bibitem[HRR14]{udayReynolds}
+Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
+\newblock Logical relations and parametricity - {A} reynolds programme for
+  category theory and programming languages.
+\newblock {\em Electron. Notes Theor. Comput. Sci.}, 303:149--180, 2014.
+
+\bibitem[Hug21]{whynotw}
+Jasper Hugunin.
+\newblock Why not w?, 2021.
+
+\bibitem[KvR20]{mutualinductive}
+Ambrus Kaposi and Jakob von Raumer.
+\newblock A syntax for mutual inductive families.
+\newblock In Zena~M. Ariola, editor, {\em 5th International Conference on
+  Formal Structures for Computation and Deduction, {FSCD} 2020, June 29-July 6,
+  2020, Paris, France (Virtual Conference)}, volume 167 of {\em LIPIcs}, pages
+  23:1--23:21. Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, 2020.
+
+\bibitem[LM11]{loh11generic}
+Andres L{\"{o}}h and Jos{\'{e}}~Pedro Magalh{\~{a}}es.
+\newblock Generic programming with indexed functors.
+\newblock In Jaakko J{\"{a}}rvi and Shin{-}Cheng Mu, editors, {\em Proceedings
+  of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
+  2011, Tokyo, Japan, September 19-21, 2011}, pages 1--12. {ACM}, 2011.
+
+\bibitem[nc21]{internallogic}
+nLab contributors.
+\newblock Internal logic, 2021.
+
+\bibitem[NF13]{forsberg-phd}
+Fredrik Nordvall~Forsberg.
+\newblock {\em Inductive-inductive definitions}.
+\newblock PhD thesis, Swansea University, 2013.
+
+\bibitem[Sch17]{scherer17deciding}
+Gabriel Scherer.
+\newblock Deciding equivalence with sums and the empty type.
+\newblock In Giuseppe Castagna and Andrew~D. Gordon, editors, {\em Proceedings
+  of the 44th {ACM} {SIGPLAN} Symposium on Principles of Programming Languages,
+  {POPL} 2017, Paris, France, January 18-20, 2017}, pages 374--386. {ACM},
+  2017.
+
+\bibitem[Swi08]{alacarte}
+Wouter Swierstra.
+\newblock Data types {\`{a}} la carte.
+\newblock {\em J. Funct. Program.}, 18(4):423--436, 2008.
+
+\bibitem[{Uni}13]{hottbook}
+The {Univalent Foundations Program}.
+\newblock {\em Homotopy Type Theory: Univalent Foundations of Mathematics}.
+\newblock \url{https://homotopytypetheory.org/book}, Institute for Advanced
+  Study, 2013.
+
+\bibitem[YHLJ09]{multirec}
+Alexey~Rodriguez Yakushev, Stefan Holdermans, Andres L{\"{o}}h, and Johan
+  Jeuring.
+\newblock Generic programming with fixed points for mutually recursive
+  datatypes.
+\newblock In Graham Hutton and Andrew~P. Tolmach, editors, {\em Proceeding of
+  the 14th {ACM} {SIGPLAN} international conference on Functional programming,
+  {ICFP} 2009, Edinburgh, Scotland, UK, August 31 - September 2, 2009}, pages
+  233--244. {ACM}, 2009.
 
 \end{thebibliography}

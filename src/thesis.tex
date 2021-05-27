@@ -24,6 +24,9 @@
 %% \bibliographystyle{IEEEtran}
 \bibliographystyle{alpha}
 
+%% Environments
+%% --------------------------------------------------------------------------------
+
 \theoremstyle{remark}
 \newtheorem{notation}{Notation}
 
@@ -38,6 +41,9 @@
 %% \geometry{left=3cm,right=2cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 \geometry{left=4cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 
+
+%% Chapter style
+%% --------------------------------------------------------------------------------
 
 \titleformat{\chapter}[display]
   {\bfseries\Large}
@@ -56,6 +62,7 @@
 \newcommand{\mbf}[1]{\mathbf{#1}}
 
 \newcommand{\refl}{\mathsf{refl}}
+\newcommand{\reflect}{\mathsf{reflect}}
 \newcommand{\id}{\mathsf{id}}
 \newcommand{\Con}{\mathsf{Con}}
 \newcommand{\Sub}{\mathsf{Sub}}
@@ -176,6 +183,13 @@
 \newcommand{\Obj}{\ms{Obj}}
 \newcommand{\Nat}{\ms{Nat}}
 \newcommand{\Bool}{\ms{Bool}}
+\newcommand{\mbbC}{\mbb{C}}
+\newcommand{\mbbD}{\mbb{D}}
+\newcommand{\lam}{\ms{lam}}
+
+\newcommand{\true}{\ms{true}}
+\newcommand{\false}{\ms{false}}
+
 
 
 %% --------------------------------------------------------------------------------
@@ -372,8 +386,8 @@ X)\times(\mi{suc} : X \to X)$.
 
 Now, we compute notions of morphisms of algebras. In this case, morphisms are
 functions between underlying sets which preserve all specified structure. The
-interpretation for calculating morphisms is a \emph{proof-relevant logical
-relation interpretation} \cite{TODO} over the $\blank^A$ interpretation. The key
+interpretation for calculating morphisms is a \emph{logical relation
+interpretation} \cite{udayReynolds} over the $\blank^A$ interpretation. The key
 part is the interpretation of types:
 \begin{alignat*}{3}
   & \hspace{-4em}\rlap{$\blank^M : (A : \Ty)\{X_0\,X_1 : \Set\}(X^M : X_0 \to X_1) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
@@ -393,7 +407,7 @@ $\Con$ pointwise:
     \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^M\,X^M\,(\gamma_0\,x)\,(\gamma_1\,x)
 \end{alignat*}
 For terms and substitutions, we get preservation statements, which are sometimes
-called \emph{fundamental lemmas} in discussions of logical relations \cite{TODO}.
+called \emph{fundamental lemmas} in discussions of logical relations \cite{udayReynolds}.
 \begin{alignat*}{3}
   & \hspace{-10em}\rlap{$\blank^M : (t : \Tm\,\Gamma\,A) \to \Gamma^M\,X^M\,\gamma_0\,\gamma_1 \to A^M\,X^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)$}\\
   & \hspace{-10em}(\var\,x)^M    &&\gamma^M \equiv \gamma^M\,x \\
@@ -428,7 +442,7 @@ of \emph{algebra morphisms}:
   & \Initial\,\{\Gamma\}\,\gamma \equiv
     (\gamma' : \Alg\,\Gamma) \to \ms{isContr}\,(\Mor\,\Gamma\,\gamma\,\gamma')
 \end{alignat*}
-Here $\ms{isContr}$ refers to unique existence \cite{TODO}. If we drop
+Here $\ms{isContr}$ refers to unique existence \cite[Section 3.11]{hottbook}. If we drop
 $\ms{isContr}$ from the definition, we get the notion of weak initiality, which
 corresponds to the recursion principle for $\Gamma$. Although we call this
 predicate $\Initial$, in this chapter we do not yet show that algebras form a
@@ -440,8 +454,8 @@ computed algebras and morphism there remain the same as in the current chapter.
 The $\blank^M$ interpretation can be viewed as a special case of logical
 relations over the $\blank^A$ model: every morphism is a \emph{functional}
 logical relation, where the chosen relation between the underlying sets happens
-to be a function \cite{TODO}. Consider now a more general relational interpretation
-for types:
+to be a function. Consider now a more general relational interpretation for
+types:
 \begin{alignat*}{3}
   & \hspace{-0.5em}\rlap{$\blank^R : (A : \Ty)\{X_0\,X_1 : \Set\}(X^R : X_0 \to X_1 \to \Set) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
   & \hspace{-0.5em}\iota^R\,&&X^R\,\alpha_0\,\,\alpha_1 \equiv X^R\,\alpha_0\,\alpha_1 \\
@@ -460,7 +474,7 @@ to get the previous definition for $(\iota \to A)^M$:
   (x_0 : X_0) \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,(f\,x_0))
 \]
 This substitution along the equation is called ``singleton contraction'' in the
-jargon of homotopy type theory \cite{TODO}. The ability to perform contraction
+jargon of homotopy type theory \cite{hottbook}. The ability to perform contraction
 here is at the heart of the \emph{strict positivity restriction} for inductive
 signatures. Strict positivity in our setting corresponds to only having
 first-order function types in signatures. If we allowed function domains to be
@@ -741,20 +755,20 @@ formalization. We get induction for $\Omega$ as below.
 
 \subsection{Comparison to F-algebras}
 
-A well-known alternative way for treating inductive types in a generic way is to use
-certain cocontinuous endofunctors as a more semantic notion of signatures.
+A well-known alternative way for treating inductive types is to use certain
+cocontinuous endofunctors as a more semantic notion of signatures.
 
-For example, single-sorted finitary inductive types can be presented as
-endofunctors which preserve colimits of some ordinal-indexed chains. For
-instance, if we have an $\omega$-cocontinuous $F : \mbb{C} \to \mbb{C}$, then
-algebras are given as $(X : |\mbb{C}|) \times (\mbb{C}(F\,X,\,X))$, and
-morphisms as the obvious structure-preserving functions, and Adámek's theorem
-\cite{TODO} establishes the existence of initial algebras.
+For example, single-sorted inductive types can be presented as endofunctors
+which preserve colimits of some ordinal-indexed chains. For instance, if we have
+an $\kappa$-cocontinuous $F : \mbb{C} \to \mbb{C}$, then algebras are given as
+$(X : |\mbb{C}|) \times (\mbb{C}(F\,X,\,X))$, morphisms as commuting squares,
+and Adámek's theorem \cite{adamek} establishes the existence of initial
+algebras.
 
 An advantage of this approach is that we can describe different classes of
 signatures by choosing different $\mbb{C}$ categories:
 \begin{itemize}
-  \item If $\mbb{C}$ is $\mbf{Set}$, we get finitary inductive types.
+  \item If $\mbb{C}$ is $\mbf{Set}$, we get simple inductive types.
   \item If $\mbb{C}$ is $\mbf{Set}^I$ for some set $I$, we get indexed inductive types.
   \item If $\mbb{C}$ is $\mbf{Set}/I$, we get inductive-recursive types.
 \end{itemize}
@@ -778,12 +792,15 @@ declared sorts. For example, in the signature for categories we have $\Obj :
 \Set$ and $\Mor : \Obj \to \Obj \to \Set$, indexed twice over $\Obj$. Some
 extensions are required to the idea of $F$-algebras:
 \begin{itemize}
-\item For inductive-inductive definitions with two sorts, Forsberg gives a
-      specification with two functors, and a considerably more complex notion of
-      algebras, involving dialgebras \cite{TODO}.
-\item For an arbitrary number of sorts, Altenkirch et al.\ \cite{TODO} use a ``list'' of
-      functors, specified mutually with categories of algebras: each functor has as
-      domain the semantic category of all previous sorts.
+\item
+  For inductive-inductive definitions with two sorts, Forsberg gives a
+  specification with two functors, and a considerably more complex notion of
+  algebras, involving dialgebras \cite{forsberg-phd}.
+\item
+  For an arbitrary number of sorts, Altenkirch et
+  al.\ \cite{altenkirch18qiit} use a ``list'' of functors, specified mutually
+  with categories of algebras: each functor has as domain the semantic category
+  of all previous sorts.
 \end{itemize}
 
 The functors-as-signatures approach gets significantly less convenient as we
@@ -826,8 +843,8 @@ requirements for practical generic programming are a bit more stringent.
 
 \paragraph{Fixpoints of functors.}There is a sizable literature
 of using fixpoints of functors in generic programming, mainly in Haskell
-\cite{TODO} and Agda \cite{TODO}. We give a minimal example below for an
-Agda-like implementation.
+\cite{alacarte,compdata,multirec} and Agda \cite{loh11generic,allais20type}. We
+give a minimal example below for an Agda-like implementation.
 
 We have an inductive syntax for some strictly positive functors, covering essentially the
 same signatures as $\Con$.
@@ -866,18 +883,18 @@ This is again fine in Haskell, but it unfortunately does not pass Agda's
 termination checker. There are several possible solutions, assuming that we
 stick to functors as signatures:
 \begin{enumerate}
-  \item Using \emph{sized types}\cite{TODO}. This is used in
-      \cite{TODO}. The drawback is dependence on an extra language feature which is
-      only supported in Agda, out of the major dependently typed languages.
+  \item Using \emph{sized types} \cite{abel17normalization}. For example, this
+    was used in \cite{allais20type}. The drawback is dependence on an extra
+    language feature which is only supported in Agda, out of the major
+    dependently typed languages.
   \item Turning termination checking off.
   \item Not using the direct inductive definition for fixpoints, and thereby not
     being exposed to the whims of syntactical strict positivity checking in
     Agda. Instead, defining initial algebras as sequential colimits, using
     Adámek's theorem. This approach was taken by Ahrens, Matthes and Mörtberg in
-    \cite{TODO}. However, the encoding overhead of this approach is excessive, and
+    \cite{ahrens19from}. However, the encoding overhead of this approach is excessive, and
     it is practically unusable for generic programming. Another drawback is that
-    defining colimits require quotient types, which is often not available natively
-    in systems.
+    defining colimits requires quotient types, which are often not available natively.
 \end{enumerate}
 
 \paragraph{W-types.} Given a polynomial $(S,\,P) : (S : \Set) \times (S \to \Set)$,
@@ -888,8 +905,8 @@ the corresponding W-type is inductively specified as below:
 \end{alignat*}
 If we assume $\top$, $\bot$, $\Bool$, $\Pi$, $\Sigma$, $\ms{W}$-types, universes
 and an intensional identity type, a large class of inductive types can be
-derived, including all infinitary and finitary indexed inductive families; this
-was shown by Hugunin \cite{TODO}. The encoding also yields definitional
+derived, including infinitary and finitary indexed inductive families; this
+was shown by Hugunin \cite{whynotw}. The encoding also yields definitional
 $\beta$-rules for recursion and elimination. However, there is also significant
 encoding overhead here.
 \begin{itemize}
@@ -911,8 +928,7 @@ for practical purposes.
 \paragraph{Term algebras.}
 The term algebras described in this chapter compare quite favorably. As we have
 seen, induction for term algebras can be defined in a small amount of easy code,
-without using sized types or quotients. It remains to be checked that term
-algebras are also practically usable.
+without using sized types or quotients.
 
 For practical usefulness, it makes sense to make a slight modification of
 terms. We switch to a \emph{spine neutral} definition. We mutually inductively
@@ -926,7 +942,7 @@ define $\ms{Spine}$ and $\Tm$:
 \end{alignat*}
 With this representation, a term is always a variable applied to a list of
 arguments. This can be useful, because the pattern matching implementation of
-the metalanguage ``knows'' about which constructors are possible, when matching
+the metalanguage knows about which constructors are possible, when matching
 on values of $\Tm\,\Gamma\,A$. Using this, we give here an ad-hoc definition of
 natural numbers in pseudo-Agda.
 \begin{alignat*}{3}
@@ -960,10 +976,10 @@ even if we don't use spine neutral terms.
 The term algebra presentation can be easily extended to indexed families. In
 that case, signatures and terms are still definable with basic inductive
 families, without requiring quotients or complicated encodings; see Kaposi and
-von Raumer \cite{TODO}.
+von Raumer \cite{mutualinductive}.
 
 The closest existing work is \emph{sum-of-products} generics by De Vries and Löh
-\cite{TODO}. There, signatures for functors are in a normal form: we cannot
+\cite{sop}. There, signatures for functors are in a normal form: we cannot
 freely take products and coproducts, instead a signature looks very much like a
 $\Con$ in this chapter (except in an indexed form). The authors observe that
 several generic programming patterns are easier to express with normalized
@@ -977,41 +993,462 @@ practically-oriented generic programming.
 \chapter{Semantics in Two-Level Type Theory}
 \label{chap:2ltt}
 
-Introduction: generalizing semantics, distinguishing strict and non-strict equations.
-Summary
+In this chapter we describe how two-level type theory is used as a metatheoretic
+setting in the rest of this thesis. First, we provide motivation and
+overview. Then, we introduce two-level type theory more formally and describe its
+intended models. Finally, we generalize the semantics and the term algebra
+construction from Chapter \ref{chap:simple-inductive-signatures} in type-level
+type theory, as a way to illustrate the applications.
+
+\section{Motivation}
+\label{sec:2ltt-motivation}
+We note two shortcomings of the semantics presented in the
+previous chapter.
+
+First, we were not able to reason about definitional equalities, only
+propositional ones. We have a formalization of signatures and semantics in
+intensional Agda, where the two notions differ\footnote{As opposed to in
+extensional type theory, where they're the same.}, but only propositional
+equality is subject to internal reasoning. For instance, we would like to show
+that term algebras support recursion and elimination with strict $\beta$-rules,
+and for this we need to reason about strict equality.
+
+Second, the semantics that we provided was not as general as it could be. We
+used the internal $\Set$ universe to specify algebras, but algebras make sense
+in many different categories. A crude way to generalize semantics is to simply
+say that our formalization, which was carried out in the syntax (i.e.\ initial
+model) of some intensional type theory, can be interpreted in any model of the
+type theory. However, this is wasteful: for simple inductive signatures, it is
+enough to assume a category with finite products as semantic setting. We don't
+need all the extra baggage that comes with a model of intensional type theory.
+
+\begin{notation}
+We use $\emptycon$ for the terminal object in a $\mbb{C}$ category, with
+$\epsilon : \mbb{C}(A,\,\emptycon)$ for the unique morphism. For products, we
+use $\blank\!\otimes\!\blank$ with $(\blank\!,\!\blank) : \mbb{C}(A,\,B) \to
+\mbb{C}(A,\,C) \to \mbb{C}(A,\,B\otimes C)$ and $\pi_1$ and $\pi_2$ for
+projections.
+\end{notation}
+
+\begin{myexample}
+Assuming $\mbbC$ has finite products, natural number algebras and binary tree
+algebras are specified as follows.
+\begin{alignat*}{3}
+  &\Alg_{\ms{NatSig}} &&\equiv (X : |\mbbC|) \times \mbbC(\emptycon,\,X) \times \mbbC(X,\,X)\\
+  &\Alg_{\ms{TreeSig}}&&\equiv (X : |\mbbC|) \times \mbbC(\emptycon,\,X) \times \mbbC(X \otimes X,\,X)
+\end{alignat*}
+\end{myexample}
+Here, $\Alg_{\ms{NatSig}}$ and $\Alg_{\ms{TreeSig}}$ are both sets in an
+unspecified metatheory, and the $\times$ in the definitions refer to the
+metatheoretic $\Sigma$. The algebras can be viewed as diagrams which preserve
+finite products, and algebra morphisms become natural transformations.
+
+How should we adjust $\Alg$ to compute algebras in $\mbbC$, and $\Mor$ to
+compute their morphisms? While it is possible to do this in a direct fashion,
+working directly with objects and morphisms of $\mbbC$ is rather unwieldy. $\mbbC$ is
+missing many convenience features of type theories.
 \begin{itemize}
-\item Formal syntax for TT as cwfs, type formers, universes
-\item Presheaf models for TT
-\item 2LTT
+\item There are no variables or binders. We are forced to work in a point-free
+  style or chase diagrams; both become difficult to write and read after a
+  certain point of complexity.
+\item
+  There no functions, universes or inductive types.
+\item
+  Substitution (with weakening as a special case) has to be handled explicitly
+  and manually. Substitutions are certain morphisms, while ``terms'' are also
+  morphisms, and we have to use composition to substitute terms. In contrast, if
+  we are working internally in a type theory, terms and substitutions are
+  distinct, and we only have to explicitly deal with terms, and substitutions
+  are automated and implicit.
 \end{itemize}
 
-\section{Categories with Families}
-\label{sec:cwf}
+The above overlaps with motivations for working in \emph{internal languages}
+\cite{internallogic} of structured categories: they aid calculation and compact
+formalization by hiding bureaucratic structural details.
 
-Describe and motivate cwfs for formal syntax. De bruijn indices, examples of
-representing stuff. Examples for type formers and universes. Copy from previous papers.
+A finite product category $\mbbC$ does not have much of an internal language: it
+is too bare-bones. But we can work instead in the internal language of
+$\hat\mbbC$, the category of presheaves over $\mbbC$. This allows faithful
+reasoning about $\mbbC$, while also including all convenience features of
+extensional type theory.
 
-\section{Presheaf Models of Type Theories}
-\label{sec:presheaf-models}
+\emph{Two-level type theories} \cite{twolevel}, or 2LTT in short, are type
+theories such that they have ``standard'' interpretations in presheaf
+categories. A 2LTT has an inner layer, where types and terms arise by embedding
+$\mbbC$ in $\hat{\mbbC}$, and an outer layer, where constructions are inherited
+from $\hat{\mbbC}$. The exact details of the syntax may vary depending on what
+structures $\mbbC$ supports, and which type formers we assume in the outer
+layer. Although it is possible to add assumptions to a 2LTT which preclude
+standard presheaf semantics \cite[Section 2.4.]{twolevel}, we stick to basic
+2LTT in this thesis. By using 2LTT, we are able to use a type-theoretic syntax
+in the rest of the thesis which differs only modestly from the style of
+definitions that we have seen so far.
 
-\section{Two-Level Type Theory}
-\label{sec:2ltt}
+From a programming perspective, basic 2LTT provides a convenient syntax for
+writing metaprograms. This can be viewed as \emph{two-stage compilation}: if we
+have a 2LTT program with an inner type, we can run it, and it returns another
+program, which lives purely in the inner theory.
 
-\subsection{Models}
-\subsection{Properties}
+\section{Models of 2LTT}
 
-\section{Simple Inductive Signatures}
-\subsection{Internal Semantics}
-\subsection{Strict and Weak Morphisms}
-\subsection{Internal Term Algebras}
+We take an algebraic view \cite{TODO} of models and syntaxes of type theories throughout
+this thesis. Models of type theories are algebraic structures: they are
+categories with certain extra structure. The syntax of a type theory is
+understood to be its initial model. In initial models, the underlying category
+is the category of typing contexts and parallel substitutions, while the extra
+structure corresponds to type and term formers, and equations quotient the
+syntax by definitional equality.
 
+Type theories can be described with quotient inductive-inductive (QII)
+signatures, and their initial models are quotient inductive-inductive types
+(QIITs). Hence, 2LTT is also a QII theory. We will first talk about QIITs in
+Chapter \ref{chap:fqiit}. Until then, we shall make do with an informal
+understanding of categorical semantics for type theories, without using anything
+in particular from the metatheory of QIITs. There is some annoying circularity
+here, that we talk about QIITs in this thesis, but we employ QIITs when talking
+about them. However, this is only an annoyance in exposition and not a
+fundamental issue: Chapter \ref{chap:levitation} describes how to eliminate
+circularity by a form of bootstrapping.
+
+The algebraic view lets us dispense with all kinds of ``raw'' syntactic objects.
+We only ever talk about well-typed and well-formed objects, moreover, every
+construction must respect definitional equalities. For terms in the algebraic
+syntax, definitional equality coincides with metatheoretic equality. This
+mirrors equality of morphisms in 1-category theory, where we usually reuse
+metatheoretic equality.
+
+\subsection{Models of Type Theories}
+
+Before elaborating on 2LTT-specific features, we review models of type theories
+in general. Variants of 2LTT will be obtained by adding extra features on the
+top of more conventional TTs.
+
+It is also worth to take a look at models of type theories at this point,
+because the notions presented in this subsection (categories with families, type
+formers) will be reused several times in this thesis, when specifying theories
+of signatures.
+
+\subsubsection{Categories With Families}
+
+\begin{mydefinition}
+A \emph{category with family} (cwf) \cite{Dybjer96internaltype} is a way to
+specify the basic structural rules for contexts, substitutions, types and
+terms. It yields a dependently typed explicit substitution calculus \cite{TODO}.
+A cwf consists of the following.
 \begin{itemize}
-\item AMDS
-\item finite product semantics, computed examples
-\item Inner term algebras.
-\item Weak initiality
-\item Dependent elimination
+\item
+  A category with a terminal object. We denote the set of objects as $\Con :
+  \Set$ and use capital Greek letters starting from $\Gamma$ to refer to
+  objects. The set of morphisms is $\Sub : \Con \to \Con \to \Set$, and we use
+  $\sigma$, $\delta$ and so on to refer to morphisms. We write $\id$ for the
+  identity morphism and $\blank\circ\blank$ for composition. The terminal
+  object is $\emptycon$ with unique morphism $\epsilon :
+  \Sub\,\Gamma\,\emptycon$. In initial models (that is, syntaxes) of type
+  theories, objects correspond to typing contexts, morphisms to parallel
+  substitutions and the terminal object to the empty context; this informs the
+  naming scheme.
+\item A \emph{family structure}, containing $\Ty : \Con \to \Set$ and $\Tm :
+  (\Gamma : \Con) \to \Ty\,\Gamma \to \Set$. We use $A$, $B$, $C$ to refer to
+  types and $t$, $u$, $v$ to refer to terms. $\Ty$ is a presheaf over the
+  category of contexts and $\Tm$ is a displayed presheaf over $\Ty$. This means
+  that types and terms can be substituted:
+  \begin{alignat*}{3}
+    &\blank[\blank] : \Ty\,\Delta \to \Sub\,\Gamma\,\Delta \to \Ty\,\Gamma\\
+    &\blank[\blank] : \Tm\,\Delta\,A \to (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Delta\,(A[\sigma])
+  \end{alignat*}
+  Substitution is functorial: we have $A[\id] = A$ and
+  $A[\sigma\circ\delta] = A[\sigma][\delta]$, and likewise for terms.
+
+  A family structure is additionally equipped with \emph{context comprehension}
+  which consists of a context extension operation $\blank\ext\blank : (\Gamma :
+  \Con) \to \Ty\,\Gamma \to \Con$ together with an isomorphism
+  $\Sub\,\Gamma\,(\Delta\ext A) \simeq ((\sigma : \Sub\,\Gamma\,\Delta) \times
+  \Tm\,\Gamma\,(A[\sigma]))$ which is natural in $\Gamma$.
 \end{itemize}
+\end{mydefinition}
+
+The following notions are derivable from the comprehension structure:
+\begin{itemize}
+\item
+  By going right-to-left along the isomorphism, we recover \emph{substitution
+  extension} $\blank,\blank : (\sigma : \Sub\,\Gamma\,\Delta) \to
+  \Tm\,\Gamma\,(A[\sigma]) \to \Sub\,\Gamma\,(\Delta\ext A)$. This means that
+  starting from $\epsilon$ or the identity substitution $\id$, we can iterate
+  $\blank,\blank$ to build substitutions as lists of terms.
+\item
+  By going left-to-right, and starting from $\id : \Sub\,(\Gamma\ext
+  A)\,(\Gamma\ext A)$, we recover the \emph{weakening substitution} $\p :
+  \Sub\,(\Gamma\ext A)\,\Gamma$ and the \emph{zero variable} $\q :
+  \Tm\,(\Gamma\ext A)\,(A[\p])$.
+\item
+  By weakening $\q$, we recover a notion of variables as De Bruijn indices. In
+  general, the $n$-th De Bruijn index is defined as $\q[\p^{n}]$, where $\p^{n}$
+  denotes $n$-fold composition.
+\end{itemize}
+
+Comprehension can be characterized either by taking $\blank,\blank$, $\p$ and
+$\q$ as primitive, or the natural isomorphism. The two are equivalent, and we
+may switch between them, depending on which is more convenient.
+
+There are other ways for presenting the basic categorical structure of models,
+which are nonetheless equivalent to cwfs, including natural models
+\cite{awodey18natural} and categories with attributes \cite{cartmellthesis}. We
+use the cwf presentation for its immediately algebraic character and closeness
+to conventional explicit substitution syntax.
+
+\begin{notation}As De Bruijn indices are hard to read, we will mostly use
+nameful notation for binders. For example, assuming $\Nat : \{\Gamma : \Con\}
+\to \Ty\,\Gamma$ and $\Id : \{\Gamma : \Con\}(A : \Ty\,\Gamma) \to
+\Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma$, we may write $\emptycon \ext
+n : \Nat \ext p : \Id\,\Nat\,n\,n$ for a typing context, instead of using
+numbered variables or cwf combinators as in $\emptycon \ext \Nat \ext
+\Id\,\Nat\,\q\,\q$.
+\end{notation}
+
+\begin{notation}
+In the following, we will denote family structures by ($\Ty$,$\Tm$) pairs and overload context
+extension $\blank\ext\blank$ for different families.
+\end{notation}
+
+\begin{mydefinition} The following derivable operations are commonly required.
+  \begin{itemize}
+    \item \emph{Single substitution} can be derived from parallel substitution
+      as follows. Assume $t : \Tm\,(\Gamma\ext A)\,B$, and $u :
+      \Tm\,\Gamma\,A$. $t$ is a term which may depend on the last variable in
+      the context, which has $A$ type. We can substitute that variable with the
+      $u$ term as $t[\id,\,u] : \Tm\,\Gamma\,(\A[\id,\,u])$. Note that term
+      substitution causes the type to be substituted as well. $(\id,\,u) :
+      \Sub\,\Gamma\,(\Gamma\ext A)$ is well-typed because $u : \Tm\,\Gamma\,A$
+      hence also $u : \Tm\,\Gamma\,(A[\id])$.
+
+    \item We can \emph{lift substitutions} over binders as follows. Assuming
+      $\sigma : \Sub\,\Gamma\,\Delta$ and $A : \Ty\,\Delta$, we construct a
+      lifting of $\sigma$ which maps an additional $A$-variable to itself:
+      $(\sigma\circ\p,\,\q) : \Sub\,(\Gamma\ext A[\sigma])\,(\Delta \ext A)$.
+      Let us see why this is well-typed. We have $\p : \Sub\,(\Gamma\ext
+      A[\sigma])\,\Gamma$ and $\sigma : \Sub\,\Gamma\,\Delta$, so $\sigma \circ
+      \p : \Sub\,(\Gamma\ext A[\sigma])\,\Delta$. Also, $\q : \Tm\,(\Gamma\ext
+      A[\sigma])\,(A[\sigma][\p])$, hence $\q : \Tm\,(\Gamma\ext
+      A[\sigma])\,(A[\sigma \circ \p])$, thus $(\sigma\circ \p,\,\q)$
+      typechecks.
+  \end{itemize}
+\end{mydefinition}
+
+\begin{notation}
+
+As a nameful notation for substitutions, we may write $t[x \mapsto u]$, for
+a single substitution, or $t[x \mapsto u_1, y \mapsto u_2]$ and so on.
+
+In nameful notation we leave all weakening implicit, including substitution
+lifting. Formally, if we have $t : \Tm\,\Gamma\,A$, we can only mention $t$ in
+$\Gamma$. If we need to mention it in $\Gamma \ext B$, we need to use $t[\p]$
+instead. In the nameful notation, $t : \Tm\,(\Gamma\ext x : B)\,A$ may be
+used.\footnote{Moreover, when working in the internal syntax of a theory, we
+just write Agda-like type-theoretic notation, without noting contexts and
+substitutions in any way.}
+\end{notation}
+
+\subsubsection{Type formers}
+A family structure in a cwf may be closed under certain type formers, such as
+functions, $\Sigma$-types, universes or inductive types. We give some examples
+here for their specification. First, we look at common negative type formers,
+which can be specified using isomorphisms. Then, we consider positive type
+formers, and finally universes.
+
+\subsubsection{Negative types}
+
+\begin{mydefinition}[$\Pi$-types] A $(\Ty,\,\Tm)$ family supports $\Pi$ types if it supports the following.
+\begin{alignat*}{3}
+  &\Pi           &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
+  &\ms{\Pi[]}    &&: (\Pi\,A\,B)[\sigma] = \Pi\,(A[\sigma])\,(B[\sigma\circ\p,\,\q])\\
+  &\app          &&: \Tm\,\Gamma\,(\Pi\,A\,B) \to \Tm\,(\Gamma \ext A)\,B\\
+  &\lam          &&: \Tm\,(\Gamma \ext A)\,B \to \Tm\,\Gamma\,(\Pi\,A\,B)\\
+  &\Pi\beta      &&: \app\,(\lam\,t) = t\\
+  &\Pi\eta       &&: \lam\,(\app\,t) = t\\
+  &\lam[]        &&: (\lam\,t)[\sigma] = \lam\,(\sigma\circ\p,\,\q)
+\end{alignat*}
+Here, $\Pi$ is the type formation rule. $\ms{\Pi[]}$ is the type substitution
+rule, expressing that substituting $\Pi$ proceeds structurally on constituent
+types.  Note $B[\sigma\circ\p,\,\q]$, where we lift $\sigma$ over the additional
+binder.
+
+The rest of the rules specify a natural isomorphism $\Tm\,\Gamma\,(\Pi\,A\,B)
+\simeq \Tm\,(\Gamma \ext A)\,B$. We only need a substitution rule (i.e.\ a
+naturality rule) for one direction of the isomorphism, since the naturality of
+the other map can is derivable.
+
+This way of specifying $\Pi$ types is very convenient if we have explicit
+substitutions. The usual ``pointful'' specification is equivalent to this. For
+example, we have the following derivation of pointful application:
+\begin{alignat*}{3}
+  &\app' : \Tm\,\Gamma\,(\Pi\,A\,B) \to (u : \Tm\,\Gamma\,A) \to \Tm\,\Gamma\,(B[\id,\,u])\\
+  &\app'\,t\,u \equiv (\app\,t)[\id,\,u]
+\end{alignat*}
+
+\end{mydefinition}
+
+\textbf{Remark on naturality.} The above specification for $\Pi$ can be written
+more compactly if we assume that everything is natural with respect to
+substitution.
+\begin{alignat*}{3}
+  &\Pi            &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
+  & (\app,\,\lam) &&: \Tm\,\Gamma\,(\Pi\,A\,B) \simeq \Tm\,(\Gamma \ext A)\,B
+\end{alignat*}
+This is a reasonable assumption; in the rest of the thesis we only ever define
+structures on cwfs which are natural in this way.
+
+\begin{notation} From now on, when specifying type formers in family structures,
+we assume that everything is natural, and thus omit substitution equations.
+\end{notation}
+
+There are ways to make this idea more precise, and take it a step further by
+working in languages where only natural constructions are possible. The term
+\emph{higher-order abstract syntax} is sometimes used for this style. It lets us
+also omit contexts, so we would only need to write
+\begin{alignat*}{3}
+  &\Pi            &&: (A : \Ty) \to (\Tm\,A \to \Ty) \to \Ty\\
+  & (\app,\,\lam) &&: \Tm\,(\Pi\,A\,B) \simeq ((a : \Tm\,A) \to \Tm\,(B\,a))
+\end{alignat*}
+Recently several promising works emerged in this area \cite{TODO}. Although this
+technology is likely to be the preferred future direction in the metatheory of
+type theories, this thesis does not make use of it. The field is rather fresh,
+with several different approaches and limited amount of pedagogical exposition,
+and the new techniques would also raise the level of abstraction in this thesis,
+all contributing to making it less accessible. One more reason, and perhaps the
+most important one, for skipping higher-order abstract syntax, is that this
+author has not yet acquired the proficiency to comfortably use the new
+techniques.
+
+\begin{mydefinition}[$\Sigma$-types] A family structure supports $\Sigma$-types if we have
+\begin{alignat*}{3}
+  & \Sigma  &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
+  & (\proj,\,(\blank,\blank)) &&: \Tm\,\Gamma\,(\Sigma\,A\,B) \simeq ((t : \Tm\,\Gamma\,A) \times \Tm\,\Gamma\,(B[\id,\,t]))
+\end{alignat*}
+We use the shorter specification above, where everything is assumed to be
+natural. We may write $\proj_1$ and $\proj_2$ for composing the metatheoretic
+first and second projections with $\proj$.
+\end{mydefinition}
+
+\begin{mydefinition}[Unit type]
+A family structure supports the unit type if we have $\top : \Ty\,\Gamma$ such
+that $\Tm\,\Gamma\,\top \simeq \top$, where the $\top$ on the right is the
+metatheoretic unit type, and we overload $\top$ for the internal unit type.
+From this, we get the internal $\tt : \Tm\,\Gamma\,\top$, which is
+definitionally unique.
+\end{mydefinition}
+
+The identity type can be also specified as a negative type.
+In this case we get an extensional identity, while if we define it as a
+positive type, we get intensional identity instead.
+
+This choice between negative and positive specification generally exists for
+type formers with a single term construction rule. For example, $\Sigma$ can be
+defined as a positive type, with an elimination rule that behaves like pattern
+matching. Positive $\Sigma$ is equivalent to negative $\Sigma$, although it only
+supports propositional $\eta$-rules. In contrast, positive identity is usually
+\emph{not} equivalent to negative identity.
+
+\begin{mydefinition}[Extensional identity]
+A family structure supports extensional identity types if there is $\Id :
+\Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma$ such that
+$(\reflect,\,\refl) : \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t = u)$.
+\end{mydefinition}
+
+$\refl : t = u \to \Tm\,\Gamma\,(\Id\,t\,u)$ expresses reflexivity of identity:
+definitionally equal terms are provably equal. $\reflect$, which goes the other
+way around, is called \emph{equality reflection} \cite{TODO}: provably equal
+terms are identified in the metatheory.
+
+Uniqueness of identity proofs (UIP) is often ascribed to the extensional
+identity type \cite{TODO}. UIP means that $\Tm\,\Gamma\,(\Id\,t\,u)$ has at most
+a single inhabitant up to $\Id$. However, UIP is not something which is inherent
+in the negative specification, instead it's inherited from the metatheory. If
+$\Tm$ forms a set in the metatheory (by assumption, or by not having
+higher-dimensional types in the metatheory), then internal equality proofs
+inherit uniqueness through the defining isomorphism.
+
+\subsubsection{Positive types}
+
+We do not dwell much on positive types here, as elsewhere in this thesis we talk
+a lot about specifying such types anyway. We provide here some background and
+a small example.
+
+The motivation is to specify initial internal algebras in a cwf. However,
+specifying the uniqueness of recursors using definitional equality is
+problematic, if we are to have decidable and efficient conversion checking for a
+type theory. Consider the specification of $\Bool$ together with its recursor.
+\begin{alignat*}{3}
+  & \Bool  &&: \Ty\,\Gamma \\
+  & \true  &&: \Tm\,\Gamma\,\Bool \\
+  & \false &&: \Tm\,\Gamma\,\Bool \\
+  & \ms{BoolRec} &&: (B : \Ty\,\Gamma)\to \Tm\,\Gamma\,B \to \Tm\,\Gamma\,B \to \Tm\,\Gamma\,\Bool \to \Tm\,\Gamma\,B\\
+  & \true\beta &&: \ms{BoolRec}\,B\,t\,f\,\true = t\\
+  & \false\beta &&: \ms{BoolRec}\,B\,t\,f\,\false = f
+\end{alignat*}
+$\ms{BoolRec}$ together with the $\beta$-rules specifies an internal
+$\Bool$-algebra morphism. A possible way to specify definitional uniqueness is
+as follows. Assuming $B : \Ty\,\Gamma$, $t : \Tm\,\Gamma\,B$, $f :
+\Tm\,\Gamma\,B$ and $m : \Tm\,(\Gamma\ext b : \Bool)\,B$, such that $m[b \mapsto
+  \true] = t$ and $m[b \mapsto \false] = f$, it follows that
+$\ms{BoolRec}\,B\,t\,f\,b : \Tm\,(\Gamma\ext b : \Bool)\,B$ is equal to $m$.
+
+Unfortunately, deciding conversion with this rule entails deciding pointwise
+equality of arbitrary $\Bool$ functions, which can be done in exponential time
+in the number of $\Bool$ arguments. More generally, Scherer presented a decision
+algorithm for conversion checking with strong finite sums and products in simple
+type theory \cite{scherer17deciding}, which also takes exponential time. If we
+move to natural numbers with definitionally unique recursion, conversion
+checking becomes undecidable.
+
+One solution is to have propositionally unique recursion instead. However, if
+such equations are postulated, that would break the canonicity property of basic
+intensional type theory, since now we would have equality proofs besides $\refl$
+in the empty context.
+
+The standard solution is to have dependent elimination principles instead: this
+allows inductive reasoning, canonicity and effectively decidable definitional
+equality at the same time. For $\Bool$, we would have
+\begin{alignat*}{3}
+  & \ms{BoolInd} &&: (B : \Ty\,(\Gamma\ext b : \Bool)) \to \Tm\,\Gamma\,(B[b \mapsto \true])\\
+  & &&\to \Tm\,\Gamma\,(B[b \mapsto \false]) \to (t : \Tm\,\Gamma\,\Bool) \to \Tm\,\Gamma\,(B[b \mapsto t])
+\end{alignat*}
+together with $\ms{BoolInd}\,B\,t\,f\,\true = t$ and $\ms{BoolInd}\,B\,t\,f\,\false = f$.
+
+Of course, if we assume extensional identity types, we have undecidable
+conversion anyway, and definitionally unique recursion is equivalent to
+induction. But decidable conversion is an essential part of type theory, perhaps
+its main selling point as a foundation for mechanized mathematics, which makes
+it possible to relegate a deluge of boilerplate to computers. Hence, decidable
+conversion should be kept in mind.
+
+\subsubsection{Universes}
+
+\todo{TODO}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%% --------------------------------------------------------------------------------
 
 \chapter{Finitary Quotient Inductive-Inductive Types}
 \label{chap:fqiit}
@@ -1044,6 +1481,7 @@ representing stuff. Examples for type formers and universes. Copy from previous 
 \section{Term Algebras}
 
 \chapter{Levitation, Bootstrapping and Universe Levels}
+\label{chap:levitation}
 \section{Levitation for Closed QIITs}
 \section{Levitation for Infinitary QIITs}
 
