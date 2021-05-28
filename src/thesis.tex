@@ -995,10 +995,11 @@ practically-oriented generic programming.
 
 In this chapter we describe how two-level type theory is used as a metatheoretic
 setting in the rest of this thesis. First, we provide motivation and
-overview. Then, we introduce two-level type theory more formally and describe its
-intended models. Finally, we generalize the semantics and the term algebra
-construction from Chapter \ref{chap:simple-inductive-signatures} in type-level
-type theory, as a way to illustrate the applications.
+overview. Second, we describe models of type theories in general, and models of
+two-level type theories as extensions. Third, we describe presheaf models of
+two-level type theories. Finally, we generalize the semantics and the term
+algebra construction from Chapter \ref{chap:simple-inductive-signatures} in
+two-level type theory, as a way to illustrate the applications.
 
 \section{Motivation}
 \label{sec:2ltt-motivation}
@@ -1089,7 +1090,18 @@ writing metaprograms. This can be viewed as \emph{two-stage compilation}: if we
 have a 2LTT program with an inner type, we can run it, and it returns another
 program, which lives purely in the inner theory.
 
-\section{Models of 2LTT}
+\section{Models of Type Theories}
+
+Before elaborating on 2LTT-specific features, we review models of type theories
+in general. Variants of 2LTT will be obtained by adding extra features on the
+top of more conventional TTs.
+
+It is also worth to take a look at models of type theories at this point,
+because the notions presented in this subsection (categories with families, type
+formers) will be reused several times in this thesis, when specifying theories
+of signatures.
+
+\subsection{The Algebraic View}
 
 We take an algebraic view \cite{TODO} of models and syntaxes of type theories throughout
 this thesis. Models of type theories are algebraic structures: they are
@@ -1117,18 +1129,10 @@ syntax, definitional equality coincides with metatheoretic equality. This
 mirrors equality of morphisms in 1-category theory, where we usually reuse
 metatheoretic equality.
 
-\subsection{Models of Type Theories}
+In the following we specify notions of models for type theories. We split this
+in two parts: categories with families and type formers.
 
-Before elaborating on 2LTT-specific features, we review models of type theories
-in general. Variants of 2LTT will be obtained by adding extra features on the
-top of more conventional TTs.
-
-It is also worth to take a look at models of type theories at this point,
-because the notions presented in this subsection (categories with families, type
-formers) will be reused several times in this thesis, when specifying theories
-of signatures.
-
-\subsubsection{Categories With Families}
+\subsection{Categories With Families}
 
 \begin{mydefinition}
 A \emph{category with family} (cwf) \cite{Dybjer96internaltype} is a way to
@@ -1210,7 +1214,7 @@ In the following, we will denote family structures by ($\Ty$,$\Tm$) pairs and ov
 extension $\blank\ext\blank$ for different families.
 \end{notation}
 
-\begin{mydefinition} The following derivable operations are commonly required.
+\begin{mydefinition} The following derivable operations are commonly used.
   \begin{itemize}
     \item \emph{Single substitution} can be derived from parallel substitution
       as follows. Assume $t : \Tm\,(\Gamma\ext A)\,B$, and $u :
@@ -1248,7 +1252,7 @@ just write Agda-like type-theoretic notation, without noting contexts and
 substitutions in any way.}
 \end{notation}
 
-\subsubsection{Type formers}
+\subsection{Type formers}
 A family structure in a cwf may be closed under certain type formers, such as
 functions, $\Sigma$-types, universes or inductive types. We give some examples
 here for their specification. First, we look at common negative type formers,
@@ -1424,6 +1428,18 @@ conversion should be kept in mind.
 \subsubsection{Universes}
 
 \todo{TODO}
+
+
+\section{Two-Level Type Theory}
+
+%% Let us move to
+
+\section{Presheaf Models}
+
+\section{Simple Inductive Signatures in 2LTT}
+
+
+
 
 
 
