@@ -34,6 +34,9 @@
 \newtheorem{mydefinition}{Definition}
 \newtheorem{myexample}{Example}
 \newtheorem{mylemma}{Lemma}
+\newtheorem{mytheorem}{Lemma}
+
+\newtheorem{corollary}{Corollary}
 
 %% Fonts and spacing
 %% --------------------------------------------------------------------------------
@@ -100,12 +103,14 @@
 \newcommand{\NatSig}{\mathsf{NatSig}}
 \newcommand{\Sg}{\Sigma}
 \newcommand{\flCwF}{\mathsf{flCwF}}
+
 \newcommand{\Kfam}{\mathsf{K}}
+\newcommand{\lamK}{\mathsf{lam}^{\K}}
+\newcommand{\appK}{\mathsf{app}^{\K}}
+
 \newcommand{\p}{\mathsf{p}}
 \newcommand{\q}{\mathsf{q}}
 \newcommand{\K}{\mathsf{K}}
-\newcommand{\lamK}{\mathsf{lam}^{\K}}
-\newcommand{\appK}{\mathsf{app}^{\K}}
 \newcommand{\A}{\mathsf{A}}
 \newcommand{\D}{\mathsf{D}}
 \renewcommand{\S}{\mathsf{S}}
@@ -184,17 +189,25 @@
 \newcommand{\Nat}{\ms{Nat}}
 \newcommand{\Bool}{\ms{Bool}}
 \newcommand{\mbbC}{\mbb{C}}
+\newcommand{\hmbbC}{\hat{\mbb{C}}}
 \newcommand{\mbbD}{\mbb{D}}
 \newcommand{\lam}{\ms{lam}}
 
 \newcommand{\true}{\ms{true}}
 \newcommand{\false}{\ms{false}}
+\newcommand{\up}{\uparrow}
+\newcommand{\down}{\downarrow}
 
+\newcommand{\lab}{<\!}
+\newcommand{\rab}{\!>}
+\newcommand{\defn}{:\equiv}
+
+\newcommand{\yon}{\ms{y}}
 
 
 %% --------------------------------------------------------------------------------
 
-\title{Type-Theoretic Signatures for Inductive Types}
+\title{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}
 \date{2021 September}
 \author{András Kovács}
 
@@ -216,6 +229,7 @@
 \section{Notation and Conventions}
 \subsection{Metatheory}
 \subsection{Universes}
+\label{sec:universes}
 \label{sec:notation}
 
 \chapter{Simple Inductive Signatures}
@@ -247,8 +261,9 @@ Generally, more expressive theories of signatures can describe a larger classes
 of inductive types. As we are aiming at minimalism right now, the current theory
 of signatures is as follows:
 
-\begin{mydefinition}The \emph{theory of signatures}, or ToS for short in the current chapter,
-is a simple type theory equipped with the following features:
+\begin{mydefinition}
+The \textbf{theory of signatures}, or ToS for short, is a simple type theory
+equipped with the following features:
   \begin{itemize}
     \item An empty base type $\iota$.
     \item A \emph{first-order function type} $\iota\!\to\!\blank$; this is a
@@ -279,7 +294,7 @@ nameful notation instead of De Bruijn indices. For example, we may write $x :
 $t\,u$ instead of $\app\,t\,u$ for $t$ and $u$ terms.
 \end{notation}
 
-\begin{mydefinition} \emph{Parallel substitutions} map variables to terms.
+\begin{mydefinition} \textbf{Parallel substitutions} map variables to terms.
 \begin{alignat*}{3}
 &\Sub : \Con \to \Con \to \Set\\
 &\Sub\,\Gamma\,\Delta \equiv \{A\} \to \Var\,\Delta\,A \to \Tm\,\Gamma\,A
@@ -288,21 +303,21 @@ We use $\sigma$ and $\delta$ to refer to substitutions. We also recursively
 define the action of substitution on terms:
 \begin{alignat*}{3}
   &\rlap{$\blank[\blank] : \Tm\,\Delta\,A \to \Sub\,\Gamma\,\Delta \to \Tm\,\Gamma\,A$}\\
-  &(\var\, x)   &&[ \sigma ] \equiv \sigma\,x\\
-  &(\app\,t\,u) &&[ \sigma ] \equiv \app\,(t[\sigma])\,(u[\sigma])
+  &(\var\, x)   &&[ \sigma ] \defn \sigma\,x\\
+  &(\app\,t\,u) &&[ \sigma ] \defn \app\,(t[\sigma])\,(u[\sigma])
 \end{alignat*}
 The identity substitution $\id$ is defined simply as $\var$. It is easy to see that
 $t[\id] = t$ for all $t$. Substitution composition is as follows.
 \begin{alignat*}{3}
   &\blank\!\circ\!\blank : \Sub\,\Delta\,\Xi \to \Sub\,\Gamma\,\Delta \to \Sub\,\Gamma\,\Xi\\
-  &(\sigma \circ \delta)\,x \equiv (\sigma\,x)[\delta]
+  &(\sigma \circ \delta)\,x \defn (\sigma\,x)[\delta]
 \end{alignat*}
 \end{mydefinition}
 
 \begin{myexample} We may write signatures for natural numbers and binary trees respectively as follows.
 \begin{alignat*}{3}
-  & \ms{NatSig}  &&\equiv \emptycon \ext (\mi{zero} : \iota) \ext (\mi{suc} : \iota \to \iota)\\
-  & \ms{TreeSig} &&\equiv \emptycon \ext (\mi{leaf} : \iota) \ext (\mi{node} : \iota \to \iota \to \iota)
+  & \ms{NatSig}  &&\defn \emptycon \ext (\mi{zero} : \iota) \ext (\mi{suc} : \iota \to \iota)\\
+  & \ms{TreeSig} &&\defn \emptycon \ext (\mi{leaf} : \iota) \ext (\mi{node} : \iota \to \iota \to \iota)
 \end{alignat*}
 \end{myexample}
 
@@ -335,7 +350,7 @@ support a \emph{recursion principle}, which can be viewed as a non-dependent
 variant of induction. In the following, we define these notions by induction on
 ToS syntax.
 
-\emph{Remark.} We use the terms ``algebra'' and ``model'' synonymously throughout
+\emph{Remark.} We use ``algebra'' and ``model'' synonymously throughout
 this thesis.
 
 \subsection{Algebras}
@@ -345,18 +360,18 @@ into the $\Set$ universe. We define the following operations by induction; the
 $\blank^A$ name is overloaded for $\Con$, $\Ty$ and $\Tm$.
 \begin{alignat*}{3}
 & \hspace{-4em} \rlap{$\blank^A : \Ty \to \Set \to \Set$} \\
-& \hspace{-4em} \iota^A\,&&X \equiv X \\
-& \hspace{-4em} (\iota\to A)^A\,&&X \equiv X \to A^A\,X\\
+& \hspace{-4em} \iota^A\,&&X \defn X \\
+& \hspace{-4em} (\iota\to A)^A\,&&X \defn X \to A^A\,X\\
 & \hspace{-4em} && \\
 & \hspace{-4em} \rlap{$\blank^A : \Con \to \Set \to \Set$}\\
-& \hspace{-4em} \rlap{$\Gamma^A\,X \equiv \{A : \Ty\} \to \Var\,\Gamma\,A \to A^A\,X$}\\
+& \hspace{-4em} \rlap{$\Gamma^A\,X \defn \{A : \Ty\} \to \Var\,\Gamma\,A \to A^A\,X$}\\
 & \hspace{-4em} && \\
 & \hspace{-4em} \rlap{$\blank^A : \Tm\,\Gamma\,A \to \{X : \Set\} \to \Gamma^A\,X \to A^A\,X$}\\
-& \hspace{-4em} (\var\,x)^A\,&&\gamma \equiv \gamma\,x\\
-& \hspace{-4em} (\app\,t\,u)^A\,&&\gamma \equiv t^A\,\gamma\,(u^A\,\gamma)\\
+& \hspace{-4em} (\var\,x)^A\,&&\gamma \defn \gamma\,x\\
+& \hspace{-4em} (\app\,t\,u)^A\,&&\gamma \defn t^A\,\gamma\,(u^A\,\gamma)\\
 & \hspace{-4em} && \\
 & \hspace{-4em} \rlap{$\blank^A : \Sub\,\Gamma\,\Delta \to \{X : \Set\} \to \Gamma^A\,X \to \Delta^A\,X$}\\
-& \hspace{-4em} \rlap{$\sigma^A\,\gamma\,x \equiv (\sigma\,x)^A\,\gamma$}
+& \hspace{-4em} \rlap{$\sigma^A\,\gamma\,x \defn (\sigma\,x)^A\,\gamma$}
 \end{alignat*}
 Here, types and contexts depend on some $X : \Set$, which serves as the
 interpretation of $\iota$. We define $\Gamma^A$ as a product: for each variable
@@ -371,10 +386,10 @@ example, we may write $(\mi{zero} : X) \times (\mi{suc} : X \to X)$ for the
 result of computing $\ms{NatSig}^A\,X$.
 \end{notation}
 
-\begin{mydefinition} We define \emph{algebras} as follows.
+\begin{mydefinition} We define \textbf{algebras} as follows.
 \begin{alignat*}{3}
   & \Alg : \Con \to \Set_1 \\
-  & \Alg\,\Gamma \equiv (X : \Set) \times \Gamma^A\,X
+  & \Alg\,\Gamma \defn (X : \Set) \times \Gamma^A\,X
 \end{alignat*}
 \end{mydefinition}
 
@@ -391,8 +406,8 @@ interpretation} \cite{udayReynolds} over the $\blank^A$ interpretation. The key
 part is the interpretation of types:
 \begin{alignat*}{3}
   & \hspace{-4em}\rlap{$\blank^M : (A : \Ty)\{X_0\,X_1 : \Set\}(X^M : X_0 \to X_1) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
-  & \hspace{-4em}\iota^M\,&&X^M\,\alpha_0\,\,\alpha_1 \equiv X^M\,\alpha_0 = \alpha_1 \\
-  & \hspace{-4em}(\iota\to A)^M\,&&X^M\,\alpha_0\,\,\alpha_1 \equiv
+  & \hspace{-4em}\iota^M\,&&X^M\,\alpha_0\,\,\alpha_1 \defn X^M\,\alpha_0 = \alpha_1 \\
+  & \hspace{-4em}(\iota\to A)^M\,&&X^M\,\alpha_0\,\,\alpha_1 \defn
        (x : X_0) \to A^M\,X^M\,(\alpha_0\,x)\,(\alpha_1\,(X^M\,x))
 \end{alignat*}
 We again assume an interpretation for the base type $\iota$, as $X_0$, $X_1$ and
@@ -402,45 +417,45 @@ the base type, preservation is simply equality. At the first-order function
 type, preservation is a quantified statement over $X_0$. We define morphisms for
 $\Con$ pointwise:
 \begin{alignat*}{3}
-  &\Con^M : (\Gamma : \Con)\{X_0\,X_1 : \Set\} \to (X_0 \to X_1) \to \Gamma^A\,X_0 \to \Gamma^A\,X_1 \to \Set\\
-  &\Gamma^M\,X^M\,\gamma_0\,\gamma_1 \equiv
+  &\blank^M : (\Gamma : \Con)\{X_0\,X_1 : \Set\} \to (X_0 \to X_1) \to \Gamma^A\,X_0 \to \Gamma^A\,X_1 \to \Set\\
+  &\Gamma^M\,X^M\,\gamma_0\,\gamma_1 \defn
     \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^M\,X^M\,(\gamma_0\,x)\,(\gamma_1\,x)
 \end{alignat*}
 For terms and substitutions, we get preservation statements, which are sometimes
 called \emph{fundamental lemmas} in discussions of logical relations \cite{udayReynolds}.
 \begin{alignat*}{3}
   & \hspace{-10em}\rlap{$\blank^M : (t : \Tm\,\Gamma\,A) \to \Gamma^M\,X^M\,\gamma_0\,\gamma_1 \to A^M\,X^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)$}\\
-  & \hspace{-10em}(\var\,x)^M    &&\gamma^M \equiv \gamma^M\,x \\
-  & \hspace{-10em}(\app\,t\,u)^M &&\gamma^M \equiv t^M\,\gamma^M\,(u^A\,\gamma_0)\\
+  & \hspace{-10em}(\var\,x)^M    &&\gamma^M \defn \gamma^M\,x \\
+  & \hspace{-10em}(\app\,t\,u)^M &&\gamma^M \defn t^M\,\gamma^M\,(u^A\,\gamma_0)\\
   & \hspace{-10em}&& \\
   & \hspace{-10em}\rlap{$\blank^M : (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^M\,X^M\,\gamma_0\,\gamma_1 \to \Delta^M\,X^M\,(\sigma^A\,\gamma_0)\,(\sigma^A\,\gamma_1)$}\\
-  & \hspace{-10em} \rlap{$\sigma^M\, \gamma^M\,x = (\sigma\,x)^M\,\gamma^M$}
+  & \hspace{-10em} \rlap{$\sigma^M\, \gamma^M\,x \defn (\sigma\,x)^M\,\gamma^M$}
 \end{alignat*}
 The definition of $(\app\,t\,u)^M$ is well-typed by the induction hypothesis
 $u^M\,\gamma^M : X^M\,(u^A\,\gamma_0) = u^A\,\gamma_1$.
 
 \begin{mydefinition}
-We again pack up $\Gamma^M$ with the interpretation of $\iota$, to get notions
-of \emph{algebra morphisms}:
+To get notions of \textbf{algebra morphisms}, we again pack up $\Gamma^M$ with
+the interpretation of $\iota$.
 \begin{alignat*}{3}
   & \Mor : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Alg\,\Gamma \to \Set \\
-  & \Mor\,\{\Gamma\}\,(X_0,\,\gamma_0)\,(X_1,\,\gamma_1) \equiv (X^M : X_0 \to X_1) \times \Gamma^M\,X^M\,\gamma_0\,\gamma_1
+  & \Mor\,\{\Gamma\}\,(X_0,\,\gamma_0)\,(X_1,\,\gamma_1) \defn (X^M : X_0 \to X_1) \times \Gamma^M\,X^M\,\gamma_0\,\gamma_1
 \end{alignat*}
 \end{mydefinition}
 \begin{myexample} We have the following computation:
 \begin{alignat*}{3}
-  & \hspace{-5em}\rlap{$\Mor\,\{\NatSig\}\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \equiv$} \\
+  & \hspace{-5em}\rlap{$\Mor\,\{\NatSig\}\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \defn$} \\
            &(X^M : X_0 \to X_1) \\
    \times\,&(X^M\,\mi{zero_0} = \mi{zero_1}) \\
    \times\,&((x : X_0) \to X^M\,(\mi{suc_0}\,x) = \mi{suc_1}\,(X^M\,x))
 \end{alignat*}
 \end{myexample}
 
-\begin{mydefinition} We state \emph{initiality} as a predicate on algebras:
+\begin{mydefinition} We state \textbf{initiality} as a predicate on algebras:
 \begin{alignat*}{3}
   & \Initial : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Set\\
-  & \Initial\,\{\Gamma\}\,\gamma \equiv
-    (\gamma' : \Alg\,\Gamma) \to \ms{isContr}\,(\Mor\,\Gamma\,\gamma\,\gamma')
+  & \Initial\,\{\Gamma\}\,\gamma \defn
+    (\gamma' : \Alg\,\Gamma) \to \ms{isContr}\,(\Mor\,\gamma\,\gamma')
 \end{alignat*}
 Here $\ms{isContr}$ refers to unique existence \cite[Section 3.11]{hottbook}. If we drop
 $\ms{isContr}$ from the definition, we get the notion of weak initiality, which
@@ -458,8 +473,8 @@ to be a function. Consider now a more general relational interpretation for
 types:
 \begin{alignat*}{3}
   & \hspace{-0.5em}\rlap{$\blank^R : (A : \Ty)\{X_0\,X_1 : \Set\}(X^R : X_0 \to X_1 \to \Set) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
-  & \hspace{-0.5em}\iota^R\,&&X^R\,\alpha_0\,\,\alpha_1 \equiv X^R\,\alpha_0\,\alpha_1 \\
-  & \hspace{-0.5em}(\iota\to A)^R\,&&X^R\,\alpha_0\,\,\alpha_1 \equiv
+  & \hspace{-0.5em}\iota^R\,&&X^R\,\alpha_0\,\,\alpha_1 \defn X^R\,\alpha_0\,\alpha_1 \\
+  & \hspace{-0.5em}(\iota\to A)^R\,&&X^R\,\alpha_0\,\,\alpha_1 \defn
        (x_0 : X_0)(x_1 : X_1) \to X^R\,x_0\,x_1 \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,x_1)
 \end{alignat*}
 Here, functions are related if they map related inputs to related outputs. If we
@@ -516,31 +531,31 @@ The displayed algebra interpretation is a \emph{logical predicate}
 interpretation, defined as follows.
 \begin{alignat*}{3}
   & \rlap{$\blank^D : (A : \Ty)\{X\} \to (X \to \Set) \to A^A\,X \to \Set$}\\
-  & \iota^D\,       && X^D\,\alpha \equiv X^D\,\alpha \\
-  & (\iota\to A)^D\,&& X^D\,\alpha \equiv (x : X)(x^D : X^D\,x) \to A^D\,X^D\,(\alpha\,x)\\
+  & \iota^D\,       && X^D\,\alpha \defn X^D\,\alpha \\
+  & (\iota\to A)^D\,&& X^D\,\alpha \defn (x : X)(x^D : X^D\,x) \to A^D\,X^D\,(\alpha\,x)\\
   & &&\\
   & \rlap{$\blank^D : (\Gamma : \Con)\{X\} \to (X \to \Set) \to \Gamma^A\,X \to \Set$}\\
-  & \rlap{$\Gamma^D\,X^D\,\gamma \equiv
+  & \rlap{$\Gamma^D\,X^D\,\gamma \defn
        \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^D\,X^D\,(\gamma\,x)$}\\
   & &&\\
   & \rlap{$\blank^D : (t : \Tm\,\Gamma\,A)
       \to \Gamma^D\,X^D\,\gamma \to A^D\,X^D\,(t^A\,\gamma)$}\\
-  & (\var\,x)^D\,&&\gamma^D \equiv \gamma^D\,x\\
-  & (\app\,t\,u)^D\,&&\gamma^D \equiv t^D\,\gamma^D\,(u^A\,\gamma)\,(u^D\,\gamma^D)\\
+  & (\var\,x)^D\,&&\gamma^D \defn \gamma^D\,x\\
+  & (\app\,t\,u)^D\,&&\gamma^D \defn t^D\,\gamma^D\,(u^A\,\gamma)\,(u^D\,\gamma^D)\\
   & &&\\
   & \rlap{$\blank^D : (\sigma : \Sub\,\Gamma\,\Delta)
       \to \Gamma^D\,X^D\,\gamma \to \Delta^D\,X^D\,(\sigma^A\,\gamma)$}\\
-  & \rlap{$\sigma^D\,\gamma^D\,x \equiv (\sigma\,x)^D\,\gamma^D$}
+  & \rlap{$\sigma^D\,\gamma^D\,x \defn (\sigma\,x)^D\,\gamma^D$}
 \end{alignat*}
 Analogously to before, everything depends on a predicate interpretation $X^D : X
 \to \Set$ for $\iota$. For types, a predicate holds for a function if the
 function preserves predicates. The interpretation of terms is again a
 fundamental lemma, and we again have pointwise definitions for contexts and
 substitutions.
-\begin{mydefinition}[Displayed algebras]
+\begin{mydefinition}[\textbf{displayed algebras}]
 \begin{alignat*}{3}
   & \DispAlg : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Set_1\\
-  & \DispAlg\,\{\Gamma\}\,(X,\,\gamma) \equiv (X^D : X \to \Set) \times \Gamma^D\,X^D\,\gamma
+  & \DispAlg\,\{\Gamma\}\,(X,\,\gamma) \defn (X^D : X \to \Set) \times \Gamma^D\,X^D\,\gamma
 \end{alignat*}
 \end{mydefinition}
 \begin{myexample} We have the following computation.
@@ -559,26 +574,26 @@ where the codomain is displayed over the domain.
 
 \begin{alignat*}{3}
   & \hspace{-6em}\rlap{$\blank^S : (A : \Ty)\{X\,X^D\}(X^S : (x : X) \to X^D) \to (\alpha : A^A\,X) \to A^D\,X^D\,\alpha \to \Set$}\\
-  & \hspace{-6em}\iota^S\,&&X^S\,\alpha\,\,\alpha^D \equiv X^S\,\alpha = \alpha^D \\
-  & \hspace{-6em}(\iota\to A)^S\,&&X^S\,\alpha\,\,\alpha^D \equiv
+  & \hspace{-6em}\iota^S\,&&X^S\,\alpha\,\,\alpha^D \defn X^S\,\alpha = \alpha^D \\
+  & \hspace{-6em}(\iota\to A)^S\,&&X^S\,\alpha\,\,\alpha^D \defn
   (x : X) \to A^S\,X^S\,(\alpha\,x)\,(\alpha^D\,(X^S\,x))\\
   & \hspace{-6em}&&\\
   &\hspace{-6em}\rlap{$\Con^S : (\Gamma : \Con)\{X\,X^D\}(X^S : (x : X) \to X^D) \to (\gamma : \Gamma^A\,X) \to \Gamma^D\,X^D\,\gamma \to \Set$}\\
-  &\hspace{-6em}\rlap{$\Gamma^S\,X^S\,\gamma_0\,\gamma_1 \equiv
+  &\hspace{-6em}\rlap{$\Gamma^S\,X^S\,\gamma_0\,\gamma_1 \defn
     \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^S\,X^S\,(\gamma_0\,x)\,(\gamma_1\,x)$}\\
   & \hspace{-6em} && \\
   & \hspace{-6em}\rlap{$\blank^S : (t : \Tm\,\Gamma\,A) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to A^S\,X^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)$}\\
-  & \hspace{-6em}(\var\,x)^S    &&\gamma^S \equiv \gamma^S\,x \\
-  & \hspace{-6em}(\app\,t\,u)^S &&\gamma^S \equiv t^S\,\gamma^S\,(u^A\,\gamma)\\
+  & \hspace{-6em}(\var\,x)^S    &&\gamma^S \defn \gamma^S\,x \\
+  & \hspace{-6em}(\app\,t\,u)^S &&\gamma^S \defn t^S\,\gamma^S\,(u^A\,\gamma)\\
   & \hspace{-6em}&& \\
   & \hspace{-6em}\rlap{$\blank^S : (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to \Delta^S\,X^S\,(\sigma^A\,\gamma)\,(\sigma^A\,\gamma^D)$}\\
   & \hspace{-6em} \rlap{$\sigma^S\, \gamma^S\,x = (\sigma\,x)^S\,\gamma^S$}
 \end{alignat*}
 
-\begin{mydefinition}[Displayed algebra sections (``sections'' in short)]
+\begin{mydefinition}[\textbf{Displayed algebra sections} (``sections'' in short)]
 \begin{alignat*}{3}
   & \Section : \{\Gamma : \Con\} \to (\gamma : \Alg\,\Gamma) \to \DispAlg\,\gamma \to \Set\\
-  & \Section\,(X,\,\gamma)\,(X^D\,\gamma^D) \equiv (X^S : (x : X) \to X^D\,x) \times \Gamma^S\,X^S\,\gamma\,\gamma^D
+  & \Section\,(X,\,\gamma)\,(X^D\,\gamma^D) \defn (X^S : (x : X) \to X^D\,x) \times \Gamma^S\,X^S\,\gamma\,\gamma^D
 \end{alignat*}
 \end{mydefinition}
 \begin{myexample} We have the following computation.
@@ -590,11 +605,11 @@ where the codomain is displayed over the domain.
 \end{alignat*}
 \end{myexample}
 
-\begin{mydefinition}[Induction]
+\begin{mydefinition}[\textbf{Induction}]
 We define a predicate which holds if an algebra supports induction.
 \begin{alignat*}{3}
   & \Inductive : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Set_1\\
-  & \Inductive\,\{\Gamma\}\,\gamma \equiv
+  & \Inductive\,\{\Gamma\}\,\gamma \defn
      (\gamma^D : \DispAlg\,\gamma) \to \Section\,\gamma\,\gamma^D
 \end{alignat*}
 \end{mydefinition}
@@ -626,16 +641,16 @@ the $\ms{zero}$ variable (given by $\var\,(\vs\,\vz)$).
 
 \begingroup
 \allowdisplaybreaks
-\begin{mydefinition}[Term algebras]
+\begin{mydefinition}[\textbf{Term algebras}]
 Fix an $\Omega : \Con$. We abbreviate $\Tm\,\Omega\,\iota$ as $\ms{T}$; this will serve
 as the carrier set of the term algebra. We additionally define the following.
 \begin{alignat*}{3}
   & \hspace{-5em}\rlap{$\blank^T : (A : \Ty) \to \Tm\,\Omega\,A \to A^A\,\ms{T}$} \\
-  & \hspace{-5em}\iota^T\,&&t \equiv t \\
-  & \hspace{-5em}(\iota\to A)^T\,&&t \equiv \lambda\,u.\,A^T\,(\app\,t\,u)\\
+  & \hspace{-5em}\iota^T\,&&t \defn t \\
+  & \hspace{-5em}(\iota\to A)^T\,&&t \defn \lambda\,u.\,A^T\,(\app\,t\,u)\\
   & \hspace{-5em}&& \\
   & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con) \to \Sub\,\Omega\,\Gamma \to \Gamma^A\,\Gamma\,\ms{T}$}\\
-  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,x \equiv A^T\,(\nu\,x)$}\\
+  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,x \defn A^T\,(\nu\,x)$}\\
   & \hspace{-5em}&& \\
   & \hspace{-5em}\rlap{$\blank^T : (t : \Tm\,\Gamma\,A)(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,(t[\nu]) = t^A\,(\Gamma^T\,\nu)$}\\
   & \hspace{-5em}(\var\,x)^T\,   &&\nu    \text{   holds by   } \refl\\
@@ -643,12 +658,12 @@ as the carrier set of the term algebra. We additionally define the following.
   & \hspace{-5em}&& \\
   & \hspace{-5em}\rlap{$\blank^T : (\sigma : \Sub\,\Gamma\,\Delta)(\nu : \Sub\,\Omega\,\Gamma)\{A\}(x : \Var\,\Delta\,A)$}\\
   & \hspace{-3em}\rlap{$\to \Delta^T\,(\sigma \circ \nu)\,x = \sigma^A\,(\Gamma^T\,\nu)\,x$}\\
-  & \hspace{-5em}\rlap{$ \sigma^T\,\nu\,x \equiv (\sigma\,x)^T\,\nu$}
+  & \hspace{-5em}\rlap{$ \sigma^T\,\nu\,x \defn (\sigma\,x)^T\,\nu$}
 \end{alignat*}
 Now we can define the term algebra for $\Omega$ itself:
 \begin{alignat*}{3}
   & \TmAlg_{\Omega} : \Alg\,\Omega \\
-  & \TmAlg_{\Omega} \equiv \Omega^T\,\Omega\,\id
+  & \TmAlg_{\Omega} \defn \Omega^T\,\Omega\,\id
 \end{alignat*}
 \end{mydefinition}
 \endgroup
@@ -684,21 +699,21 @@ may not be initial.
 We show that $\TmAlg_{\Omega}$ supports a recursion principle, i.e.\ it is weakly
 initial.
 
-\begin{mydefinition}[Recursor construction] We assume $(X,\,\omega) : \Alg\,\Omega$;
+\begin{mydefinition}[\textbf{Recursor construction}] We assume $(X,\,\omega) : \Alg\,\Omega$;
 recall that $X : \Set$ and $\omega : \Omega^A\,X$. We define $\ms{R} : \ms{T} \to X$
 as $\ms{R}\,t \equiv t^A\,\omega$. We additionally define the following.
 \begin{alignat*}{3}
 & \hspace{-6em}\rlap{$\blank^R : (A : \Ty)(t : \Tm\,\Omega\,A) \to A^M\,\ms{R}\,(A^T\,t)\,(t^A\,\omega)$}\\
-& \hspace{-6em}\iota^R\,&&t \equiv (\refl : t^A\,\omega = t^A\,\omega)\\
-& \hspace{-6em}(\iota\to A)^R\,&&t \equiv \lambda\,u.\,A^R\,(\app\,t\,u)\\
+& \hspace{-6em}\iota^R\,&&t \defn (\refl : t^A\,\omega = t^A\,\omega)\\
+& \hspace{-6em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
 & \hspace{-6em}&& \\
 & \hspace{-6em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
-& \hspace{-6em}\rlap{$\Gamma^R\,\nu\,x \equiv A^R\,(\nu\,x)$}
+& \hspace{-6em}\rlap{$\Gamma^R\,\nu\,x \defn A^R\,(\nu\,x)$}
 \end{alignat*}
 We define the recursor for $\Omega$ as
 \begin{alignat*}{3}
   & \Rec_{\Omega} : (\mi{alg} : \Alg\,\Omega) \to \Mor\,\TmAlg_{\Omega}\,\mi{alg}\\
-  & \Rec_{\Omega}\,(X,\,\omega) \equiv (\ms{R},\,\Omega^R\,\Omega\,\id)
+  & \Rec_{\Omega}\,(X,\,\omega) \defn (\ms{R},\,\Omega^R\,\Omega\,\id)
 \end{alignat*}
 \end{mydefinition}
 
@@ -717,7 +732,7 @@ recursion for term algebras is given by evaluation in the ``standard'' model
 $\blank^A$. Now, we show that induction for term algebras corresponds to
 evaluation in the logical predicate model $\blank^D$.
 
-\begin{mydefinition}[Eliminator construction]
+\begin{mydefinition}[\textbf{Eliminator construction}]
 We assume $(X^D,\,\omega^D) : \DispAlg\,\TmAlg_\Omega$. Recall that $X^D :
 \ms{T} \to \Set$ and $\omega^D : \Omega^D\,X^D\,(\Omega^T\,\Omega\,\id)$. Like
 before, we first interpret the underlying set:
@@ -960,7 +975,7 @@ The actual Agda definition can be found in the supplementary formalization, and
 it is pretty much the same as above. We recover the exact same behavior with
 respect to pattern matching as with native inductive definitions.
 
-\todo{formalize Rec and Ind with spines in Agda}
+\todo{formalize Rec and Ind with spines in Agda. Revise paragraph below}
 
 $\Rec_\Omega$ and $\Ind_\Omega$ can be adapted to spine neutral terms with minor
 adjustments. But what about the $\beta$-rules which they produce as part of
@@ -1027,16 +1042,16 @@ need all the extra baggage that comes with a model of intensional type theory.
 We use $\emptycon$ for the terminal object in a $\mbb{C}$ category, with
 $\epsilon : \mbb{C}(A,\,\emptycon)$ for the unique morphism. For products, we
 use $\blank\!\otimes\!\blank$ with $(\blank\!,\!\blank) : \mbb{C}(A,\,B) \to
-\mbb{C}(A,\,C) \to \mbb{C}(A,\,B\otimes C)$ and $\pi_1$ and $\pi_2$ for
-projections.
+\mbb{C}(A,\,C) \to \mbb{C}(A,\,B\otimes C)$ and $\p$ and $\q$ for
+first and second projections respectively.
 \end{notation}
 
 \begin{myexample}
 Assuming $\mbbC$ has finite products, natural number algebras and binary tree
 algebras are specified as follows.
 \begin{alignat*}{3}
-  &\Alg_{\ms{NatSig}} &&\equiv (X : |\mbbC|) \times \mbbC(\emptycon,\,X) \times \mbbC(X,\,X)\\
-  &\Alg_{\ms{TreeSig}}&&\equiv (X : |\mbbC|) \times \mbbC(\emptycon,\,X) \times \mbbC(X \otimes X,\,X)
+  &\Alg_{\ms{NatSig}} &&\defn (X : |\mbbC|) \times \mbbC(\emptycon,\,X) \times \mbbC(X,\,X)\\
+  &\Alg_{\ms{TreeSig}}&& \defn (X : |\mbbC|) \times \mbbC(\emptycon,\,X) \times \mbbC(X \otimes X,\,X)
 \end{alignat*}
 \end{myexample}
 Here, $\Alg_{\ms{NatSig}}$ and $\Alg_{\ms{TreeSig}}$ are both sets in an
@@ -1135,7 +1150,7 @@ in two parts: categories with families and type formers.
 \subsection{Categories With Families}
 
 \begin{mydefinition}
-A \emph{category with family} (cwf) \cite{Dybjer96internaltype} is a way to
+A \textbf{category with family} (cwf) \cite{Dybjer96internaltype} is a way to
 specify the basic structural rules for contexts, substitutions, types and
 terms. It yields a dependently typed explicit substitution calculus \cite{TODO}.
 A cwf consists of the following.
@@ -1261,7 +1276,25 @@ formers, and finally universes.
 
 \subsubsection{Negative types}
 
-\begin{mydefinition}[$\Pi$-types] A $(\Ty,\,\Tm)$ family supports $\Pi$ types if it supports the following.
+\begin{mydefinition}
+\label{def:constant-families}
+A family structure supports \textbf{constant families} if we have the following.
+\begin{alignat*}{3}
+  & \K &&: \Con \to \{\Gamma : \Con \} \to \Ty\,\Gamma \\
+  & (\appK,\,\lamK) &&: \Tm\,\Gamma\,(\K\,\Delta) \simeq \Sub\,\Gamma\,\Delta
+\end{alignat*}
+Constant families express that every context can be viewed as a non-dependent
+type in any context. Having constant families is equivalent to the
+\emph{democracy} property for a cwf
+\cite{clairambault2014biequivalence,forsberg-phd}.  Constant families are
+convenient when building models, because they let us model non-dependent types
+as semantic contexts, which are often simpler structures than semantic types.
+From a programming perspective, constant families specify closed record types,
+where $\K\,\Delta$ has $\Delta$-many fields.
+\end{mydefinition}
+
+\begin{mydefinition}
+A $(\Ty,\,\Tm)$ family supports \textbf{$\Pi$-types} if it supports the following.
 \begin{alignat*}{3}
   &\Pi           &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
   &\ms{\Pi[]}    &&: (\Pi\,A\,B)[\sigma] = \Pi\,(A[\sigma])\,(B[\sigma\circ\p,\,\q])\\
@@ -1323,7 +1356,8 @@ most important one, for skipping higher-order abstract syntax, is that this
 author has not yet acquired the proficiency to comfortably use the new
 techniques.
 
-\begin{mydefinition}[$\Sigma$-types] A family structure supports $\Sigma$-types if we have
+\begin{mydefinition}
+A family structure supports \textbf{$\Sigma$-types} if we have
 \begin{alignat*}{3}
   & \Sigma  &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
   & (\proj,\,(\blank,\blank)) &&: \Tm\,\Gamma\,(\Sigma\,A\,B) \simeq ((t : \Tm\,\Gamma\,A) \times \Tm\,\Gamma\,(B[\id,\,t]))
@@ -1333,17 +1367,25 @@ natural. We may write $\proj_1$ and $\proj_2$ for composing the metatheoretic
 first and second projections with $\proj$.
 \end{mydefinition}
 
-\begin{mydefinition}[Unit type]
-A family structure supports the unit type if we have $\top : \Ty\,\Gamma$ such
+\begin{mydefinition}
+A family structure supports the \textbf{unit type} if we have $\top : \Ty\,\Gamma$ such
 that $\Tm\,\Gamma\,\top \simeq \top$, where the $\top$ on the right is the
 metatheoretic unit type, and we overload $\top$ for the internal unit type.
 From this, we get the internal $\tt : \Tm\,\Gamma\,\top$, which is
 definitionally unique.
 \end{mydefinition}
 
-The identity type can be also specified as a negative type.
-In this case we get an extensional identity, while if we define it as a
-positive type, we get intensional identity instead.
+\begin{mydefinition}
+A family structure supports \textbf{extensional identity} types if there is $\Id
+: \Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma$ such that
+$(\reflect,\,\refl) : \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t = u)$.
+\end{mydefinition}
+
+It is also possible to give positive definition for identity types, in which
+case we get intensional identity. Extensional identity corresponds to a
+categorical equalizer of terms (a limit), while the Martin-Löf-style intensional
+identity is characterized as the initial reflexive relation on a type (a
+colimit).
 
 This choice between negative and positive specification generally exists for
 type formers with a single term construction rule. For example, $\Sigma$ can be
@@ -1351,12 +1393,6 @@ defined as a positive type, with an elimination rule that behaves like pattern
 matching. Positive $\Sigma$ is equivalent to negative $\Sigma$, although it only
 supports propositional $\eta$-rules. In contrast, positive identity is usually
 \emph{not} equivalent to negative identity.
-
-\begin{mydefinition}[Extensional identity]
-A family structure supports extensional identity types if there is $\Id :
-\Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma$ such that
-$(\reflect,\,\refl) : \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t = u)$.
-\end{mydefinition}
 
 $\refl : t = u \to \Tm\,\Gamma\,(\Id\,t\,u)$ expresses reflexivity of identity:
 definitionally equal terms are provably equal. $\reflect$, which goes the other
@@ -1405,9 +1441,9 @@ move to natural numbers with definitionally unique recursion, conversion
 checking becomes undecidable.
 
 One solution is to have propositionally unique recursion instead. However, if
-such equations are postulated, that would break the canonicity property of basic
-intensional type theory, since now we would have equality proofs besides $\refl$
-in the empty context.
+such equations are postulated, that would break the canonicity property in
+intensional type theories, since now we would have equality proofs other than
+$\refl$ in the empty context.
 
 The standard solution is to have dependent elimination principles instead: this
 allows inductive reasoning, canonicity and effectively decidable definitional
@@ -1427,14 +1463,443 @@ conversion should be kept in mind.
 
 \subsubsection{Universes}
 
-\todo{TODO}
+Universes are types which classify types. There are several different flavors of
+universes.
 
+\begin{mydefinition} A \textbf{Tarski-style} universe consists of
+the following data:
+\begin{alignat*}{3}
+  & \U : \Ty\,\Gamma\hspace{2em}\El : \Tm\,\Gamma\,\U \to \Ty\,\Gamma
+\end{alignat*}
+\end{mydefinition}
+This is a weak classifier, since not all $\Ty\,\Gamma$ are necessarily
+represented as terms of the universe. Rather, this kind of universe can be
+viewed as an internal sub-family of $(\Ty,\,\Tm)$. Like families, Tarski
+universes can be closed under type formers. For instance, if $\U$ has $\Nat$,
+we have the following:
+\begin{alignat*}{3}
+  &\Nat : \Tm\,\Gamma\,\U
+    \hspace{1em}\mi{zero} : \Tm\,\Gamma\,(\El\,\Nat)
+    \hspace{1em}\mi{suc} : \Tm\,\Gamma\,(\El\,\Nat) \to \Tm\,\Gamma\,(\El\,\Nat)
+\end{alignat*}
+\vspace{-2em}
+\begin{alignat*}{3}
+  \ms{NatElim} &:\,\,\,(P : \Ty\,(\Gamma\ext n : \El\,\Nat))\\
+  &\to \Tm\,\Gamma\,(P[n \mapsto \mi{zero}])\\
+  &\to \Tm\,(\Gamma\ext n : \El\,\Nat \ext \mi{np} : P[n \mapsto n])\,(P[n \mapsto \mi{suc}\,n]) \\
+  &\to (n : \Tm\,\Gamma\,(\El\,\Nat)) \to \Tm\,\Gamma\,(P[n \mapsto n])
+\end{alignat*}
+If all type formers in $\U$ follow this scheme, $\U$ may be called a
+\textbf{weakly Tarski} universe. If we assume that every type former in $\U$ is
+also duplicated in $(\Ty,\,\Tm)$, moreover $\El$ preserves all type formers, so
+that e.g.\ $\El\,\Nat$ is definitionally equal to the natural number type in
+$\Ty$, then $\U$ is \textbf{strongly Tarski}.
+
+It often is more convenient to have stronger classifiers as universes, so that
+\emph{all} types in a given family structure are represented.
+
+\begin{mydefinition}
+Ignoring size issues for now, \textbf{Coquand universes} \cite{TODO} are
+specified as follows:
+\[
+  \U : \Ty\,\Gamma\hspace{1em} (\El,\,\ms{c}) : \Tm\,\Gamma\,\U \simeq \Ty\,\Gamma
+\]
+$\ms{c}$ maps every type in $\Ty$ to a code in $\U$. This is very convenient,
+since now we can ignore $\El$ when specifying type formers, as $\ms{c}$ can be
+always used on demand to get a code for a type.
+\end{mydefinition}
+
+Unfortunately, the exact specification above yields an inconsistent
+``type-in-type'' system, because $\U$ itself has a code in $\U$. The standard
+solution is to have multiple family structures $(\Ty_i,\,\Tm_i)$, indexed by
+universe levels, and have $\U_i : \Ty_{i + 1}\,\Gamma$ and
+$\Tm_{i+1}\,\Gamma\,\U_i \simeq \Ty_i\,\Gamma$. For a general specification of
+consistent universe hierarchies , see \cite{TODO}. As mentioned in Section
+\ref{sec:universes}, we omit universe indices in the following, and implicitly
+assume ``just enough'' universes for particular purposes.
+
+\begin{mydefinition}
+\textbf{Russell universes} are a stricter variant of Coquand universes, where we
+have $\Tm\,\Gamma\,\U = \Ty\,\Gamma$ as an equality of sets instead of an
+isomorphism. This justifies omitting $\El$ and $\ms{c}$ from informal notation,
+and implicitly casting $A : \Tm\,\Gamma\,\U$ to $\Ty\,\Gamma$.
+\end{mydefinition}
 
 \section{Two-Level Type Theory}
 
-%% Let us move to
+We describe models of a basic version of 2LTT in the following. The basic idea
+is that we have two family structures on a cwf, related by a family morphism.
 
-\section{Presheaf Models}
+\begin{mydefinition}
+A \textbf{family morphism} $F$ between ($\Tm_0$, $\Ty_0$) and ($\Tm_1$, $\Ty_1$)
+families consists of natural transformations mapping types to types and terms to
+terms, which preserves context extensions up to context isomorphism, i.e.\ we
+have that $(\Gamma \ext F\,A) \simeq (\Gamma \ext A)$, where $\simeq$ denotes
+existence of an invertible $\Sub$.
+\end{mydefinition}
+
+Family morphisms are restrictions of so-called \emph{weak morphisms}
+\cite{dependentrightadjoints} (or \emph{pseudomorphisms}
+\cite{kaposi2019gluing}) of cwfs: a weak morphism which has the identity action
+on the base category is exactly a family morphism.
+
+\begin{mylemma} Every family morphism has invertible action on terms, i.e.\ there
+  is an $F^{-1} : \Tm\,\Gamma\,(F\,A) \to \Tm\,\Gamma\,A$.
+\end{mylemma}
+
+\begin{proof}
+from the preservation of context extension by $F$, we know that $F$ is
+invertible on the zero De Bruijn index, so for $\q : \Tm\,(\Gamma \ext F\,A)\,(F
+(A[\p]))$, we have $F^{-1}\q : \Tm\,(\Gamma \ext F\,A)\,(A[\p])$, such that $F
+(F^{-1}\,\q) = \q$. If we have any $t : \Tm\,\Gamma\,(F\,A)$, we also have
+$(F^{-1}\q)[\id,\,t] : \Tm\,\Gamma\,A$, and this yields the inverse action
+$F^{-1}$ which acts on all terms.
+\end{proof}
+
+\begin{notation}
+In the following, we write $\Lift : \Ty_0\,\Gamma \to \Ty_1\,\Gamma$ for
+the action of some morphism on types, $\up : \Tm_0\,\Gamma\,A \to
+\Tm_1\,\Gamma\,(\Lift\,A)$ for the action on terms, and $\down$ for the inverse
+action on terms. We also call the action on types \emph{type lifting}
+and the action on terms \emph{term lifting}. We may also use $\Lift$ to
+refer to a specific family morphism, if there is no ambiguity.
+\end{notation}
+
+\begin{mydefinition}
+A \textbf{model of basic 2LTT} consists of a cwf equipped with two families
+$(\Ty_0,\,\Tm_0)$ and $(\Ty_1,\,\Tm_1)$ and a morphism between them. Both
+families may be closed under arbitrary additional type formers.
+\end{mydefinition}
+
+\begin{notation}
+We may call $(\Ty_0,\,\Tm_0)$ the inner family and $(\Ty_1,\,\Tm_1)$ the outer
+one. If a type former is present in both families, we may distinguish the two
+copies by indexing, for example $\Bool_0 : \Ty_0\,\Gamma$ and $\Bool_1 :
+\Ty_1\,\Gamma$, and likewise for term formers. However, we overload notation in
+cases where levels are inferable, such as in a function type $\Lift\Bool_0 \to
+\Bool_1$, where the function arrow is clearly in the outer level.
+\end{notation}
+
+The syntax of basic 2LTT can be interpreted as having ($\Ty_1$, $\Tm_1$) as a
+metaprogramming layer which can generate object-level programs in the ($\Ty_0$,
+$\Tm_0$) layer.
+
+Lifted types correspond to types of object-level expressions; for example,
+$\Bool_0 : \Ty_0\,\Gamma$ is the object-level type of Booleans, while
+$\Lift\Bool_0$ is the meta-level type of $\Bool_0$-expressions, and $\Bool_1 :
+\Ty_1\,\Gamma$ is the type of meta-level Booleans. It is possible to compute a
+$\Bool_0$ from a $\Bool_1$. Given $b : \Tm_1\,\Gamma\,\Bool_1$, we can construct
+$\down(\mathsf{if}\,b\,\mathsf{then}\up\!\true_0\,\mathsf{else}\up\!\false_0) :
+\Tm_0\,\Gamma\,\Bool_0$.
+
+But there is no way to compute a $\Bool_1$ from a $\Bool_0$: we can try to lift
+the input, but there is no elimination rule for $\Lift\Bool_0$ in
+$\Ty_1$. Conceptually, terms of $\Lift\Bool_0$ are \emph{expressions}, so they
+are not necessarily $\true$ or $\false$, they can also be variables or neutral
+expressions, so the usual Boolean elimination is not justified for them.
+$\Lift$ preserves type formers in the following way:
+\begin{itemize}
+\item It preserves negative types up to isomorphism. The reason is that these
+  types are specified with isomorphisms, and $\Lift$ itself is an isomorphism on
+  terms. For example, $\Lift\!(A \times B) \simeq\,\, \Lift\!A\,\times
+  \Lift\!B$.
+\item For positive types, it's possible to eliminate from outer types to inner
+      ones but not the other way around.
+\item For universes, it's possible to convert inner types to outer ones, but not
+  the other way around. For example, assuming Russell universes, given $a :
+  \Tm_1\,\Gamma\,(\Lift \U_0)$, we have $\Lift (\down a) : \Tm_1\,\Gamma\,\U_1$.
+\end{itemize}
+
+The rules of basic 2LTT model a form of generative two-stage compilation with
+dependent types. Comparing this system to e.g.\ BER MetaOCaml
+\cite{kiselyov14metaocaml}, we can relate $\Lift$ to $\ms{code}$, $\up$ to
+the quasi-quotation operation $<\!\blank\!>$, and $\down$ to escape
+$\sim\!\blank$.
+
+We may also think about the relation between \emph{modalities} and family
+morphisms. The main difference is that morphisms impose no structural
+restrictions on variables and contexts. Concretely, every $\Lift$ is dependent
+right adjoint \cite{dependentrightadjoints} to the identity functor on the base
+category, as we have $\Tm\,(\Id\,\Gamma)\,A \simeq
+\Tm\,\Gamma\,(\Lift\,A)$. Hence, every morphism can be viewed as a degenerate
+modality.
+
+For convenience, we use a slightly stricter notion of 2LTT in
+this thesis:
+\begin{mydefinition}\label{def:2ltt} A \textbf{model of 2LTT} is a model of basic 2LTT such that
+\begin{enumerate}
+  \item $(\Gamma\,\,\ext \Lift\!A) = (\Gamma \ext A)$
+  \item $\Tm_1\,\Gamma\,(\Lift\!A) = \Tm_0\,\Gamma\,A$
+\end{enumerate}
+\end{mydefinition}
+This allows us to omit term lifting annotations, so that now $\true_0$ is a term
+of $\Bool_0$, but also a term of $\Lift \Bool_0$. In a proof assistant, the extra
+equations would not buy us much, because we would have to transport $\true_0$
+over the equations anyway. But when working in a less formal extensional
+notation, as we do in this thesis, the transports can be omitted.
+
+\section{Standard Semantics of 2LTT}
+
+We take a look at the standard semantics of 2LTT which we use in the rest of the
+thesis. This justifies the metaprogramming view, that 2LTT allows meta-level
+reasoning about objects in an inner theory.
+
+We present it in a modular fashion, by assuming progressively more structure in
+the inner theory. First, we only assume a category for the inner theory. This
+already lets us present a presheaf semantics for the outer layer. Then, we
+assume a cwf as the inner theory, which lets us interpret $\Lift$ as well.
+
+\subsection{Presheaf Model of the Outer Layer}
+
+In this subsection we present a presheaf model for the outer layer of 2LTT, that
+is, the base category together with the terminal object and the $(\Ty_1,\,\Tm_1)$
+family. This presheaf semantics is well-known in the literature \cite{TODO}. We
+give a specification which follows \cite{TODO} most closely.
+
+We assume a $\mbbC$ category. We write $i,\,j,\,k : |\mbbC|$ for objects and
+$f,\,g,\,h\,: \mbbC(i,\,j)$ for morphisms. We use a different notation than for
+cwfs before, in order to disambiguate components in $\mbbC$ from components in
+the presheaf model of 2LTT. In the following, we use $\hmbbC$ to refer to the
+presheaf model of the outer layer (which is being defined). We denote components
+of the model using field projection syntax, by subscription with $\hmbbC$. For
+example, $\Con_{\hmbbC} : \Set$ refers to the set of objects in the underlying
+category of $\hmbbC$.
+
+\subsubsection{Model of Cwf}
+
+\begin{mydefinition}
+$\Gamma : \Con_{\hmbbC}$ is a presheaf over $\mbbC$. Its components
+are as follows.
+\begin{alignat*}{3}
+  & |\Gamma|             &&: |\mbbC| \to \Set \\
+  & \blank\lab\blank\rab &&: |\Gamma|\,j \to \mbbC(i,\,j) \to |\Gamma|\,i\\
+  & \gamma\lab\id\rab &&= \gamma \\
+  & \gamma\lab f\circ g\rab &&= \gamma \lab f \rab \lab g \rab \\
+\end{alignat*}
+We flip around the order of arguments in the action of $\Gamma$ on
+morphisms. This is more convenient because of the contravariance; we can
+observe this in the statement of preservation laws already.
+\end{mydefinition}
+
+\begin{mydefinition}
+$\sigma : \Sub_{\hmbbC}\,\Gamma\,\Delta$ is a natural transformation from $\Gamma$ to $\Delta$. Its components are the following.
+\begin{alignat*}{3}
+  & |\sigma| : |\Gamma|\,i \to |\Delta|\,i \\
+  & |\sigma|(\gamma\lab f \rab) = (|\sigma|\gamma)\lab f \rab
+\end{alignat*}
+\end{mydefinition}
+
+\begin{mydefinition}
+$A : \Ty_{1\,\hmbbC}\,\Gamma$ is a displayed presheaf over $\Gamma$. The
+``displayed'' here is used in exactly the same sense as in ``displayed
+algebra'' before. As we will see in Chapter \ref{chap:fqiit}, presheaves can be
+specified with a signature, in which case a presheaf is an algebra, and a
+displayed presheaf is a displayed algebra. The definition here is equivalent
+to saying that $A$ is a presheaf over the category of elements of $\Gamma$,
+but it is more convenient to use in concrete definitions and calculations. The
+components of $A$ are as follows.
+\begin{alignat*}{3}
+  &|A| &&: |\Gamma|\,i \to \Set\\
+  &\blank\lab\blank\rab &&: |A|\,\gamma \to (f : \mbbC(i,\,j)) \to |A|\,(\gamma\lab f \rab)\\
+  & \alpha\lab\id\rab &&= \alpha \\
+  & \alpha\lab f\circ g\rab &&= \alpha \lab f \rab \lab g \rab
+\end{alignat*}
+\end{mydefinition}
+
+\begin{mydefinition}
+$t : \Tm_{1\,\hmbbC}\,\Gamma\,A$ is a section of the displayed presheaf $A$. This is
+again the same notion of section that we have seen before, instantiated for
+presheaves.
+\begin{alignat*}{3}
+  & |t| : (\gamma : |\Gamma|)\,i \to |A|\,\gamma \\
+  & |t|(\gamma\lab f \rab) = (|t|\gamma)\lab f \rab
+\end{alignat*}
+\end{mydefinition}
+
+\begin{mydefinition}
+$\Gamma \ext_{\hmbbC} A : \Con_{\hmbbC}$ is the total presheaf of the displayed presheaf $A$. Its action on objects and morphisms is the following.
+\begin{alignat*}{3}
+  &|\Gamma \ext_{\hmbbC} A| &&\defn (\gamma : |\Gamma|) \times |A\,\gamma|\\
+  &(\gamma,\,\alpha)\lab f \rab &&\defn (\gamma\lab f \rab,\, \alpha\lab f \rab)
+\end{alignat*}
+The $\id$ and $\blank\!\circ\!\blank$ preservation laws follow immediately.
+\end{mydefinition}
+
+\begin{mydefinition}
+$A[\sigma]_{\hmbbC} : \Ty_{1\,\hmbbC}\,\Gamma$ is defined as follows, assuming
+$A : \Ty_{1\,\hmbbC}\,\Delta$ and $\sigma : \Sub_{\hmbbC}\,\Gamma\,\Delta$.
+\begin{alignat*}{3}
+  & |A[\sigma]_{\hmbbC}|\,\gamma &&\defn |A|\,(|\sigma|\,\gamma) \\
+  & \alpha \lab f \rab &&\defn \alpha \lab f \rab
+\end{alignat*}
+In the second component, we use $\blank\lab\blank\rab$ for $A$ on the right hand
+side.  The definition is well-typed since $|A|\,(|\sigma|\,(\gamma \lab f\rab))
+= |A|\,((|\sigma|\,\gamma) \lab f \rab)$ by the naturality of
+$\sigma$. Functoriality follows from functoriality of $A$.
+\end{mydefinition}
+
+It's easy to check that the above definitions can be extended to a cwf.
+\begin{itemize}
+  \item For the base category, we take the category of presheaves.
+  \item $\emptycon_{\hmbbC}$ is the terminal presheaf, i.e.\ the constantly $\top$
+        functor.
+  \item Type substitution is functorial, as it is defined as simple function
+    composition of actions on objects.
+  \item Term substitution is defined as composition of a section and
+    a natural transformation; and also functorial for the same reason.
+  \item Context comprehension structure follows from the $\Sigma$-based definition for
+    context extension.
+\end{itemize}
+
+\subsubsection{Yoneda Embedding}
+
+Before continuing with interpreting type formers in $\hmbbC$, we review the
+Yoneda embedding, as it is useful in subsequent definitions.
+
+\begin{mydefinition}
+The \textbf{Yoneda embedding}, denoted $\ms{y}$, is a functor from $\mbbC$ to
+the underlying category of $\hmbbC$, defined as follows.
+\begin{alignat*}{3}
+  & \yon : |\mbbC| \to \Con_{\hmbbC} \hspace{3em}&& \yon : \mbbC(i,\,j) \to \Sub_{\hmbbC}\,(\yon\,i)\,(\yon\,j)\\
+  & \yon\,i \defn \mbbC(\blank,\,i) && |\yon\,f|\,g \defn f \circ g
+\end{alignat*}
+\end{mydefinition}
+
+\begin{mylemma}[\textbf{Yoneda lemma}] We have $\Sub_{\hmbbC}\,(\yon\,i)\,\Gamma \simeq |\Gamma|\,i$ as an isomorphism of sets, natural in $i$ \cite{TODO}.
+\end{mylemma}
+
+\noindent\emph{Corollary.} If we choose $\Gamma$ to be $\yon j$, it follows that
+$\Sub_{\hmbbC}\,(\yon\,i)\,(\yon\,j) \simeq \mbbC(i,\,j)$, i.e.\ that $\yon$ is
+bijective on morphisms; hence it is an embedding.
+
+\begin{notation}
+For $\gamma : |\Gamma|\,i$, we use $\gamma\!\lab\!\blank\!\rab :
+\Sub_{\hmbbC}\,(\yon\,i)\,\Gamma $ to denote transporting right to left along the Yoneda
+lemma. In the other direction, we don't need a notation per se, since from
+$\sigma : \Sub_{\hmbbC}\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id :
+|\Gamma|\,i$.
+\end{notation}
+
+\subsubsection{Type Formers}
+
+\begin{mydefinition}
+\textbf{Constant families} are displayed presheaves which do not depend on their context.
+\begin{alignat*}{3}
+  & \K_{\hmbbC} &&: \Con_{\hmbbC} \to \{\Gamma : \Con_{\hmbbC} \} \to \Ty_{\hmbbC}\,\Gamma\\
+  & |\K_{\hmbbC}\,\Delta|\,\{i\}\,\gamma\,&&\defn |\Delta|\,i \\
+  & \delta\lab f \rab &&\defn \delta \lab f \rab
+\end{alignat*}
+With this definition, we actually have $\Tm_{\hmbbC}\,\Gamma\,(\K_{\hmbbC}\,\Delta) =
+\Sub_{\hmbbC}\,\Gamma\,\Delta$ which is stronger than the required isomorphism in
+Definition \ref{def:constant-families}.
+\end{mydefinition}
+
+\begin{notation}
+It is useful to consider any set as a constant presheaf, so
+given $A : \Set$ we may write $A : \Con_{\hmbbC}$ for the constant presheaf
+as well.
+\end{notation}
+
+\begin{mydefinition}
+From any $A : \Set$, we get $\K\,A : \Ty_{\hmbbC}\,\Gamma$. This can be used to
+model negative or positive \textbf{closed type formers}. For example, natural
+numbers are modeled as $\K\,\mbb{N}$, Booleans as $\K\,\Bool$, the unit type as
+$\K\,\top$, etc.
+\end{mydefinition}
+
+\begin{mydefinition}
+A \textbf{Coquand universe} can be defined as follows. Since $\U_{\hmbbC}$ is a
+non-dependent type, it is helpful to define it as $\U_{\hmbbC} : \Con_{\hmbbC}$
+such that $\Sub_{\hmbbC}\,\Gamma\,\U_{\hmbbC} \simeq \Ty_{\hmbbC}\,\Gamma$.  The
+usual universe can be derived from this as $\K_{\hmbbC}\,\U_{\hmbbC}$.
+
+We can take a hint from the Yoneda lemma in the definition. We aim to define
+$|\U_{\hmbbC}|\,i$, but by the Yoneda lemma it is isomorphic to
+$\Sub_{\hmbbC}\,(\yon i)\,\U_{\hmbbC}$. However, by specification this should be
+isomorphic to $\Ty_{\hmbbC}\,(\yon\,i)$, so we take this as definition:
+\begin{alignat*}{3}
+  & \U_{\hmbbC} &&: \Con_{\hmbbC}\\
+  &|\U_{\hmbbC}|\,i &&\defn \Ty_{\hmbbC}\,(\yon\,i)\\
+  &A \lab f \rab &&\defn A[\yon f]_{\hmbbC}
+\end{alignat*}
+\end{mydefinition}
+In the $A \lab f \rab$ definition, we substitute $A : \Ty_{\hmbbC}\,(\yon\,i)$
+with $\yon f : \Sub_{\hmbbC}\,(\yon j)\,(\yon i)$ to get an element of
+$\Ty_{\hmbbC}\,(\yon\,j)$.  The required $\Sub_{\hmbbC}\,\Gamma\,\U_{\hmbbC}
+\simeq \Ty_{\hmbbC}\,\Gamma$ is straightforward so we omit the definition.
+
+\begin{mydefinition} \textbf{$\Sigma$-types} are defined pointwise:
+\begin{alignat*}{3}
+  & \Sigma_{\hmbbC}  &&: (A : \Ty_{\hmbbC}\,\Gamma) \to \Ty_{\hmbbC}\,(\Gamma\ext A) \to \Ty_{\hmbbC}\,\Gamma\\    & |\Sigma_{\hmbbC}\,A\,B|\,\gamma && \defn (\alpha : |A|\,\gamma) \times |B|\,(\gamma,\,\alpha)\\
+  & (\alpha,\,\beta) \lab f \rab && \defn (\alpha \lab f \rab,\, \beta \lab f \rab)
+\end{alignat*}
+\end{mydefinition}
+
+\begin{mydefinition} We define \textbf{$\Pi$-types} in the following.
+
+\begin{alignat*}{3}
+  & \Pi_{\hmbbC} &&: (A : \Ty_{\hmbbC}\,\Gamma) \to \Ty_{\hmbbC}\,(\Gamma \ext A) \to \Ty_{\hmbbC}\,\Gamma\\
+  & |\Pi_{\hmbbC}\,A\,B|\,\{i\}\,\gamma &&\defn \Tm_{\hmbbC}\,(\yon i \ext A[\gamma\!\lab\!\blank\!\rab])\,(B[\gamma\!\lab\!\blank\!\rab \circ\,\p,\,\q])\\
+  & t\lab f \rab &&\defn t[\yon f \circ \p,\, \q]_{\hmbbC}
+\end{alignat*}
+
+\todo{Get rid of $\hmbbC$ subscripts}
+
+\end{mydefinition}
+
+\subsection{Modeling The Inner Layer and Lifting}
+
+We assume now that $\mbbC$ is a cwf. We write types as $a,\,b,\,c :
+\Ty_\mbbC\,i$ and terms as $t,\,u,\,v : \Tm_\mbbC\,i\,a$. We reuse $\emptycon$
+for the terminal object and $\blank\ext\blank$ for context extension, and
+likewise reuse notation for substitutions.
+
+\begin{mydefinition}[\textbf{($\Ty_{0\,\hmbbC}$, $\Tm_{0\,\hmbbC}$)}]
+First, note that $\Ty_{\mbbC}$ is a presheaf over $\mbbC$, and $\Tm_{\mbbC}$ is
+a displayed presheaf over $\Ty_{\mbbC}$; this follows from the requirement that
+they form a family structure over $\mbbC$. Hence, $\Ty_{\mbbC}$ is an element of
+$\Con_{\hmbbC}$ and $\Tm_{\mbbC}$ is an element of $\Ty_{\hmbbC}\,\Ty_{\mbbC}$.
+\begin{alignat*}{3}
+  & \Ty_{0\,\hmbbC}\,\Gamma &&\defn \Sub_{\hmbbC}\,\Gamma\,\Ty_{\mbbC}\\
+  & \Tm_{0\,\hmbbC}\,\Gamma\,A &&\defn \Tm_{\hmbbC}\,\Gamma\,(\Tm_\mbbC[A]_{\hmbbC})
+\end{alignat*}
+In other words, $A : \Ty_{0\,\hmbbC}\,\Gamma$ is a natural transformation from
+$\Gamma$ to $\Ty_{\mbbC}$, and $t : \Tm_{0\,\hmbbC}\,\Gamma\,A$ is a section of
+the displayed presheaf $\Tm_\mbbC[A]_{\hmbbC}$. This is well-typed since $A :
+\Sub_{\hmbbC}\,\Gamma\,\Ty_{\mbbC}$, so we can use the semantic substitution
+operation $\blank[\blank]_{\hmbbC}$.
+
+It might be helpful to unfold part of the definition: if $t :
+\Tm_{0\,\hmbbC}\,\Gamma\,A$, then $|t| : \{i : |\mbbC|\} \to (\gamma : |\Gamma|\,i) \to
+\Tm_{\mbbC}\,i\,(|A|\,\gamma)$.
+
+For $A : \Ty_{0\,\hmbbC}\,\Delta$, we define substitution by having
+$A[\sigma]_{\hmbbC} \defn A \circ_{\hmbbC} \sigma$.  Likewise, term substitution
+is given by term substitution in $\hmbbC$.
+\end{mydefinition}
+
+\begin{mydefinition}(\textbf{Lifting})
+\begin{alignat*}{3}
+  & \Lift\,\,: \Ty_{0\,\hmbbC}\,\Gamma \to \Ty_{1\,\hmbbC} \\
+  & \Lift\!A \defn \Tm_{\mbbC}[A]
+\end{alignat*}
+This yields $\Tm_{0\,\hmbbC}\,\Gamma\,A \equiv
+\Tm_{1\,\hmbbC}\,\Gamma\,(\Lift\!A)$, which is the second condition from
+Definition \ref{def:2ltt}.
+\end{mydefinition}
+
+\begin{mydefinition}[\textbf{Context comprehension for ($\Ty_{0\,\hmbbC}$, $\Tm_{0\,\hmbbC}$)}]
+We define the inner context extension in $\hmbbC$ as follows: $\Gamma \ext A
+\defn \Gamma\,\,\ext\Lift\!A$. This yields the first condition from Definition
+\ref{def:2ltt}. It also follows that inner $\blank\ext\blank$ supports the
+expected comprehension isomorphism, since the outer $\blank\ext\blank$ supports
+it and $\Lift$ is an isomorphism on terms.
+\end{mydefinition}
+
+\todo{some discussion, dependent yoneda, representable pi, examples}
+
+%% foo: $\mbf{y}$
+
 
 \section{Simple Inductive Signatures in 2LTT}
 

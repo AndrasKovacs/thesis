@@ -126,3 +126,20 @@ fixpoints & continuity    vs W-types
 --          1. Cat signature, interpret it in cwf of Cats
 --          2. Double cat signature, interpret it in cwf of sets
 --
+
+f : C(i, j)
+yf : Sub yi yj
+|yf| g := f ∘ g
+
+
+U : Ty Γ
+|U|i := Ty yi
+a<f> := a<yf>
+
+Tm Γ U ≃ Ty Γ
+
+a : Tm Γ U
+|a| : |Γ|i → Ty yi         |Γ|i → Set
+
+|a|₁ : |Γ|i → C(j, i) → Set
+|a|₂ : |Γ|i (f : C(j, i)) → (g : C(k, j)) →

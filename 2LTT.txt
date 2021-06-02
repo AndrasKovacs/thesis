@@ -77,9 +77,13 @@ Ty₁ Γ   := Ĉ.Ty Γ
 Tm₁ Γ A := Ĉ.Tm Γ A
 
 ⇑ : Ty₀ Γ → Ty₁ Γ
-⇑ A := C.Tm[A]
+⇑A := C.Tm[A]
 
 Tm₀ Γ A ≡ Tm₁ Γ (Lift A)   OK
+
+
+(Γ ▶ A) : Con
+(Γ ▶ A) := Γ ▶ ⇑A
 
 ------------------------------------------------------------
 
@@ -113,7 +117,7 @@ Tm₁ Γ Ty₀ ≃ Ty₀ Γ
   (N : C.Ty ∙) × C.Tm ∙ N × |el N|(∙ ▶ N)
   (N : C.Ty ∙) × C.Tm ∙ N × C.Tm (∙ ▶ N) N
 
--- Finite product category
+a-- Finite product category
 ------------------------------------------------------------
 
 C.Ty Γ := C.Con
@@ -140,3 +144,151 @@ Tm Γ (Eq a t u) ≃ (t = u)
 (Eq a t u)ᴬ γ := (u γ = t γ)
 
 --------------------------------------------------------------------------------
+
+-- term yoneda lemma
+
+Tm (Γ ▶ ⇑A) B ~ ?
+
+(∀ i. (γ : |Γ|i)(α : C.Tm i (|A| γ)) → |B|ᵢ (γ, α)) ~ ?
+
+Sub (A × yB) C
+
+∀ i. |A|i → |yB|i → |C|i
+
+|yA ⇒ B|i = yi × yA → B
+          = y(i × A) → B
+	  = |B| (i × A)
+
+Sub A (yj ⇒ C)
+∀ i. |A|i → |B|(i × j)
+
+(A × yi → B) ≃ (∀ i. |A|i → |B|(i×j))
+
+|yi ⇒ B|j ≃
+|yi ⇒ B|j ≃ |B|(j × i)
+|yi ⇒ B|∙ ≃ |B|(∙ × i) ≃ |B| i
+
+⇑Bool₀ ⇒ Bool₁ ≃ Bool₁
+
+-- Tm ∙ (yi ⇒ B)
+
+-- Tm y∙ (yi ⇒ B)
+
+-- |yi ⇒ B|∙
+
+-- |B|(∙,i)
+
+
+(yi ⇒ A ⇒ B)
+
+|A ⇒ B|(∙,i) = y(∙,i) × A → B
+             = yi × A → B
+	     = yi → (A ⇒ B)
+	     = |A ⇒ B|i
+	     = yi × A → B ....
+
+|A ⇒ B|(∙, i) = y(∙,i) × A → B = yi × A → B = ∀ j. (j→i) → |A|j → |B|j
+
+(A ⇒ yi → B)
+
+|A ⇒ yi ⇒ B|∙ = y∙ × A → (yi ⇒ B) = ∀ j. |A|j → |B|(j,i)
+
+|yi ⇒ A|j = yj × yi → A = y(j×i) → A = |A|(j×i)
+
+
+
+Tm yi A ~ |A|ᵢ id
+
+γ : |Γ|ᵢ
+from γ : Sub yi Γ
+|Γ|ᵢ ≃ Sub yi Γ
+
+
+-- y→ : Sub yi Γ → |Γ|i
+-- y← : |Γ|i → Sub yi Γ
+
+σ ↦ |σ|id
+
+γ : |Γ|i      (λ (f : i⇒j). γ<f>)
+
+|σ|id
+
+γ<->
+
+
+|Π A B|ᵢ γ := Tm (yi ▶ A[from γ]) B[from γ∘p, q]
+t<f> := t[yf∘p, q]  OK
+
+
+y Γ                 := C.Sub _ Γ
+|y σ|ᵢ γ            := σ ∘ γ
+
+|y (A : C.Ty Γ)|ᵢ σ := C.Tm i (A[σ])
+t<f>                := t[yf]
+
+y ∙ ~ ∙
+y (Γ ▶ A) ~ y Γ ▶ y A
+
+lemma :
+
+  Sub yΓ Δ ~ |Δ|Γ
+  Tm yΓ A ~ |A|Γ id
+
+  Tm yΓ yA ~ |yA|Γ id = C.Tm Γ A
+
+
+
+
+-- |Π ⇑A B|ᵢ γ = Tm (yi ▶ C.Tm[A]
+
+-- Tm yΓ yA
+
+-- C.Ty Γ → Ty (yΓ)
+
+
+
+Tm Γ (Π A B) ~ Tm (Γ ▶ A) B
+
+Tm yi A ~ |A|ᵢ id
+
+|Π A B|ᵢ (γ : |Γ|i) = Tm (yi ▶ A[γ<->]) (B[γ<-> ∘ p, q])
+
+Sub Γ U ~ Ty Γ
+
+|U|i ~ Sub yi U ~ Ty yi
+
+|U|i := Ty yi
+t<f> := t[yf]
+
+
+
+
+-- -- derivation uf U
+-- Tm Γ U ~ Ty Γ
+
+-- |U|ᵢ γ
+
+
+  t : Tm (yi ▶ A[from γ]) B[from γ ∘ p, q]
+  f : C(j, i)
+
+  [yf ∘ p, q] : Sub (yj ▶ A[from γ ∘ yf]) (yi ▶ A[from γ])
+
+
+  goal : Tm (yj ▶ A[from γ ∘ yf]) B[from γ ∘ yf ∘ p, q]
+
+  yf : Sub yj yi
+
+  γ : |Γ|ᵢ
+  γ<f> : |Γ|ⱼ
+  from (γ<f>) = Sub yj Γ
+
+  from γ : Sub yi Γ
+  yf     : Sub yj yi
+  from γ ∘ yf : Sub yj Γ
+
+  lemma:
+    from(γ<f>) = from γ ∘ yf
+
+  γ    : Sub yi Γ
+  γ<f> : Sub yj Γ
