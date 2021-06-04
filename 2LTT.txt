@@ -236,6 +236,37 @@ lemma :
 
   Tm yΓ yA ~ |yA|Γ id = C.Tm Γ A
 
+|Exp Γ Δ|i := Sub (yi × Γ) Δ
+σ<f>       := σ ∘ (yf∘p, q)
+
+  -- σ : Sub (yi × Γ) Δ
+  -- f : C(j, i)
+  -- goal :
+
+
+El : Sub Γ U → Ty₁ Γ
+|El σ| γ := |σ| γ
+A<f>     := A[yf]
+
+c : Ty₁ Γ → Sub Γ U
+|c A| γ := |A| γ
+
+y : C.Ty i → Ty₁ (yi)
+yon A := C.Tm
+
+Tm (y (i ▶ |A| γ)) (B[γ<->∘p, q][y▶⁻¹])
+
+   |B[γ<->∘p, q][y▶⁻¹]| {i ▶ |A|γ} id
+
+   |B| (|γ<->∘p, q|∘y▶⁻¹) (p, q)
+   |B|
+
+
+
+
+|Π ⇑A B|ᵢ γ = Tm (yi ▶ C.Tm[A ∘ γ<->]) (B[γ<->∘p, q])
+            =
+
 
 
 
@@ -261,6 +292,11 @@ Sub Γ U ~ Ty Γ
 t<f> := t[yf]
 
 
+yon(A : C.Ty i) : Ty₁ (yon i)
+|yon A|ⱼ f := C.Tm j (A[f])
+
+
+
 
 
 -- -- derivation uf U
@@ -268,12 +304,48 @@ t<f> := t[yf]
 
 -- |U|ᵢ γ
 
+  A : Ty₀ Γ
+
+  ⇑A : Ty₁ Γ
+
+  ⇑A[γ<->] : Ty₁ yi
+          = C.Tm[A ∘ γ<->]
+   j f ↦ C.Tm j (|A| (γ<f>))
+
+  |A| : Sub Γ C.Ty
+
+  |yon A|ⱼ f = C.Tm j A[f]
+  t<g> = t[g]
+
+  |yon(|A|ᵢ γ)|ⱼ f = C.Tm j (|A|ᵢ γ)[f] = C.Tm j (|A|ⱼ (γ<f>))
+
+  yon(|A|ᵢ γ) =? ⇑A[γ<->]
+
+  ⇑A[γ<->] = C.Tm[A∘γ<->]
+  |C.Tm[A∘γ<->]|ⱼ f = C.Tm j (|A|ⱼ (γ<f>))
+
+
+  |A|ᵢ γ : C.Ty i
+
+  yon(|A|ᵢ γ) : Ty₁ yi
+
+  Tm (yi ▶ A[γ<->]) (B[γ<->∘p, q])
+  Tm (yi ▶ ⇑A[γ<->]) (B[γ<->∘p, q])
+  Tm (yi ▶ C.Tm[A∘γ<->]) (B[γ<->∘p, q])
+
+
+  (⇑A)[γ<->] = ⇑(A[γ<->]) = C.Tm [A][γ<->] = C.Tm[A∘y<->]
+
+
+  i σ ↦ C.Tm i (|A| (γ<
+
+  Tm (yi ▶ A[γ<->]) (B[γ<->∘p, q])
+
 
   t : Tm (yi ▶ A[from γ]) B[from γ ∘ p, q]
   f : C(j, i)
 
   [yf ∘ p, q] : Sub (yj ▶ A[from γ ∘ yf]) (yi ▶ A[from γ])
-
 
   goal : Tm (yj ▶ A[from γ ∘ yf]) B[from γ ∘ yf ∘ p, q]
 
@@ -292,3 +364,10 @@ t<f> := t[yf]
 
   γ    : Sub yi Γ
   γ<f> : Sub yj Γ
+
+|Exp yi Γ| j ≃ |Γ|(i × j)
+
+|Exp yi Γ| j ≃
+Sub (yj ⊗ yi) Γ ≃
+Sub (y (j ⊗ i)) Γ ≃
+|Γ|(j ⊗ i)

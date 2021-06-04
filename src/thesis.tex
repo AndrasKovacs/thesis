@@ -677,7 +677,7 @@ in the interpretation of every type in a signature.
 The interpretation of types embeds terms as $A$-algebras. At the base type
 $\iota$, this embedding is simply the identity function, since $\iota^A\,\ms{T}
 \equiv \ms{T} \equiv \Tm\,\Omega\,\iota$. At function types we recursively proceed
-under a semantic $\lambda$. The interpretation of substitutions is analogous.
+under a semantic $\lambda$. The interpretation of contexts is pointwise.
 
 The interpretations of terms and substitutions are coherence properties, which
 relate the term algebra construction to term evaluation in the $\blank^A$ model.
@@ -738,7 +738,7 @@ We assume $(X^D,\,\omega^D) : \DispAlg\,\TmAlg_\Omega$. Recall that $X^D :
 before, we first interpret the underlying set:
 \begin{alignat*}{3}
   & \ms{E} : (t : \ms{T}) \to X^D\,t \\
-  & \ms{E}\,t \equiv t^D\,\omega^D
+  & \ms{E}\,t \defn t^D\,\omega^D
 \end{alignat*}
 However, this definition is not immediately well-typed, since $t^D\,\omega^D$
 has type $X^D\,(t^A\,(\Omega^T\,\Omega\,\id))$, so we have to show that
@@ -750,10 +750,10 @@ and contexts as well:
 \begin{alignat*}{3}
   & \hspace{-8em}\rlap{$\blank^E : (A : \Ty)(t : \Tm\,\Omega\,A) \to A^S\,\ms{E}\,(t^A\,(\Omega^T\,\Omega\,\id))\,(t^D\,\omega^D)$}\\
   & \hspace{-8em}\iota^E\,&&t : (t^A\,(\Omega^T\,\Omega\,\id))^D\,\omega^D = t^D\,\omega^D\\
-  & \hspace{-8em}(\iota\to A)^E\,&&t \equiv \lambda\,u.\, A^E\,(\app\,t\,u)\\
+  & \hspace{-8em}(\iota\to A)^E\,&&t \defn \lambda\,u.\, A^E\,(\app\,t\,u)\\
   & \hspace{-8em}&& \\
-  & \hspace{-8em}\rlap{$\blank^E : \Con : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^S\,\ms{E}\,(\nu^A\,(\Omega^T\,\Omega\,\id))\, (\nu^D\,\omega^D)$}\\
-  & \hspace{-8em}\rlap{$\Gamma^E\,\nu\,x \equiv A^E\,(\nu\,x)$}
+  & \hspace{-8em}\rlap{$\blank^E : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^S\,\ms{E}\,(\nu^A\,(\Omega^T\,\Omega\,\id))\, (\nu^D\,\omega^D)$}\\
+  & \hspace{-8em}\rlap{$\Gamma^E\,\nu\,x \defn A^E\,(\nu\,x)$}
 \end{alignat*}
 In $\iota^E$ we use the same equation as in the definition of $\ms{E}$. In
 $(\iota\to A)^E$ the definition is well-typed because of the same equation, but
@@ -762,7 +762,7 @@ additional path induction and transport fiddling in the (intensional) Agda
 formalization. We get induction for $\Omega$ as below.
 \begin{alignat*}{3}
   &\Ind_{\Omega} : (\mi{alg} : \DispAlg\,\TmAlg_\Omega) \to \Section\,\TmAlg_\Omega\,\mi{alg}\\
-  &\Ind_{\Omega}\,(X^D,\,\omega^D) \equiv (E,\, \Omega^E\,\Omega\,\id)
+  &\Ind_{\Omega}\,(X^D,\,\omega^D) \defn (E,\, \Omega^E\,\Omega\,\id)
 \end{alignat*}
 \end{mydefinition}
 
@@ -1106,6 +1106,7 @@ have a 2LTT program with an inner type, we can run it, and it returns another
 program, which lives purely in the inner theory.
 
 \section{Models of Type Theories}
+\label{sec:models-of-tts}
 
 Before elaborating on 2LTT-specific features, we review models of type theories
 in general. Variants of 2LTT will be obtained by adding extra features on the
@@ -1230,6 +1231,7 @@ extension $\blank\ext\blank$ for different families.
 \end{notation}
 
 \begin{mydefinition} The following derivable operations are commonly used.
+\label{def:cwfops}
   \begin{itemize}
     \item \emph{Single substitution} can be derived from parallel substitution
       as follows. Assume $t : \Tm\,(\Gamma\ext A)\,B$, and $u :
@@ -1340,7 +1342,7 @@ we assume that everything is natural, and thus omit substitution equations.
 
 There are ways to make this idea more precise, and take it a step further by
 working in languages where only natural constructions are possible. The term
-\emph{higher-order abstract syntax} is sometimes used for this style. It lets us
+\emph{higher-order abstract syntax} (HOAS) is sometimes used for this style. It lets us
 also omit contexts, so we would only need to write
 \begin{alignat*}{3}
   &\Pi            &&: (A : \Ty) \to (\Tm\,A \to \Ty) \to \Ty\\
@@ -1652,23 +1654,22 @@ assume a cwf as the inner theory, which lets us interpret $\Lift$ as well.
 \subsection{Presheaf Model of the Outer Layer}
 
 In this subsection we present a presheaf model for the outer layer of 2LTT, that
-is, the base category together with the terminal object and the $(\Ty_1,\,\Tm_1)$
-family. This presheaf semantics is well-known in the literature \cite{TODO}. We
-give a specification which follows \cite{TODO} most closely.
+is, the base category together with the terminal object, the $(\Ty_1,\,\Tm_1)$
+family and some type formers. This presheaf semantics is well-known in the
+literature \cite{TODO}. We give a specification which follows \cite{TODO} most
+closely.
 
 We assume a $\mbbC$ category. We write $i,\,j,\,k : |\mbbC|$ for objects and
 $f,\,g,\,h\,: \mbbC(i,\,j)$ for morphisms. We use a different notation than for
 cwfs before, in order to disambiguate components in $\mbbC$ from components in
-the presheaf model of 2LTT. In the following, we use $\hmbbC$ to refer to the
-presheaf model of the outer layer (which is being defined). We denote components
-of the model using field projection syntax, by subscription with $\hmbbC$. For
-example, $\Con_{\hmbbC} : \Set$ refers to the set of objects in the underlying
-category of $\hmbbC$.
+the presheaf model of 2LTT. We use $\hmbbC$ to refer to the model which is being
+defined. We denote components of $\hmbbC$ by simply using the component names
+from Section \ref{sec:models-of-tts}.
 
 \subsubsection{Model of Cwf}
 
 \begin{mydefinition}
-$\Gamma : \Con_{\hmbbC}$ is a presheaf over $\mbbC$. Its components
+$\Gamma : \Con$ is a presheaf over $\mbbC$. Its components
 are as follows.
 \begin{alignat*}{3}
   & |\Gamma|             &&: |\mbbC| \to \Set \\
@@ -1677,20 +1678,19 @@ are as follows.
   & \gamma\lab f\circ g\rab &&= \gamma \lab f \rab \lab g \rab \\
 \end{alignat*}
 We flip around the order of arguments in the action of $\Gamma$ on
-morphisms. This is more convenient because of the contravariance; we can
-observe this in the statement of preservation laws already.
+morphisms. This is more convenient because of the contravariance; we can observe
+this in the statement of preservation laws already. The action on morphisms is
+sometimes called \emph{restriction}.
 \end{mydefinition}
 
 \begin{mydefinition}
-$\sigma : \Sub_{\hmbbC}\,\Gamma\,\Delta$ is a natural transformation from $\Gamma$ to $\Delta$. Its components are the following.
-\begin{alignat*}{3}
-  & |\sigma| : |\Gamma|\,i \to |\Delta|\,i \\
-  & |\sigma|(\gamma\lab f \rab) = (|\sigma|\gamma)\lab f \rab
-\end{alignat*}
+$\sigma : \Sub\,\Gamma\,\Delta$ is a natural transformation from $\Gamma$ to
+$\Delta$. It has action $|\sigma| : |\Gamma|\,i \to |\Delta|\,i$, such that
+$|\sigma|(\gamma\lab f \rab) = (|\sigma|\gamma)$.
 \end{mydefinition}
 
 \begin{mydefinition}
-$A : \Ty_{1\,\hmbbC}\,\Gamma$ is a displayed presheaf over $\Gamma$. The
+$A : \Ty_1\,\Gamma$ is a displayed presheaf over $\Gamma$. The
 ``displayed'' here is used in exactly the same sense as in ``displayed
 algebra'' before. As we will see in Chapter \ref{chap:fqiit}, presheaves can be
 specified with a signature, in which case a presheaf is an algebra, and a
@@ -1707,7 +1707,7 @@ components of $A$ are as follows.
 \end{mydefinition}
 
 \begin{mydefinition}
-$t : \Tm_{1\,\hmbbC}\,\Gamma\,A$ is a section of the displayed presheaf $A$. This is
+$t : \Tm_1\,\Gamma\,A$ is a section of the displayed presheaf $A$. This is
 again the same notion of section that we have seen before, instantiated for
 presheaves.
 \begin{alignat*}{3}
@@ -1717,32 +1717,32 @@ presheaves.
 \end{mydefinition}
 
 \begin{mydefinition}
-$\Gamma \ext_{\hmbbC} A : \Con_{\hmbbC}$ is the total presheaf of the displayed presheaf $A$. Its action on objects and morphisms is the following.
+$\Gamma \ext A : \Con$ is the total presheaf of the displayed presheaf $A$. Its action on objects and morphisms is the following.
 \begin{alignat*}{3}
-  &|\Gamma \ext_{\hmbbC} A| &&\defn (\gamma : |\Gamma|) \times |A\,\gamma|\\
+  &|\Gamma \ext A| &&\defn (\gamma : |\Gamma|) \times |A\,\gamma|\\
   &(\gamma,\,\alpha)\lab f \rab &&\defn (\gamma\lab f \rab,\, \alpha\lab f \rab)
 \end{alignat*}
 The $\id$ and $\blank\!\circ\!\blank$ preservation laws follow immediately.
 \end{mydefinition}
 
 \begin{mydefinition}
-$A[\sigma]_{\hmbbC} : \Ty_{1\,\hmbbC}\,\Gamma$ is defined as follows, assuming
-$A : \Ty_{1\,\hmbbC}\,\Delta$ and $\sigma : \Sub_{\hmbbC}\,\Gamma\,\Delta$.
+$A[\sigma] : \Ty_{1}\,\Gamma$ is defined as follows, assuming
+$A : \Ty_{1}\,\Delta$ and $\sigma : \Sub\,\Gamma\,\Delta$.
 \begin{alignat*}{3}
-  & |A[\sigma]_{\hmbbC}|\,\gamma &&\defn |A|\,(|\sigma|\,\gamma) \\
+  & |A[\sigma]|\,\gamma &&\defn |A|\,(|\sigma|\,\gamma) \\
   & \alpha \lab f \rab &&\defn \alpha \lab f \rab
 \end{alignat*}
-In the second component, we use $\blank\lab\blank\rab$ for $A$ on the right hand
-side.  The definition is well-typed since $|A|\,(|\sigma|\,(\gamma \lab f\rab))
-= |A|\,((|\sigma|\,\gamma) \lab f \rab)$ by the naturality of
+In the second component, we use $\blank\!\lab\!\blank\!\rab$ for $A$ on the right hand
+side.  The definition is well-typed since $|A|\,(|\sigma|\,(\gamma\!\lab\!f\!\rab))
+= |A|\,((|\sigma|\,\gamma)\!\lab\!f\!\rab)$ by the naturality of
 $\sigma$. Functoriality follows from functoriality of $A$.
 \end{mydefinition}
 
 It's easy to check that the above definitions can be extended to a cwf.
 \begin{itemize}
   \item For the base category, we take the category of presheaves.
-  \item $\emptycon_{\hmbbC}$ is the terminal presheaf, i.e.\ the constantly $\top$
-        functor.
+  \item The empty context $\emptycon$ is the terminal presheaf, i.e.\ the
+        constantly $\top$ functor.
   \item Type substitution is functorial, as it is defined as simple function
     composition of actions on objects.
   \item Term substitution is defined as composition of a section and
@@ -1760,23 +1760,24 @@ Yoneda embedding, as it is useful in subsequent definitions.
 The \textbf{Yoneda embedding}, denoted $\ms{y}$, is a functor from $\mbbC$ to
 the underlying category of $\hmbbC$, defined as follows.
 \begin{alignat*}{3}
-  & \yon : |\mbbC| \to \Con_{\hmbbC} \hspace{3em}&& \yon : \mbbC(i,\,j) \to \Sub_{\hmbbC}\,(\yon\,i)\,(\yon\,j)\\
+  & \yon : |\mbbC| \to \Con \hspace{3em}&& \yon : \mbbC(i,\,j) \to \Sub\,(\yon\,i)\,(\yon\,j)\\
   & \yon\,i \defn \mbbC(\blank,\,i) && |\yon\,f|\,g \defn f \circ g
 \end{alignat*}
 \end{mydefinition}
 
-\begin{mylemma}[\textbf{Yoneda lemma}] We have $\Sub_{\hmbbC}\,(\yon\,i)\,\Gamma \simeq |\Gamma|\,i$ as an isomorphism of sets, natural in $i$ \cite{TODO}.
+\begin{mylemma}[\textbf{Yoneda lemma}] We have $\Sub\,(\yon\,i)\,\Gamma \simeq |\Gamma|\,i$ as an isomorphism of sets, natural in $i$ \cite{TODO}.
 \end{mylemma}
 
 \noindent\emph{Corollary.} If we choose $\Gamma$ to be $\yon j$, it follows that
-$\Sub_{\hmbbC}\,(\yon\,i)\,(\yon\,j) \simeq \mbbC(i,\,j)$, i.e.\ that $\yon$ is
+$\Sub\,(\yon\,i)\,(\yon\,j) \simeq \mbbC(i,\,j)$, i.e.\ that $\yon$ is
 bijective on morphisms; hence it is an embedding.
 
 \begin{notation}
+\label{not:yoneda}
 For $\gamma : |\Gamma|\,i$, we use $\gamma\!\lab\!\blank\!\rab :
-\Sub_{\hmbbC}\,(\yon\,i)\,\Gamma $ to denote transporting right to left along the Yoneda
-lemma. In the other direction, we don't need a notation per se, since from
-$\sigma : \Sub_{\hmbbC}\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id :
+\Sub\,(\yon\,i)\,\Gamma $ to denote transporting right-to-left along
+the Yoneda lemma. In the other direction, we don't need a notation as it is,
+since from $\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id :
 |\Gamma|\,i$.
 \end{notation}
 
@@ -1785,110 +1786,168 @@ $\sigma : \Sub_{\hmbbC}\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id :
 \begin{mydefinition}
 \textbf{Constant families} are displayed presheaves which do not depend on their context.
 \begin{alignat*}{3}
-  & \K_{\hmbbC} &&: \Con_{\hmbbC} \to \{\Gamma : \Con_{\hmbbC} \} \to \Ty_{\hmbbC}\,\Gamma\\
-  & |\K_{\hmbbC}\,\Delta|\,\{i\}\,\gamma\,&&\defn |\Delta|\,i \\
+  & \K &&: \Con \to \{\Gamma : \Con \} \to \Ty_1\,\Gamma\\
+  & |\K\,\Delta|\,\{i\}\,\gamma\,&&\defn |\Delta|\,i \\
   & \delta\lab f \rab &&\defn \delta \lab f \rab
 \end{alignat*}
-With this definition, we actually have $\Tm_{\hmbbC}\,\Gamma\,(\K_{\hmbbC}\,\Delta) =
-\Sub_{\hmbbC}\,\Gamma\,\Delta$ which is stronger than the required isomorphism in
+With this definition, we actually have $\Tm_1\,\Gamma\,(\K\,\Delta) =
+\Sub\,\Gamma\,\Delta$ which is stronger than the required isomorphism in
 Definition \ref{def:constant-families}.
 \end{mydefinition}
 
 \begin{notation}
 It is useful to consider any set as a constant presheaf, so
-given $A : \Set$ we may write $A : \Con_{\hmbbC}$ for the constant presheaf
+given $A : \Set$ we may write $A : \Con$ for the constant presheaf
 as well.
 \end{notation}
 
 \begin{mydefinition}
-From any $A : \Set$, we get $\K\,A : \Ty_{\hmbbC}\,\Gamma$. This can be used to
+From any $A : \Set$, we get $\K\,A : \Ty_1\,\Gamma$. This can be used to
 model negative or positive \textbf{closed type formers}. For example, natural
 numbers are modeled as $\K\,\mbb{N}$, Booleans as $\K\,\Bool$, the unit type as
 $\K\,\top$, etc.
 \end{mydefinition}
 
 \begin{mydefinition}
-A \textbf{Coquand universe} can be defined as follows. Since $\U_{\hmbbC}$ is a
-non-dependent type, it is helpful to define it as $\U_{\hmbbC} : \Con_{\hmbbC}$
-such that $\Sub_{\hmbbC}\,\Gamma\,\U_{\hmbbC} \simeq \Ty_{\hmbbC}\,\Gamma$.  The
-usual universe can be derived from this as $\K_{\hmbbC}\,\U_{\hmbbC}$.
+\textbf{Coquand universes} can be defined as follows. Since $\U$ is a
+non-dependent type, it is helpful to define it as $\U : \Con$ such that
+$\Sub\,\Gamma\,\U \simeq \Ty_1\,\Gamma$.  The usual universe can be derived from
+this as $\K\,\U$. Again, we ignore size issues; the fully formal definition
+would involve indexing constructions in $\hmbbC$ by universe levels.
 
-We can take a hint from the Yoneda lemma in the definition. We aim to define
-$|\U_{\hmbbC}|\,i$, but by the Yoneda lemma it is isomorphic to
-$\Sub_{\hmbbC}\,(\yon i)\,\U_{\hmbbC}$. However, by specification this should be
-isomorphic to $\Ty_{\hmbbC}\,(\yon\,i)$, so we take this as definition:
+We can take a hint from the Yoneda lemma. We aim to define $|\U|\,i$, but by the
+Yoneda lemma it is isomorphic to $\Sub\,(\yon i)\,\U$. However, by specification
+this should be isomorphic to $\Ty_1\,(\yon\,i)$, so we take this as definition:
 \begin{alignat*}{3}
-  & \U_{\hmbbC} &&: \Con_{\hmbbC}\\
-  &|\U_{\hmbbC}|\,i &&\defn \Ty_{\hmbbC}\,(\yon\,i)\\
-  &A \lab f \rab &&\defn A[\yon f]_{\hmbbC}
+  & \U &&: \Con\\
+  &|\U|\,i &&\defn \Ty_1\,(\yon\,i)\\
+  &A \lab f \rab &&\defn A[\yon f]
 \end{alignat*}
 \end{mydefinition}
-In the $A \lab f \rab$ definition, we substitute $A : \Ty_{\hmbbC}\,(\yon\,i)$
-with $\yon f : \Sub_{\hmbbC}\,(\yon j)\,(\yon i)$ to get an element of
-$\Ty_{\hmbbC}\,(\yon\,j)$.  The required $\Sub_{\hmbbC}\,\Gamma\,\U_{\hmbbC}
-\simeq \Ty_{\hmbbC}\,\Gamma$ is straightforward so we omit the definition.
+In the $A \lab f \rab$ definition, we substitute $A : \Ty_1\,(\yon\,i)$ with
+$\yon f : \Sub\,(\yon j)\,(\yon i)$ to get an element of $\Ty_1\,(\yon j)$.
+The required $\Sub\,\Gamma\,\U \simeq \Ty_1\,\Gamma$ is straightforward, so we
+omit the definition.
 
-\begin{mydefinition} \textbf{$\Sigma$-types} are defined pointwise:
+\begin{mydefinition}
+\textbf{$\Sigma$-types} are defined pointwise. The definitions for pairing and
+projections follow straightforwardly.
 \begin{alignat*}{3}
-  & \Sigma_{\hmbbC}  &&: (A : \Ty_{\hmbbC}\,\Gamma) \to \Ty_{\hmbbC}\,(\Gamma\ext A) \to \Ty_{\hmbbC}\,\Gamma\\    & |\Sigma_{\hmbbC}\,A\,B|\,\gamma && \defn (\alpha : |A|\,\gamma) \times |B|\,(\gamma,\,\alpha)\\
+  & \Sigma  &&: (A : \Ty_1\,\Gamma) \to \Ty_1\,(\Gamma\ext A) \to \Ty_1\,\Gamma\\    & |\Sigma\,A\,B|\,\gamma && \defn (\alpha : |A|\,\gamma) \times |B|\,(\gamma,\,\alpha)\\
   & (\alpha,\,\beta) \lab f \rab && \defn (\alpha \lab f \rab,\, \beta \lab f \rab)
 \end{alignat*}
 \end{mydefinition}
 
-\begin{mydefinition} We define \textbf{$\Pi$-types} in the following.
+\begin{mydefinition}
+We define \textbf{$\Pi$-types} in the following. This is a bit more complicated,
+so first we look at the simpler case of presheaf exponentials.
 
+The exponential $\Delta^\Gamma : \Con$ is characterized by the isomorphism
+$\Sub\,(\Gamma \otimes \Delta)\,\Xi\,\simeq\,\Sub\,\Gamma\,(\Xi^\Delta)$, where
+we write $\otimes$ for the pointwise product of two presheaves. We can again use
+the Yoneda lemma. We want to define $|\Delta^\Gamma|\,i$, but this is isomorphic
+to $\Sub\,(\yon i)\,(\Delta^\Gamma)$, which should be isomorphic to $\Sub\,(\yon
+i \otimes \Gamma)\,\Delta$ by the specification of exponentials. Hence:
 \begin{alignat*}{3}
-  & \Pi_{\hmbbC} &&: (A : \Ty_{\hmbbC}\,\Gamma) \to \Ty_{\hmbbC}\,(\Gamma \ext A) \to \Ty_{\hmbbC}\,\Gamma\\
-  & |\Pi_{\hmbbC}\,A\,B|\,\{i\}\,\gamma &&\defn \Tm_{\hmbbC}\,(\yon i \ext A[\gamma\!\lab\!\blank\!\rab])\,(B[\gamma\!\lab\!\blank\!\rab \circ\,\p,\,\q])\\
-  & t\lab f \rab &&\defn t[\yon f \circ \p,\, \q]_{\hmbbC}
+  &|\Delta^\Gamma|\,i &&\defn \Sub\,(\yon i \otimes \Gamma)\,\Delta \\
+  & \sigma \lab f \rab &&\defn \sigma \circ (\yon f \circ \p,\,\q)
 \end{alignat*}
+In the definition of presheaf restriction, we use $\p$, $\q$ as projections and
+$\blank\!,\!\blank$ as pairing for $\otimes$. In short, $(\yon f \circ \p,\,\q)$
+is the same as the morphism lifting from Definition \ref{def:cwfops}: it weakens
+$\yon f : \Sub\,(\yon j)\,(\yon i)$ to $\Sub\,(\yon j \otimes \Gamma)\,(\yon i
+\otimes \Gamma)$.
 
-\todo{Get rid of $\hmbbC$ subscripts}
+The dependently typed case follows the same pattern, except that we use $\Tm$
+and $\blank\!\ext\!\blank$ instead of $\Sub$ and
+$\blank\!\otimes\!\blank$. Additionally, the action on objects depends on
+$\gamma : |\Gamma|\,i$, and we make use of $\gamma\!\lab\!\blank\!\rab\,\,:
+\Sub\,(\yon i)\,\Gamma$ (introduced in Notation \ref{not:yoneda}).
+\begin{alignat*}{3}
+  & \Pi &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty\,\Gamma\\
+  & |\Pi\,A\,B|\,\{i\}\,\gamma &&\defn \Tm\,(\yon i \ext A[\gamma\!\lab\!\blank\!\rab])\,(B[\gamma\!\lab\!\blank\!\rab \circ\,\p,\,\q])\\
+  & t\lab f \rab &&\defn t[\yon f \circ \p,\, \q]
+\end{alignat*}
+Let's unfold the above definition a bit. Assuming $t : |\Pi\,A\,B|\,\{i\}\,\gamma$, we have
+\[
+|t| : \{j : |\mbbC|\}\to((f,\,\alpha) : (f : \mbbC(j,\,i)) \times |A|\,(\gamma\!\lab\!f\!\rab)) \to
+       |B|\,(\gamma\!\lab\!f\!\rab,\,\alpha)
+\]
+This is a bit clearer if we remove the $\Sigma$-type by currying.
+\[
+|t| : \{j : |\mbbC|\}(f : \mbbC(j,\,i))(\alpha : |A|\,(\gamma\!\lab\!f\!\rab)) \to
+       |B|\,(\gamma\!\lab\!f\!\rab,\,\alpha)
+\]
+
+Restriction is functorial since it is defined as $\Tm_1$ substitution. The definitions
+for $\lam$ and $\app$ are left to the reader.
+\end{mydefinition}
+
+\begin{mydefinition}
+\textbf{Extensional identity} is defined as pointwise equality of outer terms,
+i.e.\ sections of displayed presheaves.
+\begin{alignat*}{3}
+  & \Id : \Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma\\
+  & |\Id\,t\,u|\,\gamma \defn |t|\,\gamma = |u|\,\gamma
+\end{alignat*}
+For the restriction operation, we have to show that $|t|\,\gamma = |u|\,\gamma$
+implies $|t|\,(\gamma\!\lab\!f\!\rab) = |u|\,(\gamma\!\lab\!f\!\rab)$. This
+follows from congruence by $\blank\!\lab\!f\!\rab$ and naturality of $t$ and
+$u$.  The defining $(\reflect,\,\refl) : \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t =
+u)$ isomorphism is evident, assuming UIP and function extensionality for the
+metatheoretic $\blank\!=\!\blank$ relation (which we do assume).
+
+
+
+
 
 \end{mydefinition}
 
-\subsection{Modeling The Inner Layer and Lifting}
+\subsection{Modeling The Inner Layer}
 
 We assume now that $\mbbC$ is a cwf. We write types as $a,\,b,\,c :
 \Ty_\mbbC\,i$ and terms as $t,\,u,\,v : \Tm_\mbbC\,i\,a$. We reuse $\emptycon$
 for the terminal object and $\blank\ext\blank$ for context extension, and
 likewise reuse notation for substitutions.
 
-\begin{mydefinition}[\textbf{($\Ty_{0\,\hmbbC}$, $\Tm_{0\,\hmbbC}$)}]
+\begin{mydefinition}[\textbf{($\Ty_{0}$, $\Tm_{0}$)}]
 First, note that $\Ty_{\mbbC}$ is a presheaf over $\mbbC$, and $\Tm_{\mbbC}$ is
 a displayed presheaf over $\Ty_{\mbbC}$; this follows from the requirement that
 they form a family structure over $\mbbC$. Hence, $\Ty_{\mbbC}$ is an element of
-$\Con_{\hmbbC}$ and $\Tm_{\mbbC}$ is an element of $\Ty_{\hmbbC}\,\Ty_{\mbbC}$.
+$\Con$ and $\Tm_{\mbbC}$ is an element of $\Ty_1\,\Ty_{\mbbC}$. With this is mind,
+we can give the following definitions:
 \begin{alignat*}{3}
-  & \Ty_{0\,\hmbbC}\,\Gamma &&\defn \Sub_{\hmbbC}\,\Gamma\,\Ty_{\mbbC}\\
-  & \Tm_{0\,\hmbbC}\,\Gamma\,A &&\defn \Tm_{\hmbbC}\,\Gamma\,(\Tm_\mbbC[A]_{\hmbbC})
+  & \Ty_{0}\,\Gamma &&\defn \Sub\,\Gamma\,\Ty_{\mbbC}\\
+  & \Tm_{0}\,\Gamma\,A &&\defn \Tm_1\,\Gamma\,(\Tm_\mbbC[A])
 \end{alignat*}
-In other words, $A : \Ty_{0\,\hmbbC}\,\Gamma$ is a natural transformation from
-$\Gamma$ to $\Ty_{\mbbC}$, and $t : \Tm_{0\,\hmbbC}\,\Gamma\,A$ is a section of
-the displayed presheaf $\Tm_\mbbC[A]_{\hmbbC}$. This is well-typed since $A :
-\Sub_{\hmbbC}\,\Gamma\,\Ty_{\mbbC}$, so we can use the semantic substitution
-operation $\blank[\blank]_{\hmbbC}$.
-
-It might be helpful to unfold part of the definition: if $t :
-\Tm_{0\,\hmbbC}\,\Gamma\,A$, then $|t| : \{i : |\mbbC|\} \to (\gamma : |\Gamma|\,i) \to
+In other words, $A : \Ty_{0}\,\Gamma$ is a natural transformation from $\Gamma$
+to $\Ty_{\mbbC}$, and $t : \Tm_{0}\,\Gamma\,A$ is a section of the displayed
+presheaf $\Tm_\mbbC[A]$. This is well-typed, since $A :
+\Sub\,\Gamma\,\Ty_{\mbbC}$, so we can use the semantic substitution operation
+$\blank[\blank]$. Unfolding part of the definition, if $t : \Tm_{0}\,\Gamma\,A$,
+then $|t| : \{i : |\mbbC|\} \to (\gamma : |\Gamma|\,i) \to
 \Tm_{\mbbC}\,i\,(|A|\,\gamma)$.
 
-For $A : \Ty_{0\,\hmbbC}\,\Delta$, we define substitution by having
-$A[\sigma]_{\hmbbC} \defn A \circ_{\hmbbC} \sigma$.  Likewise, term substitution
-is given by term substitution in $\hmbbC$.
+For $A : \Ty_{0}\,\Delta$, we define substitution by having
+$A[\sigma] \defn A \circ \sigma$.  Likewise, term substitution
+is given by $\Tm_1$ substitution.
+
+In short, inner types are $\mbbC$ types, inner terms are $\mbbC$ terms, and
+both can additionally depend on a $\Gamma$ context in a natural way.
 \end{mydefinition}
 
 \begin{mydefinition}(\textbf{Lifting})
 \begin{alignat*}{3}
-  & \Lift\,\,: \Ty_{0\,\hmbbC}\,\Gamma \to \Ty_{1\,\hmbbC} \\
+  & \Lift\,\,: \Ty_{0}\,\Gamma \to \Ty_{1}\,\Gamma \\
   & \Lift\!A \defn \Tm_{\mbbC}[A]
 \end{alignat*}
-This yields $\Tm_{0\,\hmbbC}\,\Gamma\,A \equiv
-\Tm_{1\,\hmbbC}\,\Gamma\,(\Lift\!A)$, which is the second condition from
-Definition \ref{def:2ltt}.
+This yields $\Tm_{0}\,\Gamma\,A \equiv
+\Tm_{1}\,\Gamma\,(\Lift\!A)$, which is the second condition from
+Definition \ref{def:2ltt}. The term lifting operations $\up$ and $\down$ can
+be defined now as identity functions.
 \end{mydefinition}
 
-\begin{mydefinition}[\textbf{Context comprehension for ($\Ty_{0\,\hmbbC}$, $\Tm_{0\,\hmbbC}$)}]
+\begin{mydefinition}[\textbf{Context comprehension for ($\Ty_{0}$, $\Tm_{0}$)}]
 We define the inner context extension in $\hmbbC$ as follows: $\Gamma \ext A
 \defn \Gamma\,\,\ext\Lift\!A$. This yields the first condition from Definition
 \ref{def:2ltt}. It also follows that inner $\blank\ext\blank$ supports the
@@ -1896,9 +1955,89 @@ expected comprehension isomorphism, since the outer $\blank\ext\blank$ supports
 it and $\Lift$ is an isomorphism on terms.
 \end{mydefinition}
 
-\todo{some discussion, dependent yoneda, representable pi, examples}
+\subsubsection{Inner Type Formers}
 
-%% foo: $\mbf{y}$
+Can type formers in $(\Ty_{\mbbC},\,\Tm_{\mbbC})$ be transferred to
+$(\Ty_0,\,\Tm_0)$? This depends on what we mean by ``type former''. Capriotti
+examined this question in some generality \cite{TODO}, although he did not make
+the notion of type formers fully precise. Some of the inductive signatures in
+this thesis or in the more recent HOAS literature \cite{TODO} could be possibly
+used to revisit this question. We don't do this in this thesis. We can give
+though a quick illustration and explanation.
+
+Generally, a type former in $\mbbC$ transfers to $\hmbbC$ if the specification
+of the type former can be already given in the internal language of $\hmbbC$; if
+the type former ``always has been'' in $\hmbbC$ to begin with. To be describable
+in $\hmbbC$, a type former needs to be natural with respect to
+substitution. This is also a core idea of HOAS: when working in $\hmbbC$,
+everything is natural, and we can omit boilerplate related to contexts and
+substitutions.
+
+For example, if we switch to a more convenient Agda-like surface syntax for
+2LTT, we may have $\Ty_{\mbbC} : \U$ and $\Tm_{\mbbC} : \Ty_{\mbbC} \to \U$,
+where $\U$ is a universe in the outer layer. We also assume that $\U$ is
+Russell-style; this is not actually the case in the standard presheaf model,
+where only Coquand-style universes are supported, but we can just assume that
+$\El$ and $\ms{c}$ are inserted during surface syntax elaboration. Then, we can
+give the HOAS specification for supporting $\Pi$-types:
+\begin{alignat*}{3}
+  &\Pi_0           : (A : \Ty_{\mbbC}) \to (\Tm_{\mbbC}\,A \to \Ty_{\mbbC}) \to \Ty_{\mbbC}\\
+  &(\app_0,\,\lam_0) : \Pi_0\,A\,B \simeq ((x : \Tm_{\mbbC}\,A) \to \Tm_{\mbbC}(B\,x))
+\end{alignat*}
+This can be viewed as a closed $\Sigma$-type in the outer layer of 2LTT.  If we
+evaluate it in the standard presheaf model, we get a presheaf, and if evaluate
+the presheaf at $\emptycon : |\mbbC|$, we get a metatheoretic $\Set$ which is
+isomorphic to the usual non-HOAS specification of $\Pi$-types.
+
+In summary, if by ``type formers'' we mean extra structure on
+$(\Ty_{\mbbC},\,\Tm_{\mbbC})$ which is definable in 2LTT, then \emph{by
+definition} all such type formers transfer from $\mbbC$ to
+$(\Ty_{\mbbC},\,\Tm_{\mbbC})$. This holds for every type former mentioned in
+this thesis.
+
+\subsection{Functions with Lifted Domains}
+
+There is a useful simplification in the standard presheaf model, in cases where
+we have functions of the form $\Pi\,(\Lift A)\,B$. First we look at the
+simply-typed case with presheaf exponentials. We need some observations about
+the Yoneda embedding.
+
+\begin{mylemma}
+$\yon$ preserves finite products up to isomorphism, i.e.\ $\yon \emptycon \simeq
+  \emptycon$ and $\yon (i \otimes j) \simeq (\yon i \otimes \yon j)$.
+\end{mylemma}
+\begin{proof}
+$\yon \emptycon$ is $\mbbC(\blank,\,\emptycon)$ by definition, which is
+pointwise isomorphic to $\top$, hence isomorphic to $\emptycon \equiv
+\K\,\top$. $\yon (i \otimes j)$ is $\mbbC(\blank,\,i \otimes j)$, which is
+isomorphic by the specification of products to $\yon i \otimes \yon j$.
+\end{proof}
+
+\begin{mylemma} We have the following isomorphism.
+\begin{alignat*}{3}
+  & |\Gamma^{\yon i}|\,j \equiv \hspace{3em}&&\\
+  & \Sub\,(\yon j \otimes \yon i)\,\Gamma \simeq \hspace{3em} &&\text{by product preservation}\\
+  & \Sub\,(\yon (j \otimes i))\,\Gamma \simeq \hspace{3em} &&\text {by Yoneda lemma}\\
+  & |\Gamma|\,(j \otimes i)&&
+\end{alignat*}
+
+\end{mylemma}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \section{Simple Inductive Signatures in 2LTT}
