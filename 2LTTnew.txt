@@ -1,0 +1,36 @@
+
+
+--------------------------------------------------------------------------------
+
+Decidable inner def equality in 2LTT
+
+Conv : (t u : Tm₀ Γ A) → Tm₁ Γ ((t = u) + (t = u → ⊥))
+
+|t|, |u| : (γ : |Γ| i) → C.Tm i (|A| γ)
+
+|Conv t u| γ : (|t| γ = |u| γ) + (∀ j f. |t| (γ<f>) = |u| (γ<f>) → ⊥)
+
+|Conv t u| γ := case (|t| γ = |u| γ) of
+  Yes refl → inj₁ refl
+  No (p : |t| γ ≠ |u| γ) →
+    λ j (f : C(j, i)) (q : |t| (γ<f>) = |u| (γ<f>)).
+
+  -- not stable under subst
+  -- stable under weakening!
+
+-- what's a psh model with weakenings?
+--------------------------------------------------------------------------------
+
+simple TT
+objects : lists of types
+morphism : OPE
+
+Γ ▶ A = Γ, A
+
+ε    : C(∙,∙)
+wk   : C(Γ, Δ) → C(Γ ▶ A, Δ)
+keep : C(Γ, Δ) → C(Γ ▶ A, Δ ▶ A)
+
+-- not enough info to get products of contexts
+
+(C(Γ, Δ) × C(Γ, Ξ)) ~ C(Γ, Δ × Ξ)

@@ -1,7 +1,8 @@
 
+
 {-# OPTIONS --without-K --safe #-}
 
-module SpineTm where
+module SpineTm2 where
 
 open import Lib
 
@@ -20,30 +21,31 @@ data Var : Con → Ty → Set where
   vs : ∀ {Γ A B} → Var Γ A → Var (Γ ▶ B) A
 
 mutual
-  Tm : Con → Ty → Set
-  Tm Γ B = ∃ λ A → Var Γ A × Sp Γ A B
+  Tm : Con → Set
+  Tm Γ = ∃ λ A → Var Γ A × Sp Γ A ι
 
   data Sp (Γ : Con) : Ty → Ty → Set where
     ε   : ∀ {A} → Sp Γ A A
-    _,_ : ∀ {B C} → Tm Γ ι → Sp Γ B C → Sp Γ (ι⇒ B) C
+    _,_ : ∀ {B C} → Tm Γ → Sp Γ B C → Sp Γ (ι⇒ B) C
 
 Sub : Con → Con → Set
-Sub Γ Δ = ∀ A → Var Δ A → Tm Γ A
+Sub Γ Δ = ∀ A → Var Δ A → Tm Γ
 
 infixr 4 _++_
 _++_ : ∀ {Γ A B C} → Sp Γ A B → Sp Γ B C → Sp Γ A C
 ε        ++ sp' = sp'
 (t , sp) ++ sp' = t , (sp ++ sp')
 
--- app : ∀ {Γ A B} → Tm Γ  → Tm Γ A → Tm Γ B
+-- app : ∀ {Γ B} → Tm Γ (ι⇒ B) → Tm Γ ι → Tm Γ B
+-- app t u = {!!}
 
-appₛ : ∀ {Γ A B} → Tm Γ A → Sp Γ A B → Tm Γ B
-appₛ (_ , x , sp) sp' = _ , x , (sp ++ sp')
+-- app : ∀ {Γ A B} → Tm Γ A → Sp Γ A B → Tm Γ B
+-- app (_ , x , sp) sp' = _ , x , (sp ++ sp')
 
 infix 5 _[_] _[_]ₛ
 _[_]   : ∀ {Γ Δ A}   → Tm Δ A → Sub Γ Δ → Tm Γ A
 _[_]ₛ  : ∀ {Γ Δ A B} → Sp Δ A B → Sub Γ Δ → Sp Γ A B
-(_ , x , sp) [ σ ]  = appₛ (σ _ x) (sp [ σ ]ₛ)
+(_ , x , sp) [ σ ]  = app {!σ _ x!} {!!} -- (σ _ x) (sp [ σ ]ₛ)
 ε            [ σ ]ₛ = ε
 (t , sp)     [ σ ]ₛ = t [ σ ] , sp [ σ ]ₛ
 
@@ -172,29 +174,30 @@ module _ (Ω : Con) where
 
   Tyᵀ : (A : Ty) → Tm Ω A → Tyᴬ A ιᵀ
   Tyᵀ ι      t = t
-  Tyᵀ (ι⇒ A) t = λ u → Tyᵀ A (appₛ t (u , ε))
+  Tyᵀ (ι⇒ A) t = λ u → Tyᵀ A (app t {!!})
 
   Conᵀ : (Γ : Con) → Sub Ω Γ → Conᴬ Γ ιᵀ
   Conᵀ Γ ν A x = Tyᵀ A (ν _ x)
 
-  Tmᵀ : ∀ {Γ A}(t : Tm Γ A) (ν : Sub Ω Γ) → Tyᵀ A (t [ ν ]) ≡ Tmᴬ t (Conᵀ Γ ν)
-  Tmᵀ (_ , x , sp) ν = {!!}
+--   Tmᵀ : ∀ {Γ A}(t : Tm Γ A)(ν : Sub Ω Γ) → Tyᵀ A (t [ ν ]) ≡ Tmᴬ t (Conᵀ Γ ν)
+--   Tmᵀ (var x)   ν = refl
+--   Tmᵀ (app t u) ν = Tmᵀ t ν ⊗ Tmᵀ u ν
 
-  Subᵀ : ∀ {Γ Δ}(σ : Sub Γ Δ)(ν : Sub Ω Γ) A x → Conᵀ Δ (σ ∘ ν) A x ≡ Subᴬ σ (Conᵀ Γ ν) A x
-  Subᵀ σ ν A x = Tmᵀ (σ A x) ν
+--   Subᵀ : ∀ {Γ Δ}(σ : Sub Γ Δ)(ν : Sub Ω Γ) A x → Conᵀ Δ (σ ∘ ν) A x ≡ Subᴬ σ (Conᵀ Γ ν) A x
+--   Subᵀ σ ν A x = Tmᵀ (σ A x) ν
 
-  -- weak initiality
-  module _ (X : Set)(ω : Conᴬ Ω X) where
+--   -- weak initiality
+--   module _ (X : Set)(ω : Conᴬ Ω X) where
 
-    ιᴿ : ιᵀ → X
-    ιᴿ t = Tmᴬ t ω
+--     ιᴿ : ιᵀ → X
+--     ιᴿ t = Tmᴬ t ω
 
-    Tyᴿ : (A : Ty)(t : Tm Ω A) → Tyᴹ A ιᴿ (Tyᵀ A t) (Tmᴬ t ω)
-    Tyᴿ ι      t = refl
-    Tyᴿ (ι⇒ A) t = λ x₀ → {!Tyᴿ A (appₛ t (x₀ , ε))!}
+--     Tyᴿ : (A : Ty)(t : Tm Ω A) → Tyᴹ A ιᴿ (Tyᵀ A t) (Tmᴬ t ω)
+--     Tyᴿ ι      t = refl
+--     Tyᴿ (ι⇒ A) t = λ x₀ → Tyᴿ A (app t x₀)
 
-    Conᴿ : (Γ : Con)(ν : Sub Ω Γ) → Conᴹ Γ ιᴿ (Conᵀ Γ ν) (Subᴬ ν ω)
-    Conᴿ Γ ν A x = Tyᴿ A (ν A x)
+--     Conᴿ : (Γ : Con)(ν : Sub Ω Γ) → Conᴹ Γ ιᴿ (Conᵀ Γ ν) (Subᴬ ν ω)
+--     Conᴿ Γ ν A x = Tyᴿ A (ν A x)
 
 --   -- induction
 --   module _ (Xᴰ : ιᵀ → Set)(ωᴰ : Conᴰ Ω Xᴰ (Conᵀ Ω id)) where

@@ -143,3 +143,37 @@ a : Tm Γ U
 
 |a|₁ : |Γ|i → C(j, i) → Set
 |a|₂ : |Γ|i (f : C(j, i)) → (g : C(k, j)) →
+
+
+--------------------------------------------------------------------------------
+
+F : Tm Γ A → Tm Γ (F A)
+F (A[σ]) = (F A)[σ]
+F (t[σ]) = (F t)[σ]
+
+(Γ ▶ A) ≃ (Γ ▶ F A)
+
+
+p   : Γ ▶ A → Γ
+q   : Γ ▶ A → A[p]
+F q : Γ ▶ A → F A[p]
+
+F⁻¹q : Tm (Γ ▶ F A) A[p]
+
+F (F⁻¹q) = q
+(F⁻¹q)[p, F q] = q
+
+
+t : Tm Γ (F A)
+
+F⁻¹q[id, t] : Tm Γ A
+
+F (F⁻¹q[id, t]) = F (F⁻¹ q) [id, t] = q[id, t] = t
+
+(F⁻¹q)[id, F t] = ?
+
+    t
+    q[id, t]
+    ((F⁻¹q)[p, F q])[id, t]
+    F⁻¹q [id, F q [id, t]]
+    F⁻¹q [id, F t]

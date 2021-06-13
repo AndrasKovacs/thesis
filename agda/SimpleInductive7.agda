@@ -1,7 +1,7 @@
 
 {-# OPTIONS --without-K --safe #-}
 
-module SimpleInductive6 where
+module SimpleInductive7 where
 
 open import Lib
 
@@ -147,62 +147,72 @@ module _ (Ω : Con) where
   -- induction
   module _ (Xᴰ : ιᵀ → Set)(ωᴰ : Conᴰ Ω Xᴰ (Conᵀ Ω id)) where
 
-    lem : (t : Tm Ω ι) → Tmᴬ t (Conᵀ Ω id) ≡ t
-    lem t = (Tmᵀ t id) ⁻¹ ◾ [id]
+    elim : (t : Tm Ω ι) → Xᴰ t
+    elim (var x)   = ωᴰ _ x
+    elim (app t u) = {!elim !}
 
-    ιᵉ : (t : Tm Ω ι) → Xᴰ t
-    ιᵉ t = tr Xᴰ (lem t) (Tmᴰ t ωᴰ)
+    -- lem : (t : Tm Ω ι) → Tmᴬ t (Conᵀ Ω id) ≡ t
+    -- lem t = (Tmᵀ t id) ⁻¹ ◾ [id]
 
-    Tyᵉ : (A : Ty)(t : Tm Ω A) → Tyˢ A ιᵉ (Tmᴬ t (Conᵀ Ω id)) (Tmᴰ t ωᴰ)
-    Tyᵉ ι      t   =
-        apd⁻¹ ιᵉ (lem t)
-      ◾ J (λ y e → tr Xᴰ (e ⁻¹) (tr Xᴰ e (Tmᴰ t ωᴰ)) ≡ Tmᴰ t ωᴰ) refl _ (lem t)
-    Tyᵉ (ι⇒ A) t =
-       λ x →
-       J (λ x' e → Tyˢ A ιᵉ (Tmᴬ t (Conᵀ Ω id) x') (Tmᴰ t ωᴰ x' (tr Xᴰ e (Tmᴰ x ωᴰ))))
-         (Tyᵉ A (app t x))
-         x (lem x)
+    -- ιᵉ : ∀{A}(t : Tm Ω A) → Tyᴰ A Xᴰ (Tmᴬ t (Conᵀ Ω id))
+    -- ιᵉ (var x)   = ωᴰ _ x
+    -- ιᵉ (app t u) = ιᵉ t (Tmᴬ u (Conᵀ Ω id)) (ιᵉ u)
 
-    Conᵉ : (Γ : Con)(ν : Sub Ω Γ) → Conˢ Γ ιᵉ (Subᴬ ν (Conᵀ Ω id)) (Subᴰ ν ωᴰ)
-    Conᵉ Γ ν {A} x = Tyᵉ A (ν _ x)
+    -- ιᵉ : (t : Tm Ω ι) → Xᴰ t
+    -- ιᵉ (var x)   = ωᴰ _ x
+    -- ιᵉ (app t u) = {!!}
+
+    -- Tyᵉ : (A : Ty)(t : Tm Ω A) → Tyˢ A (λ t → Tmᴰ t ωᴰ) (Tmᴬ t (Conᵀ Ω id)) {!Tmᴰ t ωᴰ!}
+    -- Tyᵉ = {!!}
+    -- Tyᵉ ι      t   =
+    --     apd⁻¹ ιᵉ (lem t)
+    --   ◾ J (λ y e → tr Xᴰ (e ⁻¹) (tr Xᴰ e (Tmᴰ t ωᴰ)) ≡ Tmᴰ t ωᴰ) refl _ (lem t)
+    -- Tyᵉ (ι⇒ A) t =
+    --    λ x →
+    --    J (λ x' e → Tyˢ A ιᵉ (Tmᴬ t (Conᵀ Ω id) x') (Tmᴰ t ωᴰ x' (tr Xᴰ e (Tmᴰ x ωᴰ))))
+    --      (Tyᵉ A (app t x))
+    --      x (lem x)
+
+--     Conᵉ : (Γ : Con)(ν : Sub Ω Γ) → Conˢ Γ ιᵉ (Subᴬ ν (Conᵀ Ω id)) (Subᴰ ν ωᴰ)
+--     Conᵉ Γ ν {A} x = Tyᵉ A (ν _ x)
 
 
-module _ (Ω : Con) where
+-- module _ (Ω : Con) where
 
-  Alg : Set₁
-  Alg = ∃ (Conᴬ Ω)
+--   Alg : Set₁
+--   Alg = ∃ (Conᴬ Ω)
 
-  Mor : Alg → Alg → Set
-  Mor (X₀ , ω₀) (X₁ , ω₁) = ∃ λ Xᴹ → Conᴹ Ω Xᴹ ω₀ ω₁
+--   Mor : Alg → Alg → Set
+--   Mor (X₀ , ω₀) (X₁ , ω₁) = ∃ λ Xᴹ → Conᴹ Ω Xᴹ ω₀ ω₁
 
-  DispAlg : Alg → Set₁
-  DispAlg (X , ω) = ∃ λ Xᴰ → Conᴰ Ω Xᴰ ω
+--   DispAlg : Alg → Set₁
+--   DispAlg (X , ω) = ∃ λ Xᴰ → Conᴰ Ω Xᴰ ω
 
-  Section : (ω : Alg) → DispAlg ω → Set
-  Section (X , ω) (Xᴰ , ωᴰ) = ∃ λ Xˢ → Conˢ Ω Xˢ ω ωᴰ
+--   Section : (ω : Alg) → DispAlg ω → Set
+--   Section (X , ω) (Xᴰ , ωᴰ) = ∃ λ Xˢ → Conˢ Ω Xˢ ω ωᴰ
 
-  TmAlg : Alg
-  TmAlg = ιᵀ Ω , Conᵀ Ω Ω id
+--   TmAlg : Alg
+--   TmAlg = ιᵀ Ω , Conᵀ Ω Ω id
 
-  Recursor : (ω : Alg) → Mor TmAlg ω
-  Recursor (X , ω) = ιᴿ Ω X ω , Conᴿ Ω X ω Ω id
+--   Recursor : (ω : Alg) → Mor TmAlg ω
+--   Recursor (X , ω) = ιᴿ Ω X ω , Conᴿ Ω X ω Ω id
 
-  Elim : (ωᴰ : DispAlg TmAlg) → Section TmAlg ωᴰ
-  Elim (Xᴰ , ωᴰ) = ιᵉ Ω Xᴰ ωᴰ , Conᵉ Ω Xᴰ ωᴰ Ω id
+--   Elim : (ωᴰ : DispAlg TmAlg) → Section TmAlg ωᴰ
+--   Elim (Xᴰ , ωᴰ) = ιᵉ Ω Xᴰ ωᴰ , Conᵉ Ω Xᴰ ωᴰ Ω id
 
---------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------
 
-NatSig = ∙ ▶ ι ▶ ι⇒ ι
-NatSyn = TmAlg NatSig
-Nat  = NatSyn .₁
-zero = NatSyn .₂ _ (vs vz)
-suc  = NatSyn .₂ _ vz
+-- NatSig = ∙ ▶ ι ▶ ι⇒ ι
+-- NatSyn = TmAlg NatSig
+-- Nat  = NatSyn .₁
+-- zero = NatSyn .₂ _ (vs vz)
+-- suc  = NatSyn .₂ _ vz
 
-NatElim : (ωᴰ : DispAlg _ NatSyn) → ∀ n → ωᴰ .₁ n
-NatElim ωᴰ = Elim NatSig ωᴰ .₁
+-- NatElim : (ωᴰ : DispAlg _ NatSyn) → ∀ n → ωᴰ .₁ n
+-- NatElim ωᴰ = Elim NatSig ωᴰ .₁
 
-zeroβ : ∀ ωᴰ → NatElim ωᴰ zero ≡ ωᴰ .₂ _ (vs vz)
-zeroβ ωᴰ = refl
+-- zeroβ : ∀ ωᴰ → NatElim ωᴰ zero ≡ ωᴰ .₂ _ (vs vz)
+-- zeroβ ωᴰ = refl
 
-sucβ : ∀ n ωᴰ → NatElim ωᴰ (suc n) ≡ ωᴰ .₂ _ vz n (NatElim ωᴰ n)
-sucβ n ωᴰ = Elim NatSig ωᴰ .₂ vz n -- not refl
+-- sucβ : ∀ n ωᴰ → NatElim ωᴰ (suc n) ≡ ωᴰ .₂ _ vz n (NatElim ωᴰ n)
+-- sucβ n ωᴰ = Elim NatSig ωᴰ .₂ vz n -- not refl

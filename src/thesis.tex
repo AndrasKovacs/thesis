@@ -2,6 +2,7 @@
 
 %% build: latexmk -pdf -pvc thesis.tex
 
+
 %% Packages
 %% --------------------------------------------------------------------------------
 
@@ -40,8 +41,10 @@
 
 %% Fonts and spacing
 %% --------------------------------------------------------------------------------
-\linespread{1.25}
+
 %% \geometry{left=3cm,right=2cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
+
+\linespread{1.25}
 \geometry{left=4cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 
 
@@ -1036,7 +1039,7 @@ say that our formalization, which was carried out in the syntax (i.e.\ initial
 model) of some intensional type theory, can be interpreted in any model of the
 type theory. However, this is wasteful: for simple inductive signatures, it is
 enough to assume a category with finite products as semantic setting. We don't
-need all the extra baggage that comes with a model of intensional type theory.
+need all the extra baggage that comes with a model of a type theory.
 
 \begin{notation}
 We use $\emptycon$ for the terminal object in a $\mbb{C}$ category, with
@@ -1056,8 +1059,8 @@ algebras are specified as follows.
 \end{myexample}
 Here, $\Alg_{\ms{NatSig}}$ and $\Alg_{\ms{TreeSig}}$ are both sets in an
 unspecified metatheory, and the $\times$ in the definitions refer to the
-metatheoretic $\Sigma$. The algebras can be viewed as diagrams which preserve
-finite products, and algebra morphisms become natural transformations.
+metatheoretic $\Sigma$. Algebras can be viewed as diagrams which preserve finite
+products, and algebra morphisms are natural transformations.
 
 How should we adjust $\Alg$ to compute algebras in $\mbbC$, and $\Mor$ to
 compute their morphisms? While it is possible to do this in a direct fashion,
@@ -1082,7 +1085,7 @@ The above overlaps with motivations for working in \emph{internal languages}
 \cite{internallogic} of structured categories: they aid calculation and compact
 formalization by hiding bureaucratic structural details.
 
-A finite product category $\mbbC$ does not have much of an internal language: it
+A finite product category $\mbbC$ does not have much of an internal language, it
 is too bare-bones. But we can work instead in the internal language of
 $\hat\mbbC$, the category of presheaves over $\mbbC$. This allows faithful
 reasoning about $\mbbC$, while also including all convenience features of
@@ -1112,8 +1115,8 @@ Before elaborating on 2LTT-specific features, we review models of type theories
 in general. Variants of 2LTT will be obtained by adding extra features on the
 top of more conventional TTs.
 
-It is also worth to take a look at models of type theories at this point,
-because the notions presented in this subsection (categories with families, type
+It is also worth to take a more general look at models at this point, because
+the notions presented in this subsection (categories with families, type
 formers) will be reused several times in this thesis, when specifying theories
 of signatures.
 
@@ -1174,7 +1177,7 @@ A cwf consists of the following.
   that types and terms can be substituted:
   \begin{alignat*}{3}
     &\blank[\blank] : \Ty\,\Delta \to \Sub\,\Gamma\,\Delta \to \Ty\,\Gamma\\
-    &\blank[\blank] : \Tm\,\Delta\,A \to (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Delta\,(A[\sigma])
+    &\blank[\blank] : \Tm\,\Delta\,A \to (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma])
   \end{alignat*}
   Substitution is functorial: we have $A[\id] = A$ and
   $A[\sigma\circ\delta] = A[\sigma][\delta]$, and likewise for terms.
@@ -1314,9 +1317,9 @@ binder.
 The rest of the rules specify a natural isomorphism $\Tm\,\Gamma\,(\Pi\,A\,B)
 \simeq \Tm\,(\Gamma \ext A)\,B$. We only need a substitution rule (i.e.\ a
 naturality rule) for one direction of the isomorphism, since the naturality of
-the other map can is derivable.
+the other map is derivable.
 
-This way of specifying $\Pi$ types is very convenient if we have explicit
+This way of specifying $\Pi$-types is very convenient if we have explicit
 substitutions. The usual ``pointful'' specification is equivalent to this. For
 example, we have the following derivation of pointful application:
 \begin{alignat*}{3}
@@ -1497,7 +1500,7 @@ also duplicated in $(\Ty,\,\Tm)$, moreover $\El$ preserves all type formers, so
 that e.g.\ $\El\,\Nat$ is definitionally equal to the natural number type in
 $\Ty$, then $\U$ is \textbf{strongly Tarski}.
 
-It often is more convenient to have stronger classifiers as universes, so that
+It is often more convenient to have stronger classifiers as universes, so that
 \emph{all} types in a given family structure are represented.
 
 \begin{mydefinition}
@@ -1506,9 +1509,9 @@ specified as follows:
 \[
   \U : \Ty\,\Gamma\hspace{1em} (\El,\,\ms{c}) : \Tm\,\Gamma\,\U \simeq \Ty\,\Gamma
 \]
-$\ms{c}$ maps every type in $\Ty$ to a code in $\U$. This is very convenient,
-since now we can ignore $\El$ when specifying type formers, as $\ms{c}$ can be
-always used on demand to get a code for a type.
+$\ms{c}$ maps every type in $\Ty$ to a code in $\U$. Now we can ignore $\El$
+when specifying type formers, as $\ms{c}$ can be always used to get a code in
+$\U$ for a type.
 \end{mydefinition}
 
 Unfortunately, the exact specification above yields an inconsistent
@@ -1550,12 +1553,17 @@ on the base category is exactly a family morphism.
 \end{mylemma}
 
 \begin{proof}
-from the preservation of context extension by $F$, we know that $F$ is
-invertible on the zero De Bruijn index, so for $\q : \Tm\,(\Gamma \ext F\,A)\,(F
-(A[\p]))$, we have $F^{-1}\q : \Tm\,(\Gamma \ext F\,A)\,(A[\p])$, such that $F
-(F^{-1}\,\q) = \q$. If we have any $t : \Tm\,\Gamma\,(F\,A)$, we also have
-$(F^{-1}\q)[\id,\,t] : \Tm\,\Gamma\,A$, and this yields the inverse action
-$F^{-1}$ which acts on all terms.
+From the $\ext$-preservation isomorphism and the defining isomorphisms of
+comprehension, we get $\q' : \Tm\,(\Gamma \ext F\,A)\,(A[\p])$ such that $F\,\q'
+= \q$ and $\q'[\p,\,F\,\q] = \q$. Now, for $t : \Tm\,\Gamma\,(F\,A)$, we
+define $F^{-1}\,t$ as $\q'[\id,\,t] : \Tm\,\Gamma\,A$. We get the following:
+\begin{alignat*}{3}
+  & F(F^{-1}\,t) = F(\q'[\id,\,t]) = (F\,\q')[\id,\,t] = \q'[\id,\,t] = t \\
+  & F^{-1}(F\,t) = \q'[\id,\,F\,t] = \q'[\id,\,(F\,\q)[\id,\,\,t]] = \q'[\p,\,F\,\q][\id,\,t]
+    = \q[\id,\,t] = t
+\end{alignat*}
+More concisely, $F$ is invertible on the generic term $\q$, which implies invertibility
+on any term.
 \end{proof}
 
 \begin{notation}
@@ -1578,7 +1586,7 @@ We may call $(\Ty_0,\,\Tm_0)$ the inner family and $(\Ty_1,\,\Tm_1)$ the outer
 one. If a type former is present in both families, we may distinguish the two
 copies by indexing, for example $\Bool_0 : \Ty_0\,\Gamma$ and $\Bool_1 :
 \Ty_1\,\Gamma$, and likewise for term formers. However, we overload notation in
-cases where levels are inferable, such as in a function type $\Lift\Bool_0 \to
+cases where levels are inferable, such as in a function type $\Lift\!\Bool_0 \to
 \Bool_1$, where the function arrow is clearly in the outer level.
 \end{notation}
 
@@ -1958,31 +1966,26 @@ it and $\Lift$ is an isomorphism on terms.
 \subsubsection{Inner Type Formers}
 
 Can type formers in $(\Ty_{\mbbC},\,\Tm_{\mbbC})$ be transferred to
-$(\Ty_0,\,\Tm_0)$? This depends on what we mean by ``type former''. Capriotti
-examined this question in some generality \cite{TODO}, although he did not make
-the notion of type formers fully precise. Some of the inductive signatures in
-this thesis or in the more recent HOAS literature \cite{TODO} could be possibly
-used to revisit this question. We don't do this in this thesis. We can give
-though a quick illustration and explanation.
+$(\Ty_0,\,\Tm_0)$? The following explanation is adapted from Capriotti
+\cite[Section 2.3]{TODO}.
 
-Generally, a type former in $\mbbC$ transfers to $\hmbbC$ if the specification
-of the type former can be already given in the internal language of $\hmbbC$; if
-the type former ``always has been'' in $\hmbbC$ to begin with. To be describable
-in $\hmbbC$, a type former needs to be natural with respect to
-substitution. This is also a core idea of HOAS: when working in $\hmbbC$,
-everything is natural, and we can omit boilerplate related to contexts and
-substitutions.
+Generally, a type former in $\mbbC$ transfers to $\hmbbC$ if it can be specified
+in the internal language of $\hmbbC$; if the type former ``always has been'' in
+$\hmbbC$ to begin with. To be describable in $\hmbbC$, a type former needs to be
+natural with respect to $\mbbC$ morphisms. This is also a core idea of HOAS: when
+working in $\hmbbC$, everything is natural, and we can omit boilerplate related
+to contexts and substitutions.
 
 For example, if we switch to a more convenient Agda-like surface syntax for
-2LTT, we may have $\Ty_{\mbbC} : \U$ and $\Tm_{\mbbC} : \Ty_{\mbbC} \to \U$,
+2LTT, we may have $\Ty_{\mbbC} : \U$ and $\Lift\,: \Ty_{\mbbC} \to \U$,
 where $\U$ is a universe in the outer layer. We also assume that $\U$ is
 Russell-style; this is not actually the case in the standard presheaf model,
 where only Coquand-style universes are supported, but we can just assume that
 $\El$ and $\ms{c}$ are inserted during surface syntax elaboration. Then, we can
 give the HOAS specification for supporting $\Pi$-types:
 \begin{alignat*}{3}
-  &\Pi_0           : (A : \Ty_{\mbbC}) \to (\Tm_{\mbbC}\,A \to \Ty_{\mbbC}) \to \Ty_{\mbbC}\\
-  &(\app_0,\,\lam_0) : \Pi_0\,A\,B \simeq ((x : \Tm_{\mbbC}\,A) \to \Tm_{\mbbC}(B\,x))
+  &\Pi_0           : (A : \Ty_{\mbbC}) \to (\Lift\! A \to \Ty_{\mbbC}) \to \Ty_{\mbbC}\\
+  &(\app_0,\,\lam_0) : \Pi_0\,A\,B \simeq ((a :\,\Lift\! A) \to \,\Lift\!(B\,a))
 \end{alignat*}
 This can be viewed as a closed $\Sigma$-type in the outer layer of 2LTT.  If we
 evaluate it in the standard presheaf model, we get a presheaf, and if evaluate
@@ -1997,10 +2000,14 @@ this thesis.
 
 \subsection{Functions with Lifted Domains}
 
-There is a useful simplification in the standard presheaf model, in cases where
-we have functions of the form $\Pi\,(\Lift A)\,B$. First we look at the
-simply-typed case with presheaf exponentials. We need some observations about
-the Yoneda embedding.
+There is a useful semantic simplification in the standard presheaf model, in
+cases where we have functions of the form $\Pi\,(\Lift\!A)\,B$. This will allow
+us to almost completely eliminate encoding overhead when interpreting inductive
+signatures in 2LTT; we look at examples in Section
+\ref{sec:2ltt-simple-signatures}.
+
+First we look at the simply-typed case with presheaf exponentials. We need some
+observations about the Yoneda embedding.
 
 \begin{mylemma}
 $\yon$ preserves finite products up to isomorphism, i.e.\ $\yon \emptycon \simeq
@@ -2020,52 +2027,37 @@ isomorphic by the specification of products to $\yon i \otimes \yon j$.
   & \Sub\,(\yon (j \otimes i))\,\Gamma \simeq \hspace{3em} &&\text {by Yoneda lemma}\\
   & |\Gamma|\,(j \otimes i)&&
 \end{alignat*}
-
 \end{mylemma}
 
+It is possible to rephrase the above derivation for $\Pi$-types. For that, we
+would need to define the action of $\yon$ on types and terms, consider the
+preservation of $\blank\ext\blank$ by $\yon$, and also specify a ``dependent''
+Yoneda lemma for $\Tm_1$. For the sake of brevity, we omit this, and present the
+result directly:
+\begin{alignat*}{3}
+  & |\Pi\,(\Lift\!A)\,B|\,\{i\}\,\gamma \simeq |B|\,\{i \ext |A|\,\gamma\}\,(\gamma\!\lab\!\p\!\rab,\,\q)
+\end{alignat*}
+In short, depending on a lifted domain is the same as depending on an extended
+context in $\mbbC$.  We expand a bit on the typing of the right hand side. We
+have $\gamma : |\Gamma|\,i$, moreover
+\begin{alignat*}{3}
+  & |B| &&: \{j : \mbbC\} \to |\Gamma\,\,\ext \Lift\!A|\,j \to \Set\\
+  & |B| &&: \{j : \mbbC\} \to ((\gamma' : |\Gamma|\,j)\times \Tm_{\mbbC}\,j\,(|A|\,\gamma')) \to \Set\\
+  & |B|\,\{i \ext |A|\,\gamma\} &&: ((\gamma' : |\Gamma|\,(i \ext |A|\,\gamma))\times \Tm_{\mbbC}\,(i \ext |A|\,\gamma)\,(|A|\,\gamma')) \to \Set\\
+  & \gamma\!\lab\!\p\!\rab &&: |\Gamma|\,(i \ext |A|\,\gamma)\\
+  & \q &&: \Tm_{\mbbC}\,(i \ext |A|\,\gamma)\,((|A|\,\gamma)[\p])\\
+  & \q &&: \Tm_{\mbbC}\,(i \ext |A|\,\gamma)\,(|A|\,(\gamma\!\lab\!\p\!\rab))\\
+\end{alignat*}
 
+\subsection{Universe for $(\Ty_0,\,\Tm_0)$}
 
-
-
-
-
-
-
-
-
-
-
-
+The
 
 
 
 
 \section{Simple Inductive Signatures in 2LTT}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\label{sec:2ltt-simple-signatures}
 
 
 %% --------------------------------------------------------------------------------
