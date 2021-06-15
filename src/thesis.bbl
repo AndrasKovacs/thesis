@@ -1,5 +1,5 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{BCM{\etalchar{+}}20}
+\begin{thebibliography}{ACD{\etalchar{+}}18}
 
 \bibitem[AAC{\etalchar{+}}20]{allais20type}
 Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
@@ -50,12 +50,6 @@ Steve Awodey.
 \newblock Natural models of homotopy type theory.
 \newblock {\em Math. Struct. Comput. Sci.}, 28(2):241--286, 2018.
 
-\bibitem[BCM{\etalchar{+}}20]{dependentrightadjoints}
-Lars Birkedal, Ranald Clouston, Bassel Mannaa, Rasmus~Ejlers M{\o}gelberg,
-  Andrew~M. Pitts, and Bas Spitters.
-\newblock Modal dependent type theory and dependent right adjoints.
-\newblock {\em Math. Struct. Comput. Sci.}, 30(2):118--138, 2020.
-
 \bibitem[BH11]{compdata}
 Patrick Bahr and Tom Hvitved.
 \newblock Compositional data types.
@@ -99,22 +93,10 @@ Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
 Jasper Hugunin.
 \newblock Why not w?, 2021.
 
-\bibitem[KHS19]{kaposi2019gluing}
-Ambrus Kaposi, Simon Huber, and Christian Sattler.
-\newblock Gluing for type theory.
-\newblock In Herman Geuvers, editor, {\em 4th International Conference on
-  Formal Structures for Computation and Deduction, {FSCD} 2019, June 24-30,
-  2019, Dortmund, Germany}, volume 131 of {\em LIPIcs}, pages 25:1--25:19.
-  Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, 2019.
-
-\bibitem[Kis14]{kiselyov14metaocaml}
-Oleg Kiselyov.
-\newblock The design and implementation of {BER} metaocaml - system
-  description.
-\newblock In Michael Codish and Eijiro Sumii, editors, {\em Functional and
-  Logic Programming - 12th International Symposium, {FLOPS} 2014, Kanazawa,
-  Japan, June 4-6, 2014. Proceedings}, volume 8475 of {\em Lecture Notes in
-  Computer Science}, pages 86--102. Springer, 2014.
+\bibitem[Kov21]{kovacs2021generalized}
+András Kovács.
+\newblock Generalized universe hierarchies and first-class universe levels,
+  2021.
 
 \bibitem[KvR20]{mutualinductive}
 Ambrus Kaposi and Jakob von Raumer.

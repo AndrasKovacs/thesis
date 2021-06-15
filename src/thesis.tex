@@ -108,8 +108,8 @@
 \newcommand{\flCwF}{\mathsf{flCwF}}
 
 \newcommand{\Kfam}{\mathsf{K}}
-\newcommand{\lamK}{\mathsf{lam}^{\K}}
-\newcommand{\appK}{\mathsf{app}^{\K}}
+\newcommand{\lamK}{\mathsf{lam}_{\K}}
+\newcommand{\appK}{\mathsf{app}_{\K}}
 
 \newcommand{\p}{\mathsf{p}}
 \newcommand{\q}{\mathsf{q}}
@@ -201,8 +201,8 @@
 \newcommand{\up}{\uparrow}
 \newcommand{\down}{\downarrow}
 
-\newcommand{\lab}{<\!}
-\newcommand{\rab}{\!>}
+\newcommand{\lab}{\langle}
+\newcommand{\rab}{\rangle}
 \newcommand{\defn}{:\equiv}
 
 \newcommand{\yon}{\ms{y}}
@@ -890,30 +890,42 @@ the inductive fixpoint for each assumed $F : \ms{Sig}$:
 \end{alignat*}
 In Haskell, this definition is valid for arbitrary \emph{semantic} $F$ functor,
 because there is no termination checking, and thus no positivity checking. In
-Agda, the above definition is valid because the positivity checker looks inside
-the definition of $\llbracket\blank\rrbracket$ and lets it through. Next we establish
-weak initiality, by defining the recursor:
+Agda, the above definition is valid because the positivity checker is willing to
+look inside the definition of $\llbracket\blank\rrbracket$. However, Coq and
+Lean reject this definition. Next we establish weak initiality, by defining the
+recursor:
 \begin{alignat*}{3}
   & \ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X \\
-  & \ms{rec}\,f\,(\ms{con}\,x) \equiv f\,(\ms{map}\,(\ms{rec}\,f)\,x)
+  & \ms{rec}\,f\,(\ms{con}\,x) \defn f\,(\ms{map}\,(\ms{rec}\,f)\,x)
 \end{alignat*}
 This is again fine in Haskell, but it unfortunately does not pass Agda's
-termination checker. There are several possible solutions, assuming that we
-stick to functors as signatures:
-\begin{enumerate}
-  \item Using \emph{sized types} \cite{abel17normalization}. For example, this
-    was used in \cite{allais20type}. The drawback is dependence on an extra
-    language feature which is only supported in Agda, out of the major
-    dependently typed languages.
-  \item Turning termination checking off.
-  \item Not using the direct inductive definition for fixpoints, and thereby not
-    being exposed to the whims of syntactical strict positivity checking in
-    Agda. Instead, defining initial algebras as sequential colimits, using
-    Adámek's theorem. This approach was taken by Ahrens, Matthes and Mörtberg in
-    \cite{ahrens19from}. However, the encoding overhead of this approach is excessive, and
-    it is practically unusable for generic programming. Another drawback is that
-    defining colimits requires quotient types, which are often not available natively.
-\end{enumerate}
+termination checker. The most conservative solution is to inline the recursive
+call into $\ms{map}$, so that the definition becomes transparent to termination
+checking.
+\begin{alignat*}{3}
+  &\ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X\\
+  &\ms{rec}\,f\,(\ms{con}\,x) \defn f\,(\ms{maprec}\,f\,x)
+\end{alignat*}
+\begin{alignat*}{3}
+  & \rlap{$\ms{maprec} : \{G\} \to (\llbracket F \rrbracket\,X \to X) \to \llbracket G \rrbracket\,\ms{Fix_F} \to \llbracket G \rrbracket\,X$}\\
+  & \ms{maprec}\,\{\Id\}\,&&f\,x &&\defn \ms{rec}\,f\,x\\
+  & \ms{maprec}\,\{\ms{K\top}\}\,&&f\,x &&\defn x\\
+  & \ms{maprec}\,\{G \otimes H\}\,&&f\,(x,\,y) &&\defn  (\ms{maprec}\,f\,x,\,\ms{maprec}\,f\,y)\\
+  & \ms{maprec}\,\{G \oplus H\}\,&&f\,(\ms{inj_1}\,x) &&\defn \ms{maprec}\,f\,x\\
+  & \ms{maprec}\,\{G \oplus H\}\,&&f\,(\ms{inj_2}\,x) &&\defn \ms{maprec}\,f\,x
+\end{alignat*}
+
+Alternatively, we might use \emph{sized types} \cite{abel17normalization}. For
+example, this was used in \cite{allais20type}. The drawback is dependence on an
+additional language feature which is only supported in Agda, and which has had
+several soundness issues since its introduction \cite{TODO}.
+
+There is yet another possible approach: defining initial algebras as sequential
+colimits, using Adámek's theorem. This approach was taken by Ahrens, Matthes and
+Mörtberg in \cite{ahrens19from}. However, the encoding overhead is excessive,
+and it is practically unusable for generic programming. Another drawback is that
+defining colimits requires quotient types, which are often not available
+natively.
 
 \paragraph{W-types.} Given a polynomial $(S,\,P) : (S : \Set) \times (S \to \Set)$,
 the corresponding W-type is inductively specified as below:
@@ -944,13 +956,20 @@ both in intensional and extensional type theories, but they are a bit too heavy
 for practical purposes.
 
 \paragraph{Term algebras.}
-The term algebras described in this chapter compare quite favorably. As we have
-seen, induction for term algebras can be defined in a small amount of easy code,
-without using sized types or quotients.
+The main advantage of the term algebras described in this chapter is that they
+can be defined using plain inductive families, which are available in every
+major dependently typed language; even in GHC Haskell the support for
+generalized ADTs is sufficient. In contrast, as we have seen, the direct
+inductive definition of fixpoints is only possible in Agda, while the colimit
+definition requires quotients and is rather heavyweight. Even in Agda, the
+drawback of the direct fixpoint definition is that many generic operations only
+pass termination checking after manual inlining. With term algebras, generic
+operations can be defined by induction on $\Tm\,\Gamma\,A$ in an obviously
+terminating way.
 
-For practical usefulness, it makes sense to make a slight modification of
-terms. We switch to a \emph{spine neutral} definition. We mutually inductively
-define $\ms{Spine}$ and $\Tm$:
+For practical usage it makes sense to slightly modify terms. We switch to a
+\emph{spine neutral} definition. We mutually inductively define $\ms{Spine}$ and
+$\Tm$:
 \begin{alignat*}{3}
   & \ms{Spine} &&: (\Gamma : \Con) \to \Ty \to \Ty \to \Set \\
   & \epsilon &&: \{A\} \to \ms{Spine}\,\Gamma\,A\,A\\
@@ -959,37 +978,38 @@ define $\ms{Spine}$ and $\Tm$:
   & \blank\$\blank &&: \{A\,B\} \to \Var\,\Gamma\,A \to \ms{Spine}\,\Gamma\,A\,B \to \Tm\,\Gamma\,B
 \end{alignat*}
 With this representation, a term is always a variable applied to a list of
-arguments. This can be useful, because the pattern matching implementation of
-the metalanguage knows about which constructors are possible, when matching
-on values of $\Tm\,\Gamma\,A$. Using this, we give here an ad-hoc definition of
-natural numbers in pseudo-Agda.
+arguments. This can be useful, because pattern matching implementations in
+metalanguages (e.g.\ Agda or Idris) are more likely to know about which
+constructors are possible in patterns. Using this, we give here an ad-hoc
+definition of natural numbers in pseudo-Agda.
 \begin{alignat*}{3}
-  &\Nat : \Set && \ms{zero} &&\equiv \vz\,\$\,\epsilon\\
-  &\Nat \equiv \Tm\,(\emptycon\ext \iota\to \iota \ext \iota)\,\iota\hspace{2em} && \ms{suc}\,n &&\equiv \vs\,\vz\,\$\,(n,\,\epsilon)
+  &\Nat : \Set && \ms{zero} &&\defn \vz\,\$\,\epsilon\\
+  &\Nat \defn \Tm\,(\emptycon\ext \iota\to \iota \ext \iota)\,\iota\hspace{2em} && \ms{suc}\,n &&\defn \vs\,\vz\,\$\,(n,\,\epsilon)
 \end{alignat*}
 \begin{alignat*}{3}
   &\hspace{-6.5em}\rlap{$\ms{NatElim} : (P : \Nat \to \Set) \to P\,\ms{zero}\to ((n : \Nat) \to P\,n \to P\,(\ms{suc}\,n))$}\\
   &\hspace{-6.5em}\rlap{$\hspace{4em}\to (n : \Nat) \to P\,n$}\\
-  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vz\,\$\,\epsilon) &&\equiv \ms{pz}\\
-  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vs\,\vz\,\$\,(n,\,\epsilon)) &&\equiv
+  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vz\,\$\,\epsilon) &&\defn \ms{pz}\\
+  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vs\,\vz\,\$\,(n,\,\epsilon)) &&\defn
     \ms{ps}\,n\,(\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,n)
 \end{alignat*}
 The actual Agda definition can be found in the supplementary formalization, and
 it is pretty much the same as above. We recover the exact same behavior with
 respect to pattern matching as with native inductive definitions.
 
-\todo{formalize Rec and Ind with spines in Agda. Revise paragraph below}
-
 $\Rec_\Omega$ and $\Ind_\Omega$ can be adapted to spine neutral terms with minor
 adjustments. But what about the $\beta$-rules which they produce as part of
-their output, are they definitional (i.e.\ proven by $\refl$)? Informally, it is
-easy to see that any concrete definition of an eliminator like $\ms{NatElim}$
-enjoys definitional $\beta$. In this chapter we do not have a nice way of
-reasoning about definitional equalities. In the next chapter we develop such
-reasoning and show that an $\Ind_\Omega$ which is defined internally to an
-intensional theory (as in this chapter) only has propositional $\beta$-rules,
-but if it is defined in a metaprogramming layer, it has definitional $\beta$,
-even if we don't use spine neutral terms.
+their output, are they definitional (i.e.\ proven by $\refl$)? In this chapter
+we do not have a rigorous way of reasoning about definitional equalities; in the
+next chapter we develop such reasoning and show that $\Rec_\Omega$ enjoys
+definitional $\beta$-rules (with or without the spine neutral
+definition).
+
+However, $\Ind_\Omega$ only supports propositional $\beta$-rules. The issue is
+the extra transporting in the definition of $\ms{E} : (t : \Tm\,\Omega\,\iota)
+\to X^D\,t$: transports don't strictly commute with constructors. This appears
+to be a point of advantage for the direct fixpoint definition in Agda, as it
+allows generic elimination with strict computation rules \cite{TODO}.
 
 The term algebra presentation can be easily extended to indexed families. In
 that case, signatures and terms are still definable with basic inductive
@@ -1003,10 +1023,6 @@ $\Con$ in this chapter (except in an indexed form). The authors observe that
 several generic programming patterns are easier to express with normalized
 signatures. However, they still use explicit fixpoints as the way to get initial
 algebras.
-
-Hence, it remains future work to see how term algebras might be used in more
-practically-oriented generic programming.
-
 
 \chapter{Semantics in Two-Level Type Theory}
 \label{chap:2ltt}
@@ -1029,8 +1045,8 @@ propositional ones. We have a formalization of signatures and semantics in
 intensional Agda, where the two notions differ\footnote{As opposed to in
 extensional type theory, where they're the same.}, but only propositional
 equality is subject to internal reasoning. For instance, we would like to show
-that term algebras support recursion and elimination with strict $\beta$-rules,
-and for this we need to reason about strict equality.
+that term algebras support recursion with strict $\beta$-rules, and for this we
+need to reason about strict equality.
 
 Second, the semantics that we provided was not as general as it could be. We
 used the internal $\Set$ universe to specify algebras, but algebras make sense
@@ -1057,10 +1073,10 @@ algebras are specified as follows.
   &\Alg_{\ms{TreeSig}}&& \defn (X : |\mbbC|) \times \mbbC(\emptycon,\,X) \times \mbbC(X \otimes X,\,X)
 \end{alignat*}
 \end{myexample}
-Here, $\Alg_{\ms{NatSig}}$ and $\Alg_{\ms{TreeSig}}$ are both sets in an
-unspecified metatheory, and the $\times$ in the definitions refer to the
-metatheoretic $\Sigma$. Algebras can be viewed as diagrams which preserve finite
-products, and algebra morphisms are natural transformations.
+Here, $\Alg_{\ms{NatSig}}$ and $\Alg_{\ms{TreeSig}}$ are both sets in some
+metatheory, and the $\times$ in the definitions refer to the metatheoretic
+$\Sigma$. Algebras can be viewed as diagrams which preserve finite products, and
+algebra morphisms are natural transformations.
 
 How should we adjust $\Alg$ to compute algebras in $\mbbC$, and $\Mor$ to
 compute their morphisms? While it is possible to do this in a direct fashion,
@@ -1282,23 +1298,6 @@ formers, and finally universes.
 \subsubsection{Negative types}
 
 \begin{mydefinition}
-\label{def:constant-families}
-A family structure supports \textbf{constant families} if we have the following.
-\begin{alignat*}{3}
-  & \K &&: \Con \to \{\Gamma : \Con \} \to \Ty\,\Gamma \\
-  & (\appK,\,\lamK) &&: \Tm\,\Gamma\,(\K\,\Delta) \simeq \Sub\,\Gamma\,\Delta
-\end{alignat*}
-Constant families express that every context can be viewed as a non-dependent
-type in any context. Having constant families is equivalent to the
-\emph{democracy} property for a cwf
-\cite{clairambault2014biequivalence,forsberg-phd}.  Constant families are
-convenient when building models, because they let us model non-dependent types
-as semantic contexts, which are often simpler structures than semantic types.
-From a programming perspective, constant families specify closed record types,
-where $\K\,\Delta$ has $\Delta$-many fields.
-\end{mydefinition}
-
-\begin{mydefinition}
 A $(\Ty,\,\Tm)$ family supports \textbf{$\Pi$-types} if it supports the following.
 \begin{alignat*}{3}
   &\Pi           &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
@@ -1362,6 +1361,23 @@ author has not yet acquired the proficiency to comfortably use the new
 techniques.
 
 \begin{mydefinition}
+\label{def:constant-families}
+A family structure supports \textbf{constant families} if we have the following.
+\begin{alignat*}{3}
+  & \K &&: \Con \to \{\Gamma : \Con \} \to \Ty\,\Gamma \\
+  & (\appK,\,\lamK) &&: \Tm\,\Gamma\,(\K\,\Delta) \simeq \Sub\,\Gamma\,\Delta
+\end{alignat*}
+Constant families express that every context can be viewed as a non-dependent
+type in any context. Having constant families is equivalent to the
+\emph{democracy} property for a cwf
+\cite{clairambault2014biequivalence,forsberg-phd}.  Constant families are
+convenient when building models, because they let us model non-dependent types
+as semantic contexts, which are often simpler structures than semantic types.
+From a programming perspective, constant families specify closed record types,
+where $\K\,\Delta$ has $\Delta$-many fields.
+\end{mydefinition}
+
+\begin{mydefinition}
 A family structure supports \textbf{$\Sigma$-types} if we have
 \begin{alignat*}{3}
   & \Sigma  &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
@@ -1386,7 +1402,7 @@ A family structure supports \textbf{extensional identity} types if there is $\Id
 $(\reflect,\,\refl) : \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t = u)$.
 \end{mydefinition}
 
-It is also possible to give positive definition for identity types, in which
+It is also possible to give a positive definition for identity types, in which
 case we get intensional identity. Extensional identity corresponds to a
 categorical equalizer of terms (a limit), while the Martin-Löf-style intensional
 identity is characterized as the initial reflexive relation on a type (a
@@ -1408,8 +1424,7 @@ Uniqueness of identity proofs (UIP) is often ascribed to the extensional
 identity type \cite{TODO}. UIP means that $\Tm\,\Gamma\,(\Id\,t\,u)$ has at most
 a single inhabitant up to $\Id$. However, UIP is not something which is inherent
 in the negative specification, instead it's inherited from the metatheory. If
-$\Tm$ forms a set in the metatheory (by assumption, or by not having
-higher-dimensional types in the metatheory), then internal equality proofs
+$\Tm$ forms a homotopy set in the metatheory, then internal equality proofs
 inherit uniqueness through the defining isomorphism.
 
 \subsubsection{Positive types}
@@ -1519,134 +1534,270 @@ Unfortunately, the exact specification above yields an inconsistent
 solution is to have multiple family structures $(\Ty_i,\,\Tm_i)$, indexed by
 universe levels, and have $\U_i : \Ty_{i + 1}\,\Gamma$ and
 $\Tm_{i+1}\,\Gamma\,\U_i \simeq \Ty_i\,\Gamma$. For a general specification of
-consistent universe hierarchies , see \cite{TODO}. As mentioned in Section
+consistent universe hierarchies , see \cite{kovacs2021generalized}. As mentioned in Section
 \ref{sec:universes}, we omit universe indices in the following, and implicitly
 assume ``just enough'' universes for particular purposes.
 
 \begin{mydefinition}
-\textbf{Russell universes} are a stricter variant of Coquand universes, where we
-have $\Tm\,\Gamma\,\U = \Ty\,\Gamma$ as an equality of sets instead of an
-isomorphism. This justifies omitting $\El$ and $\ms{c}$ from informal notation,
-and implicitly casting $A : \Tm\,\Gamma\,\U$ to $\Ty\,\Gamma$.
+\textbf{Russell universes} are Coquand universes additionally satisfying
+$\Tm\,\Gamma\,\U = \Ty\,\Gamma$ as an equality of sets, and also $\ms{El}\,t =
+t$. This justifies omitting $\El$ and $\ms{c}$ from informal notation,
+implicitly casting between $\Tm\,\Gamma\,\U$ and $\Ty\,\Gamma$.
 \end{mydefinition}
+Russell-style universes are commonly supported in set-theoretic models. They are
+also often inherited from meta-type-theories which themselves have
+Russell-universes. Major implementations of type theories (Coq, Lean, Agda,
+Idris) are all such.
+
 
 \section{Two-Level Type Theory}
 
-We describe models of a basic version of 2LTT in the following. The basic idea
-is that we have two family structures on a cwf, related by a family morphism.
+We describe models of 2LTT in the following. This is not the only possible way
+to present 2LTT; our approach differs from \cite{twolevel} in some ways. We will summarize
+the differences at the end of this section.
 
 \begin{mydefinition}
-A \textbf{family morphism} $F$ between ($\Tm_0$, $\Ty_0$) and ($\Tm_1$, $\Ty_1$)
-families consists of natural transformations mapping types to types and terms to
-terms, which preserves context extensions up to context isomorphism, i.e.\ we
-have that $(\Gamma \ext F\,A) \simeq (\Gamma \ext A)$, where $\simeq$ denotes
-existence of an invertible $\Sub$.
-\end{mydefinition}
-
-Family morphisms are restrictions of so-called \emph{weak morphisms}
-\cite{dependentrightadjoints} (or \emph{pseudomorphisms}
-\cite{kaposi2019gluing}) of cwfs: a weak morphism which has the identity action
-on the base category is exactly a family morphism.
-
-\begin{mylemma} Every family morphism has invertible action on terms, i.e.\ there
-  is an $F^{-1} : \Tm\,\Gamma\,(F\,A) \to \Tm\,\Gamma\,A$.
-\end{mylemma}
-
-\begin{proof}
-From the $\ext$-preservation isomorphism and the defining isomorphisms of
-comprehension, we get $\q' : \Tm\,(\Gamma \ext F\,A)\,(A[\p])$ such that $F\,\q'
-= \q$ and $\q'[\p,\,F\,\q] = \q$. Now, for $t : \Tm\,\Gamma\,(F\,A)$, we
-define $F^{-1}\,t$ as $\q'[\id,\,t] : \Tm\,\Gamma\,A$. We get the following:
-\begin{alignat*}{3}
-  & F(F^{-1}\,t) = F(\q'[\id,\,t]) = (F\,\q')[\id,\,t] = \q'[\id,\,t] = t \\
-  & F^{-1}(F\,t) = \q'[\id,\,F\,t] = \q'[\id,\,(F\,\q)[\id,\,\,t]] = \q'[\p,\,F\,\q][\id,\,t]
-    = \q[\id,\,t] = t
-\end{alignat*}
-More concisely, $F$ is invertible on the generic term $\q$, which implies invertibility
-on any term.
-\end{proof}
-
-\begin{notation}
-In the following, we write $\Lift : \Ty_0\,\Gamma \to \Ty_1\,\Gamma$ for
-the action of some morphism on types, $\up : \Tm_0\,\Gamma\,A \to
-\Tm_1\,\Gamma\,(\Lift\,A)$ for the action on terms, and $\down$ for the inverse
-action on terms. We also call the action on types \emph{type lifting}
-and the action on terms \emph{term lifting}. We may also use $\Lift$ to
-refer to a specific family morphism, if there is no ambiguity.
-\end{notation}
-
-\begin{mydefinition}
-A \textbf{model of basic 2LTT} consists of a cwf equipped with two families
-$(\Ty_0,\,\Tm_0)$ and $(\Ty_1,\,\Tm_1)$ and a morphism between them. Both
-families may be closed under arbitrary additional type formers.
-\end{mydefinition}
-
-\begin{notation}
-We may call $(\Ty_0,\,\Tm_0)$ the inner family and $(\Ty_1,\,\Tm_1)$ the outer
-one. If a type former is present in both families, we may distinguish the two
-copies by indexing, for example $\Bool_0 : \Ty_0\,\Gamma$ and $\Bool_1 :
-\Ty_1\,\Gamma$, and likewise for term formers. However, we overload notation in
-cases where levels are inferable, such as in a function type $\Lift\!\Bool_0 \to
-\Bool_1$, where the function arrow is clearly in the outer level.
-\end{notation}
-
-The syntax of basic 2LTT can be interpreted as having ($\Ty_1$, $\Tm_1$) as a
-metaprogramming layer which can generate object-level programs in the ($\Ty_0$,
-$\Tm_0$) layer.
-
-Lifted types correspond to types of object-level expressions; for example,
-$\Bool_0 : \Ty_0\,\Gamma$ is the object-level type of Booleans, while
-$\Lift\Bool_0$ is the meta-level type of $\Bool_0$-expressions, and $\Bool_1 :
-\Ty_1\,\Gamma$ is the type of meta-level Booleans. It is possible to compute a
-$\Bool_0$ from a $\Bool_1$. Given $b : \Tm_1\,\Gamma\,\Bool_1$, we can construct
-$\down(\mathsf{if}\,b\,\mathsf{then}\up\!\true_0\,\mathsf{else}\up\!\false_0) :
-\Tm_0\,\Gamma\,\Bool_0$.
-
-But there is no way to compute a $\Bool_1$ from a $\Bool_0$: we can try to lift
-the input, but there is no elimination rule for $\Lift\Bool_0$ in
-$\Ty_1$. Conceptually, terms of $\Lift\Bool_0$ are \emph{expressions}, so they
-are not necessarily $\true$ or $\false$, they can also be variables or neutral
-expressions, so the usual Boolean elimination is not justified for them.
-$\Lift$ preserves type formers in the following way:
+A model of a \textbf{two-level type theory} is a model of type theory such that
 \begin{itemize}
-\item It preserves negative types up to isomorphism. The reason is that these
-  types are specified with isomorphisms, and $\Lift$ itself is an isomorphism on
-  terms. For example, $\Lift\!(A \times B) \simeq\,\, \Lift\!A\,\times
-  \Lift\!B$.
-\item For positive types, it's possible to eliminate from outer types to inner
-      ones but not the other way around.
-\item For universes, it's possible to convert inner types to outer ones, but not
-  the other way around. For example, assuming Russell universes, given $a :
-  \Tm_1\,\Gamma\,(\Lift \U_0)$, we have $\Lift (\down a) : \Tm_1\,\Gamma\,\U_1$.
+  \item It supports a Tarski-style universe $\Ty_0 : \Ty\,\Gamma$ with decoding $\Tm_0 :
+    \Tm\,\Gamma\,\Ty_0 \to \Ty\,\Gamma$.
+  \item $\Ty_0$ may be closed under arbitrary type formers, however, it is only possible
+    to eliminate from $\Ty_0$ type formers to types in $\Ty_0$.
+\end{itemize}
+Types in $\Ty_0$ are called \emph{inner} types, while other types are \emph{outer}. Alternatively,
+we may talk about \emph{object-level} and \emph{meta-level} types.
+\end{mydefinition}
+
+For example, if we have inner functions, we have the following:
+\begin{alignat*}{3}
+  &\Pi_0 &&: (A : \Tm\,\Gamma\,\Ty_0) \to \Tm\,(\Gamma \ext \Tm_0\,A) \to \Tm\,\Gamma\,\Ty_0\\
+  &(\app_0,\,\lam_0) &&: \Tm\,\Gamma\,(\Tm_0\,(\Pi_0\,A\,B)) \simeq \Tm\,(\Gamma \ext \Tm_0\,A)\,(\Tm_0\,B)
+\end{alignat*}
+If we have inner Booleans, we have the following (with $\beta$-rules omitted):
+\begin{alignat*}{3}
+  &\Bool_0 &&: \Tm\,\Gamma\,\Ty_0\\
+  &\true_0 &&: \Tm\,\Gamma\,(\Tm_0\,\Bool_0)\\
+  &\false_0 &&: \Tm\,\Gamma\,(\Tm_0\,\Bool_0)\\
+  & \ms{BoolInd_0} &&: (B : \Tm\,(\Gamma\ext b : \Tm_0\,\Bool_0)\,\Ty_0)\\
+  & && \to \Tm\,\Gamma\,(\Tm_0\,(B[b \mapsto \true_0]))\\
+  & &&\to \Tm\,\Gamma\,(\Tm_0\,(B[b \mapsto \false_0]))\\
+  & && \to (t : \Tm\,\Gamma\,(\Tm_0\,\Bool_0)) \to \Tm\,\Gamma\,(\Tm_0\,(B[b \mapsto t]))
+\end{alignat*}
+
+Intuitively, we can view outer types and terms as metatheoretical, while $\Ty_0$
+represents the set of types in the object theory, and $\Tm_0$ witnesses that any
+object type can be mapped to a metatheoretical set of object terms. The
+restriction on elimination is crucial. If we have a Boolean term in the object
+language, we can use the object-level elimination principle to construct new
+object terms. But it makes no sense to eliminate into the metatheory. In fact,
+an object-level Boolean term is not necessarily $\true$ or $\false$, it can also
+be just a variable or neutral term in some context, or it can be an arbitrary
+non-canonical value in a given model.
+
+We review some properties of 2LTT. An important point is the action of $\Tm_0$
+on type formers. In general, $\Tm_0$ preserves the negative type formers but not
+others.
+
+For example, we have the isomorphism $\Tm_0\,(\Pi_0\,A\,B) \simeq
+\Pi_1\,(\Tm_0\,A)\,(\Tm_0\,B)$, where $\Pi_1$ denotes outer functions.  We move
+left-to-right by mapping $t$ to $\lam_1\,(\app_1\,t)$, and the other way by
+mapping $t$ to $\lam_0\,(\app_0\,t)$. The preservation of $\Sigma$, $\top$, $\K$
+and extensional identity is analogous.
+
+In contrast, we can map from outer positive types to inner ones, but not the
+other way around. From $b : \Tm\,\Gamma\,\Bool_1$, we can use the outer
+$\Bool_1$ recursor to return in $\Tm_0\,\Bool_0$. In the other direction, we
+only have constant functions since the $\Bool_0$ recursor only targets types in
+$\Ty_0$.
+
+It may be the case that there are universes in the inner layer. For example,
+disregarding size issues (or just accepting an inconsistent inner theory), there
+may be an $\U_0$ in $\Ty_0$ such that we have $\Tm\,\Gamma\,(\Tm_0\,\U_0) =
+\Tm\,\Gamma\,\Ty_0$. This amounts to having a Russell-style inner universe with
+type-in-type. Assume that we have $\U_1$ as well, as a meta-level Russell
+universe. Then we can map from $\Tm_0\,\U_0$ to $\U_1$, by taking $A$ to
+$\Tm_0\,A$, but we cannot map in the other direction.
+
+\subsubsection{Internal Syntax and Notation}
+
+In the rest of this thesis we will mostly work internally to a 2LTT. This means
+using 2LTT similarly to how we used type-theoretic notation so far as
+mathematical language.
+\begin{itemize}
+  \item
+    We adopt the metatheoretic notation for type formers that we have been using
+    so far. For instance, $\Pi$-types are written as $(x : A) \to B$ or as $A
+    \to B$, on both levels.
+  \item
+    We assume a Russell-style universe $\U_1$ in the outer layer. We leave the
+    \emph{sizing} levels implicit: the $_1$ in $\U_1$ refers to being in the
+    outer layer, not to the conventional sizing index in universe
+    hierarchies. In other words, if we were fully explicit, we would use a
+    second sizing index which is orthogonal to the two levels, so that we would
+    have $\U_{1,\,0}$, $\U_{1,\,1}$ and so on; but we omit the sizing indices.
+  \item
+    If the same type formers are supported both in the inner and outer layers, we
+    may distinguish them by $_0$ and $_1$ subscripts, e.g.\ by having $\Bool_0$ and
+    $\Bool_1$. We omit some inferable subscripts, mostly for $\Pi$ and
+    $\Sigma$-types. In these cases, we usually know from the type parameters which
+    type former is meant. For example, $\Tm_0\,\Bool_0 \to \Bool_1$ can only refer
+    to outer functions.
+  \item
+    By having $\U_1$, we are able to have $\Ty_0 : \U_1$ and $\Tm_0 : \Ty_0 \to
+    \U_1$.  Hence we don't have to deal with proper meta-level types, and have a
+    more uniform notation. Notation and specification for inner type formers changes
+    accordingly. For example, for inner $\Pi$-types we may write $(x : A) \to B$
+    if $A : \Ty_0$ and $B$ depends on $x : \Tm_0\,A$. This also enables a
+    higher-order specification: if $B : \Tm_0\,A \to \Ty_0$, then $(x : A) \to
+    B\,x : \Ty_0$, and the specifying isomorphism for $\Pi$ can be written as
+    $\Tm_0\,((x : A) \to B\,x) \simeq ((x : \Tm_0\,A) \to \Tm_0\,(B\,x))$.
+  \item
+    We will omit inferable $\Tm_0$ applications. For instance, $\Bool_1 \to
+    \Bool_0$ can be ``elaborated'' to $\Bool_1 \to \Tm_0\,\Bool_0$ without
+    ambiguity, since the function codomain must be on the same level as the
+    domain, and the only thing we can do to make sense of this is to lift the
+    codomain by $\Tm_0$. Sometimes there is some ambiguity: $(\Bool_0 \to
+    \Bool_0) \to \Bool_1$ can be elaborated both to $\Tm_0\,(\Bool_0 \to
+    \Bool_0) \to \Bool_1$ and to $(\Tm_0\,\Bool_0 \to \Tm_0\,\Bool_0) \to
+    \Bool_1$. However, in this case the two output types are definitionally
+    isomorphic, because of the $\Pi$-preservation by $\Tm_0$. Hence, the
+    elaboration choice does not make much difference, so we shall still omit
+    $\Tm_0$-s in situations like this.
 \end{itemize}
 
-The rules of basic 2LTT model a form of generative two-stage compilation with
-dependent types. Comparing this system to e.g.\ BER MetaOCaml
-\cite{kiselyov14metaocaml}, we can relate $\Lift$ to $\ms{code}$, $\up$ to
-the quasi-quotation operation $<\!\blank\!>$, and $\down$ to escape
-$\sim\!\blank$.
+\begin{myexample} Working in the shortened internal syntax of 2LTT, the specification of $\Bool_0$
+looks like the following (omitting $\beta$ again):
+\begin{alignat*}{3}
+  &\Bool_0  &&: \Ty_0\\
+  &\true_0  &&: \Bool_0\\
+  &\false_0 &&: \Bool_0\\
+  & \ms{BoolInd_0} &&: (B : \Bool_0 \to \Ty_0) \to B\,\true_0 \to B\,\false_0 \to (t : \Bool_0) \to B\,t
+\end{alignat*}
+If we elaborate the type of $\ms{BoolInd_0}$, we get the following:
+\begin{alignat*}{3}
+  & \ms{BoolInd_0} &&: (B : \Tm_0\,\Bool_0 \to \Ty_0) \to \Tm_0\,(B\,\true_0) \to \Tm_0\,(B\,\false_0)\\
+  & && \to (t : \Tm_0\,\Bool_0) \to \Tm_0\,(B\,t)
+\end{alignat*}
+Here, the type is forced to live in the outer level because of the dependency on
+$\Ty_0$. Since $\Ty_0$ is an outer type, $\Bool_0 \to \Ty_0$ must be lifted, which
+in turn requires all other types to be lifted as well.
+\end{myexample}
 
-We may also think about the relation between \emph{modalities} and family
-morphisms. The main difference is that morphisms impose no structural
-restrictions on variables and contexts. Concretely, every $\Lift$ is dependent
-right adjoint \cite{dependentrightadjoints} to the identity functor on the base
-category, as we have $\Tm\,(\Id\,\Gamma)\,A \simeq
-\Tm\,\Gamma\,(\Lift\,A)$. Hence, every morphism can be viewed as a degenerate
-modality.
 
-For convenience, we use a slightly stricter notion of 2LTT in
-this thesis:
-\begin{mydefinition}\label{def:2ltt} A \textbf{model of 2LTT} is a model of basic 2LTT such that
-\begin{enumerate}
-  \item $(\Gamma\,\,\ext \Lift\!A) = (\Gamma \ext A)$
-  \item $\Tm_1\,\Gamma\,(\Lift\!A) = \Tm_0\,\Gamma\,A$
-\end{enumerate}
-\end{mydefinition}
-This allows us to omit term lifting annotations, so that now $\true_0$ is a term
-of $\Bool_0$, but also a term of $\Lift \Bool_0$. In a proof assistant, the extra
-equations would not buy us much, because we would have to transport $\true_0$
-over the equations anyway. But when working in a less formal extensional
-notation, as we do in this thesis, the transports can be omitted.
+
+
+%% \begin{mydefinition}
+%% A \textbf{family morphism} $F$ between ($\Tm_0$, $\Ty_0$) and ($\Tm_1$, $\Ty_1$)
+%% families consists of natural transformations mapping types to types and terms to
+%% terms, which preserves context extensions up to context isomorphism, i.e.\ we
+%% have that $(\Gamma \ext F\,A) \simeq (\Gamma \ext A)$, where $\simeq$ denotes
+%% existence of an invertible $\Sub$.
+%% \end{mydefinition}
+
+%% Family morphisms are restrictions of so-called \emph{weak morphisms}
+%% \cite{dependentrightadjoints} (or \emph{pseudomorphisms}
+%% \cite{kaposi2019gluing}) of cwfs: a weak morphism which has the identity action
+%% on the base category is exactly a family morphism.
+
+%% \begin{mylemma} Every family morphism has invertible action on terms, i.e.\ there
+%%   is an $F^{-1} : \Tm\,\Gamma\,(F\,A) \to \Tm\,\Gamma\,A$.
+%% \end{mylemma}
+
+%% \begin{proof}
+%% From the $\ext$-preservation isomorphism and the defining isomorphisms of
+%% comprehension, we get $\q' : \Tm\,(\Gamma \ext F\,A)\,(A[\p])$ such that $F\,\q'
+%% = \q$ and $\q'[\p,\,F\,\q] = \q$. Now, for $t : \Tm\,\Gamma\,(F\,A)$, we
+%% define $F^{-1}\,t$ as $\q'[\id,\,t] : \Tm\,\Gamma\,A$. We get the following:
+%% \begin{alignat*}{3}
+%%   & F(F^{-1}\,t) = F(\q'[\id,\,t]) = (F\,\q')[\id,\,t] = \q'[\id,\,t] = t \\
+%%   & F^{-1}(F\,t) = \q'[\id,\,F\,t] = \q'[\id,\,(F\,\q)[\id,\,\,t]] = \q'[\p,\,F\,\q][\id,\,t]
+%%     = \q[\id,\,t] = t
+%% \end{alignat*}
+%% More concisely, $F$ is invertible on the generic term $\q$, which implies invertibility
+%% on any term.
+%% \end{proof}
+
+%% \begin{notation}
+%% In the following, we write $\Lift : \Ty_0\,\Gamma \to \Ty_1\,\Gamma$ for
+%% the action of some morphism on types, $\up : \Tm_0\,\Gamma\,A \to
+%% \Tm_1\,\Gamma\,(\Lift\,A)$ for the action on terms, and $\down$ for the inverse
+%% action on terms. We also call the action on types \emph{type lifting}
+%% and the action on terms \emph{term lifting}. We may also use $\Lift$ to
+%% refer to a specific family morphism, if there is no ambiguity.
+%% \end{notation}
+
+%% \begin{mydefinition}
+%% A \textbf{model of basic 2LTT} consists of a cwf equipped with two families
+%% $(\Ty_0,\,\Tm_0)$ and $(\Ty_1,\,\Tm_1)$ and a morphism between them. Both
+%% families may be closed under arbitrary additional type formers.
+%% \end{mydefinition}
+
+%% \begin{notation}
+%% We may call $(\Ty_0,\,\Tm_0)$ the inner family and $(\Ty_1,\,\Tm_1)$ the outer
+%% one. If a type former is present in both families, we may distinguish the two
+%% copies by indexing, for example $\Bool_0 : \Ty_0\,\Gamma$ and $\Bool_1 :
+%% \Ty_1\,\Gamma$, and likewise for term formers. However, we overload notation in
+%% cases where levels are inferable, such as in a function type $\Lift\!\Bool_0 \to
+%% \Bool_1$, where the function arrow is clearly in the outer level.
+%% \end{notation}
+
+%% The syntax of basic 2LTT can be interpreted as having ($\Ty_1$, $\Tm_1$) as a
+%% metaprogramming layer which can generate object-level programs in the ($\Ty_0$,
+%% $\Tm_0$) layer.
+
+%% Lifted types correspond to types of object-level expressions; for example,
+%% $\Bool_0 : \Ty_0\,\Gamma$ is the object-level type of Booleans, while
+%% $\Lift\Bool_0$ is the meta-level type of $\Bool_0$-expressions, and $\Bool_1 :
+%% \Ty_1\,\Gamma$ is the type of meta-level Booleans. It is possible to compute a
+%% $\Bool_0$ from a $\Bool_1$. Given $b : \Tm_1\,\Gamma\,\Bool_1$, we can construct
+%% $\down(\mathsf{if}\,b\,\mathsf{then}\up\!\true_0\,\mathsf{else}\up\!\false_0) :
+%% \Tm_0\,\Gamma\,\Bool_0$.
+
+%% But there is no way to compute a $\Bool_1$ from a $\Bool_0$: we can try to lift
+%% the input, but there is no elimination rule for $\Lift\Bool_0$ in
+%% $\Ty_1$. Conceptually, terms of $\Lift\Bool_0$ are \emph{expressions}, so they
+%% are not necessarily $\true$ or $\false$, they can also be variables or neutral
+%% expressions, so the usual Boolean elimination is not justified for them.
+%% $\Lift$ preserves type formers in the following way:
+%% \begin{itemize}
+%% \item It preserves negative types up to isomorphism. The reason is that these
+%%   types are specified with isomorphisms, and $\Lift$ itself is an isomorphism on
+%%   terms. For example, $\Lift\!(A \times B) \simeq\,\, \Lift\!A\,\times
+%%   \Lift\!B$.
+%% \item For positive types, it's possible to eliminate from outer types to inner
+%%       ones but not the other way around.
+%% \item For universes, it's possible to convert inner types to outer ones, but not
+%%   the other way around. For example, assuming Russell universes, given $a :
+%%   \Tm_1\,\Gamma\,(\Lift \U_0)$, we have $\Lift (\down a) : \Tm_1\,\Gamma\,\U_1$.
+%% \end{itemize}
+
+%% The rules of basic 2LTT model a form of generative two-stage compilation with
+%% dependent types. Comparing this system to e.g.\ BER MetaOCaml
+%% \cite{kiselyov14metaocaml}, we can relate $\Lift$ to $\ms{code}$, $\up$ to
+%% the quasi-quotation operation $<\!\blank\!>$, and $\down$ to escape
+%% $\sim\!\blank$.
+
+%% We may also think about the relation between \emph{modalities} and family
+%% morphisms. The main difference is that morphisms impose no structural
+%% restrictions on variables and contexts. Concretely, every $\Lift$ is dependent
+%% right adjoint \cite{dependentrightadjoints} to the identity functor on the base
+%% category, as we have $\Tm\,(\Id\,\Gamma)\,A \simeq
+%% \Tm\,\Gamma\,(\Lift\,A)$. Hence, every morphism can be viewed as a degenerate
+%% modality.
+
+%% For convenience, we use a slightly stricter notion of 2LTT in
+%% this thesis:
+%% \begin{mydefinition}\label{def:2ltt} A \textbf{model of 2LTT} is a model of basic 2LTT such that
+%% \begin{enumerate}
+%%   \item $(\Gamma\,\,\ext \Lift\!A) = (\Gamma \ext A)$
+%%   \item $\Tm_1\,\Gamma\,(\Lift\!A) = \Tm_0\,\Gamma\,A$
+%% \end{enumerate}
+%% \end{mydefinition}
+%% This allows us to omit term lifting annotations, so that now $\true_0$ is a term
+%% of $\Bool_0$, but also a term of $\Lift \Bool_0$. In a proof assistant, the extra
+%% equations would not buy us much, because we would have to transport $\true_0$
+%% over the equations anyway. But when working in a less formal extensional
+%% notation, as we do in this thesis, the transports can be omitted.
 
 \section{Standard Semantics of 2LTT}
 
@@ -1657,22 +1808,23 @@ reasoning about objects in an inner theory.
 We present it in a modular fashion, by assuming progressively more structure in
 the inner theory. First, we only assume a category for the inner theory. This
 already lets us present a presheaf semantics for the outer layer. Then, we
-assume a cwf as the inner theory, which lets us interpret $\Lift$ as well.
+assume a cwf as the inner theory, which lets us interpret $\Ty_0$ and $\Tm_0$ as
+well.
 
 \subsection{Presheaf Model of the Outer Layer}
 
 In this subsection we present a presheaf model for the outer layer of 2LTT, that
-is, the base category together with the terminal object, the $(\Ty_1,\,\Tm_1)$
+is, the base category together with the terminal object, the $(\Ty,\,\Tm)$
 family and some type formers. This presheaf semantics is well-known in the
-literature \cite{TODO}. We give a specification which follows \cite{TODO} most
-closely.
+literature \cite{TODO}. We give a specification which follows \cite{TODO} and
+\cite{TODO} most closely.
 
 We assume a $\mbbC$ category. We write $i,\,j,\,k : |\mbbC|$ for objects and
 $f,\,g,\,h\,: \mbbC(i,\,j)$ for morphisms. We use a different notation than for
 cwfs before, in order to disambiguate components in $\mbbC$ from components in
 the presheaf model of 2LTT. We use $\hmbbC$ to refer to the model which is being
-defined. We denote components of $\hmbbC$ by simply using the component names
-from Section \ref{sec:models-of-tts}.
+defined. We denote components of $\hmbbC$ by simply using the names from Section
+\ref{sec:models-of-tts}.
 
 \subsubsection{Model of Cwf}
 
@@ -1683,7 +1835,7 @@ are as follows.
   & |\Gamma|             &&: |\mbbC| \to \Set \\
   & \blank\lab\blank\rab &&: |\Gamma|\,j \to \mbbC(i,\,j) \to |\Gamma|\,i\\
   & \gamma\lab\id\rab &&= \gamma \\
-  & \gamma\lab f\circ g\rab &&= \gamma \lab f \rab \lab g \rab \\
+  & \gamma\lab f\circ g\rab &&= \gamma \lab f \rab \lab g \rab
 \end{alignat*}
 We flip around the order of arguments in the action of $\Gamma$ on
 morphisms. This is more convenient because of the contravariance; we can observe
@@ -1698,7 +1850,7 @@ $|\sigma|(\gamma\lab f \rab) = (|\sigma|\gamma)$.
 \end{mydefinition}
 
 \begin{mydefinition}
-$A : \Ty_1\,\Gamma$ is a displayed presheaf over $\Gamma$. The
+$A : \Ty\,\Gamma$ is a displayed presheaf over $\Gamma$. The
 ``displayed'' here is used in exactly the same sense as in ``displayed
 algebra'' before. As we will see in Chapter \ref{chap:fqiit}, presheaves can be
 specified with a signature, in which case a presheaf is an algebra, and a
@@ -1715,7 +1867,7 @@ components of $A$ are as follows.
 \end{mydefinition}
 
 \begin{mydefinition}
-$t : \Tm_1\,\Gamma\,A$ is a section of the displayed presheaf $A$. This is
+$t : \Tm\,\Gamma\,A$ is a section of the displayed presheaf $A$. This is
 again the same notion of section that we have seen before, instantiated for
 presheaves.
 \begin{alignat*}{3}
@@ -1734,15 +1886,15 @@ The $\id$ and $\blank\!\circ\!\blank$ preservation laws follow immediately.
 \end{mydefinition}
 
 \begin{mydefinition}
-$A[\sigma] : \Ty_{1}\,\Gamma$ is defined as follows, assuming
-$A : \Ty_{1}\,\Delta$ and $\sigma : \Sub\,\Gamma\,\Delta$.
+$A[\sigma] : \Ty\,\Gamma$ is defined as follows, assuming
+$A : \Ty\,\Delta$ and $\sigma : \Sub\,\Gamma\,\Delta$.
 \begin{alignat*}{3}
   & |A[\sigma]|\,\gamma &&\defn |A|\,(|\sigma|\,\gamma) \\
   & \alpha \lab f \rab &&\defn \alpha \lab f \rab
 \end{alignat*}
 In the second component, we use $\blank\!\lab\!\blank\!\rab$ for $A$ on the right hand
-side.  The definition is well-typed since $|A|\,(|\sigma|\,(\gamma\!\lab\!f\!\rab))
-= |A|\,((|\sigma|\,\gamma)\!\lab\!f\!\rab)$ by the naturality of
+side.  The definition is well-typed since $|A|\,(|\sigma|\,(\gamma\lab f \rab))
+= |A|\,((|\sigma|\,\gamma)\lab f \rab)$ by the naturality of
 $\sigma$. Functoriality follows from functoriality of $A$.
 \end{mydefinition}
 
@@ -1782,11 +1934,10 @@ bijective on morphisms; hence it is an embedding.
 
 \begin{notation}
 \label{not:yoneda}
-For $\gamma : |\Gamma|\,i$, we use $\gamma\!\lab\!\blank\!\rab :
-\Sub\,(\yon\,i)\,\Gamma $ to denote transporting right-to-left along
-the Yoneda lemma. In the other direction, we don't need a notation as it is,
-since from $\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id :
-|\Gamma|\,i$.
+For $\gamma : |\Gamma|\,i$, we use $\gamma\lab \blank \rab :
+\Sub\,(\yon\,i)\,\Gamma $ to denote transporting right-to-left along the Yoneda
+lemma. In the other direction we don't really need a notation, since from
+$\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id : |\Gamma|\,i$.
 \end{notation}
 
 \subsubsection{Type Formers}
@@ -1794,11 +1945,11 @@ since from $\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id :
 \begin{mydefinition}
 \textbf{Constant families} are displayed presheaves which do not depend on their context.
 \begin{alignat*}{3}
-  & \K &&: \Con \to \{\Gamma : \Con \} \to \Ty_1\,\Gamma\\
+  & \K &&: \Con \to \{\Gamma : \Con \} \to \Ty\,\Gamma\\
   & |\K\,\Delta|\,\{i\}\,\gamma\,&&\defn |\Delta|\,i \\
   & \delta\lab f \rab &&\defn \delta \lab f \rab
 \end{alignat*}
-With this definition, we actually have $\Tm_1\,\Gamma\,(\K\,\Delta) =
+With this definition, we actually have $\Tm\,\Gamma\,(\K\,\Delta) =
 \Sub\,\Gamma\,\Delta$ which is stronger than the required isomorphism in
 Definition \ref{def:constant-families}.
 \end{mydefinition}
@@ -1810,38 +1961,38 @@ as well.
 \end{notation}
 
 \begin{mydefinition}
-From any $A : \Set$, we get $\K\,A : \Ty_1\,\Gamma$. This can be used to
+From any $A : \Set$, we get $\K\,A : \Ty\,\Gamma$. This can be used to
 model negative or positive \textbf{closed type formers}. For example, natural
 numbers are modeled as $\K\,\mbb{N}$, Booleans as $\K\,\Bool$, the unit type as
-$\K\,\top$, etc.
+$\K\,\top$, and so on.
 \end{mydefinition}
 
 \begin{mydefinition}
 \textbf{Coquand universes} can be defined as follows. Since $\U$ is a
-non-dependent type, it is helpful to define it as $\U : \Con$ such that
-$\Sub\,\Gamma\,\U \simeq \Ty_1\,\Gamma$.  The usual universe can be derived from
+non-dependent type, it is helpful to define it as a $\U : \Con$ such that
+$\Sub\,\Gamma\,\U \simeq \Ty\,\Gamma$.  The usual universe can be derived from
 this as $\K\,\U$. Again, we ignore size issues; the fully formal definition
 would involve indexing constructions in $\hmbbC$ by universe levels.
 
 We can take a hint from the Yoneda lemma. We aim to define $|\U|\,i$, but by the
 Yoneda lemma it is isomorphic to $\Sub\,(\yon i)\,\U$. However, by specification
-this should be isomorphic to $\Ty_1\,(\yon\,i)$, so we take this as definition:
+this should be isomorphic to $\Ty\,(\yon\,i)$, so we take this as definition:
 \begin{alignat*}{3}
   & \U &&: \Con\\
-  &|\U|\,i &&\defn \Ty_1\,(\yon\,i)\\
+  &|\U|\,i &&\defn \Ty\,(\yon\,i)\\
   &A \lab f \rab &&\defn A[\yon f]
 \end{alignat*}
 \end{mydefinition}
-In the $A \lab f \rab$ definition, we substitute $A : \Ty_1\,(\yon\,i)$ with
-$\yon f : \Sub\,(\yon j)\,(\yon i)$ to get an element of $\Ty_1\,(\yon j)$.
-The required $\Sub\,\Gamma\,\U \simeq \Ty_1\,\Gamma$ is straightforward, so we
+In the $A \lab f \rab$ definition, we substitute $A : \Ty\,(\yon\,i)$ with
+$\yon f : \Sub\,(\yon j)\,(\yon i)$ to get an element of $\Ty\,(\yon j)$.
+The required $\Sub\,\Gamma\,\U \simeq \Ty\,\Gamma$ is straightforward, so we
 omit the definition.
 
 \begin{mydefinition}
 \textbf{$\Sigma$-types} are defined pointwise. The definitions for pairing and
 projections follow straightforwardly.
 \begin{alignat*}{3}
-  & \Sigma  &&: (A : \Ty_1\,\Gamma) \to \Ty_1\,(\Gamma\ext A) \to \Ty_1\,\Gamma\\    & |\Sigma\,A\,B|\,\gamma && \defn (\alpha : |A|\,\gamma) \times |B|\,(\gamma,\,\alpha)\\
+  & \Sigma  &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\    & |\Sigma\,A\,B|\,\gamma && \defn (\alpha : |A|\,\gamma) \times |B|\,(\gamma,\,\alpha)\\
   & (\alpha,\,\beta) \lab f \rab && \defn (\alpha \lab f \rab,\, \beta \lab f \rab)
 \end{alignat*}
 \end{mydefinition}
@@ -1869,25 +2020,25 @@ $\yon f : \Sub\,(\yon j)\,(\yon i)$ to $\Sub\,(\yon j \otimes \Gamma)\,(\yon i
 The dependently typed case follows the same pattern, except that we use $\Tm$
 and $\blank\!\ext\!\blank$ instead of $\Sub$ and
 $\blank\!\otimes\!\blank$. Additionally, the action on objects depends on
-$\gamma : |\Gamma|\,i$, and we make use of $\gamma\!\lab\!\blank\!\rab\,\,:
+$\gamma : |\Gamma|\,i$, and we make use of $\gamma \lab \blank \rab\,\,:
 \Sub\,(\yon i)\,\Gamma$ (introduced in Notation \ref{not:yoneda}).
 \begin{alignat*}{3}
   & \Pi &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty\,\Gamma\\
-  & |\Pi\,A\,B|\,\{i\}\,\gamma &&\defn \Tm\,(\yon i \ext A[\gamma\!\lab\!\blank\!\rab])\,(B[\gamma\!\lab\!\blank\!\rab \circ\,\p,\,\q])\\
+  & |\Pi\,A\,B|\,\{i\}\,\gamma &&\defn \Tm\,(\yon i \ext A[\gamma \lab \blank \rab])\,(B[\gamma\lab\blank\rab \circ\,\p,\,\q])\\
   & t\lab f \rab &&\defn t[\yon f \circ \p,\, \q]
 \end{alignat*}
 Let's unfold the above definition a bit. Assuming $t : |\Pi\,A\,B|\,\{i\}\,\gamma$, we have
 \[
-|t| : \{j : |\mbbC|\}\to((f,\,\alpha) : (f : \mbbC(j,\,i)) \times |A|\,(\gamma\!\lab\!f\!\rab)) \to
-       |B|\,(\gamma\!\lab\!f\!\rab,\,\alpha)
+|t| : \{j : |\mbbC|\}\to((f,\,\alpha) : (f : \mbbC(j,\,i)) \times |A|\,(\gamma\lab f \rab)) \to
+       |B|\,(\gamma\lab f\rab,\,\alpha)
 \]
 This is a bit clearer if we remove the $\Sigma$-type by currying.
 \[
-|t| : \{j : |\mbbC|\}(f : \mbbC(j,\,i))(\alpha : |A|\,(\gamma\!\lab\!f\!\rab)) \to
-       |B|\,(\gamma\!\lab\!f\!\rab,\,\alpha)
+|t| : \{j : |\mbbC|\}(f : \mbbC(j,\,i))(\alpha : |A|\,(\gamma \lab f \rab)) \to
+       |B|\,(\gamma\lab f \rab,\,\alpha)
 \]
 
-Restriction is functorial since it is defined as $\Tm_1$ substitution. The definitions
+Restriction is functorial since it is defined as $\Tm$ substitution. The definitions
 for $\lam$ and $\app$ are left to the reader.
 \end{mydefinition}
 
@@ -1904,11 +2055,6 @@ follows from congruence by $\blank\!\lab\!f\!\rab$ and naturality of $t$ and
 $u$.  The defining $(\reflect,\,\refl) : \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t =
 u)$ isomorphism is evident, assuming UIP and function extensionality for the
 metatheoretic $\blank\!=\!\blank$ relation (which we do assume).
-
-
-
-
-
 \end{mydefinition}
 
 \subsection{Modeling The Inner Layer}
@@ -1918,15 +2064,15 @@ We assume now that $\mbbC$ is a cwf. We write types as $a,\,b,\,c :
 for the terminal object and $\blank\ext\blank$ for context extension, and
 likewise reuse notation for substitutions.
 
-\begin{mydefinition}[\textbf{($\Ty_{0}$, $\Tm_{0}$)}]
+\begin{mydefinition}[\textbf{$\Ty_{0}$, $\Tm_{0}$}]
 First, note that $\Ty_{\mbbC}$ is a presheaf over $\mbbC$, and $\Tm_{\mbbC}$ is
 a displayed presheaf over $\Ty_{\mbbC}$; this follows from the requirement that
 they form a family structure over $\mbbC$. Hence, $\Ty_{\mbbC}$ is an element of
-$\Con$ and $\Tm_{\mbbC}$ is an element of $\Ty_1\,\Ty_{\mbbC}$. With this is mind,
+$\Con$ and $\Tm_{\mbbC}$ is an element of $\Ty\,\Ty_{\mbbC}$. With this is mind,
 we can give the following definitions:
 \begin{alignat*}{3}
   & \Ty_{0}\,\Gamma &&\defn \Sub\,\Gamma\,\Ty_{\mbbC}\\
-  & \Tm_{0}\,\Gamma\,A &&\defn \Tm_1\,\Gamma\,(\Tm_\mbbC[A])
+  & \Tm_{0}\,\Gamma\,A &&\defn \Tm\,\Gamma\,(\Tm_\mbbC[A])
 \end{alignat*}
 In other words, $A : \Ty_{0}\,\Gamma$ is a natural transformation from $\Gamma$
 to $\Ty_{\mbbC}$, and $t : \Tm_{0}\,\Gamma\,A$ is a section of the displayed
@@ -1938,7 +2084,7 @@ then $|t| : \{i : |\mbbC|\} \to (\gamma : |\Gamma|\,i) \to
 
 For $A : \Ty_{0}\,\Delta$, we define substitution by having
 $A[\sigma] \defn A \circ \sigma$.  Likewise, term substitution
-is given by $\Tm_1$ substitution.
+is given by $\Tm$ substitution.
 
 In short, inner types are $\mbbC$ types, inner terms are $\mbbC$ terms, and
 both can additionally depend on a $\Gamma$ context in a natural way.
@@ -1946,11 +2092,11 @@ both can additionally depend on a $\Gamma$ context in a natural way.
 
 \begin{mydefinition}(\textbf{Lifting})
 \begin{alignat*}{3}
-  & \Lift\,\,: \Ty_{0}\,\Gamma \to \Ty_{1}\,\Gamma \\
+  & \Lift\,\,: \Ty_{0}\,\Gamma \to \Ty\,\Gamma \\
   & \Lift\!A \defn \Tm_{\mbbC}[A]
 \end{alignat*}
 This yields $\Tm_{0}\,\Gamma\,A \equiv
-\Tm_{1}\,\Gamma\,(\Lift\!A)$, which is the second condition from
+\Tm\,\Gamma\,(\Lift\!A)$, which is the second condition from
 Definition \ref{def:2ltt}. The term lifting operations $\up$ and $\down$ can
 be defined now as identity functions.
 \end{mydefinition}
@@ -2032,7 +2178,7 @@ isomorphic by the specification of products to $\yon i \otimes \yon j$.
 It is possible to rephrase the above derivation for $\Pi$-types. For that, we
 would need to define the action of $\yon$ on types and terms, consider the
 preservation of $\blank\ext\blank$ by $\yon$, and also specify a ``dependent''
-Yoneda lemma for $\Tm_1$. For the sake of brevity, we omit this, and present the
+Yoneda lemma for $\Tm$. For the sake of brevity, we omit this, and present the
 result directly:
 \begin{alignat*}{3}
   & |\Pi\,(\Lift\!A)\,B|\,\{i\}\,\gamma \simeq |B|\,\{i \ext |A|\,\gamma\}\,(\gamma\!\lab\!\p\!\rab,\,\q)
