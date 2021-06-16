@@ -371,3 +371,17 @@ yon(A : C.Ty i) : Ty₁ (yon i)
 Sub (yj ⊗ yi) Γ ≃
 Sub (y (j ⊗ i)) Γ ≃
 |Γ|(j ⊗ i)
+
+--------------------------------------------------------------------------------
+
+C.Ty : Con
+C.Tm : Ty C.Ty
+
+Ty₀ : Ty Γ
+Ty₀ := K C.Ty
+
+Tm₀ : Tm Γ Ty₀ → Ty Γ
+Tm₀ A := C.Tm
+
+-- Ty₀ : Ty Γ
+-- |Ty₀| {i} γ := C.Ty i

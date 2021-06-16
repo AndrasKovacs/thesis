@@ -851,7 +851,7 @@ Compared to a purely mathematical motivation for this formalization, the
 requirements for practical generic programming are a bit more stringent.
 \begin{itemize}
   \item \emph{Encoding overhead}: there should be an acceptable overhead in
-    program size and performance when using a generic representations.  Size
+    program size and performance when using generic representations.  Size
     blowup can be an issue when writing proofs as well, when types and
     expressions become too large to mentally parse.
   \item \emph{Strictness properties}: generic representations should compute as
@@ -889,10 +889,10 @@ the inductive fixpoint for each assumed $F : \ms{Sig}$:
   & \ms{con_F} &&: \llbracket F \rrbracket\,\ms{Fix_F} \to \ms{Fix_F}
 \end{alignat*}
 In Haskell, this definition is valid for arbitrary \emph{semantic} $F$ functor,
-because there is no termination checking, and thus no positivity checking. In
-Agda, the above definition is valid because the positivity checker is willing to
-look inside the definition of $\llbracket\blank\rrbracket$. However, Coq and
-Lean reject this definition. Next we establish weak initiality, by defining the
+because there is no termination checking or positivity checking. In Agda, the
+above definition is valid because the positivity checker is willing to look
+inside the definition of $\llbracket\blank\rrbracket$. However, Coq and Lean
+reject this definition. Next we establish weak initiality, by defining the
 recursor:
 \begin{alignat*}{3}
   & \ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X \\
@@ -915,10 +915,10 @@ checking.
   & \ms{maprec}\,\{G \oplus H\}\,&&f\,(\ms{inj_2}\,x) &&\defn \ms{maprec}\,f\,x
 \end{alignat*}
 
-Alternatively, we might use \emph{sized types} \cite{abel17normalization}. For
-example, this was used in \cite{allais20type}. The drawback is dependence on an
-additional language feature which is only supported in Agda, and which has had
-several soundness issues since its introduction \cite{TODO}.
+Alternatively, we might use \emph{sized types} \cite{abel17normalization}, as
+in \cite{allais20type}. The drawback is dependence on an additional
+language feature which is only supported in Agda, and which has had several
+soundness issues since its introduction \cite{TODO}.
 
 There is yet another possible approach: defining initial algebras as sequential
 colimits, using Adámek's theorem. This approach was taken by Ahrens, Matthes and
@@ -958,14 +958,14 @@ for practical purposes.
 \paragraph{Term algebras.}
 The main advantage of the term algebras described in this chapter is that they
 can be defined using plain inductive families, which are available in every
-major dependently typed language; even in GHC Haskell the support for
-generalized ADTs is sufficient. In contrast, as we have seen, the direct
-inductive definition of fixpoints is only possible in Agda, while the colimit
-definition requires quotients and is rather heavyweight. Even in Agda, the
-drawback of the direct fixpoint definition is that many generic operations only
-pass termination checking after manual inlining. With term algebras, generic
-operations can be defined by induction on $\Tm\,\Gamma\,A$ in an obviously
-terminating way.
+major dependently typed language. Even in GHC Haskell, the support for
+generalized ADTs is sufficient for implementing term algebras. In contrast, as
+we have seen, the direct inductive definition of fixpoints is only possible in
+Agda, while the colimit definition requires quotients and is rather
+heavyweight. Even in Agda, the drawback of the direct fixpoint definition is
+that many generic operations only pass termination checking after manual
+inlining. With term algebras, generic operations can be defined by induction on
+$\Tm\,\Gamma\,A$ in an obviously terminating way.
 
 For practical usage it makes sense to slightly modify terms. We switch to a
 \emph{spine neutral} definition. We mutually inductively define $\ms{Spine}$ and
@@ -1016,7 +1016,7 @@ that case, signatures and terms are still definable with basic inductive
 families, without requiring quotients or complicated encodings; see Kaposi and
 von Raumer \cite{mutualinductive}.
 
-The closest existing work is \emph{sum-of-products} generics by De Vries and Löh
+A related existing work is \emph{sum-of-products} generics by De Vries and Löh
 \cite{sop}. There, signatures for functors are in a normal form: we cannot
 freely take products and coproducts, instead a signature looks very much like a
 $\Con$ in this chapter (except in an indexed form). The authors observe that
@@ -1552,6 +1552,8 @@ Idris) are all such.
 
 \section{Two-Level Type Theory}
 
+\subsection{Models}
+
 We describe models of 2LTT in the following. This is not the only possible way
 to present 2LTT; our approach differs from \cite{twolevel} in some ways. We will summarize
 the differences at the end of this section.
@@ -1618,33 +1620,35 @@ type-in-type. Assume that we have $\U_1$ as well, as a meta-level Russell
 universe. Then we can map from $\Tm_0\,\U_0$ to $\U_1$, by taking $A$ to
 $\Tm_0\,A$, but we cannot map in the other direction.
 
-\subsubsection{Internal Syntax and Notation}
+\subsection{Internal Syntax and Notation}
+\label{sec:internal-syntax}
 
-In the rest of this thesis we will mostly work internally to a 2LTT. This means
-using 2LTT similarly to how we used type-theoretic notation so far as
-mathematical language.
+In the rest of this thesis we will mostly work internally to a 2LTT, i.e.\ we
+use 2LTT as metatheory. Thus, we mostly adapt the metatheoretical notations used
+up until now. We list used features and conventions below.
+
 \begin{itemize}
   \item
-    We adopt the metatheoretic notation for type formers that we have been using
-    so far. For instance, $\Pi$-types are written as $(x : A) \to B$ or as $A
-    \to B$, on both levels.
+    We keep previous notation for type formers. For instance, $\Pi$-types are
+    written as $(x : A) \to B$ or as $A \to B$.
   \item
-    We assume a Russell-style universe $\U_1$ in the outer layer. We leave the
-    \emph{sizing} levels implicit: the $_1$ in $\U_1$ refers to being in the
-    outer layer, not to the conventional sizing index in universe
-    hierarchies. In other words, if we were fully explicit, we would use a
-    second sizing index which is orthogonal to the two levels, so that we would
-    have $\U_{1,\,0}$, $\U_{1,\,1}$ and so on; but we omit the sizing indices.
+    We assume a Coquand-style universe in the outer layer, named $\Set$. As
+    before, we leave the sizing levels implicit; if we were fully precise, we
+    would write $\Set_i$ for a hierarchy of outer universes. Despite having a
+    Coquand universe, we shall omit encoding and decoding in the internal
+    syntax, and instead work in Russell-style. In practical implementations,
+    elaborating Russell-style notation to Coquand-style is straightforward to
+    do.
   \item
     If the same type formers are supported both in the inner and outer layers, we
     may distinguish them by $_0$ and $_1$ subscripts, e.g.\ by having $\Bool_0$ and
-    $\Bool_1$. We omit some inferable subscripts, mostly for $\Pi$ and
+    $\Bool_1$. We omit some inferable subscripts, e.g.\ for $\Pi$ and
     $\Sigma$-types. In these cases, we usually know from the type parameters which
     type former is meant. For example, $\Tm_0\,\Bool_0 \to \Bool_1$ can only refer
     to outer functions.
   \item
-    By having $\U_1$, we are able to have $\Ty_0 : \U_1$ and $\Tm_0 : \Ty_0 \to
-    \U_1$.  Hence we don't have to deal with proper meta-level types, and have a
+    By having $\Set$, we are able to have $\Ty_0 : \Set$ and $\Tm_0 : \Ty_0 \to
+    \Set$. So we don't have to deal with proper meta-level types, and have a
     more uniform notation. Notation and specification for inner type formers changes
     accordingly. For example, for inner $\Pi$-types we may write $(x : A) \to B$
     if $A : \Ty_0$ and $B$ depends on $x : \Tm_0\,A$. This also enables a
@@ -1665,7 +1669,7 @@ mathematical language.
     $\Tm_0$-s in situations like this.
 \end{itemize}
 
-\begin{myexample} Working in the shortened internal syntax of 2LTT, the specification of $\Bool_0$
+\begin{myexample} Working in the internal syntax of 2LTT, the specification of $\Bool_0$
 looks like the following (omitting $\beta$ again):
 \begin{alignat*}{3}
   &\Bool_0  &&: \Ty_0\\
@@ -1801,15 +1805,15 @@ in turn requires all other types to be lifted as well.
 
 \section{Standard Semantics of 2LTT}
 
-We take a look at the standard semantics of 2LTT which we use in the rest of the
+We review the standard semantics of 2LTT which we use in the rest of the
 thesis. This justifies the metaprogramming view, that 2LTT allows meta-level
-reasoning about objects in an inner theory.
+reasoning about an inner theory.
 
-We present it in a modular fashion, by assuming progressively more structure in
-the inner theory. First, we only assume a category for the inner theory. This
-already lets us present a presheaf semantics for the outer layer. Then, we
-assume a cwf as the inner theory, which lets us interpret $\Ty_0$ and $\Tm_0$ as
-well.
+We present it two steps, by assuming progressively more structure in the inner
+theory. First, we only assume a category. This already lets us present a
+presheaf semantics for the outer layer. Then, we assume a cwf as the inner
+theory, which lets us interpret $\Ty_0$ and $\Tm_0$ and also consider inner type
+formers.
 
 \subsection{Presheaf Model of the Outer Layer}
 
@@ -1819,11 +1823,15 @@ family and some type formers. This presheaf semantics is well-known in the
 literature \cite{TODO}. We give a specification which follows \cite{TODO} and
 \cite{TODO} most closely.
 
+In the following, we work outside 2LTT (since we are defining a model of 2LTT),
+in a suitable metatheory; an extensional type theory with enough $\Set$
+universes suffices.
+
 We assume a $\mbbC$ category. We write $i,\,j,\,k : |\mbbC|$ for objects and
 $f,\,g,\,h\,: \mbbC(i,\,j)$ for morphisms. We use a different notation than for
 cwfs before, in order to disambiguate components in $\mbbC$ from components in
 the presheaf model of 2LTT. We use $\hmbbC$ to refer to the model which is being
-defined. We denote components of $\hmbbC$ by simply using the names from Section
+defined. We use the same component names for $\hmbbC$ as in Section
 \ref{sec:models-of-tts}.
 
 \subsubsection{Model of Cwf}
@@ -1943,6 +1951,7 @@ $\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id : |\Gamma|\,i$.
 \subsubsection{Type Formers}
 
 \begin{mydefinition}
+\label{def:k-psh}
 \textbf{Constant families} are displayed presheaves which do not depend on their context.
 \begin{alignat*}{3}
   & \K &&: \Con \to \{\Gamma : \Con \} \to \Ty\,\Gamma\\
@@ -1968,25 +1977,35 @@ $\K\,\top$, and so on.
 \end{mydefinition}
 
 \begin{mydefinition}
-\textbf{Coquand universes} can be defined as follows. Since $\U$ is a
-non-dependent type, it is helpful to define it as a $\U : \Con$ such that
-$\Sub\,\Gamma\,\U \simeq \Ty\,\Gamma$.  The usual universe can be derived from
-this as $\K\,\U$. Again, we ignore size issues; the fully formal definition
+\textbf{Coquand universes} can be defined as follows. We write $\Set_{\hmbbC}$
+for the outer universe in the model, to distinguish it from the external
+$\Set$. Since the $\Set_{\hmbbC}$ is a non-dependent type, it is helpful to
+define it as a $\Set_{\hmbbC} : \Con$ such that $\Sub\,\Gamma\,\Set_{\hmbbC}
+\simeq \Ty\,\Gamma$.  The usual universe can be derived from this as
+$\K\,\Set_{\hmbbC}$. Again, we ignore size issues; the fully formal definition
 would involve indexing constructions in $\hmbbC$ by universe levels.
 
-We can take a hint from the Yoneda lemma. We aim to define $|\U|\,i$, but by the
-Yoneda lemma it is isomorphic to $\Sub\,(\yon i)\,\U$. However, by specification
-this should be isomorphic to $\Ty\,(\yon\,i)$, so we take this as definition:
+We can take a hint from the Yoneda lemma. We aim to define $|\Set_{\hmbbC}|\,i$,
+but by the Yoneda lemma it is isomorphic to $\Sub\,(\yon
+i)\,\Set_{\hmbbC}$. However, by specification this should be isomorphic to
+$\Ty\,(\yon\,i)$, so we take this as definition:
 \begin{alignat*}{3}
-  & \U &&: \Con\\
-  &|\U|\,i &&\defn \Ty\,(\yon\,i)\\
+  & \Set_{\hmbbC} &&: \Con\\
+  &|\Set_{\hmbbC}|\,i &&\defn \Ty\,(\yon\,i)\\
   &A \lab f \rab &&\defn A[\yon f]
 \end{alignat*}
 \end{mydefinition}
-In the $A \lab f \rab$ definition, we substitute $A : \Ty\,(\yon\,i)$ with
-$\yon f : \Sub\,(\yon j)\,(\yon i)$ to get an element of $\Ty\,(\yon j)$.
-The required $\Sub\,\Gamma\,\U \simeq \Ty\,\Gamma$ is straightforward, so we
-omit the definition.
+In the $A \lab f \rab$ definition, we substitute $A : \Ty\,(\yon\,i)$ with $\yon
+f : \Sub\,(\yon j)\,(\yon i)$ to get an element of $\Ty\,(\yon j)$.  The
+required $\Sub\,\Gamma\,\Set_{\hmbbC} \simeq \Ty\,\Gamma$ is straightforward, so
+we omit the definition.
+
+We note that \emph{Russell} universes are not supported in the outer layer, as
+$\Sub\,\Gamma\,\Set_{\hmbbC}$ and $\Ty\,\Gamma$ are not strictly the same, in
+particular they have a different number of components as iterated
+$\Sigma$-types. Nevertheless, as we mentioned in \ref{sec:internal-syntax}, we
+use Russell-style notation in the internal 2LTT syntax, and assume that encoding/decoding
+is inserted by elaboration.
 
 \begin{mydefinition}
 \textbf{$\Sigma$-types} are defined pointwise. The definitions for pairing and
@@ -2050,8 +2069,8 @@ i.e.\ sections of displayed presheaves.
   & |\Id\,t\,u|\,\gamma \defn |t|\,\gamma = |u|\,\gamma
 \end{alignat*}
 For the restriction operation, we have to show that $|t|\,\gamma = |u|\,\gamma$
-implies $|t|\,(\gamma\!\lab\!f\!\rab) = |u|\,(\gamma\!\lab\!f\!\rab)$. This
-follows from congruence by $\blank\!\lab\!f\!\rab$ and naturality of $t$ and
+implies $|t|\,(\gamma\lab f \rab) = |u|\,(\gamma \lab f \rab)$. This
+follows from congruence by $\blank \lab f \rab$ and naturality of $t$ and
 $u$.  The defining $(\reflect,\,\refl) : \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t =
 u)$ isomorphism is evident, assuming UIP and function extensionality for the
 metatheoretic $\blank\!=\!\blank$ relation (which we do assume).
@@ -2067,94 +2086,63 @@ likewise reuse notation for substitutions.
 \begin{mydefinition}[\textbf{$\Ty_{0}$, $\Tm_{0}$}]
 First, note that $\Ty_{\mbbC}$ is a presheaf over $\mbbC$, and $\Tm_{\mbbC}$ is
 a displayed presheaf over $\Ty_{\mbbC}$; this follows from the requirement that
-they form a family structure over $\mbbC$. Hence, $\Ty_{\mbbC}$ is an element of
-$\Con$ and $\Tm_{\mbbC}$ is an element of $\Ty\,\Ty_{\mbbC}$. With this is mind,
-we can give the following definitions:
+they form a family structure over $\mbbC$. Hence, in the presheaf model
+$\Ty_{\mbbC}$ is an element of $\Con$ and $\Tm_{\mbbC}$ is an element of
+$\Ty\,\Ty_{\mbbC}$. Also recall from Definition \ref{def:k-psh} that
+$\Tm\,\Gamma\,(\K\,\Delta) = \Sub\,\Gamma\,\Delta$. With this is mind, we
+give the following definitions:
 \begin{alignat*}{3}
-  & \Ty_{0}\,\Gamma &&\defn \Sub\,\Gamma\,\Ty_{\mbbC}\\
-  & \Tm_{0}\,\Gamma\,A &&\defn \Tm\,\Gamma\,(\Tm_\mbbC[A])
+  & \Ty_0 : \Ty\,\Gamma                   && \Tm_0 : \Tm\,\Gamma\,\Ty_0 \to \Ty\,\Gamma\\
+  & \Ty_0 \defn \K\,\Ty_{\mbbC}\hspace{2em} && \Tm_0\,A \defn \Tm_{\mbbC}[A]
 \end{alignat*}
-In other words, $A : \Ty_{0}\,\Gamma$ is a natural transformation from $\Gamma$
-to $\Ty_{\mbbC}$, and $t : \Tm_{0}\,\Gamma\,A$ is a section of the displayed
-presheaf $\Tm_\mbbC[A]$. This is well-typed, since $A :
-\Sub\,\Gamma\,\Ty_{\mbbC}$, so we can use the semantic substitution operation
-$\blank[\blank]$. Unfolding part of the definition, if $t : \Tm_{0}\,\Gamma\,A$,
-then $|t| : \{i : |\mbbC|\} \to (\gamma : |\Gamma|\,i) \to
-\Tm_{\mbbC}\,i\,(|A|\,\gamma)$.
-
-For $A : \Ty_{0}\,\Delta$, we define substitution by having
-$A[\sigma] \defn A \circ \sigma$.  Likewise, term substitution
-is given by $\Tm$ substitution.
-
-In short, inner types are $\mbbC$ types, inner terms are $\mbbC$ terms, and
-both can additionally depend on a $\Gamma$ context in a natural way.
-\end{mydefinition}
-
-\begin{mydefinition}(\textbf{Lifting})
-\begin{alignat*}{3}
-  & \Lift\,\,: \Ty_{0}\,\Gamma \to \Ty\,\Gamma \\
-  & \Lift\!A \defn \Tm_{\mbbC}[A]
-\end{alignat*}
-This yields $\Tm_{0}\,\Gamma\,A \equiv
-\Tm\,\Gamma\,(\Lift\!A)$, which is the second condition from
-Definition \ref{def:2ltt}. The term lifting operations $\up$ and $\down$ can
-be defined now as identity functions.
-\end{mydefinition}
-
-\begin{mydefinition}[\textbf{Context comprehension for ($\Ty_{0}$, $\Tm_{0}$)}]
-We define the inner context extension in $\hmbbC$ as follows: $\Gamma \ext A
-\defn \Gamma\,\,\ext\Lift\!A$. This yields the first condition from Definition
-\ref{def:2ltt}. It also follows that inner $\blank\ext\blank$ supports the
-expected comprehension isomorphism, since the outer $\blank\ext\blank$ supports
-it and $\Lift$ is an isomorphism on terms.
+$\Tm_{\mbbC}[A]$ is well-typed since $A : \Tm\,\Gamma\,(\K\,\Ty_{\mbbC})$, thus
+$A : \Sub\,\Gamma\,\Ty_{\mbbC}$. In other words, $A$ is a natural transformation
+from $\Gamma$ to the presheaf of inner types.
 \end{mydefinition}
 
 \subsubsection{Inner Type Formers}
 
 Can type formers in $(\Ty_{\mbbC},\,\Tm_{\mbbC})$ be transferred to
-$(\Ty_0,\,\Tm_0)$? The following explanation is adapted from Capriotti
-\cite[Section 2.3]{TODO}.
+$(\Ty_0,\,\Tm_0)$ in the presheaf model of 2LTT? For example, if $\mbbC$
+supports $\Bool$, we would like to model $\Bool_0$ in $\Ty_0$ as well. The
+following explanation is adapted from Capriotti \cite[Section
+  2.3]{capriotti2017models}.
 
 Generally, a type former in $\mbbC$ transfers to $\hmbbC$ if it can be specified
 in the internal language of $\hmbbC$; if the type former ``always has been'' in
 $\hmbbC$ to begin with. To be describable in $\hmbbC$, a type former needs to be
-natural with respect to $\mbbC$ morphisms. This is also a core idea of HOAS: when
-working in $\hmbbC$, everything is natural, and we can omit boilerplate related
-to contexts and substitutions.
-
-For example, if we switch to a more convenient Agda-like surface syntax for
-2LTT, we may have $\Ty_{\mbbC} : \U$ and $\Lift\,: \Ty_{\mbbC} \to \U$,
-where $\U$ is a universe in the outer layer. We also assume that $\U$ is
-Russell-style; this is not actually the case in the standard presheaf model,
-where only Coquand-style universes are supported, but we can just assume that
-$\El$ and $\ms{c}$ are inserted during surface syntax elaboration. Then, we can
-give the HOAS specification for supporting $\Pi$-types:
+natural with respect to $\mbbC$ morphisms. This is also a core idea of HOAS:
+when working in $\hmbbC$, everything is natural, and we can omit boilerplate
+related to contexts and substitutions. For example, consider the specification
+of inner $\Pi$-types in the internal syntax of 2LTT:
 \begin{alignat*}{3}
-  &\Pi_0           : (A : \Ty_{\mbbC}) \to (\Lift\! A \to \Ty_{\mbbC}) \to \Ty_{\mbbC}\\
-  &(\app_0,\,\lam_0) : \Pi_0\,A\,B \simeq ((a :\,\Lift\! A) \to \,\Lift\!(B\,a))
+  &\Pi_0             &&: (A : \Ty_0) \to (\Tm_0\,A \to \Ty_0) \to \Ty_0\\
+  &(\app_0,\,\lam_0) &&: \Pi_0\,A\,B \simeq ((a :\,\Tm_0\,A) \to \,\Tm_0\,(B\,a))
 \end{alignat*}
-This can be viewed as a closed $\Sigma$-type in the outer layer of 2LTT.  If we
-evaluate it in the standard presheaf model, we get a presheaf, and if evaluate
-the presheaf at $\emptycon : |\mbbC|$, we get a metatheoretic $\Set$ which is
-isomorphic to the usual non-HOAS specification of $\Pi$-types.
+We can say that this \emph{defines} what it means for $\mbbC$ to support $\Pi$. We can
+recover the usual non-higher-order specification of $\Pi$ in the following way, up to
+isomorphism:
+\begin{itemize}
+\item First, we interpret the higher-order specification as a context or closed $\Sigma$-type
+      in the standard presheaf model of 2LTT. This yields a presheaf over $\mbbC$.
+\item Then, we evaluate the resulting presheaf at the terminal object
+      $\emptycon$. This yields a set which is isomorphic to the conventional
+      specification of $\Pi$.
+\end{itemize}
 
-In summary, if by ``type formers'' we mean extra structure on
-$(\Ty_{\mbbC},\,\Tm_{\mbbC})$ which is definable in 2LTT, then \emph{by
-definition} all such type formers transfer from $\mbbC$ to
-$(\Ty_{\mbbC},\,\Tm_{\mbbC})$. This holds for every type former mentioned in
-this thesis.
+In summary, if by ``type formers'' we mean extra structure on $(\Ty_0,\,\Tm_0)$
+which is definable in 2LTT, then \emph{by definition} all such type formers
+transfer from $\mbbC$ to $(\Ty_0,\,\Tm_0)$. This holds for every type former
+mentioned in this thesis.
 
-\subsection{Functions with Lifted Domains}
+\subsection{Functions with Inner Domains}
 
 There is a useful semantic simplification in the standard presheaf model, in
-cases where we have functions of the form $\Pi\,(\Lift\!A)\,B$. This will allow
+cases where we have functions of the form $\Pi\,(\Tm_0\,A)\,B$. This will allow
 us to almost completely eliminate encoding overhead when interpreting inductive
 signatures in 2LTT; we look at examples in Section
-\ref{sec:2ltt-simple-signatures}.
-
-First we look at the simply-typed case with presheaf exponentials. We need some
-observations about the Yoneda embedding.
-
+\ref{sec:2ltt-simple-signatures}. First we look at the simply-typed case with
+presheaf exponentials. We need some observations about the Yoneda embedding.
 \begin{mylemma}
 $\yon$ preserves finite products up to isomorphism, i.e.\ $\yon \emptycon \simeq
   \emptycon$ and $\yon (i \otimes j) \simeq (\yon i \otimes \yon j)$.
@@ -2163,9 +2151,8 @@ $\yon$ preserves finite products up to isomorphism, i.e.\ $\yon \emptycon \simeq
 $\yon \emptycon$ is $\mbbC(\blank,\,\emptycon)$ by definition, which is
 pointwise isomorphic to $\top$, hence isomorphic to $\emptycon \equiv
 \K\,\top$. $\yon (i \otimes j)$ is $\mbbC(\blank,\,i \otimes j)$, which is
-isomorphic by the specification of products to $\yon i \otimes \yon j$.
+isomorphic to $\yon i \otimes \yon j$ by the specification of products.
 \end{proof}
-
 \begin{mylemma} We have the following isomorphism.
 \begin{alignat*}{3}
   & |\Gamma^{\yon i}|\,j \equiv \hspace{3em}&&\\
@@ -2181,29 +2168,27 @@ preservation of $\blank\ext\blank$ by $\yon$, and also specify a ``dependent''
 Yoneda lemma for $\Tm$. For the sake of brevity, we omit this, and present the
 result directly:
 \begin{alignat*}{3}
-  & |\Pi\,(\Lift\!A)\,B|\,\{i\}\,\gamma \simeq |B|\,\{i \ext |A|\,\gamma\}\,(\gamma\!\lab\!\p\!\rab,\,\q)
+  & |\Pi\,(\Tm_0\,A)\,B|\,\{i\}\,\gamma \simeq |B|\,\{i \ext |A|\,\gamma\}\,(\gamma \lab \p \rab,\,\q)
 \end{alignat*}
-In short, depending on a lifted domain is the same as depending on an extended
+In short, depending on an inner domain is the same as depending on an extended
 context in $\mbbC$.  We expand a bit on the typing of the right hand side. We
 have $\gamma : |\Gamma|\,i$, moreover
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
-  & |B| &&: \{j : \mbbC\} \to |\Gamma\,\,\ext \Lift\!A|\,j \to \Set\\
+  & |B| &&: \{j : \mbbC\} \to |\Gamma\,\,\ext \Tm_0\,A|\,j \to \Set\\
   & |B| &&: \{j : \mbbC\} \to ((\gamma' : |\Gamma|\,j)\times \Tm_{\mbbC}\,j\,(|A|\,\gamma')) \to \Set\\
   & |B|\,\{i \ext |A|\,\gamma\} &&: ((\gamma' : |\Gamma|\,(i \ext |A|\,\gamma))\times \Tm_{\mbbC}\,(i \ext |A|\,\gamma)\,(|A|\,\gamma')) \to \Set\\
-  & \gamma\!\lab\!\p\!\rab &&: |\Gamma|\,(i \ext |A|\,\gamma)\\
+  & \gamma \lab \p \rab &&: |\Gamma|\,(i \ext |A|\,\gamma)\\
   & \q &&: \Tm_{\mbbC}\,(i \ext |A|\,\gamma)\,((|A|\,\gamma)[\p])\\
-  & \q &&: \Tm_{\mbbC}\,(i \ext |A|\,\gamma)\,(|A|\,(\gamma\!\lab\!\p\!\rab))\\
+  & \q &&: \Tm_{\mbbC}\,(i \ext |A|\,\gamma)\,(|A|\,(\gamma \lab \p \rab))\\
 \end{alignat*}
-
-\subsection{Universe for $(\Ty_0,\,\Tm_0)$}
-
-The
-
-
-
+\endgroup
 
 \section{Simple Inductive Signatures in 2LTT}
 \label{sec:2ltt-simple-signatures}
+
+
 
 
 %% --------------------------------------------------------------------------------
