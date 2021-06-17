@@ -106,6 +106,8 @@
 \newcommand{\NatSig}{\mathsf{NatSig}}
 \newcommand{\Sg}{\Sigma}
 \newcommand{\flCwF}{\mathsf{flCwF}}
+\newcommand{\SigTy}{\mathsf{SigTy}}
+\newcommand{\SigTm}{\mathsf{SigTm}}
 
 \newcommand{\Kfam}{\mathsf{K}}
 \newcommand{\lamK}{\mathsf{lam}_{\K}}
@@ -576,12 +578,12 @@ Sections of displayed algebras are ``dependent'' analogues of algebra morphisms,
 where the codomain is displayed over the domain.
 
 \begin{alignat*}{3}
-  & \hspace{-6em}\rlap{$\blank^S : (A : \Ty)\{X\,X^D\}(X^S : (x : X) \to X^D) \to (\alpha : A^A\,X) \to A^D\,X^D\,\alpha \to \Set$}\\
+  & \hspace{-6em}\rlap{$\blank^S : (A : \Ty)\{X\,X^D\}(X^S : (x : X) \to X^D\,x) \to (\alpha : A^A\,X) \to A^D\,X^D\,\alpha \to \Set$}\\
   & \hspace{-6em}\iota^S\,&&X^S\,\alpha\,\,\alpha^D \defn X^S\,\alpha = \alpha^D \\
   & \hspace{-6em}(\iota\to A)^S\,&&X^S\,\alpha\,\,\alpha^D \defn
   (x : X) \to A^S\,X^S\,(\alpha\,x)\,(\alpha^D\,(X^S\,x))\\
   & \hspace{-6em}&&\\
-  &\hspace{-6em}\rlap{$\Con^S : (\Gamma : \Con)\{X\,X^D\}(X^S : (x : X) \to X^D) \to (\gamma : \Gamma^A\,X) \to \Gamma^D\,X^D\,\gamma \to \Set$}\\
+  &\hspace{-6em}\rlap{$\Con^S : (\Gamma : \Con)\{X\,X^D\}(X^S : (x : X) \to X^D\,x) \to (\gamma : \Gamma^A\,X) \to \Gamma^D\,X^D\,\gamma \to \Set$}\\
   &\hspace{-6em}\rlap{$\Gamma^S\,X^S\,\gamma_0\,\gamma_1 \defn
     \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^S\,X^S\,(\gamma_0\,x)\,(\gamma_1\,x)$}\\
   & \hspace{-6em} && \\
@@ -652,7 +654,7 @@ as the carrier set of the term algebra. We additionally define the following.
   & \hspace{-5em}\iota^T\,&&t \defn t \\
   & \hspace{-5em}(\iota\to A)^T\,&&t \defn \lambda\,u.\,A^T\,(\app\,t\,u)\\
   & \hspace{-5em}&& \\
-  & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con) \to \Sub\,\Omega\,\Gamma \to \Gamma^A\,\Gamma\,\ms{T}$}\\
+  & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con) \to \Sub\,\Omega\,\Gamma \to \Gamma^A\,\ms{T}$}\\
   & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,x \defn A^T\,(\nu\,x)$}\\
   & \hspace{-5em}&& \\
   & \hspace{-5em}\rlap{$\blank^T : (t : \Tm\,\Gamma\,A)(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,(t[\nu]) = t^A\,(\Gamma^T\,\nu)$}\\
@@ -1624,8 +1626,8 @@ $\Tm_0\,A$, but we cannot map in the other direction.
 \label{sec:internal-syntax}
 
 In the rest of this thesis we will mostly work internally to a 2LTT, i.e.\ we
-use 2LTT as metatheory. Thus, we mostly adapt the metatheoretical notations used
-up until now. We list used features and conventions below.
+use 2LTT as metatheory. We adapt the metatheoretical notations used up until
+now. We list used features and conventions below.
 
 \begin{itemize}
   \item
@@ -1647,6 +1649,12 @@ up until now. We list used features and conventions below.
     type former is meant. For example, $\Tm_0\,\Bool_0 \to \Bool_1$ can only refer
     to outer functions.
   \item
+    We have the convention that $\blank\!=\!\blank$ refers to the inner equality
+    type, while $\blank\!\equiv\!\blank$ refers to the outer equality type. In
+    the semantics of 2LTT that we use, outer equality of inner values is
+    interpreted as definitional equality of inner terms, hence the naming
+    scheme.
+  \item
     By having $\Set$, we are able to have $\Ty_0 : \Set$ and $\Tm_0 : \Ty_0 \to
     \Set$. So we don't have to deal with proper meta-level types, and have a
     more uniform notation. Notation and specification for inner type formers changes
@@ -1656,7 +1664,7 @@ up until now. We list used features and conventions below.
     B\,x : \Ty_0$, and the specifying isomorphism for $\Pi$ can be written as
     $\Tm_0\,((x : A) \to B\,x) \simeq ((x : \Tm_0\,A) \to \Tm_0\,(B\,x))$.
   \item
-    We will omit inferable $\Tm_0$ applications. For instance, $\Bool_1 \to
+    We may omit inferable $\Tm_0$ applications. For instance, $\Bool_1 \to
     \Bool_0$ can be ``elaborated'' to $\Bool_1 \to \Tm_0\,\Bool_0$ without
     ambiguity, since the function codomain must be on the same level as the
     domain, and the only thing we can do to make sense of this is to lift the
@@ -2062,7 +2070,7 @@ for $\lam$ and $\app$ are left to the reader.
 \end{mydefinition}
 
 \begin{mydefinition}
-\textbf{Extensional identity} is defined as pointwise equality of outer terms,
+\textbf{Extensional identity} is defined as pointwise equality of terms,
 i.e.\ sections of displayed presheaves.
 \begin{alignat*}{3}
   & \Id : \Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma\\
@@ -2119,9 +2127,9 @@ of inner $\Pi$-types in the internal syntax of 2LTT:
   &\Pi_0             &&: (A : \Ty_0) \to (\Tm_0\,A \to \Ty_0) \to \Ty_0\\
   &(\app_0,\,\lam_0) &&: \Pi_0\,A\,B \simeq ((a :\,\Tm_0\,A) \to \,\Tm_0\,(B\,a))
 \end{alignat*}
-We can say that this \emph{defines} what it means for $\mbbC$ to support $\Pi$. We can
-recover the usual non-higher-order specification of $\Pi$ in the following way, up to
-isomorphism:
+We can say that this \emph{defines} what it means for $\mbbC$ to support
+$\Pi$. We recover the usual non-higher-order specification of $\Pi$ in the
+following way, up to isomorphism:
 \begin{itemize}
 \item First, we interpret the higher-order specification as a context or closed $\Sigma$-type
       in the standard presheaf model of 2LTT. This yields a presheaf over $\mbbC$.
@@ -2138,11 +2146,10 @@ mentioned in this thesis.
 \subsection{Functions with Inner Domains}
 
 There is a useful semantic simplification in the standard presheaf model, in
-cases where we have functions of the form $\Pi\,(\Tm_0\,A)\,B$. This will allow
-us to almost completely eliminate encoding overhead when interpreting inductive
-signatures in 2LTT; we look at examples in Section
-\ref{sec:2ltt-simple-signatures}. First we look at the simply-typed case with
-presheaf exponentials. We need some observations about the Yoneda embedding.
+cases where we have functions of the form $\Pi\,(\Tm_0\,A)\,B$. This greatly
+reduces encoding overhead when interpreting inductive signatures in 2LTT; we
+look at examples in Section \ref{sec:2ltt-simple-signatures}. First we look at
+the simply-typed case with presheaf exponentials.
 \begin{mylemma}
 $\yon$ preserves finite products up to isomorphism, i.e.\ $\yon \emptycon \simeq
   \emptycon$ and $\yon (i \otimes j) \simeq (\yon i \otimes \yon j)$.
@@ -2187,6 +2194,233 @@ have $\gamma : |\Gamma|\,i$, moreover
 
 \section{Simple Inductive Signatures in 2LTT}
 \label{sec:2ltt-simple-signatures}
+
+We revisit simple inductive signatures in this section, working internally to
+2LTT. We review the concepts introduced in Chapter
+\ref{chap:simple-inductive-signatures} in the same order.
+
+\subsection{Theory of Signatures}
+Signatures are defined exactly in the same way as before: we have $\Con : \Set$,
+$\Ty : \Set$, $\Sub : \Con \to \Con \to \Set$, $\Var : \Con \to \Ty \to \Set$ and
+$\Tm : \Con \to \Ty \to \Set$. However, now by $\Set$ we mean the outer universe
+of 2LTT. Thus signatures are inductively defined in the outer layer.
+
+\subsection{Algebras}
+
+Again we compute algebras by induction on signatures, but now we use inner
+types for carriers of algebras. We interpret types as follows:
+\begin{alignat*}{3}
+& \hspace{-4em} \rlap{$\blank^A : \Ty \to \Ty_0 \to \Set$} \\
+& \hspace{-4em} \iota^A\,&&X \defn \Tm_0\,X \\
+& \hspace{-4em} (\iota\to A)^A\,&&X \defn \Tm_0\,X \to A^A\,X
+\end{alignat*}
+Elsewhere, we change the type of the $X$ parameters accordingly:
+\begin{alignat*}{3}
+& \blank^A &&: \Con \to \Ty_0 \to \Set\\
+& \blank^A &&: \Var\,\Gamma\,A \to \{X : \Ty_0\} \to \Gamma^A\,X \to A^A\,X\\
+& \blank^A &&: \Tm\,\Gamma\,A \to \{X : \Ty_0\} \to \Gamma^A\,X \to A^A\,X\\
+& \blank^A &&: \Sub\,\Gamma\,\Delta \to \{X : \Ty_0\} \to \Gamma^A\,X \to \Delta^A\,X
+\end{alignat*}
+We also define $\ms{Alg}\,\Gamma$ as $(X : \Ty_0) \times \Gamma^A\,X$.
+
+\begin{myexample}
+Inside 2LTT we have the following:\footnote{Up to isomorphism, since we previously defined $\Gamma^A$ as a function type instead of an iterated product type.}
+\[ \Alg\,\ms{NatSig} \equiv (X : \Ty_0)\times(\mi{zero} : \Tm_0\,X)\times(\mi{suc} : \Tm_0\,X \to \Tm_0\,X) \]
+Then, we may assume any cwf $\mbbC$, and interpret the above closed type in the
+presheaf model $\hmbbC$, and evaluate the result at $\emptycon$ and
+the unique element of the terminal presheaf $\K\,\top$:
+\[
+  |\Alg\,\ms{NatSig}|\,\{\emptycon\}\,\tt : \Set
+\]
+We only need to compute definitions now. We use the simplified semantics for
+$\mi{suc} : \Tm_0\,X \to \Tm_0\,X$, since the function domain is an inner
+type. We get the following:
+\[
+|\Alg\,\ms{NatSig}|\,\{\emptycon\}\,\tt \equiv
+(X : \Ty_{\mbbC}\,\emptycon) \times (\mi{zero} : \Tm_{\mbbC}\,\emptycon\,X) \times (\mi{suc} : \Tm_{\mbbC}\,(\emptycon \ext X)\,X)
+\]
+Using the same computation, we get the following for binary trees:
+\[
+|\Alg\,\ms{TreeSig}|\,\{\emptycon\}\,\tt \equiv
+(X : \Ty_{\mbbC}\,\emptycon) \times (\mi{leaf} : \Tm_{\mbbC}\,\emptycon\,X) \times (\mi{node} : \Tm_{\mbbC}\,(\emptycon \ext X \ext X)\,X)
+\]
+\end{myexample}
+
+We can also get internal algebras in any $\mbbC$ category with finite products,
+because we can build cwfs from all such $\mbbC$.
+
+\begin{mydefinition} Assuming $\mbbC$ with finite products, we build a cwf by setting
+$\Con \defn |\mbbC|$, $\Ty\,\Gamma \defn |\mbbC|$, $\Sub\,\Gamma\,\Delta \defn \mbbC(\Gamma,\,\Delta)$, $\Tm\,\Gamma\,A \defn \mbbC(\Gamma,\,A)$, $\Gamma \ext A \defn \Gamma \otimes A$ and $\emptycon \defn \emptycon_{\mbbC}$. In short, we build a non-dependent (simply-typed) cwf.
+\end{mydefinition}
+
+Now we can interpret interpret signatures in cwfs given by finite product
+categories. For example:
+\[
+|\Alg\,\ms{NatSig}|\,\{\emptycon\}\,\tt \equiv
+(X : |\mbbC|) \times (\mi{zero} : \mbbC(\emptycon,\,X)) \times (\mi{suc} : \mbbC(\emptycon \otimes X,\,X))
+\]
+This is almost the same as what we would write by hand for the specification of
+natural number objects. The only difference is the extra $\emptycon
+\otimes\blank$ in $\mi{suc}$.
+
+\subsection{Morphisms}
+
+We get an additional degree of freedom in the computation of morphisms:
+preservation equations can be inner or outer. The former option is \emph{weak}
+or \emph{propositional} preservation, while the latter is \emph{strict}
+preservation. In the presheaf model of 2LTT, outer equality is definitional
+equality of inner terms, while inner equality is propositional equality in the
+inner theory. Of course, if the inner theory has extensional identity types,
+weak and strict equations in 2LTT coincide for inner types. We compute weak
+preservation for types as follows.
+\begin{alignat*}{3}
+  & \hspace{-5em}\rlap{$\blank^M : (A : \Ty)\{X_0\,X_1 : \Ty_0\}(X^M : \Tm_0\,X_0 \to \Tm_0\,X_1) \to A^A\,X_0 \to A^A\,X_1 \to \Set$}\\
+  & \hspace{-5em}\iota^M\,&&X^M\,\alpha_0\,\,\alpha_1 \defn \Tm_0\,(X^M\,\alpha_0 = \alpha_1) \\
+  & \hspace{-5em}(\iota\to A)^M\,&&X^M\,\alpha_0\,\,\alpha_1 \defn
+       (x : \Tm_0\,X_0) \to A^M\,X^M\,(\alpha_0\,x)\,(\alpha_1\,(X^M\,x))
+\end{alignat*}
+For strict preservation, we simply change $\Tm_0\,(X^M\,\alpha_0 = \alpha_1)$ to
+$X^M\,\alpha_0 \equiv \alpha_1$. We omit here the other $\blank^M$ definitions.
+
+\subsection{Displayed Algebras}
+
+We present $\blank^D$ only for types below.
+\begin{alignat*}{3}
+  & \rlap{$\blank^D : (A : \Ty)\{X\} \to (\Tm_0\,X \to \Ty_0) \to A^A\,X \to \Set$}\\
+  & \iota^D\,       && X^D\,\alpha \defn \Tm_0\,(X^D\,\alpha) \\
+  & (\iota\to A)^D\,&& X^D\,\alpha \defn (x : \Tm_0\,X)(x^D : \Tm_0\,(X^D\,x)) \to A^D\,X^D\,(\alpha\,x)
+\end{alignat*}
+We use type dependency in the inner layer. In the presheaf model, this is
+interpreted as inner types depending on certain contexts.
+\begin{myexample} Assume a closed $(X,\,\mi{zero},\,\mi{suc})$ $\Nat$-algebra in 2LTT. We have the following computation:
+\begin{alignat*}{3}
+  & \hspace{-5em}\rlap{$\DispAlg\,\{\ms{NatSig}\}\,(X,\,\mi{zero},\,\mi{suc}) \equiv$}\\
+              & (X^D &&: \Tm_0\,X \to \Ty_0)\\
+      \times\,& (\mi{zero^D} &&: \Tm_0\,(X^D\,\mi{zero}))\\
+      \times\,& (\mi{suc^D} &&: (n : \Tm_0\,X) \to \Tm_0\,(X^D\,n) \to \Tm_0\,(X^D\,(\mi{suc}\,n)))
+\end{alignat*}
+Let's look at the presheaf interpretation now. We simplify functions with inner
+domains everywhere. Also note that for $\ms{suc} : \Tm_0\,X \to \Tm_0\,X$, we
+get $|\ms{suc}|\,\tt : \Tm_{\mbbC}\,(\emptycon\ext n : |X|\,\tt)\,(|X|\,\tt)$ in
+the semantics, so a $\ms{suc}\,t$ application is translated as a substitution
+$(|\ms{suc}|\,\tt)[n \mapsto |t|\,\tt]$.
+\begin{alignat*}{3}
+  & \rlap{$|\DispAlg\,\{\ms{NatSig}\}\,(X,\,\mi{zero},\,\mi{suc})|\,\{\emptycon\}\,\tt \equiv$}\\
+              & (X^D &&: \Ty_{\mbbC}\,(\emptycon\ext n : |X|\,\tt))\\
+      \times\,& (\mi{zero^D} &&: \Tm_{\mbbC}\,\emptycon\,(X^D[n \mapsto |\mi{zero}|\,\tt]))\\
+      \times\,& (\mi{suc^D} &&: \Tm_{\mbbC}\,(\emptycon\ext n : |X|\,\tt \ext n^D : X^D[n \mapsto |\mi{zero}|\,\tt])\,(X^D[n \mapsto (|\mi{suc}|\,\tt)[n \mapsto n]))
+\end{alignat*}
+\end{myexample}
+To explain $(|\ms{suc}|\,\tt)[n \mapsto n])$: we have $\ms{suc}\,n$ in 2LTT,
+where $n$ is an inner variable, and in the presheaf model inner variables become
+actual variables in the inner theory. Hence, we map the $n$ which $\ms{suc}$
+depends on to the concrete $n$ in the context.
+
+We can also interpret displayed algebras in finite product categories:
+\begin{alignat*}{3}
+  & \hspace{-2em}\rlap{$|\DispAlg\,\{\ms{NatSig}\}\,(X,\,\mi{zero},\,\mi{suc})|\,\{\emptycon\}\,\tt \equiv$}\\
+              & (X^D &&: |\mbbC|)\\
+      \times\,& (\mi{zero^D} &&: \mbbC(\emptycon,\,X^D))\\
+      \times\,& (\mi{suc^D} &&: \mbbC(\emptycon \otimes |X|\,\tt \otimes X^D,\, X^D))
+\end{alignat*}
+
+While displayed algebras in cwfs can be used as bundles of induction motives and
+methods, in finite product categories they are argument bundles to
+\emph{primitive recursion}; this is sometimes also called a
+\emph{paramorphism} \cite{bananas}. In an internal syntax, the type of primitive
+recursion for natural numbers could be written more compactly as:
+\begin{alignat*}{3}
+  & \ms{primrec} : (X : \Set) \to X \to (\Nat \to X \to X) \to \Nat \to X
+\end{alignat*}
+This is not the same thing as the usual recursion principle (corresponding to
+weak initiality), because of the extra dependency on $\Nat$ in the method for
+successors.
+
+\subsection{Sections}
+Sections are analogous to morphisms. We again have a choice between weak and
+strict preservation; below we have weak preservation.
+\begin{alignat*}{3}
+  & \rlap{$\blank^S : (A : \Ty)\{X\,X^D\}(X^S : (x : \Tm_0\,X)\to \Tm_0\,(X^D\,x))$}\\
+  & \hspace{2em}\rlap{$\to (\alpha : A^A\,X) \to A^D\,X^D\,\alpha \to \Set$}\\
+  & \iota^S\,&&X^S\,\alpha\,\,\alpha^D \defn \Tm_0\,(X^S\,\alpha = \alpha^D) \\
+  & (\iota\to A)^S\,&&X^S\,\alpha\,\,\alpha^D \defn
+  (x : \Tm_0\,X) \to A^S\,X^S\,(\alpha\,x)\,(\alpha^D\,(X^S\,x))
+\end{alignat*}
+
+\subsection{Term Algebras}
+
+For term algebras, we have to assume that the inner theory supports the theory
+of signatures. We are going to have a bit of a name clash here, so we use
+$\SigTy_0$ to refer to signature types, and $\SigTm_0$ for terms. That is, we have
+\begin{alignat*}{3}
+  & \SigTy_0  &&: \Ty_0\\
+  & \Con_0   &&: \Ty_0\\
+  & \Var_0   &&: \Tm_0\,\Con_0 \to \Tm_0\,\SigTy_0 \to \Ty_0\\
+  & \SigTm_0 &&: \Tm_0\,\Con_0 \to \Tm_0\,\SigTy_0 \to \Ty_0\\
+  & \Sub_0   &&: \Tm_0\,\Con_0 \to \Tm_0\,\Con_0 \to \Ty_0
+\end{alignat*}
+together with all constructors and induction principles.
+
+\emph{Remark.} Strictly speaking, if we only want to construct term algebras, we
+don't need to assume induction principles. Also, we will see in Section
+\ref{TODO} that inner ToS induction is not necessary to show weak initiality of
+term algebras; weaker assumptions suffice. In this section, we omit these
+generalizations, as the goal is to redo the constructions of Chapter
+\ref{chap:simple-inductive-signatures} without making essential changes.
+
+At the same time, we still have ToS in the outer layer. To make the naming
+scheme a bit more consistent, we shall write outer ToS types as $\SigTy_1$,
+$\SigTm_1$, $\Con_1$, $\Var_1$ and $\Sub_1$. We have conversion functions from
+the outer ToS to the inner ToS:
+\begin{mydefinition} We have the following \textbf{lowering} functions, defined
+by outer induction. Lowering preserves all value constructors.
+\begin{alignat*}{3}
+  & \down\,: \SigTy_1 \to \Tm_0\,\SigTy_0\\
+  & \down\,: \Con_1 \to \Tm_0\,\Con_0\\
+  & \down\,: \Var_1\,\Gamma\,A \to \Tm_0\,(\Var_0\,(\down\Gamma)\,(\down A))\\
+  & \down\,: \SigTm_1\,\Gamma\,A \to \Tm_0\,(\SigTm_0\,(\down \Gamma)\,(\down A))\\
+  & \down\,: \Sub_1\,\Gamma\,\Delta \to \Sub_0\,(\down \Gamma)\,(\down \delta)
+\end{alignat*}
+\end{mydefinition}
+\noindent We fix an $\Omega : \Con_1$, and define $\ms{T} : \Ty_0$ as $\SigTm_0\,(\down\Omega)\,\iota$. We define term algebras as follows.
+\begin{alignat*}{3}
+  & \hspace{-5em}\rlap{$\blank^T : (A : \SigTy_1) \to \Tm_0\,(\SigTm_0\,(\down\Omega)\,(\down A)) \to A^A\,\ms{T}$} \\
+  & \hspace{-5em}\iota^T\,&&t \defn t \\
+  & \hspace{-5em}(\iota\to A)^T\,&&t \defn \lambda\,u.\,A^T\,(\app\,t\,u)
+\end{alignat*}
+
+\begin{alignat*}{3}
+  & \hspace{-5em}&& \\
+  & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con_1) \to \Sub_1\,\Omega\,\Gamma \to \Gamma^A\,\ms{T}$}\\
+  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,x \defn A^T\,(\down(\nu\,x))$}\\
+  & \hspace{-5em}&& \\
+  & \hspace{-5em}\rlap{$\blank^T : (t : \Tm\,\Gamma\,A)(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,(t[\nu]) = t^A\,(\Gamma^T\,\nu)$}\\
+  & \hspace{-5em}(\var\,x)^T\,   &&\nu    \text{   holds by   } \refl\\
+  & \hspace{-5em}(\app\,t\,u)^T\,&&\nu \text {   holds by   } t^T\,\nu \text{   and   } u^T\,\nu\\
+  & \hspace{-5em}&& \\
+  & \hspace{-5em}\rlap{$\blank^T : (\sigma : \Sub\,\Gamma\,\Delta)(\nu : \Sub\,\Omega\,\Gamma)\{A\}(x : \Var\,\Delta\,A)$}\\
+  & \hspace{-3em}\rlap{$\to \Delta^T\,(\sigma \circ \nu)\,x = \sigma^A\,(\Gamma^T\,\nu)\,x$}\\
+  & \hspace{-5em}\rlap{$ \sigma^T\,\nu\,x \defn (\sigma\,x)^T\,\nu$}
+\end{alignat*}
+
+
+
+
+
+
+
+
+%% For term algebras we have to assume that the inner theory supports
+%% the theory of signatures.
+
+
+
+
+
+
+
+
+
 
 
 

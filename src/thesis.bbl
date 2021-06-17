@@ -118,6 +118,15 @@ Andres L{\"{o}}h and Jos{\'{e}}~Pedro Magalh{\~{a}}es.
   of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
   2011, Tokyo, Japan, September 19-21, 2011}, pages 1--12. {ACM}, 2011.
 
+\bibitem[MFP91]{bananas}
+Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.
+\newblock Functional programming with bananas, lenses, envelopes and barbed
+  wire.
+\newblock In John Hughes, editor, {\em Functional Programming Languages and
+  Computer Architecture, 5th {ACM} Conference, Cambridge, MA, USA, August
+  26-30, 1991, Proceedings}, volume 523 of {\em Lecture Notes in Computer
+  Science}, pages 124--144. Springer, 1991.
+
 \bibitem[nc21]{internallogic}
 nLab contributors.
 \newblock Internal logic, 2021.
