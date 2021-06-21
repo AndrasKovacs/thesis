@@ -655,7 +655,7 @@ as the carrier set of the term algebra. We additionally define the following.
   & \hspace{-5em}(\iota\to A)^T\,&&t \defn \lambda\,u.\,A^T\,(\app\,t\,u)\\
   & \hspace{-5em}&& \\
   & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con) \to \Sub\,\Omega\,\Gamma \to \Gamma^A\,\ms{T}$}\\
-  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,x \defn A^T\,(\nu\,x)$}\\
+  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,\{A\}\,x \defn A^T\,(\nu\,x)$}\\
   & \hspace{-5em}&& \\
   & \hspace{-5em}\rlap{$\blank^T : (t : \Tm\,\Gamma\,A)(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,(t[\nu]) = t^A\,(\Gamma^T\,\nu)$}\\
   & \hspace{-5em}(\var\,x)^T\,   &&\nu    \text{   holds by   } \refl\\
@@ -701,6 +701,7 @@ constructed from ToS syntax are themselves initial algebras, in other cases they
 may not be initial.
 
 \subsection{Weak Initiality}
+\label{sec:simple-weak-initiality}
 We show that $\TmAlg_{\Omega}$ supports a recursion principle, i.e.\ it is weakly
 initial.
 
@@ -2349,9 +2350,10 @@ strict preservation; below we have weak preservation.
 
 \subsection{Term Algebras}
 
-For term algebras, we have to assume that the inner theory supports the theory
-of signatures. We are going to have a bit of a name clash here, so we use
-$\SigTy_0$ to refer to signature types, and $\SigTm_0$ for terms. That is, we have
+For term algebras, we need to assume a bit more in the inner theory. For
+starters, it has to support the theory of signatures. In order to avoid name
+clashes down the line, we use $\SigTy_0$ to refer to signature types, and
+$\SigTm_0$ for terms. That is, we have
 \begin{alignat*}{3}
   & \SigTy_0  &&: \Ty_0\\
   & \Con_0   &&: \Ty_0\\
@@ -2359,21 +2361,23 @@ $\SigTy_0$ to refer to signature types, and $\SigTm_0$ for terms. That is, we ha
   & \SigTm_0 &&: \Tm_0\,\Con_0 \to \Tm_0\,\SigTy_0 \to \Ty_0\\
   & \Sub_0   &&: \Tm_0\,\Con_0 \to \Tm_0\,\Con_0 \to \Ty_0
 \end{alignat*}
-together with all constructors and induction principles.
+together with all constructors and induction principles. We also assume inner
+$\Pi$-types, because we previously defined $\Sub$ using functions.
 
-\emph{Remark.} Strictly speaking, if we only want to construct term algebras, we
-don't need to assume induction principles. Also, we will see in Section
-\ref{TODO} that inner ToS induction is not necessary to show weak initiality of
-term algebras; weaker assumptions suffice. In this section, we omit these
-generalizations, as the goal is to redo the constructions of Chapter
+\emph{Remark.} In the current section we are liberal with making assumptions in
+the inner theory. Strictly speaking, if we only want to construct term algebras,
+we don't need to assume signature induction principles. Also, we will see in
+Section \ref{TODO} that inner ToS induction is not necessary to show weak
+initiality of term algebras; weaker assumptions suffice. In this section, we
+omit these generalizations, as the goal is to redo the constructions of Chapter
 \ref{chap:simple-inductive-signatures} without making essential changes.
 
-At the same time, we still have ToS in the outer layer. To make the naming
+We still have ToS in the outer layer. To make the naming
 scheme a bit more consistent, we shall write outer ToS types as $\SigTy_1$,
 $\SigTm_1$, $\Con_1$, $\Var_1$ and $\Sub_1$. We have conversion functions from
 the outer ToS to the inner ToS:
 \begin{mydefinition} We have the following \textbf{lowering} functions, defined
-by outer induction. Lowering preserves all value constructors.
+by outer induction. Lowering preserves all structure.
 \begin{alignat*}{3}
   & \down\,: \SigTy_1 \to \Tm_0\,\SigTy_0\\
   & \down\,: \Con_1 \to \Tm_0\,\Con_0\\
@@ -2386,22 +2390,73 @@ by outer induction. Lowering preserves all value constructors.
 \begin{alignat*}{3}
   & \hspace{-5em}\rlap{$\blank^T : (A : \SigTy_1) \to \Tm_0\,(\SigTm_0\,(\down\Omega)\,(\down A)) \to A^A\,\ms{T}$} \\
   & \hspace{-5em}\iota^T\,&&t \defn t \\
-  & \hspace{-5em}(\iota\to A)^T\,&&t \defn \lambda\,u.\,A^T\,(\app\,t\,u)
+  & \hspace{-5em}(\iota\to A)^T\,&&t \defn \lambda\,u.\,A^T\,(\app\,t\,u)\\
+  & \hspace{-5em}&&\\
+  & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con_1) \to \Sub_1\,\Omega\,\Gamma \to \Gamma^A\,\ms{T}$}\\
+  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,\{A\}\,x \defn A^T\,(\down(\nu\,x))$}\\
+  & \hspace{-5em} && \\
+  & \hspace{-5em}\rlap{$\TmAlg_{\Omega} : \Alg\,\Omega$}\\
+  & \hspace{-5em}\rlap{$\TmAlg_{\Omega} \defn \Omega^T\,\Omega\,\id$}
+\end{alignat*}
+We omit the $\blank^T$ interpretation for terms and substitutions for now, as
+they require a bit more setup, and they are not needed just for term algebras.
+
+\subsection{Weak Initiality}
+
+Recall from Section \ref{sec:simple-weak-initiality} that recursion is
+implemented using the $\blank^A$ interpretation of terms. Since terms are now in
+the inner theory, we need to define an inner version of the same interpretation.
+We need to compute types by inner induction, so we additionally assume a
+Russell-style inner $\U_0$ universe, so that we may coerce between $\Tm_0\,\U_0$
+and $\Ty_0$.  We define the following similarly as before, but on the inner
+level.
+\begin{alignat*}{3}
+  &\blank^A : \Tm_0\,(\SigTy_0 \to \U_0 \to \U_0)\\
+  &\blank^A : \Tm_0\,(\Con_0 \to \U_0 \to \U_0)\\
+  &\blank^A : \Tm_0\,(\SigTm_0\,\Gamma\,A \to \{X : \U_0\} \to \Gamma^A\,X \to A^A\,X)\\
+  &\blank^A : \Tm_0\,(\Sub_0\,\Gamma\,\Delta \to \{X : \U_0\} \to \Gamma^A\,X \to \Delta^A\,X)
 \end{alignat*}
 
-\begin{alignat*}{3}
-  & \hspace{-5em}&& \\
-  & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con_1) \to \Sub_1\,\Omega\,\Gamma \to \Gamma^A\,\ms{T}$}\\
-  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,x \defn A^T\,(\down(\nu\,x))$}\\
-  & \hspace{-5em}&& \\
-  & \hspace{-5em}\rlap{$\blank^T : (t : \Tm\,\Gamma\,A)(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,(t[\nu]) = t^A\,(\Gamma^T\,\nu)$}\\
-  & \hspace{-5em}(\var\,x)^T\,   &&\nu    \text{   holds by   } \refl\\
-  & \hspace{-5em}(\app\,t\,u)^T\,&&\nu \text {   holds by   } t^T\,\nu \text{   and   } u^T\,\nu\\
-  & \hspace{-5em}&& \\
-  & \hspace{-5em}\rlap{$\blank^T : (\sigma : \Sub\,\Gamma\,\Delta)(\nu : \Sub\,\Omega\,\Gamma)\{A\}(x : \Var\,\Delta\,A)$}\\
-  & \hspace{-3em}\rlap{$\to \Delta^T\,(\sigma \circ \nu)\,x = \sigma^A\,(\Gamma^T\,\nu)\,x$}\\
-  & \hspace{-5em}\rlap{$ \sigma^T\,\nu\,x \defn (\sigma\,x)^T\,\nu$}
-\end{alignat*}
+\begin{mylemma} For $A : \SigTy_1$, $\Gamma : \Con_1$ and $X : \Ty_0$
+we have definitional isomorphisms $\Tm_0\,((\down A)^A\,X) \simeq A^A\,X$
+and $\Tm_0\,((\down \Gamma)^A\,X) \simeq \Gamma^A\,X$.
+\end{mylemma}
+
+\begin{proof}
+$\down\,$ strictly preserves all structure, moreover $\Tm_0$ preserves function
+  types up to isomorphism, and the $\blank^A$ definitions only compute to
+  function types.
+\end{proof}
+
+%% \begin{alignat*}{3}
+%% & \hspace{-8em}\rlap{$\blank^R : (A : \SigTy_1)(t : \SigTm_0\,(\down\Omega)\,(\down A)) \to A^M\,\ms{R}\,(A^T\,t)\,(t^A\,\omega)$}\\
+%% & \hspace{-8em}\iota^R\,&&t \defn (\refl : t^A\,\omega = t^A\,\omega)\\
+%% & \hspace{-8em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
+%% & \hspace{-8em}&& \\
+%% & \hspace{-8em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
+%% & \hspace{-8em}\rlap{$\Gamma^R\,\nu\,x \defn A^R\,(\nu\,x)$}
+%% \end{alignat*}
+
+
+
+%% We assume $(X,\,\omega) : \Alg_{\Omega}$. We define $\ms{R} : \Tm_0\,\ms{T} \to \Tm_0\,X$ as
+
+
+%% \begin{alignat*}{3}
+%% & \hspace{-8em}\rlap{$\blank^R : (A : \SigTy_1)(t : \SigTm_0\,(\down\Omega)\,(\down A)) \to A^M\,\ms{R}\,(A^T\,t)\,(t^A\,\omega)$}\\
+%% & \hspace{-8em}\iota^R\,&&t \defn (\refl : t^A\,\omega = t^A\,\omega)\\
+%% & \hspace{-8em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
+%% & \hspace{-8em}&& \\
+%% & \hspace{-8em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
+%% & \hspace{-8em}\rlap{$\Gamma^R\,\nu\,x \defn A^R\,(\nu\,x)$}
+%% \end{alignat*}
+
+%% \begin{alignat*}{3}
+%%   & \Rec_{\Omega} : (\mi{alg} : \Alg\,\Omega) \to \Mor\,\TmAlg_{\Omega}\,\mi{alg}\\
+%%   & \Rec_{\Omega}\,(X,\,\omega) \defn (\ms{R},\,\Omega^R\,\Omega\,\id)
+%% \end{alignat*}
+
+
 
 
 
