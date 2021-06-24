@@ -136,6 +136,13 @@ Fredrik Nordvall~Forsberg.
 \newblock {\em Inductive-inductive definitions}.
 \newblock PhD thesis, Swansea University, 2013.
 
+\bibitem[PWK19]{pickering-multistage}
+Matthew Pickering, Nicolas Wu, and Csongor Kiss.
+\newblock Multi-stage programs in context.
+\newblock In Richard~A. Eisenberg, editor, {\em Proceedings of the 12th {ACM}
+  {SIGPLAN} International Symposium on Haskell, Haskell@ICFP 2019, Berlin,
+  Germany, August 18-23, 2019}, pages 71--84. {ACM}, 2019.
+
 \bibitem[Sch17]{scherer17deciding}
 Gabriel Scherer.
 \newblock Deciding equivalence with sums and the empty type.

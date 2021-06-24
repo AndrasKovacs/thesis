@@ -705,7 +705,7 @@ may not be initial.
 We show that $\TmAlg_{\Omega}$ supports a recursion principle, i.e.\ it is weakly
 initial.
 
-\begin{mydefinition}[\textbf{Recursor construction}] We assume $(X,\,\omega) : \Alg\,\Omega$;
+\begin{mydefinition}[\textbf{Recursor construction}]\label{def:simple-recursor} We assume $(X,\,\omega) : \Alg\,\Omega$;
 recall that $X : \Set$ and $\omega : \Omega^A\,X$. We define $\ms{R} : \ms{T} \to X$
 as $\ms{R}\,t \equiv t^A\,\omega$. We additionally define the following.
 \begin{alignat*}{3}
@@ -738,7 +738,7 @@ recursion for term algebras is given by evaluation in the ``standard'' model
 $\blank^A$. Now, we show that induction for term algebras corresponds to
 evaluation in the logical predicate model $\blank^D$.
 
-\begin{mydefinition}[\textbf{Eliminator construction}]
+\begin{mydefinition}[\textbf{Eliminator construction}]\label{def:simple-eliminator-construction}
 We assume $(X^D,\,\omega^D) : \DispAlg\,\TmAlg_\Omega$. Recall that $X^D :
 \ms{T} \to \Set$ and $\omega^D : \Omega^D\,X^D\,(\Omega^T\,\Omega\,\id)$. Like
 before, we first interpret the underlying set:
@@ -843,6 +843,7 @@ taking total categories; a $\Sigma$ in $\mbf{Cat}$). In our approach, we aim to
 get the displayed categories directly, without talking about functors.
 
 \subsection{Generic Programming}
+\label{sec:generic-programming}
 
 Let's consider now our signatures and term algebras in the context of generic
 programming. This is largely future work, and we don't elaborate it much. But we
@@ -1043,15 +1044,7 @@ two-level type theory, as a way to illustrate the applications.
 We note two shortcomings of the semantics presented in the
 previous chapter.
 
-First, we were not able to reason about definitional equalities, only
-propositional ones. We have a formalization of signatures and semantics in
-intensional Agda, where the two notions differ\footnote{As opposed to in
-extensional type theory, where they're the same.}, but only propositional
-equality is subject to internal reasoning. For instance, we would like to show
-that term algebras support recursion with strict $\beta$-rules, and for this we
-need to reason about strict equality.
-
-Second, the semantics that we provided was not as general as it could be. We
+First, the semantics that we provided was not as general as it could be. We
 used the internal $\Set$ universe to specify algebras, but algebras make sense
 in many different categories. A crude way to generalize semantics is to simply
 say that our formalization, which was carried out in the syntax (i.e.\ initial
@@ -1059,6 +1052,14 @@ model) of some intensional type theory, can be interpreted in any model of the
 type theory. However, this is wasteful: for simple inductive signatures, it is
 enough to assume a category with finite products as semantic setting. We don't
 need all the extra baggage that comes with a model of a type theory.
+
+Second, we were not able to reason about definitional equalities, only
+propositional ones. We have a formalization of signatures and semantics in
+intensional Agda, where the two notions differ\footnote{As opposed to in
+extensional type theory, where they're the same.}, but only propositional
+equality is subject to internal reasoning. For instance, we would like to show
+that term algebras support recursion with strict $\beta$-rules, and for this we
+need to reason about strict equality.
 
 \begin{notation}
 We use $\emptycon$ for the terminal object in a $\mbb{C}$ category, with
@@ -1674,7 +1675,7 @@ now. We list used features and conventions below.
     \Bool_0) \to \Bool_1$ and to $(\Tm_0\,\Bool_0 \to \Tm_0\,\Bool_0) \to
     \Bool_1$. However, in this case the two output types are definitionally
     isomorphic, because of the $\Pi$-preservation by $\Tm_0$. Hence, the
-    elaboration choice does not make much difference, so we shall still omit
+    elaboration choice does not make much difference, so we may still omit
     $\Tm_0$-s in situations like this.
 \end{itemize}
 
@@ -2200,6 +2201,13 @@ We revisit simple inductive signatures in this section, working internally to
 2LTT. We review the concepts introduced in Chapter
 \ref{chap:simple-inductive-signatures} in the same order.
 
+\begin{notation}
+In this section we shall be fairly explicit about writing $\Tm_0$-s, and
+transporting along definitional isomorphisms. The simple setting makes it
+feasible to be explicit; in later chapters we are more terse, as signatures and
+semantics get more complicated.
+\end{notation}
+
 \subsection{Theory of Signatures}
 Signatures are defined exactly in the same way as before: we have $\Con : \Set$,
 $\Ty : \Set$, $\Sub : \Con \to \Con \to \Set$, $\Var : \Con \to \Ty \to \Set$ and
@@ -2281,7 +2289,17 @@ preservation for types as follows.
        (x : \Tm_0\,X_0) \to A^M\,X^M\,(\alpha_0\,x)\,(\alpha_1\,(X^M\,x))
 \end{alignat*}
 For strict preservation, we simply change $\Tm_0\,(X^M\,\alpha_0 = \alpha_1)$ to
-$X^M\,\alpha_0 \equiv \alpha_1$. We omit here the other $\blank^M$ definitions.
+$X^M\,\alpha_0 \equiv \alpha_1$. The definition of morphisms is the same as
+before:
+\begin{alignat*}{3}
+  &\blank^M : (\Gamma : \Con_1)\{X_0\,X_1 : \Ty_0\} \to (\Tm_0\,X_0 \to \Tm_0\,X_1) \to \Gamma^A\,X_0 \to \Gamma^A\,X_1 \to \Set\\
+  &\Gamma^M\,X^M\,\gamma_0\,\gamma_1 \defn
+  \{A\}(x : \Var_1\,\Gamma\,A) \to A^M\,X^M\,(\gamma_0\,x)\,(\gamma_1\,x)\\
+  & \\
+  &\Mor : \{\Gamma : \Con_1\} \to \Alg\,\Gamma \to \Alg\,\Gamma \to \Set \\
+  &\Mor\,\{\Gamma\}\,(X_0,\,\gamma_0)\,(X_1,\,\gamma_1) \defn (X^M : \Tm_0\,X_0 \to \Tm_0\,X_1) \times \Gamma^M\,X^M\,\gamma_0\,\gamma_1
+\end{alignat*}
+We omit here the $\blank^M$ definitions for terms and substitutions.
 
 \subsection{Displayed Algebras}
 
@@ -2373,31 +2391,76 @@ omit these generalizations, as the goal is to redo the constructions of Chapter
 \ref{chap:simple-inductive-signatures} without making essential changes.
 
 We still have ToS in the outer layer. To make the naming
-scheme a bit more consistent, we shall write outer ToS types as $\SigTy_1$,
+scheme consistent, we shall write outer ToS types as $\SigTy_1$,
 $\SigTm_1$, $\Con_1$, $\Var_1$ and $\Sub_1$. We have conversion functions from
 the outer ToS to the inner ToS:
-\begin{mydefinition} We have the following \textbf{lowering} functions, defined
-by outer induction. Lowering preserves all structure.
+\begin{mydefinition} We have the following \textbf{lowering} functions which
+preserve all structure.
 \begin{alignat*}{3}
-  & \down\,: \SigTy_1 \to \Tm_0\,\SigTy_0\\
-  & \down\,: \Con_1 \to \Tm_0\,\Con_0\\
-  & \down\,: \Var_1\,\Gamma\,A \to \Tm_0\,(\Var_0\,(\down\Gamma)\,(\down A))\\
-  & \down\,: \SigTm_1\,\Gamma\,A \to \Tm_0\,(\SigTm_0\,(\down \Gamma)\,(\down A))\\
-  & \down\,: \Sub_1\,\Gamma\,\Delta \to \Sub_0\,(\down \Gamma)\,(\down \delta)
+  & \down\,: \SigTy_1 &&\to \Tm_0\,\SigTy_0\\
+  & \down\,: \Con_1 &&\to \Tm_0\,\Con_0\\
+  & \down\,: \Var_1\,\Gamma\,A &&\to \Tm_0\,(\Var_0\,(\down\!\Gamma)\,(\down\!A))\\
+  & \down\,: \SigTm_1\,\Gamma\,A &&\to \Tm_0\,(\SigTm_0\,(\down\!\Gamma)\,(\down\!A))\\
+  & \down\,: \Sub_1\,\Gamma\,\Delta &&\to \Tm_0\,(\Sub_0\,(\down\!\Gamma)\,(\down\!\delta))
 \end{alignat*}
-\end{mydefinition}
-\noindent We fix an $\Omega : \Con_1$, and define $\ms{T} : \Ty_0$ as $\SigTm_0\,(\down\Omega)\,\iota$. We define term algebras as follows.
+These functions are called ``lifting'' in the context of multi-stage
+programming; see e.g.\ the $\ms{Lift}$ typeclass in Haskell
+\cite{pickering-multistage}.
+
+Lowering is straightforward to define for types, contexts, variables and terms,
+but there is a bit of a complication for $\Sub$. Unfolding the definitions, we
+need to map from $\{A\} \to \Var_1\,\Delta\,A \to \SigTm_1\,\Gamma\,A$ to
+$\Tm_0\,(\{A\} \to \Var_0\,(\down\Delta)\,A \to \SigTm_0\,(\down\Gamma)\,A)$. It
+might appear problematic that we have types and variables in \emph{negative}
+position, because we can't map inner types/variables to outer ones.
+Fortunately, $\Sub_1\,\Gamma\,\Delta$ is isomorphic to a finite product type,
+and we can lower a finite product componentwise.
+
+Concretely, we define lowering by induction on $\Delta$, while making use of
+a case splitting operation for $\Var_0$. We use an informal $\ms{case}$
+operation below, which can be defined using inner induction. Note that since
+$\Var_0\,\emptycon\,A$ is an empty type, case splitting on it behaves like
+elimination for the empty type.
 \begin{alignat*}{3}
-  & \hspace{-5em}\rlap{$\blank^T : (A : \SigTy_1) \to \Tm_0\,(\SigTm_0\,(\down\Omega)\,(\down A)) \to A^A\,\ms{T}$} \\
+  &\rlap{$\hspace{0.3em}\down_{\Delta} : \Sub_1\,\Gamma\,\Delta \to \Tm_0\,(\Sub_0\,(\down\!\Gamma)\,(\down\!\Delta))$}\\
+  &\down_{\emptycon}\,&&\sigma \defn
+      \lambda\,\{A\}\,(x : \Var_0\,\emptycon\,A).\,\ms{case}\,x\,\ms{of}\,()\\
+  &\down_{\Delta\ext B}\,&&\sigma \defn
+      \lambda\,\{A\}\,(x : \Var_1\,(\down\!\Delta\,\ext \down\!B)\,A).\,\ms{case}\,x\,\ms{of}\\
+  & &&\vz\hspace{0.65em}\to\,\,\down\!(\sigma\,\vz)\\
+  & &&\vs\,x \to\,\,\down_{\Delta}\!(\sigma \circ \vs)\,x
+\end{alignat*}
+In general, for finite $A$ type, functions of the form $A \to \Tm_0\,B$ can be
+represented as inner types up to isomorphism; they can be viewed as finite
+products of terms.
+
+\emph{Remark.} For infinite $A$ this does not work anymore in our system. In
+\cite{twolevel}, the assumption that this still works with $A \equiv \Nat_1$ is
+an important axiom (``cofibrancy of $\Nat_1$'') which makes it possible to embed
+higher categorical structures in 2LTT. From the metaprogramming perspective,
+cofibrancy of $\Nat_1$ implies that the inner theory is \emph{infinitary}, since
+we can form inner terms from infinite collections of inner terms. We don't
+assume this axiom in 2LTT, although we will consider infinitary (object) type
+theories in Chapters \ref{chap:fqiit} and \ref{chap:iqiit}.
+\end{mydefinition}
+
+\noindent
+We continue to the definition of term algebras. We fix an $\Omega : \Con_1$, and
+define $\ms{T} : \Ty_0$ as $\SigTm_0\,(\down\!\Omega)\,\iota$.
+\begingroup
+\allowdisplaybreaks
+\begin{alignat*}{3}
+  & \hspace{-5em}\rlap{$\blank^T : (A : \SigTy_1) \to \Tm_0\,(\SigTm_0\,(\down\!\Omega)\,(\down\!A)) \to A^A\,\ms{T}$} \\
   & \hspace{-5em}\iota^T\,&&t \defn t \\
   & \hspace{-5em}(\iota\to A)^T\,&&t \defn \lambda\,u.\,A^T\,(\app\,t\,u)\\
   & \hspace{-5em}&&\\
   & \hspace{-5em}\rlap{$\blank^T : (\Gamma : \Con_1) \to \Sub_1\,\Omega\,\Gamma \to \Gamma^A\,\ms{T}$}\\
-  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,\{A\}\,x \defn A^T\,(\down(\nu\,x))$}\\
+  & \hspace{-5em}\rlap{$\Gamma^T\,\nu\,\{A\}\,x \defn A^T\,(\down\!(\nu\,x))$}\\
   & \hspace{-5em} && \\
   & \hspace{-5em}\rlap{$\TmAlg_{\Omega} : \Alg\,\Omega$}\\
   & \hspace{-5em}\rlap{$\TmAlg_{\Omega} \defn \Omega^T\,\Omega\,\id$}
 \end{alignat*}
+\endgroup
 We omit the $\blank^T$ interpretation for terms and substitutions for now, as
 they require a bit more setup, and they are not needed just for term algebras.
 
@@ -2407,54 +2470,183 @@ Recall from Section \ref{sec:simple-weak-initiality} that recursion is
 implemented using the $\blank^A$ interpretation of terms. Since terms are now in
 the inner theory, we need to define an inner version of the same interpretation.
 We need to compute types by inner induction, so we additionally assume a
-Russell-style inner $\U_0$ universe, so that we may coerce between $\Tm_0\,\U_0$
-and $\Ty_0$.  We define the following similarly as before, but on the inner
-level.
+Russell-style inner $\U_0$ universe. The Russell style means that we may freely
+coerce between $\Tm_0\,\U_0$ and $\Ty_0$. The following are defined the same way
+as $\blank^A$ before.
 \begin{alignat*}{3}
   &\blank^A : \Tm_0\,(\SigTy_0 \to \U_0 \to \U_0)\\
   &\blank^A : \Tm_0\,(\Con_0 \to \U_0 \to \U_0)\\
   &\blank^A : \Tm_0\,(\SigTm_0\,\Gamma\,A \to \{X : \U_0\} \to \Gamma^A\,X \to A^A\,X)\\
   &\blank^A : \Tm_0\,(\Sub_0\,\Gamma\,\Delta \to \{X : \U_0\} \to \Gamma^A\,X \to \Delta^A\,X)
 \end{alignat*}
-
-\begin{mylemma} For $A : \SigTy_1$, $\Gamma : \Con_1$ and $X : \Ty_0$
-we have definitional isomorphisms $\Tm_0\,((\down A)^A\,X) \simeq A^A\,X$
-and $\Tm_0\,((\down \Gamma)^A\,X) \simeq \Gamma^A\,X$.
+Since lowering preserves all structure, and $\blank^A$ is defined in the same
+way in both the inner and outer theories, lowering is compatible with
+$\blank^A$ in the following way.
+\begin{mylemma}\label{lem:down-compat-alg} Assume $A : \SigTy_1$, $\Gamma : \Con_1$, $X : \Ty_0$, $\gamma : \Gamma^A\,X$ and $t : \SigTm_1\,\Gamma\,A$. We have the following:
+  \begin{itemize}
+  \item $(A^A_{\to},\,A^A_{\leftarrow}) : \Tm_0\,((\down\!A)^A\,X) \simeq A^A\,X$
+  \item $(\Gamma^A_{\to},\,\Gamma^A_{\leftarrow}) : \Tm_0\,((\down\!\Gamma)^A\,X) \simeq \Gamma^A\,X$
+  \item $t^A\,\gamma \equiv A^A_{\to}\,((\down\!t)^A\,(\Gamma^A_{\leftarrow}\,\gamma))$
+  \end{itemize}
 \end{mylemma}
-
 \begin{proof}
-$\down\,$ strictly preserves all structure, moreover $\Tm_0$ preserves function
-  types up to isomorphism, and the $\blank^A$ definitions only compute to
-  function types.
+By induction on $\Gamma$, $A$ and $t$.
+\end{proof}
+We construct recursors now, yielding strict algebra morphisms.  We
+assume $(X,\,\omega) : \Alg\,\Omega$. Recall that $\omega : \Omega^A\,X$, thus
+$\Omega^A_{\leftarrow}\,\omega : \Tm_0\,((\down\!\Omega)^A\,X)$. We define $\ms{R} :
+\Tm_0\,\ms{T} \to \Tm_0\,X$ as $\ms{R}\,t \defn t^A\,(\Omega^A_{\leftarrow}\,\omega)$.
+\begin{alignat*}{3}
+& \hspace{-8em}\rlap{$\blank^R : (A : \SigTy_1)(t : \Tm_0\,(\SigTm_0\,(\down\!\Omega)\,(\down\!A))) \to A^M\,\ms{R}\,(A^T\,t)\,(\A^A_{\rightarrow}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega)))$}\\
+& \hspace{-8em}\iota^R\,&&t : t^A\,(\Omega^A_{\leftarrow}\,\omega) \equiv \iota^A_{\to}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega))\\
+& \hspace{-8em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
+& \hspace{-8em}&& \\
+& \hspace{-8em}\rlap{$\blank^R : (\Gamma : \Con_1)(\nu : \Sub_1\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
+& \hspace{-8em}\rlap{$\Gamma^R\,\nu\,\{A\}\,x \defn A^R\,(\down\!(\nu\,x))$}
+\end{alignat*}
+In the proof obligation for $t^A\,(\Omega^A_{\leftarrow}\,\omega) \equiv
+\iota^A_{\to}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega))$, $\iota^A_{\to}$ computes
+to the identity function; note that $\iota^A_{\to} : \Tm_0\,X \to \Tm_0\,X$. Hence
+the equality becomes reflexive.
+
+In $\Gamma^R\,\nu\,\{A\}\,x \defn A^R\,(\down\!(\nu\,x))$, we have that
+\[
+  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(A^A_{\to}\,(\down\!(\nu\,x)^A\,(\Omega^A_{\leftarrow}\,\omega)))
+\]
+Hence by Lemma \ref{lem:down-compat-alg}, we have
+\[
+  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,((\nu\,x)^A\,\omega)
+\]
+Hence, by the definition of $\blank^A$ for substitutions:
+\[
+  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(\nu^A\,\omega\,x)
+\]
+Which is exactly what is required when we unfold the expected return type:
+\begin{alignat*}{3}
+  & \blank^R : (\Gamma : \Con_1)(\nu : \Sub_1\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)\\
+  & \blank^R : (\Gamma : \Con_1)(\nu : \Sub_1\,\Omega\,\Gamma) \to \{A\}(x : \Var_1\,\Gamma\,A) \to
+    A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(\nu^A\,\omega\,x)
+\end{alignat*}
+The recursor is defined the same way as in Definition \ref{def:simple-recursor}:
+\begin{alignat*}{3}
+  & \Rec_{\Omega} : (\mi{alg} : \Alg\,\Omega) \to \Mor\,\TmAlg_{\Omega}\,\mi{alg}\\
+  & \Rec_{\Omega}\,(X,\,\omega) \defn (\ms{R},\,\Omega^R\,\Omega\,\id)
+\end{alignat*}
+
+\subsection{Induction}
+
+For induction, we need to additionally define $\blank^D$ in the inner layer.
+\begin{alignat*}{3}
+  &\blank^D : \Tm_0\,((A : \SigTy_0)\{X\} \to (\Tm_0\,X \to \U_0) \to A^A\,X \to \U_0)\\
+  &\blank^D : \Tm_0\,((\Gamma : \Con_0)\{X\} \to (\Tm_0\,X \to \U_0) \to \Gamma^A\,X \to \U_0)\\
+  &\blank^D : \Tm_0\,((t : \SigTm_0\,\Gamma\,A) \to \Gamma^D\,X^D\,\gamma \to A^D\,X^D\,(t^A\,\gamma))\\
+  &\blank^D : \Tm_0\,((\sigma : \Sub_0\,\Gamma\,\Delta) \to \Gamma^D\,X^D\,\gamma \to \Delta^D\,X^D\,(\sigma^A\,\gamma))
+\end{alignat*}
+
+\begin{mylemma}
+We have again compatibility of lowering with $\blank^D$. Assuming
+$(X,\,\gamma) : \Alg\,\Gamma$, $(X^D,\,\gamma^D) : \DispAlg\,(X,\,\gamma)$,
+$t : \SigTm_1\,\Gamma\,A$, and $\alpha : A^A\,X$, we have
+\begin{itemize}
+  \item $(\A^D_{\to},\,\A^D_{\leftarrow}) :
+    \Tm_0\,((\down\!\A)^D\,X^D\,(\A^A_{\leftarrow}\,\alpha)) \simeq \A^D\,X^D\,\alpha$
+  \item $(\Gamma^D_{\to},\,\Gamma^D_{\leftarrow}) :
+    \Tm_0\,((\down\!\Gamma)^D\,X^D\,(\Gamma^A_{\leftarrow}\,\gamma)) \simeq \Gamma^D\,X^D\,\gamma$
+  \item $t^D\,\gamma^D \equiv A^D_{\to}\,((\down\!t)^D\,(\Gamma^D_{\leftarrow}\,\gamma^D))$
+\end{itemize}
+The equation for $t^D\,\gamma^D$ is well-typed because of the term equation in Lemma
+\ref{lem:down-compat-alg}.
+\end{mylemma}
+\begin{proof} Again by induction on $\Gamma$, $A$ and $t$.
 \end{proof}
 
-%% \begin{alignat*}{3}
-%% & \hspace{-8em}\rlap{$\blank^R : (A : \SigTy_1)(t : \SigTm_0\,(\down\Omega)\,(\down A)) \to A^M\,\ms{R}\,(A^T\,t)\,(t^A\,\omega)$}\\
-%% & \hspace{-8em}\iota^R\,&&t \defn (\refl : t^A\,\omega = t^A\,\omega)\\
-%% & \hspace{-8em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
-%% & \hspace{-8em}&& \\
-%% & \hspace{-8em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
-%% & \hspace{-8em}\rlap{$\Gamma^R\,\nu\,x \defn A^R\,(\nu\,x)$}
-%% \end{alignat*}
+We also need to extend $\blank^T$ with action on terms. Note that we return
+an inner equality, since we can only compute such equality by induction on the
+inner term input:
+\[
+\blank^T : (t : \SigTm_0\,(\down\!\Gamma)\,(\down\!A))(\nu : \Sub_1\,\Omega\,\Gamma) \to
+  \Tm_0\,(A^A_{\leftarrow}\,(A^T\,(t[\down\!\nu])) = t^A\,(\Gamma^A_{\leftarrow}\,\nu))
+\]
+We assume $(X^D,\,\omega^D) : \DispAlg\,\TmAlg_\Omega$, and define elimination
+as follows:
+\begin{alignat*}{3}
+  & \ms{E} : (t : \Tm_0\,\ms{T}) \to \Tm_0\,(X^D\,t) \\
+  & \ms{E}\,t \defn t^D\,(\Omega^D_{\leftarrow}\,\omega^D)
+\end{alignat*}
+This definition is well-typed only up to $t^T\,\id : \Tm_0\,(t =
+t^A\,(\Omega^A_{\leftarrow}\,(\Omega^T\,\Omega\,\id)))$. Since $t^T\,\id$ is an
+inner equality, in a fully formal intensional presentation we would have to
+write an explicit transport in the definition.
+
+We shall skip the remainder of the eliminator construction; it goes the same way
+as in Definition \ref{def:simple-eliminator-construction}. We generally observe
+that
+\begin{itemize}
+  \item The inner theory has all necessary features to reproduce the eliminator
+    construction.
+  \item Types and constructions which are defined on both levels are essentially
+    the same.
+  \item Lowering preserves all relevant structure.
+\end{itemize}
+Since $t^T$ yields inner equations, this implies that the displayed algebra
+sections returned by the eliminator are \emph{weak sections}, i.e.\ they contain
+$\beta$-rules expressed in inner equalities.
+
+\section{Discussion}
+
+\subsection{Evaluation}
+
+Let's review how 2LTT addresses the shortcomings that we mentioned in Section
+\ref{sec:2ltt-motivation}.
+\\\\
+\textbf{Generalized semantics.} For this purpose, there is minimal
+technical overhead to using 2LTT; we only need to sprinkle $\Ty_0$ and $\Tm_0$
+around a bit, and we get semantics internally to cwfs (including all finite product
+categories).
+\\\\
+\textbf{Term algebra constructions.}
+Here, we had to deal with significantly more noise, because of the necessary
+lowerings and their preservation isomorphisms. However, this overhead should be
+compared to reasoning about object-level definitional equality in a deeply
+embedded way, which entails explicitly manipulating abstract syntax and its
+substitutions and weakenings. Compared to that, 2LTT is tremendously easier. One
+could also argue that lowering is an entirely mechanical affair, and we can just
+omit most of it if we are comfortable enough with the formalism.
+
+\subsection{Recursor vs. Eliminator Construction}
+
+The essential extra detail that we
+had to handle in Section \ref{sec:2ltt-simple-signatures} was the choice between
+strict and weak equations. This choice brings along further implementation
+constraints.
+
+Strict equations are stronger as assumptions, because they represent
+definitional equality of inner terms. However, we can only produce strict
+equations by eliminating from outer types. Hence, if we aim to output strict
+equations, we have to assume every dependency in the outer theory, which in turn
+may require using lowering.
+
+Weak equations are easier to produce: strict equality implies weak equality,
+plus we can prove weak equality by inner induction. But we cannot use weak
+equality to transport outer values.
+
+In the recursor construction, we produced strict $\beta$-rules, which trivially
+imply weak $\beta$-rules as well. In contrast, the eliminator construction
+relies essentially on equations produced by $\blank^T$ for inner terms. Can we
+somehow get strict equations from $\blank^T$? This does not seem possible, at
+least without changing the approach in a major way: terms must be inner, or else
+we have no hope of inner recursion/induction. And if terms are inner, then
+$\ms{E}$ must act on arbitrary inner terms, hence $\blank^T$ must do so too.
+
+It would interesting to check if there is a possible alternative formulation of
+term algebras and constructed eliminators, which makes it possible to get strict
+eliminators. Looking back to Section \ref{sec:generic-programming}, it appears
+that by using spine neutral terms, we get strict elimination for each
+signature. However, this relies on the Agda implementation of pattern matching:
+it is not clear whether
 
 
 
-%% We assume $(X,\,\omega) : \Alg_{\Omega}$. We define $\ms{R} : \Tm_0\,\ms{T} \to \Tm_0\,X$ as
-
-
-%% \begin{alignat*}{3}
-%% & \hspace{-8em}\rlap{$\blank^R : (A : \SigTy_1)(t : \SigTm_0\,(\down\Omega)\,(\down A)) \to A^M\,\ms{R}\,(A^T\,t)\,(t^A\,\omega)$}\\
-%% & \hspace{-8em}\iota^R\,&&t \defn (\refl : t^A\,\omega = t^A\,\omega)\\
-%% & \hspace{-8em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
-%% & \hspace{-8em}&& \\
-%% & \hspace{-8em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
-%% & \hspace{-8em}\rlap{$\Gamma^R\,\nu\,x \defn A^R\,(\nu\,x)$}
-%% \end{alignat*}
-
-%% \begin{alignat*}{3}
-%%   & \Rec_{\Omega} : (\mi{alg} : \Alg\,\Omega) \to \Mor\,\TmAlg_{\Omega}\,\mi{alg}\\
-%%   & \Rec_{\Omega}\,(X,\,\omega) \defn (\ms{R},\,\Omega^R\,\Omega\,\id)
-%% \end{alignat*}
 
 
 
@@ -2464,14 +2656,12 @@ $\down\,$ strictly preserves all structure, moreover $\Tm_0$ preserves function
 
 
 
+%% \begin{itemize}
+%%   \item The choice between weak and strict equations
+%% \end{itemize}
 
-%% For term algebras we have to assume that the inner theory supports
-%% the theory of signatures.
-
-
-
-
-
+%% when moving to 2LTT the essential extra detail that we have to manage is the choice
+%% between weak and strict preservation, which
 
 
 
