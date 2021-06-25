@@ -110,3 +110,33 @@ Xᴰ : X → U₀
                       : Tm₀ ((↓A)ᴰ Xᴰ (Aᴬ← (tᴬ γ))
 
        tᴰ γᴰ = Aᴰ→ ((↓t)ᴰ (Γᴰ← γᴰ))
+
+--------------------------------------------------------------------------------
+-- Does it work to have
+-- -ᴬ : Tm₀ ↓Γ ↓A → Γᴬ X → Aᴬ X  ?
+-- No, because  if t = app t u : Tm Γ B, then the argument type is not statically known.
+
+T := SigTm₀ ↓Ω ι
+
+
+-- -ᴬ : SigTm₀ ↓Γ ↓A → Γᴬ X → Aᴬ X
+
+-- -ᴬ : SigTm₀ Γ A → ∀ {Γ' A'} → Γ ≡ ↓Γ' → A ≡ ↓A' → Γ'ᴬ X → A'ᴬ X
+
+-- (var x)ᴬ : ∀ {Γ' A'} → Γ ≡ ↓Γ' → A ≡ ↓A' → Γ'ᴬ X → A'ᴬ X
+-- (app t u)ᴬ : ∀ {Γ' A'} → Γ ≡ ↓Γ' → A ≡ ↓A' → Γ'ᴬ X → A'ᴬ X
+
+-ᴬ : SigTm₀ ↓Γ ↓A → Γᴬ X → Aᴬ X
+(var vz) : ∀ {Γ' A'} → (Γ ▶ A) ≡ ↓Γ' → A ≡ ↓A' → Γ'ᴬ X → A'ᴬ X
+         : (Γ' ▶ A')ᴬ X → A' X
+
+
+app {A → B} t {A} u : Tm₀ Γ A
+
+(app {Γ}{A}{B} t u)ᴬ : ∀ {Γ' A'} → Γ ≡ ↓Γ' → B ≡ ↓A' → Γ'ᴬ X → A'ᴬ X
+                     : ∀ {Γ' A'} → Γ ≡ ↓Γ' → B ≡ ↓A' → Γ'ᴬ X → A'ᴬ X
+
+    t : Tm₀ Γ (A ⇒ B)
+    u : Tm₀ Γ A
+
+    tᴬ : ∀ {Γ' A'} → Γ ≡ ↓Γ' → (A ⇒ B) ≡ ↓A' → Γ'ᴬ X → A'ᴬ X

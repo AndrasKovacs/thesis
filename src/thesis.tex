@@ -69,6 +69,7 @@
 
 \newcommand{\refl}{\mathsf{refl}}
 \newcommand{\reflect}{\mathsf{reflect}}
+\newcommand{\Reflect}{\mathsf{Reflect}}
 \newcommand{\id}{\mathsf{id}}
 \newcommand{\Con}{\mathsf{Con}}
 \newcommand{\Sub}{\mathsf{Sub}}
@@ -1625,7 +1626,7 @@ universe. Then we can map from $\Tm_0\,\U_0$ to $\U_1$, by taking $A$ to
 $\Tm_0\,A$, but we cannot map in the other direction.
 
 \subsection{Internal Syntax and Notation}
-\label{sec:internal-syntax}
+\label{sec:2ltt-internal-syntax}
 
 In the rest of this thesis we will mostly work internally to a 2LTT, i.e.\ we
 use 2LTT as metatheory. We adapt the metatheoretical notations used up until
@@ -1696,122 +1697,6 @@ Here, the type is forced to live in the outer level because of the dependency on
 $\Ty_0$. Since $\Ty_0$ is an outer type, $\Bool_0 \to \Ty_0$ must be lifted, which
 in turn requires all other types to be lifted as well.
 \end{myexample}
-
-
-
-
-%% \begin{mydefinition}
-%% A \textbf{family morphism} $F$ between ($\Tm_0$, $\Ty_0$) and ($\Tm_1$, $\Ty_1$)
-%% families consists of natural transformations mapping types to types and terms to
-%% terms, which preserves context extensions up to context isomorphism, i.e.\ we
-%% have that $(\Gamma \ext F\,A) \simeq (\Gamma \ext A)$, where $\simeq$ denotes
-%% existence of an invertible $\Sub$.
-%% \end{mydefinition}
-
-%% Family morphisms are restrictions of so-called \emph{weak morphisms}
-%% \cite{dependentrightadjoints} (or \emph{pseudomorphisms}
-%% \cite{kaposi2019gluing}) of cwfs: a weak morphism which has the identity action
-%% on the base category is exactly a family morphism.
-
-%% \begin{mylemma} Every family morphism has invertible action on terms, i.e.\ there
-%%   is an $F^{-1} : \Tm\,\Gamma\,(F\,A) \to \Tm\,\Gamma\,A$.
-%% \end{mylemma}
-
-%% \begin{proof}
-%% From the $\ext$-preservation isomorphism and the defining isomorphisms of
-%% comprehension, we get $\q' : \Tm\,(\Gamma \ext F\,A)\,(A[\p])$ such that $F\,\q'
-%% = \q$ and $\q'[\p,\,F\,\q] = \q$. Now, for $t : \Tm\,\Gamma\,(F\,A)$, we
-%% define $F^{-1}\,t$ as $\q'[\id,\,t] : \Tm\,\Gamma\,A$. We get the following:
-%% \begin{alignat*}{3}
-%%   & F(F^{-1}\,t) = F(\q'[\id,\,t]) = (F\,\q')[\id,\,t] = \q'[\id,\,t] = t \\
-%%   & F^{-1}(F\,t) = \q'[\id,\,F\,t] = \q'[\id,\,(F\,\q)[\id,\,\,t]] = \q'[\p,\,F\,\q][\id,\,t]
-%%     = \q[\id,\,t] = t
-%% \end{alignat*}
-%% More concisely, $F$ is invertible on the generic term $\q$, which implies invertibility
-%% on any term.
-%% \end{proof}
-
-%% \begin{notation}
-%% In the following, we write $\Lift : \Ty_0\,\Gamma \to \Ty_1\,\Gamma$ for
-%% the action of some morphism on types, $\up : \Tm_0\,\Gamma\,A \to
-%% \Tm_1\,\Gamma\,(\Lift\,A)$ for the action on terms, and $\down$ for the inverse
-%% action on terms. We also call the action on types \emph{type lifting}
-%% and the action on terms \emph{term lifting}. We may also use $\Lift$ to
-%% refer to a specific family morphism, if there is no ambiguity.
-%% \end{notation}
-
-%% \begin{mydefinition}
-%% A \textbf{model of basic 2LTT} consists of a cwf equipped with two families
-%% $(\Ty_0,\,\Tm_0)$ and $(\Ty_1,\,\Tm_1)$ and a morphism between them. Both
-%% families may be closed under arbitrary additional type formers.
-%% \end{mydefinition}
-
-%% \begin{notation}
-%% We may call $(\Ty_0,\,\Tm_0)$ the inner family and $(\Ty_1,\,\Tm_1)$ the outer
-%% one. If a type former is present in both families, we may distinguish the two
-%% copies by indexing, for example $\Bool_0 : \Ty_0\,\Gamma$ and $\Bool_1 :
-%% \Ty_1\,\Gamma$, and likewise for term formers. However, we overload notation in
-%% cases where levels are inferable, such as in a function type $\Lift\!\Bool_0 \to
-%% \Bool_1$, where the function arrow is clearly in the outer level.
-%% \end{notation}
-
-%% The syntax of basic 2LTT can be interpreted as having ($\Ty_1$, $\Tm_1$) as a
-%% metaprogramming layer which can generate object-level programs in the ($\Ty_0$,
-%% $\Tm_0$) layer.
-
-%% Lifted types correspond to types of object-level expressions; for example,
-%% $\Bool_0 : \Ty_0\,\Gamma$ is the object-level type of Booleans, while
-%% $\Lift\Bool_0$ is the meta-level type of $\Bool_0$-expressions, and $\Bool_1 :
-%% \Ty_1\,\Gamma$ is the type of meta-level Booleans. It is possible to compute a
-%% $\Bool_0$ from a $\Bool_1$. Given $b : \Tm_1\,\Gamma\,\Bool_1$, we can construct
-%% $\down(\mathsf{if}\,b\,\mathsf{then}\up\!\true_0\,\mathsf{else}\up\!\false_0) :
-%% \Tm_0\,\Gamma\,\Bool_0$.
-
-%% But there is no way to compute a $\Bool_1$ from a $\Bool_0$: we can try to lift
-%% the input, but there is no elimination rule for $\Lift\Bool_0$ in
-%% $\Ty_1$. Conceptually, terms of $\Lift\Bool_0$ are \emph{expressions}, so they
-%% are not necessarily $\true$ or $\false$, they can also be variables or neutral
-%% expressions, so the usual Boolean elimination is not justified for them.
-%% $\Lift$ preserves type formers in the following way:
-%% \begin{itemize}
-%% \item It preserves negative types up to isomorphism. The reason is that these
-%%   types are specified with isomorphisms, and $\Lift$ itself is an isomorphism on
-%%   terms. For example, $\Lift\!(A \times B) \simeq\,\, \Lift\!A\,\times
-%%   \Lift\!B$.
-%% \item For positive types, it's possible to eliminate from outer types to inner
-%%       ones but not the other way around.
-%% \item For universes, it's possible to convert inner types to outer ones, but not
-%%   the other way around. For example, assuming Russell universes, given $a :
-%%   \Tm_1\,\Gamma\,(\Lift \U_0)$, we have $\Lift (\down a) : \Tm_1\,\Gamma\,\U_1$.
-%% \end{itemize}
-
-%% The rules of basic 2LTT model a form of generative two-stage compilation with
-%% dependent types. Comparing this system to e.g.\ BER MetaOCaml
-%% \cite{kiselyov14metaocaml}, we can relate $\Lift$ to $\ms{code}$, $\up$ to
-%% the quasi-quotation operation $<\!\blank\!>$, and $\down$ to escape
-%% $\sim\!\blank$.
-
-%% We may also think about the relation between \emph{modalities} and family
-%% morphisms. The main difference is that morphisms impose no structural
-%% restrictions on variables and contexts. Concretely, every $\Lift$ is dependent
-%% right adjoint \cite{dependentrightadjoints} to the identity functor on the base
-%% category, as we have $\Tm\,(\Id\,\Gamma)\,A \simeq
-%% \Tm\,\Gamma\,(\Lift\,A)$. Hence, every morphism can be viewed as a degenerate
-%% modality.
-
-%% For convenience, we use a slightly stricter notion of 2LTT in
-%% this thesis:
-%% \begin{mydefinition}\label{def:2ltt} A \textbf{model of 2LTT} is a model of basic 2LTT such that
-%% \begin{enumerate}
-%%   \item $(\Gamma\,\,\ext \Lift\!A) = (\Gamma \ext A)$
-%%   \item $\Tm_1\,\Gamma\,(\Lift\!A) = \Tm_0\,\Gamma\,A$
-%% \end{enumerate}
-%% \end{mydefinition}
-%% This allows us to omit term lifting annotations, so that now $\true_0$ is a term
-%% of $\Bool_0$, but also a term of $\Lift \Bool_0$. In a proof assistant, the extra
-%% equations would not buy us much, because we would have to transport $\true_0$
-%% over the equations anyway. But when working in a less formal extensional
-%% notation, as we do in this thesis, the transports can be omitted.
 
 \section{Standard Semantics of 2LTT}
 
@@ -2013,7 +1898,7 @@ we omit the definition.
 We note that \emph{Russell} universes are not supported in the outer layer, as
 $\Sub\,\Gamma\,\Set_{\hmbbC}$ and $\Ty\,\Gamma$ are not strictly the same, in
 particular they have a different number of components as iterated
-$\Sigma$-types. Nevertheless, as we mentioned in \ref{sec:internal-syntax}, we
+$\Sigma$-types. Nevertheless, as we mentioned in Section \ref{sec:2ltt-internal-syntax}, we
 use Russell-style notation in the internal 2LTT syntax, and assume that encoding/decoding
 is inserted by elaboration.
 
@@ -2414,7 +2299,7 @@ $\Tm_0\,(\{A\} \to \Var_0\,(\down\Delta)\,A \to \SigTm_0\,(\down\Gamma)\,A)$. It
 might appear problematic that we have types and variables in \emph{negative}
 position, because we can't map inner types/variables to outer ones.
 Fortunately, $\Sub_1\,\Gamma\,\Delta$ is isomorphic to a finite product type,
-and we can lower a finite product componentwise.
+and we can lower a finite product component-wise.
 
 Concretely, we define lowering by induction on $\Delta$, while making use of
 a case splitting operation for $\Var_0$. We use an informal $\ms{case}$
@@ -2638,47 +2523,62 @@ least without changing the approach in a major way: terms must be inner, or else
 we have no hope of inner recursion/induction. And if terms are inner, then
 $\ms{E}$ must act on arbitrary inner terms, hence $\blank^T$ must do so too.
 
-It would interesting to check if there is a possible alternative formulation of
+It would be interesting to check if there is a possible alternative formulation of
 term algebras and constructed eliminators, which makes it possible to get strict
 eliminators. Looking back to Section \ref{sec:generic-programming}, it appears
 that by using spine neutral terms, we get strict elimination for each
-signature. However, this relies on the Agda implementation of pattern matching:
-it is not clear whether
-
-
-
-
-
-
-
-
-
-
-
-
-%% \begin{itemize}
-%%   \item The choice between weak and strict equations
-%% \end{itemize}
-
-%% when moving to 2LTT the essential extra detail that we have to manage is the choice
-%% between weak and strict preservation, which
-
-
-
-
-
-
-
-
-%% --------------------------------------------------------------------------------
+signature. However, this relies on the Agda implementation of pattern matching
+and structurally recursive definitions, so it requires more work to see if it
+can be translated to 2LTT in a generic way.
 
 \chapter{Finitary Quotient Inductive-Inductive Types}
 \label{chap:fqiit}
 
+In this chapter we bump the expressive power of signatures by a large margin,
+and also substantially extend the semantics. However, we keep the basic approach
+the same; indeed its advantages become more apparent with the more sophisticated
+signatures.
+
+First, we specify signatures and present a number of examples. Then we build
+semantics, term algebras and present \todo{todo}
+
 \section{Theory of Signatures}
 \label{sec:fqiit-tos}
 
-\subsection{Models}
+Signatures are once again given by contexts of a type theory, but now it is a
+dependent type theory, given as a cwf with certain type formers, in the style
+of Section \ref{sec:models-of-tts}.
+\\\\
+\textbf{Metatheory and notation.} We work in 2LTT with $\Ty_0$ and $\Tm_0$, and
+we assume no inner type formers.  We follow notation from Section
+\ref{sec:2ltt-internal-syntax}. We mostly omit $\Tm_0$ applications in the
+following.
+\\\\
+In the following we specify models of the theory of \emph{finitary quotient
+inductive-inductive signatures}. The names involved are a bit of a mouthful, so
+we abbreviate ``finitary quotient inductive-inductive'' as FQII, and like
+before, we abbreviate ``theory of signatures'' as ToS. In this chapter, by
+signature we mean an FQII signature unless otherwise specified.
+
+\begin{mydefinition} A \textbf{model of the theory of signatures} consists of the following.
+  \begin{itemize}
+    \item A \textbf{cwf} with underlying sets $\Con$, $\Sub$, $\Ty$ and $\Tm$, all returning in
+      the outer $\Set$ universe of 2LTT.
+    \item A \textbf{Tarski-style universe} $\U$ with decoding $\El$.
+    \item An \textbf{extensional identity type} $\Id : \Tm\,\Gamma\,A \to
+      \Tm\,\Gamma\,A \to \Ty\,\Gamma$, specified by $(\reflect,\,\refl) :
+      \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t \equiv u)$.
+    \item An \textbf{inductive function type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
+      \Ty\,(\Gamma\ext\El\,a) \to \Ty\,\Gamma$, specified by
+      $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
+    \item An \textbf{external function type} $\Pie : (A : \Ty_0) \to (A \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
+      $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,A\,B) \simeq ((x : A) \to \Tm\,\Gamma\,(B\,x))$.
+
+
+  \end{itemize}
+\end{mydefinition}
+
+%% \subsection{Models}
 \subsection{Examples}
 
 \section{Semantics}
@@ -2695,6 +2595,9 @@ it is not clear whether
 \subsection{Awodey-Frey-Speight Encoding}
 
 \section{Left Adjoints of Signature Morphisms}
+
+
+
 
 \chapter{Infinitary Quotient Inductive-Inductive Types}
 \label{chap:iqiit}
