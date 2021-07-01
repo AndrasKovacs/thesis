@@ -35,7 +35,10 @@
 \newtheorem{mydefinition}{Definition}
 \newtheorem{myexample}{Example}
 \newtheorem{mylemma}{Lemma}
-\newtheorem{mytheorem}{Lemma}
+
+\theoremstyle{theorem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
 
 \newtheorem{corollary}{Corollary}
 
@@ -66,6 +69,11 @@
 \newcommand{\ms}[1]{\mathsf{#1}}
 \newcommand{\mbb}[1]{\mathbb{#1}}
 \newcommand{\mbf}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+
+
+\newcommand{\zero}{\ms{zero}}
+\newcommand{\suc}{\ms{suc}}
 
 \newcommand{\refl}{\mathsf{refl}}
 \newcommand{\reflect}{\mathsf{reflect}}
@@ -88,11 +96,14 @@
 \newcommand{\ext}{\triangleright}
 \newcommand{\emptycon}{\scaleobj{.75}\bullet}
 \newcommand{\Pii}{\Pi}
+\newcommand{\funi}{\Rightarrow}
+\newcommand{\fune}{\Rightarrow^{ext}}
 \newcommand{\appi}{\mathsf{app}}
 \newcommand{\lami}{\mathsf{lam}}
 \newcommand{\Pie}{\Pi^{\mathsf{ext}}}
 \newcommand{\appe}{\mathsf{app^{ext}}}
 \newcommand{\lame}{\mathsf{lam^{ext}}}
+\newcommand{\toe}{\to^{ext}}
 \newcommand{\Piinf}{\Pi^{\mathsf{inf}}}
 \newcommand{\appinf}{\mathsf{app^{inf}}}
 \newcommand{\laminf}{\mathsf{lam^{inf}}}
@@ -106,7 +117,7 @@
 \newcommand{\subtype}{\mathsf{subtype}}
 \newcommand{\NatSig}{\mathsf{NatSig}}
 \newcommand{\Sg}{\Sigma}
-\newcommand{\flCwF}{\mathsf{flCwF}}
+\newcommand{\flcwf}{\mathsf{flcwf}}
 \newcommand{\SigTy}{\mathsf{SigTy}}
 \newcommand{\SigTm}{\mathsf{SigTm}}
 
@@ -1311,7 +1322,7 @@ A $(\Ty,\,\Tm)$ family supports \textbf{$\Pi$-types} if it supports the followin
   &\lam          &&: \Tm\,(\Gamma \ext A)\,B \to \Tm\,\Gamma\,(\Pi\,A\,B)\\
   &\Pi\beta      &&: \app\,(\lam\,t) = t\\
   &\Pi\eta       &&: \lam\,(\app\,t) = t\\
-  &\lam[]        &&: (\lam\,t)[\sigma] = \lam\,(\sigma\circ\p,\,\q)
+  &\lam[]        &&: (\lam\,t)[\sigma] = \lam\,(t[\sigma\circ\p,\,\q])
 \end{alignat*}
 Here, $\Pi$ is the type formation rule. $\ms{\Pi[]}$ is the type substitution
 rule, expressing that substituting $\Pi$ proceeds structurally on constituent
@@ -1328,7 +1339,7 @@ substitutions. The usual ``pointful'' specification is equivalent to this. For
 example, we have the following derivation of pointful application:
 \begin{alignat*}{3}
   &\app' : \Tm\,\Gamma\,(\Pi\,A\,B) \to (u : \Tm\,\Gamma\,A) \to \Tm\,\Gamma\,(B[\id,\,u])\\
-  &\app'\,t\,u \equiv (\app\,t)[\id,\,u]
+  &\app'\,t\,u \defn (\app\,t)[\id,\,u]
 \end{alignat*}
 
 \end{mydefinition}
@@ -1380,6 +1391,11 @@ convenient when building models, because they let us model non-dependent types
 as semantic contexts, which are often simpler structures than semantic types.
 From a programming perspective, constant families specify closed record types,
 where $\K\,\Delta$ has $\Delta$-many fields.
+
+If we have equalities of sets for the specification,
+i.e.\ $\Tm\,\Gamma\,(\K\,\Delta) = \Sub\,\Gamma\,\Delta$, we have \textbf{strict
+  constant families}.
+
 \end{mydefinition}
 
 \begin{mydefinition}
@@ -1753,6 +1769,7 @@ $|\sigma|(\gamma\lab f \rab) = (|\sigma|\gamma)$.
 \end{mydefinition}
 
 \begin{mydefinition}
+\label{def:presheaf-type}
 $A : \Ty\,\Gamma$ is a displayed presheaf over $\Gamma$. The
 ``displayed'' here is used in exactly the same sense as in ``displayed
 algebra'' before. As we will see in Chapter \ref{chap:fqiit}, presheaves can be
@@ -1853,9 +1870,8 @@ $\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id : |\Gamma|\,i$.
   & |\K\,\Delta|\,\{i\}\,\gamma\,&&\defn |\Delta|\,i \\
   & \delta\lab f \rab &&\defn \delta \lab f \rab
 \end{alignat*}
-With this definition, we actually have $\Tm\,\Gamma\,(\K\,\Delta) =
-\Sub\,\Gamma\,\Delta$ which is stronger than the required isomorphism in
-Definition \ref{def:constant-families}.
+With this definition, we have $\Tm\,\Gamma\,(\K\,\Delta) = \Sub\,\Gamma\,\Delta$
+so we have strict constant families.
 \end{mydefinition}
 
 \begin{notation}
@@ -1957,8 +1973,7 @@ for $\lam$ and $\app$ are left to the reader.
 \end{mydefinition}
 
 \begin{mydefinition}
-\textbf{Extensional identity} is defined as pointwise equality of terms,
-i.e.\ sections of displayed presheaves.
+\textbf{Extensional identity} is defined as pointwise equality of sections:
 \begin{alignat*}{3}
   & \Id : \Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma\\
   & |\Id\,t\,u|\,\gamma \defn |t|\,\gamma = |u|\,\gamma
@@ -2087,7 +2102,7 @@ We revisit simple inductive signatures in this section, working internally to
 \ref{chap:simple-inductive-signatures} in the same order.
 
 \begin{notation}
-In this section we shall be fairly explicit about writing $\Tm_0$-s, and
+In this section we shall be fairly explicit about writing $\Tm_0$-s and
 transporting along definitional isomorphisms. The simple setting makes it
 feasible to be explicit; in later chapters we are more terse, as signatures and
 semantics get more complicated.
@@ -2147,14 +2162,14 @@ because we can build cwfs from all such $\mbbC$.
 $\Con \defn |\mbbC|$, $\Ty\,\Gamma \defn |\mbbC|$, $\Sub\,\Gamma\,\Delta \defn \mbbC(\Gamma,\,\Delta)$, $\Tm\,\Gamma\,A \defn \mbbC(\Gamma,\,A)$, $\Gamma \ext A \defn \Gamma \otimes A$ and $\emptycon \defn \emptycon_{\mbbC}$. In short, we build a non-dependent (simply-typed) cwf.
 \end{mydefinition}
 
-Now we can interpret interpret signatures in cwfs given by finite product
-categories. For example:
+Now we can effectively interpret signatures in finite product categories. For
+example:
 \[
 |\Alg\,\ms{NatSig}|\,\{\emptycon\}\,\tt \equiv
 (X : |\mbbC|) \times (\mi{zero} : \mbbC(\emptycon,\,X)) \times (\mi{suc} : \mbbC(\emptycon \otimes X,\,X))
 \]
 This is almost the same as what we would write by hand for the specification of
-natural number objects. The only difference is the extra $\emptycon
+natural number objects; the only difference is the extra $\emptycon
 \otimes\blank$ in $\mi{suc}$.
 
 \subsection{Morphisms}
@@ -2290,7 +2305,8 @@ preserve all structure.
 \end{alignat*}
 These functions are called ``lifting'' in the context of multi-stage
 programming; see e.g.\ the $\ms{Lift}$ typeclass in Haskell
-\cite{pickering-multistage}.
+\cite{pickering-multistage}. There, like here, the point is to build
+object-language terms from meta-level (``compile-time'') values.
 
 Lowering is straightforward to define for types, contexts, variables and terms,
 but there is a bit of a complication for $\Sub$. Unfolding the definitions, we
@@ -2464,15 +2480,10 @@ inner equality, in a fully formal intensional presentation we would have to
 write an explicit transport in the definition.
 
 We shall skip the remainder of the eliminator construction; it goes the same way
-as in Definition \ref{def:simple-eliminator-construction}. We generally observe
-that
-\begin{itemize}
-  \item The inner theory has all necessary features to reproduce the eliminator
-    construction.
-  \item Types and constructions which are defined on both levels are essentially
-    the same.
-  \item Lowering preserves all relevant structure.
-\end{itemize}
+as in Definition \ref{def:simple-eliminator-construction}. Intuitively, this is
+possible since the inner theory has all necessary features to reproduce the
+eliminator construction, and lowering preserves all structure.
+
 Since $t^T$ yields inner equations, this implies that the displayed algebra
 sections returned by the eliminator are \emph{weak sections}, i.e.\ they contain
 $\beta$-rules expressed in inner equalities.
@@ -2528,8 +2539,8 @@ term algebras and constructed eliminators, which makes it possible to get strict
 eliminators. Looking back to Section \ref{sec:generic-programming}, it appears
 that by using spine neutral terms, we get strict elimination for each
 signature. However, this relies on the Agda implementation of pattern matching
-and structurally recursive definitions, so it requires more work to see if it
-can be translated to 2LTT in a generic way.
+and structurally recursive definitions, so it would require more work to translate
+these definitions to 2LTT in a generic way.
 
 \chapter{Finitary Quotient Inductive-Inductive Types}
 \label{chap:fqiit}
@@ -2538,9 +2549,6 @@ In this chapter we bump the expressive power of signatures by a large margin,
 and also substantially extend the semantics. However, we keep the basic approach
 the same; indeed its advantages become more apparent with the more sophisticated
 signatures.
-
-First, we specify signatures and present a number of examples. Then we build
-semantics, term algebras and present \todo{todo}
 
 \section{Theory of Signatures}
 \label{sec:fqiit-tos}
@@ -2554,7 +2562,7 @@ we assume no inner type formers.  We follow notation from Section
 \ref{sec:2ltt-internal-syntax}. We mostly omit $\Tm_0$ applications in the
 following.
 \\\\
-In the following we specify models of the theory of \emph{finitary quotient
+We specify models of the theory of \emph{finitary quotient
 inductive-inductive signatures}. The names involved are a bit of a mouthful, so
 we abbreviate ``finitary quotient inductive-inductive'' as FQII, and like
 before, we abbreviate ``theory of signatures'' as ToS. In this chapter, by
@@ -2573,16 +2581,348 @@ signature we mean an FQII signature unless otherwise specified.
       $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
     \item An \textbf{external function type} $\Pie : (A : \Ty_0) \to (A \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
       $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,A\,B) \simeq ((x : A) \to \Tm\,\Gamma\,(B\,x))$.
-
-
   \end{itemize}
 \end{mydefinition}
+At this point we only have a notion of model for ToS, but as we will see in
+Chapter \ref{chap:iqiit}, ToS is also an algebraic theory, more specifically an
+infinitary QII one. It is infinitary because $\Pie$ and $\lame$ allow branching
+over elements of arbitrary $A : \Ty_0$ types.
 
-%% \subsection{Models}
-\subsection{Examples}
+Because of the algebraic character of ToS, there is a category of ToS models
+where morphisms strictly preserve all structure, and the initial model
+corresponds to the syntax. In this chapter, we just assume that the ToS
+syntax exists, and leave metatheoretical matters to Chapter \ref{chap:iqiit}.
+\begin{mydefinition} An FQII \textbf{signature} is an element of $\Con$ in the syntax of ToS.
+\end{mydefinition}
+We review several example signatures in the following, using progressively
+more ToS type formers.  We also introduce progressively more compact notation
+for signatures. As a rule of thumb, we shall use compact notation for larger and
+more complex signatures, but we shall be more explicit when we specify models of
+ToS later in this chapter.
+\begin{myexample}
+  Simple inductive signatures can be evidently expressed using $\U$ and
+  $\Pi$. By adding a single $\U$ to the signature, we introduce the inductive
+  sort.
+  \begin{alignat*}{3}
+    & \ms{NatSig} &&\defn \emptycon \ext (N : \U) \ext (\mi{zero} : \El\,N)
+                        \ext (\mi{suc} : \Pi (n : N) (\El\,N))\\
+    & \ms{TreeSig} &&\defn \emptycon \ext (T : \U) \ext (\mi{leaf} : \El\,T)
+                         \ext (\mi{node} : \Pi (t_1 : T) (\Pi (t_2 : T) (\El\,T)))
+  \end{alignat*}
+  Observe that the domains in $\Pi$ are terms with type $\U$, while the codomains are proper types.
+\end{myexample}
+
+\begin{notation} We write non-dependent function types in ToS as follows.
+  \begin{itemize}
+  \item $a \funi B$ for $\Pi\,(\_ : a)\,B$.
+  \item $A \fune B$ for $\Pie\,A\,(\lambda\,\_.\,B)$.
+  \end{itemize}
+\end{notation}
+\noindent
+Using this notation, we may write $\mi{suc} : N \funi \El\,N$ and $\mi{node} : T
+\funi T \funi \El\,T$.
+
+\begin{notation}
+The ``categorical'' application $\app$ with explicit substitutions is a bit
+inconvenient. Instead, we simply write whitespace for $\Pii$ and $\Pie$
+application:
+\begin{alignat*}{3}
+  & t\,u \defn (\appi\,t)[\id,\,u]\\
+  & t\,u \defn (\appe\,t)\,u
+\end{alignat*}
+\end{notation}
+
+\begin{myexample}
+We may have any number of sorts by adding more $\U$ to the signatures. Moreover,
+sorts can be indexed over previous sorts. Hence, using only $\U$, $\El$ and
+$\Pi$, we can express any closed inductive-inductive type \cite{TODO}. The
+following fragment of the the signature for categories is such:
+\begin{alignat*}{3}
+  & \emptycon \ext (\mi{Obj} : \U) \ext (\mi{Hom} : \mi{Obj} \funi \mi{Obj} \funi \U)
+      \ext (\mi{id} : \Pi(i : \mi{Obj})\,(\El\,(\mi{Hom}\,i\,i)))n
+\end{alignat*}
+These inductive-inductive signatures are more flexible than those in prior works
+\cite{TODO}, since we allow type constructors (sorts) and point constructors to
+be arbitrarily mixed (as opposed to mandating that sorts are declared first). For example:
+\begin{alignat*}{3}
+  & \emptycon \ext (A : \U) \ext (a : \El\,A) \ext (B : A \funi \U) \ext (C : B\,a \funi \U)
+\end{alignat*}
+Here $C$ is indexed over $B\,a$, where $a$ is a point constructor of $a$, so a
+sort specification mentions a point constructor.
+\end{myexample}
+
+\begin{myexample} $\Id$ lets us add equations to signatures. With this, we can write down the full
+signature for categories:
+\begin{alignat*}{3}
+  & \emptycon &&\ext (\mi{Obj}   &&: \U)\\
+  &           &&\ext (\mi{Hom}   &&: \mi{Obj} \funi \mi{Obj} \funi \U)\\
+  &           &&\ext (\mi{id}    &&: \Pi(i : \mi{Obj})\,(\El\,(\mi{Hom}\,i\,i)))\\
+  &           &&\ext (\mi{comp}  &&: \Pi\,(i\,j\,k : \mi{Obj})\,(\mi{Hom}\,j\,k \funi \mi{Hom}\,i\,j \funi \El\,(\mi{Hom}\,i\,k)))\\
+  &           &&\ext (\mi{idr}   &&: \Pi\,(i\,j : \mi{Obj})(f : \mi{Hom}\,i\,j)\,(\Id\,(\mi{comp}\,i\,i\,j\,f\,(\mi{id}\,i))\,f))\\
+  &           &&\ext (\mi{idl}   &&: \Pi\,(i\,j : \mi{Obj})(f : \mi{Hom}\,i\,j)\,(\Id\,(\mi{comp}\,i\,j\,j\,(\mi{id}\,j)\,f)\,f))\\
+  &           &&\ext (\mi{assoc} &&: \Pi\,(i\,j\,k\,l : \mi{Obj})(f : \mi{Hom}\,j\,l)(g : \mi{Hom}\,j\,k)(h : \mi{Hom}\,i\,j)\\
+  &           && &&\hspace{1.7em} (\Id
+                 \,(\mi{comp}\,i\,j\,l\,(\mi{comp}\,j\,k\,l\,f\,g)\,h)
+                 \,(\mi{comp}\,i\,k\,l\,f\,(\mi{comp}\,i\,j\,k\,g\,h))
+\end{alignat*}
+Now, this is already rather hard to read, even together with the compressed
+notation for multiple $\Pi$ binders.
+\begin{notation}
+For more complex signatures, we may entirely switch to an internal notation,
+where we mostly reuse the same conventions as in the metatheories. We use $(x :
+a) \to B$ for inductive functions, $(x : A) \to^{ext} B$ for external functions,
+but we still write $\Id$ for the identity type and make $\U$ and $\El$
+explicit. In this notation, a signature is just a listing of types. The category
+signature becomes the following:
+\begin{alignat*}{3}
+  & \mi{Obj} &&: \U\\
+  & \mi{Hom} &&: \mi{Obj} \to \mi{Obj} \to \U\\
+  & \mi{id}  &&: \El\,(\mi{Hom}\,i\,i)\\
+  & \mi{\blank\!\circ\!\blank} &&: \mi{Hom}\,j\,k \to \mi{Hom}\,i\,j \to \El\,(\mi{Hom}\,i\,k)\\
+  & \mi{idr} &&: \Id\,(f \circ \mi{id})\,f\\
+  & \mi{idl} &&: \Id\,(\mi{id} \circ f)\,f\\
+  & \mi{assoc} &&: \Id\,(f \circ (g \circ h))\,((f \circ g) \circ h)
+\end{alignat*}
+\end{notation}
+\end{myexample}
+
+\begin{myexample}
+The external function type makes it possible to reference inner types (in 2LTT)
+in signatures. Here ``external'' is meant relative to a given signature, and
+refers to types and inhabitants which are not introduced inside a signature.
+For example, we give a signature for lists by assuming $A : \Ty_0$ for the
+(external) type of list elements:
+\begin{alignat*}{3}
+  &\mi{List} &&: \U\\
+  &\mi{nil}  &&: \El\,\mi{List}\\
+  &\mi{cons} &&: A \to^{ext} \mi{List} \to \El\,\mi{List}
+\end{alignat*}
+Hence, ``parameters'' are always assumptions made in the metatheory. We can
+also \emph{index} sorts by external values. Let's specify length-indexed vectors
+now; we keep the $A : \Ty_0$ assumption, but also assume that $\Ty_0$ has
+natural numbers, with $\Nat_0 : \Ty_0$, $\zero_0$ and $\suc_0$.
+\begin{alignat*}{3}
+  &\mi{Vec}  &&: \Nat_0 \to^{ext} \U \\
+  &\mi{nil}  &&: \El\,(\mi{Vec}\,\zero_0)\\
+  &\mi{cons} &&: (n : \Nat_0) \to^{ext} A \to^{ext} \mi{Vec}\,n \to \El\,(\mi{Vec}\,(\suc_0\,n))
+\end{alignat*}
+\end{myexample}
+
+\begin{myexample}
+We can also introduce \emph{sort equations} using $\Id$: this means equating
+terms of $\U$, i.e.\ inductively specified sets. This is useful for specifying
+certain strict type formers. For example, a signature for cwfs can be extended with
+a specification for strict constant families.
+\begin{alignat*}{3}
+  & \mi{Con}     &&: \U\\
+  & \mi{Sub}     &&: \mi{Con} \to \mi{Con} \to \U \\
+  & \mi{Ty}      &&: \mi{Con} \to \U\\
+  & \mi{Tm}      &&: (\Gamma : \mi{Con}) \to \mi{Ty}\,\Gamma \to \U\\
+  & ...          &&\\
+  & \mi{K}       &&: \mi{Con} \to \{\Gamma : \mi{Con}\} \to \El\,(\mi{Ty}\,\Gamma)\\
+  & \mi{K_{spec}} &&: \Id\,(\mi{Tm}\,\Gamma\,(\mi{K}\,\Delta))\,(\mi{Sub}\,\Gamma\,\Delta)
+\end{alignat*}
+The equation for Russell-style universes is likewise a sort equation:
+\begin{alignat*}{3}
+  &\mi{Univ}    &&: \El\,(\mi{Ty}\,\Gamma)\\
+  &\mi{Russell} &&: \Id\,(\mi{Tm}\,\Gamma\,\mi{Univ})\,(\mi{Ty}\,\Gamma)
+\end{alignat*}
+\end{myexample}
+
+\begin{myexample}
+As we mentioned in Definition \ref{def:presheaf-type}, there is a signature for
+presheaves, so let's look at that now. Assume a category $\mbbC$ in the inner
+theory; this means that objects and morphisms of $\mbbC$ are in $\Ty_0$.
+\begin{alignat*}{3}
+  & \mi{Obj}         &&: |\mbbC| \toe \U\\
+  & \mi{Hom}         &&: \mbbC(i,\,j) \toe \mi{Obj}\,j \to \El\,(\mi{Obj}\,i)\\
+  & \mi{Hom_{\ms{id}}} &&: \Id\,(\mi{Hom}\,\id\,x)\,x\\
+  & \mi{Hom_{\circ}}  &&: \Id\,(\mi{Hom}\,(f \circ g)\,x)\,(\mi{Hom}\,f\,(\mi{Hom}\,g\,x))
+\end{alignat*}
+We depart from the sugary naming scheme in Definition \ref{def:presheaf-type},
+and name the action on objects $\mi{Obj}$ and the action on morphisms
+$\mi{Hom}$.  We will shortly specify algebras for signatures, where it will be
+evident that this signature specifies presheaves from $\mbbC$ to the category
+of inner types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A
+\to \Tm_0\,B$ functions as morphisms.
+\end{myexample}
+
+\textbf{Strict positivity.} Only strictly positive signatures are expressible.
+Similarly to the case with simple signatures, there is no way to abstract over a
+inductive functions, since inductive function domains are in $\U$, and $\U$ has
+no type formers at all. With $\Pie$, we can abstract over functions, but only on
+ones which are external to a signature and don't depend on internally specified
+constructors.
 
 \section{Semantics}
 \label{sec:fqiit-semantics}
+
+\subsection{Overview}
+
+For simple signatures, we only gave semantics in enough detail so that notions
+of recursion and induction could be recovered. We aim to do more now. For each
+signature, we would like to have
+\begin{enumerate}
+  \item A \emph{category} of algebras, with homomorphisms as morphisms.
+  \item A notion of induction, which requires a notion of dependent algebras.
+  \item A proof that for algebras, initiality is equivalent to supporting induction.
+\end{enumerate}
+
+We do this by creating a model of ToS where contexts (signatures) are categories
+with certain extra structure and substitutions are structure-preserving
+functors. Then, ToS signatures can be interpreted in this model, using the
+initiality of ToS syntax (i.e.\ the recursor).
+
+Our semantics has a type-theoretic flavor, which is inspired by the cubical set
+model of Martin-Löf type theory by Bezem et al. \cite{cubicalmodel}. The idea is
+to avoid strictness issues by starting from basic ingredients which are already
+strict enough. Hence, instead of modeling ToS types as certain slices and
+substitution by pullback, we model types as displayed categories with extra
+structure, which naturally support strict reindexing/substitution.
+
+We make a similar choice in the interpretation of signatures themselves: we use
+structured cwfs of algebras, where types correspond to displayed algebras. This
+choice is in contrast to having finitely complete categories of algebras.
+Preliminarily, the reason is that ``native'' displayed algebras and sections
+allow us to compute induction principles strictly as one would write in a type
+theory. In fact, in this chapter we recover exactly the same semantics for
+simple signatures that we already specified.
+
+In contrast, displayed algebras are a derived notion in finitely complete
+categories, and the induction principles would be only up to isomorphism.  This
+issue is perhaps not relevant from a purely categorical perspective, but we are
+concerned with eventually implementing QIITs in proof assistants. If we don't
+compute induction principles here in an exact way, we don't get them from
+anywhere else.
+
+\subsection{Separate vs.\ bundled models}
+
+Previously, we defined $\blank^A$, $\blank^M$, $\blank^D$ and $\blank^S$
+interpretations of signatures separately, by doing induction anew for each
+one. Formally, this amounts to giving a plain model of ToS in order to define
+$\blank^A$, but then giving three \emph{displayed} models of ToS to specify the
+other interpretations, because they sometimes need to refer to the recursors or
+eliminators of other interpretations.
+
+For example, $\blank^A : \Con \to \Set$ while $\blank^D : (\Gamma : \Con) \to
+\Gamma^A \to \Set$, so displayed algebras already refer to $\blank^A$, which is
+part of the recursor for the corresponding model.
+
+However, this piecewise style can be avoided: we can give a single non-displayed
+model which packs everything in a $\Sigma$-type, yielding just one
+interpretation function for signatures. Let's call that function $\blank^M$ now:
+\begin{alignat*}{5}
+  & \blank^M : \Con &&\to \,&&(A &&: \Set)\\
+  & &&\hspace{0.3em}\times &&(M  &&: A \to A \to \Set)\\
+  & &&\hspace{0.3em}\times &&(D  &&: A \to \Set)\\
+  & &&\hspace{0.3em}\times &&(S  &&: (a : A) \to D\,a \to \Set)
+\end{alignat*}
+Note that it is often not possible to merge multiple recursors/eliminators by
+packing models together. For example, addition on natural numbers is defined by
+recursion, and so is multiplication; but since multiplication calls addition in
+an iterated fashion, it is not possible to define both operations by a single
+algebra. Nevertheless, merging does work in our case. We will, in fact, get a
+formal vocabulary for merging models (and manipulating them in other ways) from
+the semantics of ToS itself.
+
+In simple cases, and in Agda, the piecewise style is convenient, since we don't
+have to deal with $\Sigma$-s. However, for larger models, important organizing
+principles may become more apparent if we bundle things together.
+
+In the following, we shall define a model $\bM : \ToS$ such that its $\Con$
+component is a bundle containing all $A$, $M$, $D$, $S$ components like above
+(and it contains more). We present the components of $\bM$ in order. There is
+significant overlap in names and notations, so we use \textbf{bold} font to
+disambiguate components of $\bM$ from components of other structures. For
+example, we use $\bs{\sigma : \Sub\,\Gamma\,\Delta}$ to denote a substitution in
+$\bM$, while there could be a $\Sub$-named components in other structures under
+consideration.
+
+\subsection{Finite Limit Cwfs}
+
+We define $\bCon : \Set$ as finite limit cwfs (flcwfs). In the following we
+specify flcwfs and describe some internal constructions.
+
+\begin{mydefinition}\label{def:flcwf}
+We define $\flcwf : \Set$ as an iterated $\Sigma$-type with the following components:
+\begin{enumerate}
+  \item A cwf with $\Con$, $\Sub$, $\Ty$, $\Tm$ all returning in $\Set$. \emph{Remark:}
+        this implies that $\flcwf : \Set$ is in a larger universe than all of these
+        internal components. We continue to elide universe sizing details.
+  \item $\Sigma$-types.
+  \item Extensional identity type $\Id$ with $\refl$ and $\reflect$.
+  \item Strict constant families $\K$.
+\end{enumerate}
+\end{mydefinition}
+\begin{mydefinition}
+We abbreviate the additional structure on cwfs consisting of $\Sigma$, $\Id$ and
+$\K$ as \textbf{fl-structure}.
+\end{mydefinition}
+
+We recover previous concepts as follows. Assuming $\Gamma$ signature, we get an
+flcwf by interpreting $\Gamma$ in $\bM$. In that flcwf we have
+\begin{itemize}
+  \item $\Con$ as the type of algebras.
+  \item $\Sub$ as the type of algebra morphisms.
+  \item $\Ty$ as the type of displayed algebras.
+  \item $\Tm$ as the type of displayed algebra sections.
+\end{itemize}
+From this, notions of initiality and induction are apparent as well. Initiality
+is the usual categorical notion. For induction, assuming $\bGamma : \bCon$, we
+have the following predicate:o
+\begin{alignat*}{3}
+  & \Inductive : \Con_{\bGamma} \to \Set\\
+  & \Inductive\,\Gamma \defn (A : \Ty_{\bGamma}\,\Gamma)\ra \Tm_{\bGamma}\,\Gamma\,A
+\end{alignat*}
+In short, an algebra is inductive if every displayed algebra over it has a
+section. Fortunately, we also know that induction and initiality are
+equivalent.
+
+\begin{theorem}\label{thm:initiality-induction}
+An object $\Gamma : \Con_{\bGamma}$ in an flcwf $\bGamma$ supports induction if
+and only if it is initial. Moreover, induction and initiality are both mere
+properties.
+\end{theorem}
+
+\begin{proof}
+First, we show that induction implies initiality. We assume $\Gamma : \Con$,
+$\ms{ind} : \ms{Inductive}\,\Gamma$ and $\Delta : \Con$. We aim to show that
+there is a unique inhabitant of $\Sub\,\Gamma\,\Delta$. We have
+$\ms{ind}\,(\K\,\Delta) : \Tm\,\Gamma\,(\K\,\Delta)$, hence
+$\ms{ind}\,(\K\,\Delta) : \Sub\,\Gamma\,\Delta$. We only need to show that this
+is unique.  Assume $\delta : \Sub\,\Gamma\,\Delta$. Now,
+$\ms{ind}\,(\Id\,\delta\,(\ms{ind}\,(\K\,\Delta))) :
+\Tm\,\Gamma\,(\Id\,\delta\,(\ms{ind}\,(\K\,\Delta)))$, and it follows by
+equality reflection that $\delta \equiv \ms{ind}\,(\K\,\Delta)$.
+
+Second, the other direction. We assume that $\Gamma$ is initial, and also $A :
+\Ty\,\Gamma$, and aim to inhabit $\Tm\,\Gamma\,A$. By initiality we get a unique
+$\sigma : \Sub\,\Gamma\,(\Gamma \ext A)$. Now, $\q[\sigma] : \Tm\,\Gamma\,(A[\p \circ \sigma])$,
+but since $\p \circ \sigma : \Sub\,\Gamma\,\Gamma$, it must be equal to $\id$ by the initiality
+of $\Gamma$. Hence, $\q[\sigma] : \Tm\,\Gamma\,A$.
+
+Lastly: it is well-known that initiality is a mere property, so let's show the
+same for induction.  We assume $\ms{ind},\,\ms{ind'} : \ms{Inductive}\,\Gamma$
+and $A : \Ty\,\Gamma$. We have
+$\reflect\,(\ms{ind}\,(\Id\,(\ms{ind}\,A)\,(\ms{ind'}\,A))) : \ms{ind}\,A \equiv
+\ms{ind'}\,A$. Since $A$ is arbitrary, by function extensionality we also have $\ms{ind} \equiv \ms{ind'}$.
+\end{proof}
+
+
+
+
+
+
+
+"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+
+"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+
+
+
+
+
+
 \subsection{Finite Limit Cwfs}
 \subsection{Equivalence of Initiality and Induction}
 \subsection{Model of the Theory of Signatures}
