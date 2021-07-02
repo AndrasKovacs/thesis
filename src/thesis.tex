@@ -2869,7 +2869,7 @@ flcwf by interpreting $\Gamma$ in $\bM$. In that flcwf we have
 \end{itemize}
 From this, notions of initiality and induction are apparent as well. Initiality
 is the usual categorical notion. For induction, assuming $\bGamma : \bCon$, we
-have the following predicate:o
+have the following predicate:
 \begin{alignat*}{3}
   & \Inductive : \Con_{\bGamma} \to \Set\\
   & \Inductive\,\Gamma \defn (A : \Ty_{\bGamma}\,\Gamma)\ra \Tm_{\bGamma}\,\Gamma\,A
@@ -2908,10 +2908,61 @@ $\reflect\,(\ms{ind}\,(\Id\,(\ms{ind}\,A)\,(\ms{ind'}\,A))) : \ms{ind}\,A \equiv
 \ms{ind'}\,A$. Since $A$ is arbitrary, by function extensionality we also have $\ms{ind} \equiv \ms{ind'}$.
 \end{proof}
 
+Note that the above proof does not rely on $\Sigma$-types in the flcwf, so why
+do we include them in the semantics? One reason is the prior result by
+Clairmabault and Dybjer \cite{clairambault2014biequivalence} that a slightly
+different formulation of flcwfs is biequivalent to finitely complete
+categories. More concretely, in ibid.\ there is a 2-category of cwfs with
+$\Sigma$, $\Id$ and ``democracy'', the last of which is equivalent to the weak
+formulation of constant families. Then, it is shown that this 2-category is
+biequivalent to the 2-category of finitely complete categories.
+
+Our flcwf is not exactly the same, because our constant families are strict. But
+we certainly don't lose anything by having stricter semantics, since the weak
+versions can be trivially recovered. In short, including $\Sigma$ is a good
+deal, as this allows us to connect our semantics back to finitely complete
+categories, which are more commonplace in categorical settings.
+
+We present some concepts in flcwfs which will be needed later, especially
+in Chapter \ref{chap:iqiit}.
+
+\begin{mydefinition}[Type categories, c.f.\ \cite{clairambault2014biequivalence}]
+\label{def:type_categories} For each $\Gamma : \Con$, there is a category
+whose objects are types $A : \Ty\,\Gamma$, and morphisms from $A$ to $B$ are
+terms $t : \Tm\,(\Gamma\,\ext\,A)\,(B[\p])$. Identity morphisms are given by $\q
+: \Tm\,(\Gamma\,\ext\,A)\,(A[\p])$, and composition $t \circ u$ by $t[\p,
+  u]$. The assignment of type categories to contexts extends to a split indexed
+category. For each $\sigma : \Sub\,\Gamma\,\Delta$, there is a functor from
+$\Ty\,\Delta$ to $\Ty\,\Gamma$, which sends $A$ to $A[\sigma]$ and $t :
+\Tm\,(\Gamma\,\ext\,A)\,(B[\p])$ to $t[\sigma\circ \p, \q]$.
+\end{mydefinition}
+
+\begin{notation}
+  ~\\
+  \begin{itemize}
+  \item  \vspace{-1.7em}
+         In any cwf, we use $\sigma : \Gamma \simeq \Delta$ to indicate
+         that $\sigma : \Sub\,\Gamma\,\Delta$ is an isomorphism with inverse $\sigma^{-1}$.
+    \item A \emph{type isomorphism}, written as $t : A \simeq B$ is an isomorphism in a
+         type category, with inverse as $t^{-1}$.
+  \end{itemize}
+\end{notation}
 
 
 
 
+
+
+
+
+
+"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+
+"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+
+"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+
+"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
 
 
 "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
