@@ -1,4 +1,5 @@
 \documentclass[12pt,a4paper,twoside,openany]{book}
+\raggedbottom
 
 %% build: latexmk -pdf -pvc thesis.tex
 
@@ -152,7 +153,7 @@
 \newcommand{\bb}{\boldsymbol{b}}
 \newcommand{\bB}{\boldsymbol{B}}
 \newcommand{\bid}{\boldsymbol{\id}}
-\newcommand{\bemptycon}{\boldsymbol{\emptycon}}
+\newcommand{\bemptycon}{\scaleobj{.75}{\boldsymbol{\bullet}}}
 \newcommand{\bSet}{\boldsymbol{\Set}}
 \newcommand{\bU}{\boldsymbol{\U}}
 \newcommand{\bEl}{\boldsymbol{\El}}
@@ -218,7 +219,6 @@
 \newcommand{\lab}{\langle}
 \newcommand{\rab}{\rangle}
 \newcommand{\defn}{:\equiv}
-
 \newcommand{\yon}{\ms{y}}
 
 
@@ -1676,12 +1676,23 @@ now. We list used features and conventions below.
   \item
     By having $\Set$, we are able to have $\Ty_0 : \Set$ and $\Tm_0 : \Ty_0 \to
     \Set$. So we don't have to deal with proper meta-level types, and have a
-    more uniform notation. Notation and specification for inner type formers changes
-    accordingly. For example, for inner $\Pi$-types we may write $(x : A) \to B$
-    if $A : \Ty_0$ and $B$ depends on $x : \Tm_0\,A$. This also enables a
-    higher-order specification: if $B : \Tm_0\,A \to \Ty_0$, then $(x : A) \to
-    B\,x : \Ty_0$, and the specifying isomorphism for $\Pi$ can be written as
-    $\Tm_0\,((x : A) \to B\,x) \simeq ((x : \Tm_0\,A) \to \Tm_0\,(B\,x))$.
+    more uniform notation. Notation and specification for inner type formers
+    changes accordingly. For example, for inner $\Pi$-types we may write $(x :
+    A) \to B$ if $A : \Ty_0$ and $B$ depends on $x : \Tm_0\,A$. This also
+    enables a higher-order specification: if $B : \Tm_0\,A \to \Ty_0$, then $(x
+    : A) \to B\,x : \Ty_0$, and the specifying isomorphism for $\Pi$ can be
+    written as $\Tm_0\,((x : A) \to B\,x) \simeq ((x : \Tm_0\,A) \to
+    \Tm_0\,(B\,x))$.
+    \begin{notation}
+      An explicit notation for inner function abstraction would look like
+      $\lam_0\,t$ for $t : (x : \Tm_0\,A) \to \Tm_0\,(B\,x)$. This results in
+      ``double'' abstraction, e.g.\ in
+      $\lam_0\,(\lambda\,x.\,\suc_0\,(\suc_0\,x)) : \Tm_0\,(\Nat_0 \to
+      \Nat_0)$. Instead of this, we write $\lambda_0\,x.\,t$ as a notation, thus
+      we write $\lambda_0\,x.\,\suc_0\,(\suc_0\,x)$ for the above example. We
+      may also group multiple $\lambda_0$ binders together the same way as with
+      $\lambda$.
+    \end{notation}
   \item
     We may omit inferable $\Tm_0$ applications. For instance, $\Bool_1 \to
     \Bool_0$ can be ``elaborated'' to $\Bool_1 \to \Tm_0\,\Bool_0$ without
@@ -1713,6 +1724,84 @@ Here, the type is forced to live in the outer level because of the dependency on
 $\Ty_0$. Since $\Ty_0$ is an outer type, $\Bool_0 \to \Ty_0$ must be lifted, which
 in turn requires all other types to be lifted as well.
 \end{myexample}
+
+\subsection{Alternative Presentation for 2LTT}
+
+We digress a bit on a different way to present 2LTT. In the primary 2LTT
+reference \cite{twolevel}, inner and outer layers are specified
+as follows. We have two different \emph{family structures} on the base
+cwf, $(\Ty_0,\,\Tm_0)$ and $(\Ty_1,\,\Tm_1)$, and a morphism between them. A
+family morphism is natural transformation mapping types to types and terms to
+terms, which is an isomorphism on terms. We might name the component maps
+as follows:
+\begin{alignat*}{3}
+  &\Lift &&: \Ty_0\,\Gamma \to \Ty_1\,\Gamma \\
+  &\up   &&: \Tm_0\,\Gamma\,A \to \Tm_1\,\Gamma\,(\Lift\!A)\\
+  &\down &&: \Tm_1\,\Gamma\,(\Lift\!A) \to \Tm_0\,\Gamma\,A
+\end{alignat*}
+An advantage of this presentation is that we may close $(\Ty_0,\,\Tm_0)$ under
+type formers without any encoding overhead, for example by having $\Bool_0 :
+\Ty_0\,\Gamma$, $\true_0 : \Tm_0\,\Gamma\,\Bool_0$, etc., without the
+Tarski-style decoding. On the other hand, we don't automatically get an outer
+universe of inner types. We can recover that in two ways:
+\begin{itemize}
+\item
+  We can assume an inner universe $\U_0 : \Ty_0\,\Gamma$, which can be lifted to the
+  outer theory as $\Lift\!\U_0$. However, we may not want to make this
+  assumption, in order to keep the inner theory as simple as possible.
+\item
+  We can assume an outer universe which classifies elements of
+  $\Ty_0\,\Gamma$. This amounts to reproducing the $\Ty_0$ \emph{type} from our
+  2LTT presentation, as an additional assumption. But in this case, we might as
+  well skip the two family structures and the $\Lift$ morphism.
+\end{itemize}
+In this thesis we make ubiquitous use of the outer universe of inner types, so
+we choose that to be the primitive notion, instead of having two family
+structures.
+
+Do we lose anything by this? For the purposes of this thesis, not
+really. However, if we wanted to implement 2LTT as a system for two-stage
+compilation, the $\Lift$ syntax appears to be closer to existing systems.
+Staging is about computing all outer redexes but no inner ones, thereby
+outputting syntax which is purely in the inner theory. This can be implemented
+as a stage-aware variant of normalization-by-evaluation \cite{TODO}. We can give
+an intuitive staging interpretation for the operators in the $\Lift$ syntax:
+\begin{itemize}
+\item
+  $\Lift\!A$ is the type of $A$-expressions. This corresponds to $a\,\ms{code}$
+  in MetaOcaml \cite{TODO} and $\ms{Exp}\,a$ in Template Haskell.
+\item
+  $\up$ is \emph{quoting}, which creates an expression from any inner term. This is
+  $.\lab\blank\rab.$ in MetaOCaml and $[|\blank|]$ in Template Haskell.
+\item $\down$ is \emph{splicing}, which inserts the result of a meta-level computation into
+  an object-level expression. This is $\sim$ in MetaOCaml and $\$$ in Template Haskell.
+\end{itemize}
+For example, in the $\Lift$ syntax, we might write a polymorphic identity function
+which acts on inner types in two different ways:
+\begin{alignat*}{3}
+  &\id : (A : \U_0) \to A \to A\hspace{2em} && \id' : (A :\,\Lift\!\U_0) \to\,\Lift\!(\down A) \to\,\Lift\!(\down A)\\
+  &\id \defn \lambda_0\,A\,x.\,x && \id' \defn \lambda_1\,A\,x.\,x
+\end{alignat*}
+The first one lives in the inner family structure. The second one is the same
+thing, but lifted to the outer theory. The choice between the two allows us to
+control staging-time evaluation. If we write $\id\,\Bool_0\,\true_0$, that's an
+inner expression which goes into the staging output as it is. On the other hand,
+$\down(\id'\,(\up\,\Bool_0)\,(\up\,\true_0))$ reduces to $\down(\up\,\true_0)$
+which in turn reduces to $\true_0$. The same choice can be expressed in our
+syntax as well:
+\begin{alignat*}{3}
+  &\id : \Tm_0\,((A : \U_0) \to A \to A)\hspace{2em}&&\id' : (A : \Tm_0\,\U_0) \to\,\Tm_0\,A \to \Tm_0\,A\\
+  &\id \defn \lambda_0\,A\,x.\,x &&\id' \defn \lambda\,A\,x.\,x
+\end{alignat*}
+It remains to be checked which style is preferable in a staging
+implementation. In the $\Lift$ style, the quoting and splicing operations add
+noise to core syntax, but they are also mostly inferable during elaboration, and
+they pack stage-changing information into $\up$ and $\down$, thereby making it
+feasible to omit stage annotations in other places in the core syntax. In the
+$\Ty_0$ style, we don't have quote/splice, but we have to keep track of stages
+in all type/term formers. The author of this thesis has made a prototype
+implementation of staging in the $\Lift$ style but not in the $\Ty_0$ style
+\cite{TODO}. It would be interesting to compare the two in future work.
 
 \section{Standard Semantics of 2LTT}
 
@@ -2045,7 +2134,7 @@ which is definable in 2LTT, then \emph{by definition} all such type formers
 transfer from $\mbbC$ to $(\Ty_0,\,\Tm_0)$. This holds for every type former
 mentioned in this thesis.
 
-\subsection{Functions with Inner Domains}
+\subsection{Functions With Inner Domains}
 
 There is a useful semantic simplification in the standard presheaf model, in
 cases where we have functions of the form $\Pi\,(\Tm_0\,A)\,B$. This greatly
@@ -2568,7 +2657,9 @@ we abbreviate ``finitary quotient inductive-inductive'' as FQII, and like
 before, we abbreviate ``theory of signatures'' as ToS. In this chapter, by
 signature we mean an FQII signature unless otherwise specified.
 
-\begin{mydefinition} A \textbf{model of the theory of signatures} consists of the following.
+\begin{mydefinition}
+\label{def:fqiit-tos}
+A \textbf{model of the theory of signatures} consists of the following.
   \begin{itemize}
     \item A \textbf{cwf} with underlying sets $\Con$, $\Sub$, $\Ty$ and $\Tm$, all returning in
       the outer $\Set$ universe of 2LTT.
@@ -2795,7 +2886,7 @@ concerned with eventually implementing QIITs in proof assistants. If we don't
 compute induction principles here in an exact way, we don't get them from
 anywhere else.
 
-\subsection{Separate vs.\ bundled models}
+\subsection{Separate vs.\ Bundled Models}
 
 Previously, we defined $\blank^A$, $\blank^M$, $\blank^D$ and $\blank^S$
 interpretations of signatures separately, by doing induction anew for each
@@ -2830,17 +2921,18 @@ have to deal with $\Sigma$-s. However, for larger models, important organizing
 principles may become more apparent if we bundle things together.
 
 In the following, we shall define a model $\bM : \ToS$ such that its $\Con$
-component is a bundle containing all $A$, $M$, $D$, $S$ components like above
-(and it contains more). We present the components of $\bM$ in order. There is
-significant overlap in names and notations, so we use \textbf{bold} font to
-disambiguate components of $\bM$ from components of other structures. For
-example, we use $\bs{\sigma : \Sub\,\Gamma\,\Delta}$ to denote a substitution in
-$\bM$, while there could be a $\Sub$-named components in other structures under
-consideration.
+component is a bundle containing all $A$, $M$, $D$, $S$ components, plus a
+number of additional components. We present the components of $\bM$ in the same
+order as in Definition \ref{def:fqiit-tos}. There is significant overlap in
+names and notations, so we use \textbf{bold} font to disambiguate components of
+$\bM$ from components of other structures. For example, we use $\bs{\sigma :
+  \Sub\,\Gamma\,\Delta}$ to denote a substitution in $\bM$, while there could be
+a $\Sub$-named components in other structures under consideration.
 
 \subsection{Finite Limit Cwfs}
 
-We define $\bCon : \Set$ as finite limit cwfs (flcwfs). In the following we
+We define $\bCon : \Set$ as the type of finite limit cwfs. Recall that this
+specifies the objects of the underlying cwf of $\bM$. In the following we
 specify flcwfs and describe some internal constructions.
 
 \begin{mydefinition}\label{def:flcwf}
@@ -2915,18 +3007,27 @@ different formulation of flcwfs is biequivalent to finitely complete
 categories. More concretely, in ibid.\ there is a 2-category of cwfs with
 $\Sigma$, $\Id$ and ``democracy'', the last of which is equivalent to the weak
 formulation of constant families. Then, it is shown that this 2-category is
-biequivalent to the 2-category of finitely complete categories.
+biequivalent to the 2-category of finitely complete categories. Thus, including
+$\Sigma$ is a good deal, as this allows us to connect our semantics back to
+finitely complete categories, which are more commonplace in categorical
+settings.
 
-Our flcwf is not exactly the same, because our constant families are strict. But
-we certainly don't lose anything by having stricter semantics, since the weak
-versions can be trivially recovered. In short, including $\Sigma$ is a good
-deal, as this allows us to connect our semantics back to finitely complete
-categories, which are more commonplace in categorical settings.
+We recover finite limits in an flcwf as follows. The product of $\Gamma$ and
+$\Delta$ is given by $\Gamma \ext \K\,\Delta$, and we get projection and pairing
+from context comprehension. The equalizer of $\sigma,\,\delta :
+\Sub\,\Gamma\,\Delta$ is given by $\Gamma \ext \Id\,\sigma\,\delta$, which is
+well-typed because morphisms can be viewed as terms, e.g.\ $\sigma :
+\Tm\,\Gamma\,(\K\,\Delta)$. The unique morphism out of the equalizer is $\p :
+\Sub\,(\Gamma \ext \Id\,\sigma\,\delta)\,\Gamma$.
 
-We present some concepts in flcwfs which will be needed later, especially
-in Chapter \ref{chap:iqiit}.
+Our flcwf is not exactly the same as in \cite{clairambault2014biequivalence}\,
+because our constant families are strict. But we certainly don't lose anything
+by having stricter semantics, since the weak version can be trivially
+recovered.
 
-\begin{mydefinition}[Type categories, c.f.\ \cite{clairambault2014biequivalence}]
+In the following we present some concepts and results in flcwfs.
+
+\begin{mydefinition}[Type categories, c.f.\ {\cite[Section 2.2]{clairambault2014biequivalence}}]
 \label{def:type_categories} For each $\Gamma : \Con$, there is a category
 whose objects are types $A : \Ty\,\Gamma$, and morphisms from $A$ to $B$ are
 terms $t : \Tm\,(\Gamma\,\ext\,A)\,(B[\p])$. Identity morphisms are given by $\q
@@ -2948,6 +3049,115 @@ $\Ty\,\Delta$ to $\Ty\,\Gamma$, which sends $A$ to $A[\sigma]$ and $t :
   \end{itemize}
 \end{notation}
 
+\begin{theorem}[Equivalence of types and slices, c.f.\ {\cite[Section 2.2]{clairambault2014biequivalence}}]
+Assume that we work in an flcwf $\bGamma$. For each $\Gamma : \Con$, the type
+category $\Ty\,\Gamma$ is equivalent to the slice category $\bGamma/\Gamma$.
+\end{theorem}
+
+\emph{Remark.} In the flcwf of sets where types are $A \to \Set$ families, the
+above theorem yields the equivalence of $A \to \Set$ and $(B : \Set) \times (B
+\to A)$. This is sometimes called the ``family-fibration'' equivalence. It is
+also a notable motivating example for univalence in type theory: it is not an
+isomorphism of sets, but only an equivalence up to isomorphism of sets. So this
+is an example for an equivalence which quite naturally arises even if we only
+care about sets, but one which is not covered by set-level univalence, and
+actually requires univalence for groupoids, if we want to prove it as a
+propositional equality.
+
+\subsection{The Cwf of Finite Limit Cwfs}
+
+The next task is to define the cwf part of $\bM$. We already know that objects
+are flcwfs.
+
+\subsubsection{Category}
+
+A \textbf{morphism} $\bsigma : \bSub\,\bGamma\,\bDelta$ is in an algebra
+homomorphism, viewing flcwfs as algebraic structures. Hence, $\bsigma$ includes
+a functor between underlying categories, but it also maps types to types and
+terms to terms, and \emph{strictly preserves all structure}.
+
+\begin{notation}
+We may implicitly project out the underlying maps from $\bsigma$. Hence, we
+have the following four maps:
+\begin{alignat*}{3}
+  & \bsigma &&: \Con_{\bGamma} \to \Con_{\bDelta} \\
+  & \bsigma &&: \Sub_{\bGamma}\,\Gamma\,\Delta \to \Sub_{\bDelta}\,(\bsigma\,\Gamma)\,(\bsigma\,\Delta)\\
+  & \bsigma &&: \Ty_{\bGamma}\,\Gamma \to \Ty_{\bDelta}\,(\bsigma\,\Gamma)\\
+  & \bsigma &&: \Tm_{\bGamma}\,\Gamma\,A \to \Tm_{\bDelta}\,(\bsigma\,\Gamma)\,(\bsigma\,A)
+\end{alignat*}
+We list some of the preservation equations as examples of usage:
+\begin{alignat*}{3}
+  \bsigma\,\emptycon &\equiv \emptycon \\
+  \bsigma\,(\Gamma \ext A) &\equiv \bsigma\,\Gamma \ext \bsigma\,A\\
+  \bsigma\,(A[\sigma]) &\equiv (\bsigma\,A)[\bsigma\,\sigma]\\
+  \bsigma\,(t[\sigma]) &\equiv (\bsigma\,t)[\bsigma\,\sigma]\\
+  \bsigma\,(\Sigma\,A\,B) &\equiv \Sigma\,(\bsigma\,A)\,(\bsigma\,B)\\
+  \bsigma\,(\proj_1\,t) &\equiv \proj_1\,(\bsigma\,t)
+\end{alignat*}
+Above, we could have also included subscripts indicating the $\bGamma$ or
+$\bDelta$ flcwf, as in $\bsigma\,\emptycon_{\bGamma} \equiv
+\emptycon_{\bDelta}$; but these are quite easily inferable, so we omit them.
+\end{notation}
+
+\textbf{Identity morphisms} and \textbf{composition} are defined in the evident
+way using identity functions and function composition for underlying maps, and
+they satisfy the category laws.
+
+The terminal object $\bemptycon:\bCon$ is given by having $\Con_{\bemptycon} \defn
+\top$, $\Sub_{\bemptycon}\,\Gamma\,\Delta \defn \top$, $\Ty_{\bemptycon}\,\Gamma \defn \top$ and
+$\Tm_{\bemptycon}\,\Gamma\,A \defn \top$, and all structure and equations are defined trivially.
+
+\subsubsection{Family Structure}
+
+A type $\bA : \bTy\,\bGamma$ is a displayed flcwf over $\bGamma$.  As we have
+seen before, displayed algebras can be computed as logical predicate
+interpretations of algebraic signatures. Every $\bA$ component lies over the
+corresponding $\bGamma$ component.
+
+\begin{notation} In situations where we need to refer to both ``base'' and
+displayed things, we give \ul{underlined} names to contexts, substitutions,
+types and terms in a base flcwf. For example, we may have $\ulGamma :
+\Con_{\bGamma}$ living in $\boldsymbol{\Gamma : \Con}$, and $\Gamma :
+\Con_{\bA}\,\ulGamma$ living in a displayed flcwf over $\bGamma$. We only use
+underlining on 2LTT variable names, and overload flcwf component names for
+displayed counterparts. For example, a $\Con$ component is named the same in
+a base flcwf and a displayed one.
+\end{notation}
+
+Concretely, a displayed flcwf $\bA$ over $\bGamma$ has the following underlying
+sets, which we call displayed contexts, substitutions, types and terms
+respectively.
+\begin{alignat*}{3}
+  & \Con_{\bA} && : \Con_{\bGamma}\ra \Set\\
+  & \Sub_{\bA} && : \Con_{\bA}\,\ulGamma \ra \Con_{\bA}\,\ulDelta \ra \Sub_{\bGamma}\,\ulGamma\,\ulDelta \ra \Set \\
+  & \Ty_{\bA}  && : \Con_{\bA}\,\ulGamma \ra \Ty_{\bGamma}\,\ulGamma \ra \Set\\
+  & \Tm_{\bA}  && : (\Gamma : \Con_{\bA}\,\ulGamma)\ra \Ty_{\bA}\,\Gamma\,\ulA \ra \Tm_{\bGamma}\,\ulGamma\,\ulA \ra \Set
+\end{alignat*}
+We also have the following components for empty context, context
+extension and substitution. We omit listing other components here.
+\begin{alignat*}{3}
+  & \emptycon_{\bA} && : \Con_{\bA}\,\emptycon_{\bGamma}\\
+  & \blank\ext_{\bA}\blank && : (\Gamma : \Con_{\bA}\,\ulGamma)\ra \Ty_{\bA}\,\Gamma\,\ulA \ra
+                     \Con_{\bA}\,\Gamma\,(\ulGamma \ext_{\bGamma} \ulA)\\
+  & \blank[\blank]_{\bA} && : \Ty_{\bA}\,\Delta\,\ulA \ra \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma
+                     \ra \Ty_{\bA}\,\Gamma\, (\ulA[\ulsigma]_{\bGamma})\\
+  & \blank[\blank]_{\bA} && : \Tm_{\bA}\,\Delta\,A\,\ult \ra (\sigma : \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma)
+                        \ra \Tm_{\bA}\,\Gamma\, (A[\sigma]_{\bA})\,(\ult[\ulsigma]_{\bGamma})
+\end{alignat*}
+In the following we will often omit $_{\bGamma}$ and $_{\bA}$ subscripts on
+components; for example, in the type $\Con_{\bA}\,\emptycon$, the $\emptycon$ is
+clearly a base component in $\bGamma$.
+%% A type $\bA : \bTy\,\bGamma$ is a displayed flcwf over $\bGamma$.  As we have
+%% seen before, displayed algebras can be computed as logical predicate
+%% interpretations of algebraic signatures. Every underlying set in $\bA$ is a
+%% family of sets over the ``base'' sets in $\bGamma$.
+%% %% \begin{alignat*}{3}
+
+
+%% \end{alignat*}
+
+%% and every type/term former
+%% and equation is indexed over the counterparts in the base.
 
 
 
@@ -2956,27 +3166,16 @@ $\Ty\,\Delta$ to $\Ty\,\Gamma$, which sends $A$ to $A[\sigma]$ and $t :
 
 
 
-"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
-
-"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
-
-"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
-
-"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
-
-
-"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
-
-"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
 
 
 
 
 
 
-\subsection{Finite Limit Cwfs}
-\subsection{Equivalence of Initiality and Induction}
-\subsection{Model of the Theory of Signatures}
+
+
+
+
 
 \section{Term Algebras}
 \label{sec:fqiit-term-algebras}
