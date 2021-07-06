@@ -169,6 +169,8 @@
 \newcommand{\bP}{\boldsymbol{\mathsf{P}}}
 \newcommand{\bD}{\boldsymbol{\mathsf{D}}}
 \newcommand{\bI}{\boldsymbol{\mathsf{I}}}
+\newcommand{\bK}{\boldsymbol{\mathsf{K}}}
+
 \newcommand{\ul}[1]{\underline{#1}}
 \newcommand{\ulGamma}{\ul{\Gamma}}
 \newcommand{\ulDelta}{\ul{\Delta}}
@@ -178,6 +180,7 @@
 \newcommand{\ulsigma}{\ul{\sigma}}
 \newcommand{\ulnu}{\ul{\nu}}
 \newcommand{\ulepsilon}{\ul{\epsilon}}
+\newcommand{\ulemptycon}{\ul{\emptycon}}
 \newcommand{\ult}{\ul{t}}
 \newcommand{\ulu}{\ul{u}}
 \newcommand{\ulA}{\ul{A}}
@@ -1371,10 +1374,15 @@ technology is likely to be the preferred future direction in the metatheory of
 type theories, this thesis does not make use of it. The field is rather fresh,
 with several different approaches and limited amount of pedagogical exposition,
 and the new techniques would also raise the level of abstraction in this thesis,
-all contributing to making it less accessible. One more reason, and perhaps the
-most important one, for skipping higher-order abstract syntax, is that this
-author has not yet acquired the proficiency to comfortably use the new
-techniques.
+all contributing to making it less accessible. It's also not obvious how exactly
+HOAS-style could be employed to aid formalization here, and it would require
+significant additional research.  Often, a setup with multiple modalities
+(``multimodal'' \cite{gratzer20multimodal}) is required
+\cite{bocquet2021induction}, because we work with presheaves over different
+cwfs. It seems that a synthetic notion of dependent modes would be also
+required to formalize constructions in this thesis, since we often work with
+displayed presheaves over displayed cwfs. This is however not yet developed in
+literature.
 
 \begin{mydefinition}
 \label{def:constant-families}
@@ -1977,6 +1985,7 @@ $\K\,\top$, and so on.
 \end{mydefinition}
 
 \begin{mydefinition}
+\label{def:presheaf-univ}
 \textbf{Coquand universes} can be defined as follows. We write $\Set_{\hmbbC}$
 for the outer universe in the model, to distinguish it from the external
 $\Set$. Since the $\Set_{\hmbbC}$ is a non-dependent type, it is helpful to
@@ -2646,12 +2655,18 @@ Signatures are once again given by contexts of a type theory, but now it is a
 dependent type theory, given as a cwf with certain type formers, in the style
 of Section \ref{sec:models-of-tts}.
 \\\\
-\textbf{Metatheory and notation.} We work in 2LTT with $\Ty_0$ and $\Tm_0$, and
-we assume no inner type formers.  We follow notation from Section
-\ref{sec:2ltt-internal-syntax}. We mostly omit $\Tm_0$ applications in the
-following.
-\\\\
-We specify models of the theory of \emph{finitary quotient
+\textbf{Metatheory and notation.} We work in 2LTT with $\Ty_0$ and $\Tm_0$. We
+make the following assumptions. Later, we may assume more type formers at either
+levels as needed.
+\begin{itemize}
+  \item $\Ty_0$ is closed under $\top$, $\Sigma$ and extensional identity $\blank\!=\!\blank$.
+        The inner identity reflects the outer one.
+  \item The outer identity $\blank\!\equiv\!\blank$ is also extensional; it supports
+        UIP, function extensionality, and it reflects strict equality in some
+        unspeficied metatheory outside 2LTT. This reflection is used to justify
+        omitting transports along $\blank\!\equiv\!\blank$ in our notation.
+\end{itemize}
+In the following we specify models of the theory of \emph{finitary quotient
 inductive-inductive signatures}. The names involved are a bit of a mouthful, so
 we abbreviate ``finitary quotient inductive-inductive'' as FQII, and like
 before, we abbreviate ``theory of signatures'' as ToS. In this chapter, by
@@ -3100,7 +3115,7 @@ $\bDelta$ flcwf, as in $\bsigma\,\emptycon_{\bGamma} \equiv
 \end{notation}
 
 \textbf{Identity morphisms} and \textbf{composition} are defined in the evident
-way using identity functions and function composition for underlying maps, and
+way using identity functions and function composition in underlying maps, and
 they satisfy the category laws.
 
 The terminal object $\bemptycon:\bCon$ is given by having $\Con_{\bemptycon} \defn
@@ -3112,7 +3127,9 @@ $\Tm_{\bemptycon}\,\Gamma\,A \defn \top$, and all structure and equations are de
 A type $\bA : \bTy\,\bGamma$ is a displayed flcwf over $\bGamma$.  As we have
 seen before, displayed algebras can be computed as logical predicate
 interpretations of algebraic signatures. Every $\bA$ component lies over the
-corresponding $\bGamma$ component.
+corresponding $\bGamma$ component. Also note that a displayed flcwf includes a
+displayed category, for which some results have been worked out in
+\cite{displayedcats}.
 
 \begin{notation} In situations where we need to refer to both ``base'' and
 displayed things, we give \ul{underlined} names to contexts, substitutions,
@@ -3133,43 +3150,307 @@ respectively.
   & \Ty_{\bA}  && : \Con_{\bA}\,\ulGamma \ra \Ty_{\bGamma}\,\ulGamma \ra \Set\\
   & \Tm_{\bA}  && : (\Gamma : \Con_{\bA}\,\ulGamma)\ra \Ty_{\bA}\,\Gamma\,\ulA \ra \Tm_{\bGamma}\,\ulGamma\,\ulA \ra \Set
 \end{alignat*}
-We also have the following components for empty context, context
-extension and substitution. We omit listing other components here.
+We list select components of $\bA$ below; note how every $\bA$ operation lies
+over the corresponding $\bGamma$ operation. In our notation with implicit
+arguments, equations in $\bA$ can be written the same way as in $\bGamma$, but
+of course there is extra indexing involved, and the displayed equations are
+well-typed because of their counterparts in the base.
 \begin{alignat*}{3}
+  & \id_{\bA} &&: \Sub\,\Gamma\,\Gamma\,\ul{\id_{\bGamma}}\\
+  & \blank\circ_{\bA}\blank &&: \Sub\,\Delta\,\Xi\,\ulsigma \to \Sub\,\Gamma\,\Delta\,\uldelta
+    \to \Sub\,\Gamma\,\Xi\,(\ulsigma \circ_{\bGamma} \uldelta)\\
+  & \ms{idl}_{\bA} &&:  \id_{\bA} \circ_{\bA} \sigma \equiv \sigma \\
+  & \ms{idr}_{\bA} &&:  \sigma \circ_{\bA} \id_{\bA} \equiv \sigma \\
   & \emptycon_{\bA} && : \Con_{\bA}\,\emptycon_{\bGamma}\\
   & \blank\ext_{\bA}\blank && : (\Gamma : \Con_{\bA}\,\ulGamma)\ra \Ty_{\bA}\,\Gamma\,\ulA \ra
                      \Con_{\bA}\,\Gamma\,(\ulGamma \ext_{\bGamma} \ulA)\\
   & \blank[\blank]_{\bA} && : \Ty_{\bA}\,\Delta\,\ulA \ra \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma
                      \ra \Ty_{\bA}\,\Gamma\, (\ulA[\ulsigma]_{\bGamma})\\
   & \blank[\blank]_{\bA} && : \Tm_{\bA}\,\Delta\,A\,\ult \ra (\sigma : \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma)
-                        \ra \Tm_{\bA}\,\Gamma\, (A[\sigma]_{\bA})\,(\ult[\ulsigma]_{\bGamma})
+                        \ra \Tm_{\bA}\,\Gamma\, (A[\sigma]_{\bA})\,(\ult[\ulsigma]_{\bGamma})\\
+  &\Id_{\bA} &&: \Tm_{\bA}\,\Gamma\,A\,\ult \to \Tm_{\bA}\,\Gamma\,A\,\ulu \to \Ty_{\bA}\,\Gamma\,(\Id_{\bGamma}\,\ult\,\ulu)\\
+  &\K_{\bA} &&: \Con_{\bA}\,\ulDelta \to \{\Gamma : \Con_{\bA}\,\ulGamma\} \to \Ty_{\bA}\,\Gamma\,(\K_{\bGamma}\,\ulDelta)\\
+  &\Sigma_{\bA} &&: (A : \Ty_{\bA}\,\Gamma\,\ulA) \to \Ty_{\bA}\,(\Gamma \ext_{\bA} A)\,\ulB \to
+                   \Ty_{\bA}\,\Gamma\,(\Sigma_{\bGamma}\,\ulA\,\ulB)
 \end{alignat*}
 In the following we will often omit $_{\bGamma}$ and $_{\bA}$ subscripts on
 components; for example, in the type $\Con_{\bA}\,\emptycon$, the $\emptycon$ is
 clearly a base component in $\bGamma$.
-%% A type $\bA : \bTy\,\bGamma$ is a displayed flcwf over $\bGamma$.  As we have
-%% seen before, displayed algebras can be computed as logical predicate
-%% interpretations of algebraic signatures. Every underlying set in $\bA$ is a
-%% family of sets over the ``base'' sets in $\bGamma$.
-%% %% \begin{alignat*}{3}
+
+A substituted type $\bs{A[\sigma] : \Ty\,\Gamma}$ is defined as follows, for
+$\bs{A : \Ty\,\Delta}$ and $\bs{\sigma : \Sub\,\Gamma\,\Delta}$. We simply compose
+underlying functions in $\bsigma$ with the underlying predicates in $\bA$:
+\begin{alignat*}{3}
+  & \Con_{\bs{A[\sigma]}}\,\ulGamma && \defn \Con_{\bA}\,(\bsigma\,\ulGamma)\\
+  & \Sub_{\bs{A[\sigma]}}\,\Gamma\,\Delta\,\ulsigma && \defn
+    \Sub_{\bA}\,\Gamma\,\Delta\,(\bsigma\,\ulsigma)\\
+  & \Ty_{\bs{A[\sigma]}}\,\Gamma\,\ulA && \defn
+      \Ty_{\bA}\,\Gamma\,(\bsigma\,\ulA)\\
+  & \Tm_{\bs{A[\sigma]}}\,\Gamma\,A\,\ult && \defn
+      \Tm_{\bA}\,\Gamma\,A\,(\bsigma\,\ult)
+\end{alignat*}
+It should be clear that $\bs{A[\sigma]}$ thus defined still supports all
+displayed flcwf structure. For example, the displayed contexts in
+$\bs{A[\sigma]}$ are elements of $\Con_{\bA}\,(\bsigma\,\ulGamma)$, but since
+$\bsigma$ preserves all $\bGamma$-structure, we can also recover all displayed
+structure. For example, if $\ulGamma$ is $\ul{\emptycon}$, we have
+$\bsigma\,\ul{\emptycon} \equiv \ul{\emptycon}$, and we can reuse
+$\emptycon_{\bA} : \Con_{\bA}\,\ul{\emptycon}$ to define the displayed empty
+context in $\bs{A[\sigma]}$, and we can proceed analogously for all other
+structure in $\bs{A[\sigma]}$.
+
+Additionally, type substitution is functorial, i.e.\ $\bs{A[\id]} \equiv \bA$
+and $\bs{A[\sigma \circ \delta]} \equiv \bs{A[\sigma][\delta]}$. This holds
+because the underlying set families are defined by function composition.
+
+\emph{Remark.} Types could be equivalently defined as slices in the category of
+flcws, and type substitution could be given as pullback, but in that case we
+would run into the well-known strictness issue, that type substitution is
+functorial only up to isomorphism \cite{TODO}. This is not a critical issue, as
+there are standard solutions for recovering strict substitutions from weak ones
+\cite{TODO}. But if we ever need to look inside the definitions in the model,
+using displayed algebras yields a lot less encoding overhead than strictifying
+pullbacks.
+
+A term $\bs{t : \Tm\,\Gamma\,A}$ is a displayed flcwf section, which again
+strictly preserves all structure. We use the same notation for the action of
+$\bt$ that we use for $\bSub$. We have the following underlying maps:
+\begin{alignat*}{3}
+  & \bt &&: (\ulGamma : \Con_{\bGamma}) \to \Con_{\bA}\,\ulGamma \\
+  & \bt &&: (\ulsigma : \Sub_{\bGamma}\,\Gamma\,\Delta) \to
+             \Sub_{\bA}\,(\bt\,\Gamma)\,(\bt\,\Delta)\,\ulsigma\\
+  & \bt &&: (\ulA : \Ty_{\bGamma}\,\Gamma) \to \Ty_{\bA}\,(\bt\,\Gamma)\,\ulA\\
+  & \bt &&: (\ult : \Tm_{\bGamma}\,\Gamma\,A) \to \Tm_{\bA}\,(\bt\,\Gamma)\,(\bt\,A)\,\ult
+\end{alignat*}
+
+A substituted term $\bs{t[\sigma]}$ for $\bs{t : \Tm\,\Delta\,A}$ and
+$\bs{\sigma : \Sub\,\Gamma\,\Delta}$ is again given by component-wise function
+composition.
+
+An extended context $\bs{\Gamma \ext A}$ is the \emph{total flcwf} of
+$\bA$. This is defined by combining corresponding underlying sets with
+$\Sigma$-types:
+\begin{alignat*}{3}
+  & \Con_{\bs{\Gamma \ext A}} &&\defn (\ulGamma : \Con_{\bGamma}) \times \Con_{\bA}\,\ulGamma\\
+  & \Sub_{\bs{\Gamma \ext A}}\,(\ulGamma,\,\Gamma)\,(\ulDelta,\,\Delta) &&\defn (\ulsigma : \Sub_{\bGamma}\,\ulGamma\,\ulDelta) \times \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma\\
+  & \Ty_{\bs{\Gamma \ext A}}\,(\ulGamma,\,\Gamma) &&\defn (\ulA : \Ty_{\bGamma}\,\ulGamma) \times \Ty_{\bA}\,\Gamma\,\ulA\\
+  & \Tm_{\bs{\Gamma \ext A}}\,(\ulGamma,\,\Gamma)\,(\ulA,\,A) &&\defn (\ult : \Tm_{\bGamma}\,\ulGamma\,\ulA) \times \Tm_{\bA}\,\Gamma\,A\,\ult
+\end{alignat*}
+All structure is defined pointwise, using $\bGamma$-structure for first
+projections and $\bA$-structure for second projections. $\bs{\Gamma \ext A}$ may
+be viewed as a dependent generalization of direct products of flcwfs.
+
+\textbf{Comprehension structure} follows from the above definition: $\bs{\p}$ is
+component-wise first projection, $\bs{\q}$ is second projection and substitution
+extension $\bs{\blank,\blank}$ is pairing.
+
+With this, we have a cwf of flcws. \emph{Remark:} flcwf itself is algebraic, and
+has a finitary QII signature. Hence, if we succeed building semantics for
+finitary QII signatures, we get ``for free'' an flcwf of flcwfs. Of course, we
+cannot rely on this when we're in the process of defining the $\bM$ model in the
+first place. Checking that the $\bM$ model indeed works, is the somewhat tedious
+task that we have to perform \emph{once}, in order to get semantics for any
+other finitary QII theory.
+
+\subsubsection{Strict Constant Families}
+
+This was not included in the ToS specification, but it's quite useful, so we
+shall define it. $\bs{\K\,\Delta : \Ty\,\Gamma}$ is defined by ignoring
+$\bGamma$ inhabitants in all underlying sets:
+\begin{alignat*}{3}
+  & \Con_{\bs{\K\,\Delta}}\,\ulGamma &&\defn \Con_{\bDelta}\\
+  & \Sub_{\bs{\K\,\Delta}}\,\Gamma\,\Delta\,\ulsigma &&\defn \Sub_{\bDelta}\,\Gamma\,\Delta\\
+  &  \Ty_{\bs{\K\,\Delta}}\,\Gamma\,\ulA &&\defn \Ty_{\bDelta}\,\Gamma\\
+  &  \Tm_{\bs{\K\,\Delta}}\,\Gamma\,A\,\ult &&\defn \Tm_{\bDelta}\,\Gamma\,A
+\end{alignat*}
+All structure is inherited from $\bDelta$. There is also a type substitution
+rule, expressing that for $\bs{\sigma : \Sub\,\Gamma\,\Xi}$, we have
+$\bs{(\K\,\{\Xi\}\,\Delta)[\sigma]} \equiv \bs{\K\,\{\Gamma\}\,\Delta}$. This
+follows immediately from the above definition and the definition of type
+substitution, since the base inhabitants are ignored the same way on both sides
+of the equation. We also need to show $\bs{\Tm\,\Gamma\,(\K\,\Delta)} \equiv
+\bs{\Sub\,\Gamma\,\Delta}$. This again follows directly from the $\bK$
+definition. From $\bK$, we get
+\begin{itemize}
+\item The unit type, defined as $\bK\,\bemptycon : \bTy\,\bGamma$.
+\item Direct products of $\bGamma$ and $\bDelta$, defined as $\bs{\Gamma \ext \K\,\Delta}$.
+\item The ability to define closed type formers as elements of $\bCon$.
+\end{itemize}
+
+\subsubsection{Universe}
+
+Similarly to what we did in Definition \ref{def:presheaf-univ}, we define $\bU$
+as a context, and use $\bK$ later to get the universe as a type. $\bU :
+\bCon$ is defined to be the flcwf where objects are inner types, and morphisms
+are outer functions between them:
+\begin{alignat*}{3}
+  &\Con_{\bU} &&\defn \Ty_0 \\
+  &\Sub_{\bU}\,\Gamma\,\Delta &&\defn \Tm_0\,\Gamma \to \Tm_0\,\Delta \\
+  &\Ty_{\bU}\,\Gamma    &&\defn \Tm_0\,\Gamma \to \Ty_0\\
+  &\Tm_{\bU}\,\Gamma\,A &&\defn (\gamma : \Tm_0\,\Gamma) \to \Tm_0\,(A\,\gamma)
+\end{alignat*}
+Substitution for types and terms is defined by function composition. The empty
+context is defined as the inner unit type $\top_0$, and context extension
+$\Gamma \ext_{\bU} A$ is defined as $(\gamma : \Gamma) \times A\,\gamma$ using
+inner $\Sigma$. We can also define $\Sigma_{\bU}$ and $\Id_{\bU}$ using inner
+$\Sigma$ and identity.
+
+For constant families, we don't need any additional assumption in the inner
+theory, since it can be defined as $\K_{\bU}\,\{\Gamma\}\,\Delta \defn \Delta$,
+and $\Sub_{\bU}\,\Gamma\,\Delta \equiv \Tm_{\bU}\,\Gamma\,(\K_{\bU}\,\Delta)$
+follows immediately.
+\\\\
+\indent For $\bs{a : \Sub\,\Gamma\,\U}$, we have to define $\bs{\El\,a :
+  \Ty\,\Gamma}$. This is given as the \emph{displayed flcwf of elements} of
+$\ba$.
+
+Background: from any functor $F : \mbbC \to \bs{\Set}$ we can construct the
+category of elements $\int\!F$, where objects are in $(i : |\mbbC|) \times F\,i$
+and morphisms between $(i,\,x)$ and $(j,\,y)$ are in $(f : \mbbC(i,\,j)) \times
+(F\,f\,x \equiv y)$. If we take the second projections of components in $\int\!F$,
+we get the displayed category of elements, which lies over $\mbbC$. We may also call
+this a \emph{discrete displayed category}, in analogy to discrete categories, whose
+objects are elements of sets.
+
+We extend this to flcwfs in the definition of $\bs{\El\,a}$. With this
+definition, $\bs{\Gamma \ext \El\,a}$ will yield the flcwf of elements of $\ba$.
+\begin{alignat*}{3}
+  &\Con_{\bs{\El\,a}}\,\ulGamma &&\defn \Tm_0\,(\ba\,\ulGamma) \\
+  &\Sub_{\bs{\El\,a}}\,\Gamma\,\Delta\,\ulsigma &&\defn \ba\,\ulsigma\,\Gamma \equiv \Delta \\
+  &\Ty_{\bs{\El\,a}}\,\Gamma\,\ulA &&\defn \Tm_0\,(\ba\,\ulA\,\Gamma)\\
+  &\Tm_{\bs{\El\,a}}\,\Gamma\,A\,\ult &&\defn \ba\,\ult\,\Gamma \equiv A
+\end{alignat*}
+Let's check that we have all other structure as well.
+\begin{itemize}
+  \item For contexts and types, the task is to exhibit elements of $\ba$ lying over
+        specific base contexts and types.
+  \item For terms and substitutions, the task is to exhibit equations which
+    specify the action of $\ba$.
+  \item Equations between terms and substitutions are trivial because of UIP (we need
+    to show equations between equality proofs).
+\end{itemize}
+We summarize below the additional structure on top of the displayed category
+part of $\bs{\El\,a}$.
+\begin{itemize}
+  \item
+  For $\emptycon_{\bs{\El\,a}} : \Con_{\bs{\El\,a}}\,\ulemptycon$, the type can
+  be simplified along the definition of $\Con_{\bs{\El\,a}}$ and
+  structure-preservation by $\ba$ to $\Tm_0\,\top_0$. Hence,
+  $\emptycon_{\bs{\El\,a}} \defn \tt_0$ is the unique definition. For $\epsilon
+  : \Sub_{\bs{\El\,a}}\,\Gamma\,\emptycon_{\bs{\El\,a}}\,\ul{\epsilon}$, we have to show
+  $\ba\,\ul{\epsilon}\,\Gamma \equiv \tt_0$, which holds by the uniqueness of $\tt_0$.
 
 
-%% \end{alignat*}
+  \item
+  For $\Gamma \ext_{\bs{\El\,a}} A : \Con_{\bs{\El\,a}}\,(\ulGamma \ext \ulA)$,
+  the target type unfolds to $\Tm_0\,(\ba\,(\ulGamma \ext \ulA))$, which in
+  turn simplifies to $\Tm_0\,((\gamma : \ba\,\ulGamma) \times \ba\,\ulA\,\gamma)$.
+  Since $\Gamma : \Tm_0\,(\ba\,\ulGamma)$ and $A : \Tm_0\,(\ba\,\ulA\,\Gamma)$,
+  we define $\Gamma \ext_{\bs{\El\,a}} A$ as $(\Gamma,\,A)$.
 
-%% and every type/term former
-%% and equation is indexed over the counterparts in the base.
+  \item
+  For comprehension, we have to show the following, after simplifying types:
+  \begin{alignat*}{3}
+    & \p &&: \ba\,\ul{\p}\,(\Gamma,\,A) &&\equiv \Gamma \\
+    & \q &&: \ba\,\ul{\q}\,(\Gamma,\,A) &&\equiv A \\
+    & (\sigma,\,t) &&: \ba\,(\ulsigma,\,\ult)\,\Gamma &&\equiv (\Delta,\,A)
+  \end{alignat*}
+  For $\p$ and $\q$, equations follow from preservation by $\ba$. For pairing,
+  the goal further simplifies to $(\ba\,\ulsigma\,\Gamma,\,\ba\,\ult\,\Gamma)
+  \equiv (\Delta,\,A)$. Then, the first and second components are equal by
+  the $\sigma$ and $t$ hypotheses.
 
+  \item
+  Assuming $A : \Ty_{\bs{\El\,a}}\,\Delta\,\ulA$ and $\sigma :
+  \Sub_{\bs{\El\,a}}\,\Gamma\,\Delta\,\ulsigma$, we aim to define
+  $A[\sigma]_{\bs{\El\,a}} :
+  \Ty_{\bs{\El\,a}}\,\Gamma\,(\ulA[\ulsigma])$. Simplifying types, $A :
+  \Tm_0\,(\ba\,\ulA\,\Delta)$, $\sigma : \ba\,\ulsigma\,\Gamma \equiv \Delta$
+  and the target type is $\Tm_0\,(\ba\,(\ulA[\ulsigma])\,\Gamma)$, which is the
+  same as $\Tm_0\,(\ba\,\ulA\,(\ba\,\ulsigma\,\Gamma))$, by the preservation of
+  $\blank[\blank]$ by $\ba$. Hence, by the $\sigma$ assumption, the target
+  type is $\Tm_0\,(\ba\,\ulA\,\Delta)$, so we give the following definition:
+  \[
+    A[\sigma]_{\bs{\El\,a}} \defn A
+  \]
+  This is clearly functorial; moreover, substitution rules for the other type
+  formers hold trivially.
+  \item Term substitution is given by transitivity of equality.
 
+  \item For $\Id_{\bs{\El\,a}}\,t\,u : \Ty_{\bs{\El\,a}}\,\Gamma\,(\Id\,\ult\,\ulu)$,
+    the goal type is $\Tm_0\,(\ba\,(\Id\,\ult\,\ulu)\,\Gamma)$, hence
+    $\Tm_0\,(\ba\,\ult\,\Gamma = \ba\,\ulu\,\Gamma)$. This holds by
+    $t : \ba\,\ult\,\Gamma \equiv A$ and $u : \ba\,\ult\,\Gamma \equiv A$.
+    Reflexivity and equality reflection are trivial by UIP.
 
+  \item
+    For $A : \Ty_{\bs{\El\,a}}\,\Gamma\,\ulA$ and $B :
+    \Ty_{\bs{\El\,a}}\,(\Gamma \ext A)\,\ulB$, we aim to define
+    $\Sigma_{\bs{\El\,a}}\,A\,B :
+    \Ty_{\bs{\El\,a}}\,\Gamma\,(\Sigma\,\ulA\,\ulB)$, hence
+    \begin{alignat*}{3}
+      &\Sigma_{\bs{\El\,a}}\,A\,B : \Tm_0\,(\ba\,(\Sigma\,\ulA\,\ulB)\,\Gamma)\\
+      &\Sigma_{\bs{\El\,a}}\,A\,B : \Tm_0\,((A : \ba\,\ulA\,\Gamma) \times \ba\,\ulB\,(\Gamma,\,A))\\
+      &\Sigma_{\bs{\El\,a}}\,A\,B \defn (A,\,B)
+    \end{alignat*}
+    Projections and pairing proceed analogously to what we did for comprehension.
+  \item
+  For $\K_{\bs{\El\,a}}\,\Delta : \Ty_{\bs{\El\,a}}\,\Gamma\,(\K\,\ulDelta)$,
+  the target type simplifies to $\Tm_0\,(\ba\,\ulDelta)$, hence we have
+  $\K_{\bs{\El\,a}}\,\Delta \defn \Delta$. For the specifying sort equation of $\K$,
+  we have to show
+  \[
+  \Sub_{\bs{\El\,a}}\,\Gamma\,\Delta\,\ulsigma \equiv
+  \Tm_{\bs{\El\,a}}\,\Gamma\,(\K_{\bs{\El\,a}}\,\Delta)\,\ulsigma
+  \]
+  where $\ulsigma : \Sub\,\ulGamma\,\ulDelta$ but at the same time $\ulsigma :
+  \Tm\,\ulGamma\,(\K\,\ulDelta)$ because of the $\K$ sort equation in the base.
+  Fortunately, both sides simplify to $\ba\,\ulsigma\,\Gamma \equiv \Delta$.
+\end{itemize}
 
+\noindent We still have to check $\bs{(\El\,a)[\sigma]} \equiv \bs{\El\,(a \circ
+  \sigma)}$, the naturality rule for $\bEl$. We only have to check equality of
+underlying sets, $\Con$ and $\Ty$ formers, since terms and substitutions are
+equal by UIP. For underlying sets, both sides compute to the following:
+\begin{alignat*}{3}
+  &\Con\,\ulGamma &&\defn \Tm_0\,(\ba\,(\bsigma\,\ulGamma)) \\
+  &\Sub\,\Gamma\,\Delta\,\ulsigma &&\defn \ba\,(\bsigma\,\ulsigma)\,\Gamma \equiv \Delta \\
+  &\Ty\,\Gamma\,\ulA &&\defn \Tm_0\,(\ba\,(\bsigma\,\ulA)\,\Gamma)\\
+  &\Tm\,\Gamma\,A\,\ult &&\defn \ba\,(\bsigma\,\ult)\,\Gamma \equiv A
+\end{alignat*}
+Since $\bsigma$ also strictly preserves all structure, and we simply replace $\ba$ action
+by the composite $\bs{a \circ \sigma}$ action, it is straightforward to check that $\Con$
+and $\Ty$ formers are also the same on both sides.
 
+At this point, we have $\bs{\U : \Con}$ and $\bs{\El : \Sub\,\Gamma\,\U}$. Let's
+rename them to $\bU'$ and $\bEl'$ respectively, and define the usual ``open''
+versions:
+\begin{alignat*}{3}
+  &\bs{\U} : \bs{\Ty\,\Gamma} &&\bs{\El} : \bs{\Tm\,\Gamma\,\U} \to \bs{\Ty\,\Gamma}\\
+  &\bs{\U} \defn \bs{\K\,\U'}\hspace{2em}&&\bs{\El}\,\ba \defn \bEl'\,\ba
+\end{alignat*}
 
+\subsubsection{Identity}
 
+Assuming $\bs{t,\,u : \Tm\,\Gamma\,A}$, extensional identity $\bs{\Id\,t\,u}$ is
+defined as component-wise equality:
+\begin{alignat*}{3}
+  & \Con_{\bs{\Id\,t\,u}}\,\ulGamma &&\defn \bt\,\ulGamma \equiv \bu\,\ulGamma\\
+  & \Sub_{\bs{\Id\,t\,u}}\,\Gamma\,\Delta\,\ulsigma &&\defn \bt\,\ulsigma \equiv \bu\,\ulsigma\\
+  & \Ty_{\bs{\Id\,t\,u}}\,\Gamma\,\ulA &&\defn \bt\,\ulA \equiv \bu\,\ulA\\
+  & \Tm_{\bs{\Id\,t\,u}}\,\Gamma\,A\,\ult &&\defn \bt\,\ult \equiv \bu\,\ult
+\end{alignat*}
+All other structure follows from structure-preservation of $\bt$ and $\bu$. For
+the simplest example, $\emptycon_{\bs{\Id\,t\,u}} : \bt\,\ulemptycon \equiv
+\bu\,\ulemptycon$ holds because $\bt$ and $\bu$ both preserve $\ulemptycon$. The
+rule $\bs{(\Id\,t\,u)[\sigma]} \equiv \bs{\Id\,(t[\sigma])\,(u[\sigma])}$ is
+straightforward to check: we only have to look at the underlying sets, where
+e.g. both sides have $\Con\,\ulGamma \equiv (\bt\,(\bsigma\,\ulGamma) \equiv
+\bu\,(\bsigma\,\ulGamma))$. It's also evident that
+$\bs{\Tm\,\Gamma\,(\Id\,t\,u)}$ is equivalent to $\bt \equiv \bu$, that is, we
+have reflexivity and equality reflection.
 
-
-
-
-
+\subsubsection{Induction Function Type}
 
 
 
@@ -3183,11 +3464,7 @@ clearly a base component in $\bGamma$.
 \subsection{Induction for Term Algebras}
 \subsection{Church Encoding}
 \subsection{Awodey-Frey-Speight Encoding}
-
 \section{Left Adjoints of Signature Morphisms}
-
-
-
 
 \chapter{Infinitary Quotient Inductive-Inductive Types}
 \label{chap:iqiit}

@@ -1,5 +1,5 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{ACD{\etalchar{+}}18}
+\begin{thebibliography}{GKNB20}
 
 \bibitem[AAC{\etalchar{+}}20]{allais20type}
 Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
@@ -57,6 +57,12 @@ Patrick Bahr and Tom Hvitved.
   of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
   2011, Tokyo, Japan, September 19-21, 2011}, pages 83--94. {ACM}, 2011.
 
+\bibitem[BKS21]{bocquet2021induction}
+Rafa{\"e}l Bocquet, Ambrus Kaposi, and Christian Sattler.
+\newblock Induction principles for type theories, internally to presheaf
+  categories.
+\newblock {\em arXiv preprint arXiv:2102.11649}, 2021.
+
 \bibitem[Cap17]{capriotti2017models}
 Paolo Capriotti.
 \newblock Models of type theory with strict equality.
@@ -87,6 +93,14 @@ Peter Dybjer.
   and Programs, International Workshop TYPES'95, Torino, Italy, June 5-8, 1995,
   Selected Papers}, volume 1158 of {\em Lecture Notes in Computer Science},
   pages 120--134. Springer, 1995.
+
+\bibitem[GKNB20]{gratzer20multimodal}
+Daniel Gratzer, G.~A. Kavvos, Andreas Nuyts, and Lars Birkedal.
+\newblock Multimodal dependent type theory.
+\newblock In Holger Hermanns, Lijun Zhang, Naoki Kobayashi, and Dale Miller,
+  editors, {\em {LICS} '20: 35th Annual {ACM/IEEE} Symposium on Logic in
+  Computer Science, Saarbr{\"{u}}cken, Germany, July 8-11, 2020}, pages
+  492--506. {ACM}, 2020.
 
 \bibitem[HRR14]{udayReynolds}
 Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
