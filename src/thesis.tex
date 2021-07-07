@@ -72,6 +72,7 @@
 \newcommand{\mbf}[1]{\mathbf{#1}}
 \newcommand{\bs}[1]{\boldsymbol{#1}}
 
+\newcommand{\Ix}{\mi{Ix}}
 
 \newcommand{\zero}{\ms{zero}}
 \newcommand{\suc}{\ms{suc}}
@@ -455,6 +456,7 @@ The definition of $(\app\,t\,u)^M$ is well-typed by the induction hypothesis
 $u^M\,\gamma^M : X^M\,(u^A\,\gamma_0) = u^A\,\gamma_1$.
 
 \begin{mydefinition}
+\label{def:simple-morphism}
 To get notions of \textbf{algebra morphisms}, we again pack up $\Gamma^M$ with
 the interpretation of $\iota$.
 \begin{alignat*}{3}
@@ -572,7 +574,7 @@ Analogously to before, everything depends on a predicate interpretation $X^D : X
 function preserves predicates. The interpretation of terms is again a
 fundamental lemma, and we again have pointwise definitions for contexts and
 substitutions.
-\begin{mydefinition}[\textbf{displayed algebras}]
+\begin{mydefinition}[\textbf{displayed algebras}]\label{def:simple-section}
 \begin{alignat*}{3}
   & \DispAlg : \{\Gamma : \Con\} \to \Alg\,\Gamma \to \Set_1\\
   & \DispAlg\,\{\Gamma\}\,(X,\,\gamma) \defn (X^D : X \to \Set) \times \Gamma^D\,X^D\,\gamma
@@ -3450,12 +3452,88 @@ e.g. both sides have $\Con\,\ulGamma \equiv (\bt\,(\bsigma\,\ulGamma) \equiv
 $\bs{\Tm\,\Gamma\,(\Id\,t\,u)}$ is equivalent to $\bt \equiv \bu$, that is, we
 have reflexivity and equality reflection.
 
-\subsubsection{Induction Function Type}
+\subsubsection{Inductive Function Type}
 
+For $\bs{a : \Tm\,\Gamma\,\U}$ and $\bs{B : \Ty\,(\Gamma \ext \El\,a)}$, we aim
+to define $\bs{\Pi\,a\,B : \Ty\,\Gamma}$. This is dependent product of displayed
+flcwfs, indexed over a \emph{discrete} domain. Discreteness is critical: since
+morphisms in $\bs{\El\,a}$ are proof-irrelevant and invertible (because they are
+equations), we avoid the variance issues that preclude general $\Pi$-types in
+the cwf of categories \cite[Secion~A1.5]{johnstone2002sketches}.
 
+The direct definition would be to define underlying sets as products, indexed
+over corresponding components in $\bs{\El\,a}$:
+\begin{alignat*}{3}
+  & \Con_{\bs{\Pi\,a\,B}}\,\ulGamma &&\defn (\gamma : \ba\,\ulGamma) \to \Con_{\bB}\,(\ulGamma,\,\gamma)\\
+  & \Sub_{\bs{\Pi\,a\,B}}\,\Gamma\,\Delta\,\ulsigma &&\defn
+    \{\gamma : \ba\,\ulGamma\}\{\delta : \ba\,\ulDelta\}(\sigma : \Sub_{\bs{\El\,a}}\,\gamma\,\delta\,\ulsigma) \to \Sub_{\bB}\,(\Gamma\,\gamma)\,(\Delta\,\delta)\,(\ulsigma,\,\sigma)\\
+  & \Ty_{\bs{\Pi\,a\,B}}\,\Gamma\,\ulA &&\defn
+    \{\gamma : \ba\,\ulGamma\}(\alpha : \ba\,\ulA\,\gamma) \to \Ty_{\bB}\,(\Gamma\,\gamma)\,(\ulA,\,\alpha)\\
+  & \Tm_{\bs{\Pi\,a\,B}}\,\Gamma\,A\,\ult &&\defn
+    \{\gamma : \ba\,\ulGamma\}\{\alpha : \ba\,\ulA\,\gamma\}(t : \Tm_{\bs{\El\,a}}\,\gamma\,\delta\,\ult)
+      \to
+    \Tm_{\bB}\,(\Gamma\,\gamma)\,(\A\,\alpha)\,(\ult,\,t)
+\end{alignat*}
+But just like in Definitions \ref{def:simple-morphism} and
+\ref{def:simple-section}, we can contract the $\Sub$ and $\Tm$ definitions,
+since $\Sub_{\bs{\El\,a}}\,\gamma\,\delta\,\ulsigma \equiv
+(\ba\,\ulsigma\,\gamma \equiv \delta)$ and
+$\Tm_{\bs{\El\,a}}\,\gamma\,\alpha\,\ult \equiv (\ba\,\ult\,\gamma \equiv
+\alpha)$.
+\begin{alignat*}{3}
+  & \Con_{\bs{\Pi\,a\,B}}\,\ulGamma &&\defn (\gamma : \ba\,\ulGamma) \to \Con_{\bB}\,(\ulGamma,\,\gamma)\\
+  & \Sub_{\bs{\Pi\,a\,B}}\,\Gamma\,\Delta\,\ulsigma &&\defn
+    (\gamma : \ba\,\ulGamma)\to \Sub_{\bB}\,(\Gamma\,\gamma)\,(\Delta\,(\ba\,\ulsigma\,\gamma))\,(\ulsigma,\,\refl)\\
+  & \Ty_{\bs{\Pi\,a\,B}}\,\Gamma\,\ulA &&\defn
+  \{\gamma : \ba\,\ulGamma\}(\alpha : \ba\,\ulA\,\gamma)
+  \to \Ty_{\bB}\,(\Gamma\,\gamma)\,(\ulA,\,\alpha)\\
+  & \Tm_{\bs{\Pi\,a\,B}}\,\Gamma\,A\,\ult &&\defn
+    (\gamma : \ba\,\ulGamma) \to \Tm_{\bB}\,(\Gamma\,\gamma)\,(\A\,(\ba\,\ult\,\gamma))\,(\ult,\,\refl)
+\end{alignat*}
+With the contracted definition, $\Sub$ and $\Tm$ are only indexed over displayed
+objects, but not over displayed morphisms or terms anymore. So it is apparent
+that we cannot have issues with indexing variance. All structure in
+$\bs{\Pi\,a\,B}$ is pointwise inherited from $\bB$. We list some examples below
+for definitions.
+\begin{alignat*}{3}
+  &\emptycon_{\bs{\Pi\,a\,B}}\,\gamma &&\defn \emptycon_{\bB}\\
+  &(\Gamma \ext_{\bs{\Pi\,a\,B}} A)\,(\gamma,\,\alpha) &&\defn (\Gamma\,\gamma \ext_{\bB} A\,\alpha)\\
+  &\id_{\bs{\Pi\,a\,B}}\,\gamma &&\defn \id_{\bB}\\
+  &(\sigma \circ_{\bs{\Pi\,a\,B}} \delta)\,\gamma &&\defn \sigma\,\gamma \circ_{\bB} \delta\,\gamma\\
+  &A[\sigma]_{\bs{\Pi\,a\,B}}\,\{\gamma\}\,\alpha &&\defn (A\,\alpha)[\sigma\,\gamma]_{\bB}\\
+  &\K_{\bs{\Pi\,a\,B}}\,\Delta\,\alpha &&\defn \K_{\bB}\,(\Delta\,\alpha)
+\end{alignat*}
 
+For the specifying isomorphism $\bs{(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B)
+  \simeq \Tm\,(\Gamma \ext \El\,a)\,B}$, note that the difference in
+presentation is exactly component-wise currying and uncurrying. For instance, in
+$\bs{t : \Tm\,\Gamma\,(\Pi\,a\,B)}$, the underlying action on contexts has the following
+type:
+\[
+  (\ulGamma : \Con_{\bGamma})(\gamma : \ba\,\ulGamma) \to \Con_{\bB}\,(\ulGamma,\,\gamma)
+\]
+While in $\bs{t : \Tm\,(\Gamma \ext \El\,a)\,B}$, we have
+\[
+  ((\ulGamma,\,\gamma) : (\ulGamma : \Con_{\bGamma}) \times \ba\,\ulGamma) \to \Con_{\bB}\,(\ulGamma,\,\gamma)
+\]
+So $\bs{\app}$ and $\bs{\lam}$ are defined as component-wise uncurrying and
+currying respectively.  Naturality of $\bs{\Pi}$ and $\bs{\app}$ again follows
+from the fact that flcwf morphisms strictly preserve all structure, and
+substitution is component-wise function composition.
 
+\subsubsection{External Function Type}
 
+For $\Ix : \Ty_0$ and $\bB : \Tm_0\,\Ix \to \bs{\Ty\,\Gamma}$, we define
+$\bs{\Pie}\,\Ix\,\bB : \bs{\Ty\,\Gamma}$ as the $\Ix$-indexed direct product of
+a family of displayed flcwfs.
+\begin{alignat*}{3}
+  & \Con_{\bs{\Pie}\,\Ix\,\bB}\,\ulGamma &&\defn (i : \Tm_0\,\Ix) \to \Con_{\bB\,i}\,\ulGamma\\
+  & \Sub_{\bs{\Pie}\,\Ix\,\bB}\,\Gamma\,\Delta\,\ulsigma &&\defn (i : \Tm_0\,\Ix) \to \Sub_{\bB\,i}\,(\Gamma\,i)\,(\Delta\,i)\,\ulsigma\\
+  &  \Ty_{\bs{\Pie}\,\Ix\,\bB}\,\Gamma\,\ulA &&\defn (i : \Tm_0\,\Ix) \to \Ty_{\bB\,i}\,(\Gamma\,i)\,\ulA\\
+  &  \Tm_{\bs{\Pie}\,\Ix\,\bB}\,\Gamma\,A\,\ult &&\defn (i : \Tm_0\,\Ix) \to \Tm_{\bB\,i}\,(\Gamma\,i)\,(A\,i)\,\ult
+\end{alignat*}
+All structure is defined in the evident pointwise way. $\bs{\appe}$ and $\bs{\lame}$ are
+defined by component-wise flipping of function arguments.
 
 
 \section{Term Algebras}
