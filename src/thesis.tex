@@ -2790,10 +2790,10 @@ Now, this is already rather hard to read, even together with the compressed
 notation for multiple $\Pi$ binders.
 \begin{notation}
 For more complex signatures, we may entirely switch to an internal notation,
-where we mostly reuse the same conventions as in the metatheories. We use $(x :
+where we mostly reuse the conventions in the metatheories. We use $(x :
 a) \to B$ for inductive functions, $(x : A) \to^{ext} B$ for external functions,
 but we still write $\Id$ for the identity type and make $\U$ and $\El$
-explicit. In this notation, a signature is just a listing of types. The category
+explicit. In this notation, a signature is just a listing of binders. The category
 signature becomes the following:
 \begin{alignat*}{3}
   & \mi{Obj} &&: \U\\
@@ -2862,10 +2862,10 @@ theory; this means that objects and morphisms of $\mbbC$ are in $\Ty_0$.
 \end{alignat*}
 We depart from the sugary naming scheme in Definition \ref{def:presheaf-type},
 and name the action on objects $\mi{Obj}$ and the action on morphisms
-$\mi{Hom}$.  We will shortly specify algebras for signatures, where it will be
-evident that this signature specifies presheaves from $\mbbC$ to the category
-of inner types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A
-\to \Tm_0\,B$ functions as morphisms.
+$\mi{Hom}$. When we give semantics to this signature in Section \ref{TODO}, we
+will get as algebras presheaves from $\mbbC$ to the category of inner
+types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A \to
+\Tm_0\,B$ functions as morphisms.
 \end{myexample}
 
 \textbf{Strict positivity.} Only strictly positive signatures are expressible.
@@ -3776,6 +3776,7 @@ in comparison to what we did with simple signatures.
 \end{itemize}
 
 \begin{mydefinition} [\textbf{Term algebras}]
+\label{sec:fqiit-term-algebras}
 We fix a $\Omega : \Con_1$. We define $\blank^T$ by induction on the outer
 ToS. Formally, we need a displayed ToS model, but we instead present the
 resulting eliminator, which is perhaps easier to read. The underlying functions
@@ -3787,6 +3788,44 @@ have the following types.
   &\blank^T &&: (\sigma : \Sub_1\,\Gamma\,\Delta)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Delta^T\,(\down\!\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)\\
   &\blank^T &&: (t : \SigTm_1\,\Gamma\,A)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to A^T\,\nu\,((\down\!t)[\nu]) \equiv t^A\,(\Gamma^T\,\nu)
 \end{alignat*}
+We review the idea of term algebras. In any model of ToS, we might think of a
+$\Sub\,\emptycon\,\Gamma$ as a $\Gamma$-algebra internal to the model. In the
+$\blank^T$ interpretation we can assume $\Omega \equiv \emptycon$; this means
+that from any internal $\Gamma$-algebra, in any model of ToS, we can extract an
+``external'' $\Gamma$-algebra. This is possible because every sort $a :
+\Tm\,\Gamma\,\U$ in ToS induces an external set of terms as
+$\Tm\,\Gamma\,(\El\,a)$.
+
+We can view the generalization from $\emptycon$ to arbitrary $\Omega$ as
+switching from working in a given model $\ms{M}$ of ToS, to working in the
+\emph{slice model} $\ms{M}/\Omega$, where contexts are $\Omega$ extended with
+zero or more entries. And in $\ms{M}/\Omega$, we have an $\Omega$-algebra quite
+trivially, by taking the identity morphism $\id :
+\Sub\,\Omega\,\Omega$\footnote{$\Sub_{\ms{M}/\Omega}\,\emptycon\,\Omega$ is
+isomorphic to, but not strictly the same as
+$\Sub_{\ms{M}}\,\Omega\,\Omega$.}. Hence, term algebras arise by first taking
+the trivial internal algebra $\id$ in $\ms{M}/\Omega$, then converting it to an
+external algebra as $\Omega^T\,\id : \Omega^A$.
+
+\emph{Remark.} We could have presented $\blank^T$ and slice models in an
+explicit separate way. We instead chose to merge them into the current
+$\blank^T$, since we don't use slice models elsewhere, and we can skip their
+definition this way. Slices models would require the specification of
+\emph{telescopes}, used to extend the base context, but this entails a fair
+amount of bureaucratic detail.
+
+
+
+
+
+
+
+%% In the \emph{slice model} $\ToS/\Omega$, contexts are extensions of
+%% $\Omega$ with zero or more entries, and the empty context is simply $\Omega$. Thus,
+%% in $\ToS/\Omega$, an internal $\Gamma$-algebra is an element of $\Sub\,\Omega\,\Gamma$.
+
+%% inside the standard $\Set$ model (which yields $\blank^A$), a $\Sub\,\emptycon\,\Gamma$ is
+%% actually isomorphic to $\Gamma^A$.
 
 
 
@@ -3798,21 +3837,9 @@ have the following types.
 
 
 
-%% For building term algebra
-
-
-%% We proceed with the construction of term algebras for FQII signatures. For
-
-
-%% We make a
-%% generalization compared to the case of simple signatures.
 
 
 
-
-
-\label{sec:fqiit-term-algebras}
-\subsection{Generic Term Algebras}
 \subsection{Induction for Term Algebras}
 \subsection{Church Encoding}
 \subsection{Awodey-Frey-Speight Encoding}
