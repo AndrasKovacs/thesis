@@ -50,6 +50,12 @@ Steve Awodey.
 \newblock Natural models of homotopy type theory.
 \newblock {\em Math. Struct. Comput. Sci.}, 28(2):241--286, 2018.
 
+\bibitem[BCH14]{cubical}
+Marc Bezem, Thierry Coquand, and Simon Huber.
+\newblock A model of type theory in cubical sets.
+\newblock In {\em 19th International Conference on Types for Proofs and
+  Programs (TYPES 2013)}, volume~26, pages 107--128, 2014.
+
 \bibitem[BH11]{compdata}
 Patrick Bahr and Tom Hvitved.
 \newblock Compositional data types.
@@ -62,6 +68,12 @@ Rafa{\"e}l Bocquet, Ambrus Kaposi, and Christian Sattler.
 \newblock Induction principles for type theories, internally to presheaf
   categories.
 \newblock {\em arXiv preprint arXiv:2102.11649}, 2021.
+
+\bibitem[BPT17]{next700}
+Simon Boulier, Pierre-Marie P{\'e}drot, and Nicolas Tabareau.
+\newblock The next 700 syntactical models of type theory.
+\newblock In {\em Proceedings of the 6th ACM SIGPLAN Conference on Certified
+  Programs and Proofs}, CPP 2017, pages 182--194, New York, NY, USA, 2017. ACM.
 
 \bibitem[Cap17]{capriotti2017models}
 Paolo Capriotti.
@@ -107,6 +119,12 @@ Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
 \newblock Logical relations and parametricity - {A} reynolds programme for
   category theory and programming languages.
 \newblock {\em Electron. Notes Theor. Comput. Sci.}, 303:149--180, 2014.
+
+\bibitem[HS96]{hofmann96groupoidmodel}
+Martin Hofmann and Thomas Streicher.
+\newblock The groupoid interpretation of type theory.
+\newblock In {\em In Venice Festschrift}, pages 83--111. Oxford University
+  Press, 1996.
 
 \bibitem[Hug21]{whynotw}
 Jasper Hugunin.

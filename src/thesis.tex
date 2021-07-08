@@ -23,6 +23,16 @@
 \usepackage{bm}
 \usepackage{titlesec}
 
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows,
+                calc,
+                decorations.pathreplacing,
+                calligraphy,% had to be after decorations.pathreplacing
+                matrix,
+                positioning
+                }
+
 %% \bibliographystyle{IEEEtran}
 \bibliographystyle{alpha}
 
@@ -1770,7 +1780,7 @@ we choose that to be the primitive notion, instead of having two family
 structures.
 
 Do we lose anything by this? For the purposes of this thesis, not
-really. However, if we wanted to implement 2LTT as a system for two-stage
+really. However, if we want to implement 2LTT as a system for two-stage
 compilation, the $\Lift$ syntax appears to be closer to existing systems.
 Staging is about computing all outer redexes but no inner ones, thereby
 outputting syntax which is purely in the inner theory. This can be implemented
@@ -2215,6 +2225,7 @@ $\Tm : \Con \to \Ty \to \Set$. However, now by $\Set$ we mean the outer universe
 of 2LTT. Thus signatures are inductively defined in the outer layer.
 
 \subsection{Algebras}
+\label{sec:2ltt-simple-algebras}
 
 Again we compute algebras by induction on signatures, but now we use inner
 types for carriers of algebras. We interpret types as follows:
@@ -2394,7 +2405,9 @@ We still have ToS in the outer layer. To make the naming
 scheme consistent, we shall write outer ToS types as $\SigTy_1$,
 $\SigTm_1$, $\Con_1$, $\Var_1$ and $\Sub_1$. We have conversion functions from
 the outer ToS to the inner ToS:
-\begin{mydefinition} We have the following \textbf{lowering} functions which
+\begin{mydefinition}
+\label{def:simple-lowering}
+We have the following \textbf{lowering} functions which
 preserve all structure.
 \begin{alignat*}{3}
   & \down\,: \SigTy_1 &&\to \Tm_0\,\SigTy_0\\
@@ -3254,6 +3267,8 @@ first place. Checking that the $\bM$ model indeed works, is the somewhat tedious
 task that we have to perform \emph{once}, in order to get semantics for any
 other finitary QII theory.
 
+\subsection{Type Formers}
+
 \subsubsection{Strict Constant Families}
 
 This was not included in the ToS specification, but it's quite useful, so we
@@ -3535,14 +3550,274 @@ a family of displayed flcwfs.
 All structure is defined in the evident pointwise way. $\bs{\appe}$ and $\bs{\lame}$ are
 defined by component-wise flipping of function arguments.
 
+\subsection{Discussion of Semantics}
+
+\subsubsection{Flcwfs For Free}
+
+We give a quick summary for using the semantics of FQII signatures. As input we
+pick a) a signature $\Gamma$ b) a cwf $\mbbC$ with $\Sigma$, $\top$ and
+extensional $\Id$. Then, we interpret the signature in $\bM$, thereby getting an
+flcwf in 2LTT. Then, we interpret that in presheaves over $\mbbC$, and we get
+the flcwf whose objects are internal $\Gamma$-algebras in $\mbbC$.
+
+One use case is in building models of certain type theories. Usually, this
+starts with constructing the base cwf. But if the objects can be specified using
+an FQII signature, we get an flcwf for free. In some cases, we get exactly
+what's needed. For example, the flcwf of presheaves can be used as it is in the
+presheaf models of type theories.
+
+In other cases, the flcwf ``for free'' has to be extended with extra
+conditions. This often happens if the objects in the model have an internal
+notion of ``equivalence'' which has to be respected by types.
+\begin{itemize}
+  \item In the setoid model, objects are setoids and types are displayed
+    setoids with additional fibrancy structure \cite{TODO}.
+  \item The groupoid model \cite{hofmann96groupoidmodel} is analogous; again types are displayed groupoids
+    with fibrancy structure.
+  \item Likewise, in the cubical set model \cite{cubical}, types are displayed
+    presheaves together with fibrancy structure (Kan composition).
+\end{itemize}
+
+In all these cases, the semantic objects have FQII signatures. We can take their
+flwcfs internally to $\bs{\Set}$ and add fibrancy conditions. The cubical set
+model is presented exactly in this way in \cite{cubical}, using displayed
+algebras. The groupoid model in \cite{hofmann96groupoidmodel} instead presents
+types as $\bs{\Gamma} \to \bs{\ms{Gpd}}$ functors, i.e.\ uses an indexed style
+instead of the displayed style.
+
+In the indexed-style groupoid model, we get strictly functorial type
+substitution, just like in the displayed style. However, the displayed style
+appears to be a more general way to get strict substitution, as it works for
+every FQII theory. Again, although finitely complete categories can be always
+strictified to cwfs, if we ever need to perform calculations with the
+internal definitions of a model, the displayed style is much more compact.
+
+\subsubsection{Variations of the Semantics}
+
+In Section \ref{sec:fqiit-tos}, we required that the inner theory has $\Sigma$,
+$\top$ and extensional $\Id$. Hence, when we interpret a signature, we again
+need to assume these type formers in $\mbbC$. We used the assumed type formers
+in the definition of $\bU$.
+
+However, we can drop $\Id$ from the requirements on the inner theory, and
+likewise drop the identity type from flcwfs, and the model still works. In this
+case we have a somewhat more general semantics. In particular, like in Section
+\ref{sec:2ltt-simple-algebras}, we can interpret signatures in finite product
+categories, because $\top$ and $\Sigma$ can be derived from finite products in
+the constructed ``simply typed'' cwf. On the other hand, we get less out of the
+semantics. For instance, we cannot show equivalence of initiality and induction
+without $\Id$.
+
+We could also add more type formers to the semantics. We may add \textbf{small
+  limits} via the external function type $\Pie$ that we already have in
+signatures. Extending flcwfs with $\Pie$ requires $\Pi$-types in the inner
+theory of 2LTT, hence in $\mbbC$ as well. Intuitively, indexed products of
+algebras require functions in the underlying sorts. More concretely, in the
+definition of $\bU$, we have to interpret
+\[
+  \Pie_{\bU} : (\Ix : \Ty_0) \to (\Tm_0\,\Ix \to \Ty_{\bU}\,\Gamma) \to \Ty_{\bU}\,\Gamma
+\]
+hence
+\[
+  \Pie_{\bU} : (\Ix : \Ty_0) \to (\Tm_0\,\Ix \to \Tm_0\,\Gamma \to \Ty_0) \to \Tm_0\,\Gamma \to \Ty_0
+\]
+This works if we can return an inner $\Pi$ in the definition:
+\[
+  \Pie_{\bU}\,\Ix\,B\,\gamma \defn (i : \Ix) \to B\,i\,\gamma
+\]
+In this case, the ``small limit'' cwf semantics can be completed. We omit
+checking the details here. From $\Pie$, we also recover indexed products, by
+using $\Pie\,\Ix\,(\lambda\,i.\,\K\,\Gamma_i)$, where $\Gamma_i$ is an indexed
+family of objects.
+
+With the small limit semantics, if we want to have a simply typed
+interpretation, we can start with a cartesian closed $\mbbC$.
+
+\subsubsection{Substitutions}
+
+Interpreting signatures is not the only potentially useful thing that we get out
+of the semantics. Each $\sigma : \Sub\,\Gamma\,\Delta$ can be viewed as a free
+interpretation of the $\Delta$ theory in $\Gamma$, and we get a strict flcwf
+morphism from the semantics.
+\\\\
+\indent One use case of $\Sub$ is to specify \textbf{ornaments} \cite{TODO}, i.e.\ ways
+to decorate structures with additional information, or dually, to erase parts of
+some structure. Ornaments differ from the usual forgetful maps, because they
+forget structure in \emph{negative} position, i.e.\ in assumptions of
+construction rules.
+
+\begin{myexample}
+We assume $A : \Ty_0$. We define the substitution which forgets elements of
+$A$-lists.
+\begin{alignat*}{3}
+  & \sigma : \Sub\,&&
+  (\emptycon \ext (\mi{Nat} : \U) \ext (\mi{zero} : \El\,\mi{Nat}) \ext (\mi{suc} : \mi{Nat}))\\
+  & &&(\emptycon \ext (\mi{List} : \U) \ext (\mi{nil} : \El\,\mi{List}) \ext (\mi{cons} : A \toe \mi{List} \to \mi{List}))
+\end{alignat*}
+The map goes from numbers to lists because of the ``contravariant''
+forgetfulness. We define $\sigma$ by listing its component definitions.
+\begin{alignat*}{3}
+  &\mi{List} &&\defn \mi{Nat}\\
+  &\mi{nil} &&\defn \mi{zero}\\
+  &\mi{cons} &&\defn \lambda^{ext}\,\_.\,\lambda\,n.\,\mi{suc}\,n
+\end{alignat*}
+\end{myexample}
+
+\begin{myexample}
+  We assume $\Nat_0 : \Ty_0$ with $\zero_0$ and $\suc_0$, and define $\sigma : \Sub\,\ms{NatSig}\,\ms{FinSig}$, where $\ms{FinSig}$ is as follows:
+\begin{alignat*}{3}
+  &\mi{Fin}  &&: \Nat_0 \toe \U\\
+  &\mi{zero} &&: (n : \Nat_0) \toe \El\,(\mi{Fin}\,(\suc_0\,n))\\
+  &\mi{suc}  &&: (n : \Nat_0) \toe \mi{Fin}\,n \to \El\,(\mi{Fin}\,(\suc_0\,n))
+\end{alignat*}
+$\sigma$ is defined as
+\begin{alignat*}{3}
+  &\mi{Fin}  &&\defn \mi{Nat}\\
+  &\mi{zero} &&\defn \lambda^{ext}\,\_.\,\mi{zero}\\
+  &\mi{suc}  &&\defn \lambda^{ext}\,\_.\,\lambda\,n.\,\mi{suc}\,n
+\end{alignat*}
+\end{myexample}
+For a specific programming use case, if we have any recursive function defined
+on an ``erased'' type, we can convert that to a recursive function which acts on
+an ``ornamented'' type. For example, if we have some $\Nat$-algebra $\Gamma$,
+the recursor yields a morphism from the initial algebra to $\Gamma$. We can map
+$\Gamma$ to a list-algebra or a $\ms{Fin}$-algebra, and then we can also use
+recursors for lists or $\ms{Fin}$. Equivalently, we can map the unique morphism
+to $\Gamma$ directly to a morphism between ornamented algebras.
+
+Note though that a number of features and concepts from prior work on ornaments
+are not yet reproduced. For example, we don't yet have an analogue of
+\emph{algebraic ornaments}, which would allow us produce an ornamented signature
+as an \emph{output} of a generic operation, instead of assuming it to begin
+with. Exploring ornaments with QII signatures could be part of future work.
+\\\\
+\indent In a broader context, ToS provides a synthetic language for specifying
+\textbf{model constructions}. For example, we can show that constant families
+and democracy are equivalent, by defining an invertible $\Sub$ between
+signatures of $\ms{cwf}+\K$ and $\ms{cwf^{dem}}$, and getting an isomorphism of
+categories of models.
+
+In many cases, this does not work, since ToS is rather restricted as a
+language. In Chapter \ref{chap:iqiit}, we present a more expressive ToS which
+is sufficient to rephrase many syntactic models \cite{next700} as signature
+morphisms, thus morphisms of categories of models.
+
+\section{Recovering AMDS Interpretations}
+
+We have defined the $\bM$ model in a ``bundled'' fashion, but sometimes we will
+also need to refer to pieces of it. On Figure \ref{fig:fqiit-model} we have a
+summary of the model. On the left, the rows are labeled with components of ToS,
+while on the top we have components of flcwf. The individual rows can be further
+unfolded, as each of them contains multiple components. Likewise the $\Sigma$,
+$\Id$ and $\K$ columns can be unfolded. We get the whole model by filling in
+every cell of the unfolded table with a definition. Of course, many of these
+cells are equations between equations, hence trivial by UIP.
+
+This setup is very regular and convenient, because we can extract a displayed
+ToS model from any column, which may depend on displayed model to the left. The
+whole model is the total model of all columns. For example, the $\Con$ column
+doesn't depend on anything, so it's a plain model. The $\Ty$ column is
+displayed over $\Con$. The $\Tm$ column is displayed over the total model of
+$\Con$ and $\Ty$, but it does not actually depend on $\Sub$.
+
+From each displayed model, we get an eliminator, i.e.\ a family of
+interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
+$\blank^S$ in the table, but in principle we could refer to the eliminators of
+other columns as well. The interpretation functions can be defined in two ways:
+\begin{itemize}
+\item By separately taking the eliminators of each column, and referring to previous
+      eliminators in each displayed model; e.g.\ referring to the eliminator maps $\blank^A$ in
+      the definition of the $\Ty$ column.
+\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
+      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
+\end{itemize}
+However, the two versions coincide because of the initiality of ToS syntax.
+
+\begin{mydefinition} From now on, we use $\blank^A$, $\blank^M$, $\blank^D$ and $\blank^S$ to refer
+to the families of functions that we described above.
+\end{mydefinition}
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|  }
+ \hline
+   & \multicolumn{5}{|c|}{cwf} & \multicolumn{3}{c|}{fl}\\
+ \cline{2-9}
+   & $\Con$ & $\Sub$ & $\Ty$ & $\Tm$ & $...$ & $\Sigma$ & $\Id$ & $\K$ \\
+ \hline
+   cwf    & \multirow{5}{2em}{$\blank^A$}&\multirow{5}{2em}{$\blank^M$}&\multirow{5}{2em}{$\blank^D$}&\multirow{5}{2em}{$\blank^S$}& & & & \\
+   $\U$   &                              &              &                  &    & & & & \\
+   $\Id$  &                              &              &                  &    & & & & \\
+   $\Pi$  &                              &              &                  &    & & & & \\
+   $\Pie$ &                              &              &                  &    & & & & \\
+ \hline
+\end{tabular}
+\end{center}
+\caption{The flcwf model of the theory of signatures}
+\label{fig:fqiit-model}
+\end{figure}
 
 \section{Term Algebras}
+
+In this section we proceed with the construction of term algebras for FQII
+signatures, and their recursors and eliminators. We make some generalizations,
+in comparison to what we did with simple signatures.
+
+\begin{itemize}
+  \item  We assume that $\Ty_0$ supports a model of ToS. As before,
+         we use $\SigTy_i$ and $\SigTm_i$ in the following. Thus, we have $\Con_0 :
+         \Ty_0$, $\Sub_0 : \Con_0 \to \Con_0 \to \Ty_0$, $\SigTy_0 : \Con_0 \to \Ty_0$
+         and $\SigTm_0 : (\Gamma : \Con_0) \to \SigTy_0\,\Gamma \to \Ty_0$. At the same
+         time, we still have $\Con_1$, $\Sub_1$ and so on in the outer theory. Note that
+         at this point, we \emph{do not assume} any recursion or induction principle for
+         the inner ToS model.
+  \item  We define lowering maps $\down$ similarly as in Definition \ref{def:simple-lowering}.
+         Again, these maps preserve all structure.
+\end{itemize}
+
+\begin{mydefinition} [\textbf{Term algebras}]
+We fix a $\Omega : \Con_1$. We define $\blank^T$ by induction on the outer
+ToS. Formally, we need a displayed ToS model, but we instead present the
+resulting eliminator, which is perhaps easier to read. The underlying functions
+have the following types.
+\begin{alignat*}{3}
+  &\blank^T &&: (\Gamma : \Con_1)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Gamma^A\\
+  &\blank^T &&: (A : \SigTy_1\,\Gamma)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \SigTm_0\,(\down\!\Omega)\,((\down\!A)[\nu])
+  \to A^A\,(\Gamma^T\,\nu)\\
+  &\blank^T &&: (\sigma : \Sub_1\,\Gamma\,\Delta)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Delta^T\,(\down\!\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)\\
+  &\blank^T &&: (t : \SigTm_1\,\Gamma\,A)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to A^T\,\nu\,((\down\!t)[\nu]) \equiv t^A\,(\Gamma^T\,\nu)
+\end{alignat*}
+
+
+
+
+
+
+
+\end{mydefinition}
+
+
+
+%% For building term algebra
+
+
+%% We proceed with the construction of term algebras for FQII signatures. For
+
+
+%% We make a
+%% generalization compared to the case of simple signatures.
+
+
+
+
+
 \label{sec:fqiit-term-algebras}
 \subsection{Generic Term Algebras}
 \subsection{Induction for Term Algebras}
 \subsection{Church Encoding}
 \subsection{Awodey-Frey-Speight Encoding}
 \section{Left Adjoints of Signature Morphisms}
+\label{sec:left-adjoints}
 
 \chapter{Infinitary Quotient Inductive-Inductive Types}
 \label{chap:iqiit}
