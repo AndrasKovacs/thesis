@@ -3709,12 +3709,12 @@ also need to refer to pieces of it. On Figure \ref{fig:fqiit-model} we have a
 summary of the model. On the left, the rows are labeled with components of ToS,
 while on the top we have components of flcwf. The individual rows can be further
 unfolded, as each of them contains multiple components. Likewise the $\Sigma$,
-$\Id$ and $\K$ columns can be unfolded. We get the whole model by filling in
-every cell of the unfolded table with a definition. Of course, many of these
-cells are equations between equations, hence trivial by UIP.
+$\Id$ and $\K$ columns can be unfolded. We get the whole model by filling every
+cell of the unfolded table with a definition. Of course, many of these cells are
+equations between equations, hence trivial by UIP.
 
 This setup is very regular and convenient, because we can extract a displayed
-ToS model from any column, which may depend on displayed model to the left. The
+ToS model from any column, which may depend on columns to the left. The
 whole model is the total model of all columns. For example, the $\Con$ column
 doesn't depend on anything, so it's a plain model. The $\Ty$ column is
 displayed over $\Con$. The $\Tm$ column is displayed over the total model of
@@ -3726,7 +3726,7 @@ $\blank^S$ in the table, but in principle we could refer to the eliminators of
 other columns as well. The interpretation functions can be defined in two ways:
 \begin{itemize}
 \item By separately taking the eliminators of each column, and referring to previous
-      eliminators in each displayed model; e.g.\ referring to the eliminator maps $\blank^A$ in
+      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
       the definition of the $\Ty$ column.
 \item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
       we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
@@ -3793,8 +3793,8 @@ $\Sub\,\emptycon\,\Gamma$ as a $\Gamma$-algebra internal to the model. In the
 $\blank^T$ interpretation we can assume $\Omega \equiv \emptycon$; this means
 that from any internal $\Gamma$-algebra, in any model of ToS, we can extract an
 ``external'' $\Gamma$-algebra. This is possible because every sort $a :
-\Tm\,\Gamma\,\U$ in ToS induces an external set of terms as
-$\Tm\,\Gamma\,(\El\,a)$.
+\SigTm_0\,\Gamma\,\U$ in ToS induces an external type of terms as
+$\SigTm_0\,\Gamma\,(\El\,a)$.
 
 We can view the generalization from $\emptycon$ to arbitrary $\Omega$ as
 switching from working in a given model $\ms{M}$ of ToS, to working in the
@@ -3810,30 +3810,91 @@ external algebra as $\Omega^T\,\id : \Omega^A$.
 \emph{Remark.} We could have presented $\blank^T$ and slice models in an
 explicit separate way. We instead chose to merge them into the current
 $\blank^T$, since we don't use slice models elsewhere, and we can skip their
-definition this way. Slices models would require the specification of
+definition this way. Slice models would require the specification of
 \emph{telescopes}, used to extend the base context, but this entails a fair
 amount of bureaucratic detail.
 
+We explain the $\blank^T$ specification in the following. Term and substitution
+equations are given by UIP. We omit most cases for substitutions and terms.
 
+For \textbf{contexts}, we simply recurse on the entries. We use a pattern
+matching notation for
+$\Sub_0\,(\down\!\Omega)\,(\down\!\Gamma\,\,\ext\down\!A)$, since any $\nu$ with
+this type is uniquely determined by its first and second projections
+$\p\circ\nu$ and $\q[\nu]$.
+\begin{alignat*}{3}
+  &\emptycon^T\,\nu           &&\defn \tt\\
+  &(\Gamma \ext A)^T(\nu,\,t) &&\defn (\Gamma^T\,\nu,\,A^T\,\nu\,t)
+\end{alignat*}
+\textbf{Type substitution} is as follows. This is well-typed by
+$\sigma^T\,\nu : \Delta^T\,(\down\!\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)$.
+\[ (A[\sigma : \Sub_1\,\Gamma\,\Delta])^T\,\nu\,t \defn A^T\,(\down\!\sigma\circ\nu)\,t \]
+For the \textbf{universe}, note that $\U^A\,\gamma \equiv \Ty_0$.  As we
+mentioned before, this is the key part when we map from internal sorts to
+$\Ty_0$.
+\begin{alignat*}{3}
+  &\U^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \SigTm_0\,(\down\!\Omega)\,\U \to
+          \Ty_0\\
+  &\U^T\,\nu\,a \defn \SigTm_0\,\Omega\,(\El\,a)
+\end{alignat*}
+For $\El$, we have to define
+\[
+  (\El\,a)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
+          \to \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a)[\nu]))
+          \to a^A\,(\Gamma^T\,\nu)
+\]
+but since $a^T\,\nu : \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a))[\nu])
+      \equiv a^A\,(\Gamma^T\,\nu)$, we have
+\begin{alignat*}{3}
+  &(\El\,a)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
+          &&\to \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a)[\nu]))\\
+  &       &&\to \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a)[\nu]))\\
+  &(\El\,a)^T\,\nu\,t \defn t &&
+\end{alignat*}
+The $a^T\,\nu$ equation is worth noting. If we have $\nu \equiv \id$, the
+equation is $a^T\,\id : \SigTm_0\,(\down\!\Omega)\,(\El\,(\down\!\,a)) \equiv
+a^A\,(\Omega^T\,\id)$, that is, if we evaluate a signature sort in the term
+model $\Omega^T\,\id$, we get a type of inner terms.
 
+For the \textbf{identity type}, we have to show that provably equal terms are evaluated
+to the same value in the term model.
+\begin{alignat*}{3}
+  &(\Id\,t\,u)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
+    &&\to \SigTm_0\,(\down\!\Omega)\,(\Id\,((\down\!t)[\nu])\,((\down\!u)[\nu]))\\
+  & &&\to t^A\,(\Gamma^T\,\nu) \equiv u^A\,(\Gamma^T\,\nu)
+\end{alignat*}
+We know by equality reflection that $(\down\!t)[\nu] \equiv (\down\!u)[\nu]$, and
+we also get
+\begin{alignat*}{3}
+  &t^T\,\nu &&: A^T\,\nu\,((\down\!t)[\nu]) &&\equiv t^A\,(\Gamma^T\,\nu)\\
+  &u^T\,\nu &&: A^T\,\nu\,((\down\!u)[\nu]) &&\equiv u^A\,(\Gamma^T\,\nu)
+\end{alignat*}
+from which the target equality follows.
 
+For the \textbf{inductive function type}, we have to convert an inner term with
+$\Pi$ type to an outer function.
+\begin{alignat*}{3}
+  &(\Pi\,a\,B)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
+                 &&\to \SigTm_0\,(\down\!\Omega)\,(\Pi\,(\down\!a)\,(\down\!B))\\
+  &              &&\to (\alpha : a^A\,(\Gamma^T\,\nu)) \to B^A\,(\Gamma^T\,\nu,\,\alpha)\\
+  &\rlap{$(\Pi\,a\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$}
+\end{alignat*}
+This is well-typed by $a^T\,\nu :
+\SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a))[\nu]) \equiv
+a^A\,(\Gamma^T\,\nu)$, which allows us to consider $\alpha$ to be an inner term
+in $\lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$.
 
-
-
-%% In the \emph{slice model} $\ToS/\Omega$, contexts are extensions of
-%% $\Omega$ with zero or more entries, and the empty context is simply $\Omega$. Thus,
-%% in $\ToS/\Omega$, an internal $\Gamma$-algebra is an element of $\Sub\,\Omega\,\Gamma$.
-
-%% inside the standard $\Set$ model (which yields $\blank^A$), a $\Sub\,\emptycon\,\Gamma$ is
-%% actually isomorphic to $\Gamma^A$.
-
-
-
-
-
-
-
+For the \textbf{external} function type we just recurse through the specifying
+isomorphism:
+\begin{alignat*}{3}
+  &(\Pie\,A\,B)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
+                 &&\to \SigTm_0\,(\down\!\Omega)\,(\Pie\,A\,(\lambda\,\alpha.\,\down\!(B\,\alpha)))\\
+  &              &&\to (\alpha : A) \to (B\,\alpha)^A\,(\Gamma^T\,\nu)\\
+  &\rlap{$(\Pie\,A\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,(B\,\alpha)^T\,(\nu,\,\alpha)$}
+\end{alignat*}
 \end{mydefinition}
+
+
 
 
 
