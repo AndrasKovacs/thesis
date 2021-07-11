@@ -11,6 +11,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[hidelinks]{hyperref}
 \usepackage{amsmath}
+\usepackage{cite}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsfonts}
@@ -82,6 +83,7 @@
 \newcommand{\mbf}[1]{\mathbf{#1}}
 \newcommand{\bs}[1]{\boldsymbol{#1}}
 
+
 \newcommand{\Ix}{\mi{Ix}}
 
 \newcommand{\zero}{\ms{zero}}
@@ -132,6 +134,9 @@
 \newcommand{\flcwf}{\mathsf{flcwf}}
 \newcommand{\SigTy}{\mathsf{SigTy}}
 \newcommand{\SigTm}{\mathsf{SigTm}}
+\newcommand{\SigU}{\mathsf{SigU}}
+\newcommand{\tm}{\ms{tm}}
+\newcommand{\ty}{\ms{ty}}
 
 \newcommand{\Kfam}{\mathsf{K}}
 \newcommand{\lamK}{\mathsf{lam}_{\K}}
@@ -234,6 +239,8 @@
 \newcommand{\rab}{\rangle}
 \newcommand{\defn}{:\equiv}
 \newcommand{\yon}{\ms{y}}
+
+\newcommand{\lub}{\,\sqcup\,}
 
 
 %% --------------------------------------------------------------------------------
@@ -1575,7 +1582,7 @@ Unfortunately, the exact specification above yields an inconsistent
 solution is to have multiple family structures $(\Ty_i,\,\Tm_i)$, indexed by
 universe levels, and have $\U_i : \Ty_{i + 1}\,\Gamma$ and
 $\Tm_{i+1}\,\Gamma\,\U_i \simeq \Ty_i\,\Gamma$. For a general specification of
-consistent universe hierarchies , see \cite{kovacs2021generalized}. As mentioned in Section
+consistent universe hierarchies, see \cite{kovacs2021generalized}. As mentioned in Section
 \ref{sec:universes}, we omit universe indices in the following, and implicitly
 assume ``just enough'' universes for particular purposes.
 
@@ -2378,6 +2385,7 @@ strict preservation; below we have weak preservation.
 \end{alignat*}
 
 \subsection{Term Algebras}
+\label{sec:simple-2ltt-term-algebras}
 
 For term algebras, we need to assume a bit more in the inner theory. For
 starters, it has to support the theory of signatures. In order to avoid name
@@ -2393,13 +2401,12 @@ $\SigTm_0$ for terms. That is, we have
 together with all constructors and induction principles. We also assume inner
 $\Pi$-types, because we previously defined $\Sub$ using functions.
 
-\emph{Remark.} In the current section we are liberal with making assumptions in
-the inner theory. Strictly speaking, if we only want to construct term algebras,
-we don't need to assume signature induction principles. Also, we will see in
-Section \ref{TODO} that inner ToS induction is not necessary to show weak
-initiality of term algebras; weaker assumptions suffice. In this section, we
-omit these generalizations, as the goal is to redo the constructions of Chapter
-\ref{chap:simple-inductive-signatures} without making essential changes.
+\emph{Remark.} If we only want to construct term algebras, it is not necessary
+to assume inner induction principles. It is sometimes useful to construct term
+algebras from models which are explicitly \emph{not} initial; we will see such
+examples in \ref{TODO}. In this section, our goal is to redo the constructions
+of Chapter \ref{chap:simple-inductive-signatures} without making essential changes, so
+we just assume everything that was available there.
 
 We still have ToS in the outer layer. To make the naming
 scheme consistent, we shall write outer ToS types as $\SigTy_1$,
@@ -3702,7 +3709,7 @@ language. In Chapter \ref{chap:iqiit}, we present a more expressive ToS which
 is sufficient to rephrase many syntactic models \cite{next700} as signature
 morphisms, thus morphisms of categories of models.
 
-\section{Recovering AMDS Interpretations}
+\subsubsection{Recovering AMDS Interpretations}
 
 We have defined the $\bM$ model in a ``bundled'' fashion, but sometimes we will
 also need to refer to pieces of it. On Figure \ref{fig:fqiit-model} we have a
@@ -3714,11 +3721,10 @@ cell of the unfolded table with a definition. Of course, many of these cells are
 equations between equations, hence trivial by UIP.
 
 This setup is very regular and convenient, because we can extract a displayed
-ToS model from any column, which may depend on columns to the left. The
-whole model is the total model of all columns. For example, the $\Con$ column
-doesn't depend on anything, so it's a plain model. The $\Ty$ column is
-displayed over $\Con$. The $\Tm$ column is displayed over the total model of
-$\Con$ and $\Ty$, but it does not actually depend on $\Sub$.
+ToS model from any column, which may depend on columns to the left. The whole
+model is the total model of all columns. For example, the $\Con$ column doesn't
+depend on anything, so it's a plain model. The $\Ty$ column is displayed over
+$\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
 
 From each displayed model, we get an eliminator, i.e.\ a family of
 interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
@@ -3733,9 +3739,9 @@ other columns as well. The interpretation functions can be defined in two ways:
 \end{itemize}
 However, the two versions coincide because of the initiality of ToS syntax.
 
-\begin{mydefinition} From now on, we use $\blank^A$, $\blank^M$, $\blank^D$ and $\blank^S$ to refer
-to the families of functions that we described above.
-\end{mydefinition}
+%% \begin{mydefinition} From now on, we use $\blank^A$, $\blank^M$, $\blank^D$ and $\blank^S$ to refer
+%% to the families of functions that we described above.
+%% \end{mydefinition}
 
 \begin{figure}
 \begin{center}
@@ -3757,35 +3763,229 @@ to the families of functions that we described above.
 \label{fig:fqiit-model}
 \end{figure}
 
+\section{Moving to the Inner Theory \& Refining Universe Levels}
+
+In the rest of the chapter, we discuss term algebras and their recursors and
+eliminators. Before we do that, we make two significant modifications to the
+setup.
+\\\\
+\indent First, \textbf{we drop the outer theory}, and work exclusively inside an
+extensional type theory. The reason is the following. The main purpose of 2LTT
+is to generalize the semantics of signatures. In the previous section, we
+presented semantics for signatures, where algebras are internal to arbitrary
+cwfs with $\Sigma$, $\top$ and extensional $\Id$. This is quite general; in
+particular we can interpret signatures in any finitely complete category. We
+also allowed dropping $\Id$ from the assumptions.
+
+In contrast, we make a lot more assumptions in the inner theory when we develop
+initial term algebras; we essentially have to replicate the outer features
+verbatim.  Thus, we gain nothing by using 2LTT, compared to working in a model
+of an extensional TT.
+
+What about the term model construction for simple signatures in Section
+\ref{sec:simple-2ltt-term-algebras}, why did we use 2LTT there? In that case,
+the inner theory was \emph{intensional}, i.e.\ lacked equality reflection. So
+there remained an interesting distinction between the inner and outer layer,
+which allowed us to prove \emph{definitional} $\beta$-rules for recursors. In
+contrast, here we assume inner equality reflection, so we have no distinction
+between propositional and definitional inner equality.
+\\\\
+\indent Second, \textbf{we make universe levels explicit} in the semantics and
+constructions. So far, we have been consistently ignoring universe levels. Now,
+size questions are less obvious, and quite relevant to a) ensuring the
+consistency of assumed induction principles b) laying groundwork for
+self-describing signatures in Chapter \ref{TODO}. In the following, we describe
+the new universe setup, and adapt the previously described signatures and
+semantics to it.
+
+\subsection{Universes \& Metatheory}
+
+We have countable Russell-style $\Set_i$ universes, which are \emph{cumulative},
+meaning that any type in $\Set_i$ is also an element of $\Set_{i+1}$. We use a
+surface syntax which is similar to Coq, where cumulativity is implicit. This
+contrasts the formal (``algebraic'') specification of cumulativity
+\cite{sterling2019algebraic,kovacs2021generalized}, which requires a rather
+large amount of explicit lifting annotation.
+
+Also following Coq, we have implicit \emph{cumulative subtyping}
+\cite{timany18cumulative}. In our case, this means that cumulativity commutes
+through basic type formers. Concretely, we have a $\blank\!\leq\!\blank$
+subtyping relation on types, specified by the following rules:
+\begin{mathpar}
+  \inferrule*{i \leq j}
+             {\Gamma \vdash \Set_i \leq \Set_j}
+
+  \inferrule*{\Gamma,\,x : A \vdash B \leq B'}
+             {\Gamma \vdash (x : A)\ra B \leq (x : A)\ra B'}
+
+  \inferrule*{\Gamma\vdash A \leq A' \\ \Gamma,\,x : A \vdash B \leq B'}
+             {\Gamma \vdash (x : A)\times B \leq (x : A') \times B'}
+
+  \inferrule*{\\}
+             {\Gamma \vdash A \leq A}
+
+  \inferrule*{\Gamma \vdash A \leq B \\ \Gamma\vdash B \leq C}
+             {\Gamma \vdash A \leq C}
+
+  \inferrule*{\Gamma\vdash A \leq A' \\ \Gamma\vdash t : A}
+             {\Gamma \vdash t : A'}
+\end{mathpar}
+These rules specify subtyping for \emph{surface syntax}; it is expected that
+surface syntax can be elaborated to \emph{coercions} in a formal syntax with
+algebraic cumulativity.
+
+Note that we have an \emph{invariant} rule for function domain types. This is in
+order to match Coq and \cite{timany18cumulative}, and also because we will not
+need a contravariant rule in any case.
+
+We assume that $\Pi$ and $\Sigma$ types return in least upper bounds of levels. For instance,
+assuming $A : \Set_i$ and $B : A \to \Set_j$, we have $(x : A) \to B : \Set_{i \lub j}$.
+
+\subsection{Signatures \& Semantics}
+
+First, we parameterize the notion of ToS-model with levels.
+\begin{mydefinition}
+For levels $i$ and $j$, $\ToS_{i,j} : \Set_{i+1\lub j+1}$ is the type of ToS
+models, defined as before, but where $\Con$, $\Sub$, $\Ty$ and $\Tm$ all return
+in $\Set_i$, and $\Pie$ abstracts over $\Set_j$. \emph{Remark:} by the
+cumulativity rules, we have that $\ToS_{i,j} \leq \ToS_{i+1,j}$.
+\end{mydefinition}
+
+\textbf{Assumption.} We assume that for all $j$, there exists an inhabitant of
+$\syn_j : \ToS_{j+1,j}$ which supports induction. Note the level bump in the first index;
+this is to avoid inconsistency from type-in-type:
+\begin{alignat*}{3}
+  &\Ty &&: \Con \to \Set_{j+1}\\ &\Pie &&: (A : \Set_j) \to (A \to \Ty\,\Gamma)
+  \to \Ty\,\Gamma
+\end{alignat*}
+With $\Ty$ returning in $\Set_j$, $\Pie$ would ``contain'' a $\Set_j$, but at
+the same time return in a type in $\Set_j$, and by induction we would be able to
+derive a Russell-like paradox \cite{TODO}. Likewise, all other underlying sets
+must be bumped to $\Set_{j+1}$, because of their mutual nature: contexts, terms
+and substitutions all ``contain'' types through some of their constructors.
+
+\begin{mydefinition}[\textbf{Signatures}]
+We define $\Sig_j : \Set_{j+1}$ as the type of signatures where $\Pie$ may
+abstract over $\Set_j$, so we have $\Sig_j \defn \Con_{\syn_j}$.
+\end{mydefinition}
+
+\begin{mydefinition}[\textbf{Flwcf model}]
+For levels $i$ and $j$, we have $\bM_{i,j} : \ToS_{(i+1\lub j)+1,j}$ as the
+model where contexts are flcwfs, and objects in the flcwf are algebras.  The
+model is defined in essentially the same way as in Section
+\ref{sec:fqiit-semantics}. The algebras have underlying sets in $\Set_i$ and
+(semantic) external functions have types in $\Set_j$ as domain. Hence, every
+algebra in $\bM_{i,j}$ is in $\Set_{i+1\lub j}$.
+\end{mydefinition}
+
+\begin{myexample}
+We may define $\ms{NatSig}$ as an element of $\Sig_0$. Then, by interpreting the
+signature in $\bM_{i,0}$, we get $\ms{NatSig}^A \equiv (N : \Set_i) \times (N
+\to N) \times N$, hence $\ms{NatSig}^A : \Set_{i + 1 \lub 0}$.
+\end{myexample}
+
+\begin{notation}
+For a signature $\Gamma : \Sig_j$ and level $i$, we may write $\Gamma^A_i$ for
+the type of $\Gamma$-algebras with underlying sets in $\Set_i$, which is
+computed by interpreting $\Gamma$ in $\bM_{i,j}$. We may use similar notation
+for $\blank^M$, $\blank^D$ and $\blank^S$.
+\end{notation}
+
+\noindent\textbf{Cumulativity of algebras.} In the following, we shall assume
+that for $\Gamma : \Sig_j$ and $i \leq i'$, we have $\Gamma^A_i \leq
+\Gamma^A_{i'}$. For any concrete signature $\Gamma$, this is clearly the case,
+but $\blank\!\leq\!\blank$ is not subject to propositional reasoning, so we
+cannot prove this by internal induction on signatures. We could prove that there
+exists a \emph{lifting}, a $\ms{Lift}\,\Gamma^A_i : \Set_{i'+1 \lub j}$
+which is isomorphic to $\Gamma^A_{i}$. Instead, we take liberties, and work as
+if we had actual cumulative subtyping. This seems acceptable, since by using
+implicit cumulativity, we are already taking the same liberty everywhere, by
+omitting formal lifts and isomorphisms.
+
+
 \section{Term Algebras}
 
-In this section we proceed with the construction of term algebras for FQII
-signatures, and their recursors and eliminators. We make some generalizations,
-in comparison to what we did with simple signatures.
+%% In this section we proceed with the construction of term algebras for FQII
+%% signatures, together with their recursors and eliminators.  First, we review our
+%% assumptions in the inner theory.
 
-\begin{itemize}
-  \item  We assume that $\Ty_0$ supports a model of ToS. As before,
-         we use $\SigTy_i$ and $\SigTm_i$ in the following. Thus, we have $\Con_0 :
-         \Ty_0$, $\Sub_0 : \Con_0 \to \Con_0 \to \Ty_0$, $\SigTy_0 : \Con_0 \to \Ty_0$
-         and $\SigTm_0 : (\Gamma : \Con_0) \to \SigTy_0\,\Gamma \to \Ty_0$. At the same
-         time, we still have $\Con_1$, $\Sub_1$ and so on in the outer theory. Note that
-         at this point, we \emph{do not assume} any recursion or induction principle for
-         the inner ToS model.
-  \item  We define lowering maps $\down$ similarly as in Definition \ref{def:simple-lowering}.
-         Again, these maps preserve all structure.
-\end{itemize}
+%% \subsection{Inner Assumptions}
+
+%% \begin{notation} As before, we use $\SigTy_i$ and $\SigTm_i$ for disambiguation, and
+%% now we additionally use $\SigU_i : \SigTy_i\,\Gamma$ for the universe in
+%% ToS$_i$, to disambiguate it from the additional universes that we shall
+%% introduce shortly.
+%% \end{notation}
+
+%% So far, we have been consistently ignoring universe levels, but now we shall
+%% make them more explicit. Perhaps we could still gloss over these details, but
+%% there are some relevant details which were far from obvious to the author.
+%% Consider external function types in $\SigTy_0$:
+%% \begin{alignat*}{3}
+%%   &\SigTy_0 &&: \Con_0 \to \Ty_0\\
+%%   &\Pie &&: (A : \Ty_0) \to (A \to \SigTy_0\,\Gamma) \to \SigTy_0\,\Gamma
+%% \end{alignat*}
+%% First, this type makes little sense as part of an inner inductive
+%% definition, because it entails ``storing'' an proper inner type (not in any
+%% universe) in an inner inductive constructor. Traditionally, we cannot abstract
+%% over arbitrary types in type theories; we can assume \emph{terms} in contexts
+%% with certain types, but cannot assume \emph{types}. Hence, we would not be able
+%% to write down the induction method for $\Pie$ purely in an inner type theory.
+
+%% The solution is to use an inner universe, say $\U$, instead of $\Ty_0$. But we
+%% still have to avoid the problem that $\SigTy_0\,\Gamma : \U$, but $\Pie$
+%% abstracts over $\U$, i.e.\ ``contains'' an element of $\U$. Together with the
+%% induction principle for inner ToS, this would let us recover $\U$-in-$\U$, hence
+%% an inconsistency. If we \emph{don't} assume induction, then it might be
+%% sensible to consider specific models where levels are not bumped up; but we do
+%% need induction for constructing recursors and eliminators.
+
+%% Hence, the abstracted $A$ in $\Pie$ needs to be smaller than $\SigTy_0$.  Also,
+%% we need $\SigTy_0$ to return in an actual inner universe instead of $\Ty_0$,
+%% because we cannot compute types in $\Ty_0$ by inner elimination.
+
+%% \begin{itemize}
+%%   \item We assume $\U_0$, $\U_1$ as sub-universes of $\Ty_0$. These
+%%     are assumed to be \emph{cumulative}, with $\U_0 < \U_1 < \Ty_0$. This
+%%     means that any type in a smaller universe may be implicitly lifted to a
+%%     larger one. Formally, the algebraic specification of cumulativity would
+%%     involve a significant amount of detail, e.g.\ lifting would be an explicit
+%%     operation on types \cite{kovacs2021generalized}. We instead use a Coq-like
+%%     notation, where cumulativity is implicit. We also omit $\Tm_0$ everywhere.
+%%   \item
+%%     We assume an inner ToS (or: ToS$_0$) where $\Con_0$, $\SigTy_0$, $\SigTm_0$ and $\Sub_0$ all
+%%     return in $\U_1$, and we have the following type for $\Pie$:
+%%     \[
+%%       \Pie : (A : \U_0) \to (A \to \SigTy_0\,\Gamma) \to \SigTy_0\,\Gamma
+%%     \]
+%%     We assume that ToS$_0$ supports induction, where we may eliminate into $\Ty_0$, hence
+%%     also into any sub-universe of $\Ty_0$.
+
+  %%   We assume that $\Ty_0$ supports a model of ToS. As before,
+  %%        we use $\SigTy_i$ and $\SigTm_i$ in the following. Thus, we have $\Con_0 :
+  %%        \Ty_0$, $\Sub_0 : \Con_0 \to \Con_0 \to \Ty_0$, $\SigTy_0 : \Con_0 \to \Ty_0$
+  %%        and $\SigTm_0 : (\Gamma : \Con_0) \to \SigTy_0\,\Gamma \to \Ty_0$. At the same
+  %%        time, we still have $\Con_1$, $\Sub_1$ and so on in the outer theory. Note that
+  %%        at this point, we \emph{do not assume} any recursion or induction principle for
+  %%        the inner ToS model.
+  %% \item  We define lowering maps $\down$ similarly as in Definition \ref{def:simple-lowering}.
+  %%        Again, these maps preserve all structure.
+%% \end{itemize}
+
+In this section we proceed with the construction of term algebras for FQII
+signatures, together with their recursors and eliminators.
 
 \begin{mydefinition} [\textbf{Term algebras}]
 \label{sec:fqiit-term-algebras}
-We fix a $\Omega : \Con_1$. We define $\blank^T$ by induction on the outer
+We fix $\Omega : \Sig_j$ for some $j$ level. We define $\blank^T$ by induction on the outer
 ToS. Formally, we need a displayed ToS model, but we instead present the
 resulting eliminator, which is perhaps easier to read. The underlying functions
 have the following types.
 \begin{alignat*}{3}
   &\blank^T &&: (\Gamma : \Con_1)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Gamma^A\\
+  &\blank^T &&: (\sigma : \Sub_1\,\Gamma\,\Delta)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Delta^T\,(\down\!\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)\\
   &\blank^T &&: (A : \SigTy_1\,\Gamma)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \SigTm_0\,(\down\!\Omega)\,((\down\!A)[\nu])
   \to A^A\,(\Gamma^T\,\nu)\\
-  &\blank^T &&: (\sigma : \Sub_1\,\Gamma\,\Delta)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Delta^T\,(\down\!\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)\\
   &\blank^T &&: (t : \SigTm_1\,\Gamma\,A)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to A^T\,\nu\,((\down\!t)[\nu]) \equiv t^A\,(\Gamma^T\,\nu)
 \end{alignat*}
 We review the idea of term algebras. In any model of ToS, we might think of a
@@ -3815,7 +4015,7 @@ definition this way. Slice models would require the specification of
 amount of bureaucratic detail.
 
 We explain the $\blank^T$ specification in the following. Term and substitution
-equations are given by UIP. We omit most cases for substitutions and terms.
+equations are given by UIP. We omit cases for substitutions and terms.
 
 For \textbf{contexts}, we simply recurse on the entries. We use a pattern
 matching notation for
@@ -3869,13 +4069,22 @@ we also get
   &t^T\,\nu &&: A^T\,\nu\,((\down\!t)[\nu]) &&\equiv t^A\,(\Gamma^T\,\nu)\\
   &u^T\,\nu &&: A^T\,\nu\,((\down\!u)[\nu]) &&\equiv u^A\,(\Gamma^T\,\nu)
 \end{alignat*}
-from which the target equality follows.
+from which the target equality follows. Equality reflection for inner $\Id$ is
+crucial here. It is the reason why $\blank^T$ works for \emph{quotient
+signatures}; equality reflection is in fact the ``quotient'' rule which
+identifies provably equal terms. For a simple example, terms with type
+\[
+  \SigTm_0\,
+  (\emptycon \ext (I : \U) \ext (\mi{left} : \El\,I) \ext (\mi{right} : \El\,I) \ext (\mi{seg} : \Id\,l\,r))\,
+  (\El\,I)
+\]
+are quotiented by $\mi{seg}$, which is a provable equation in the context.
 
 For the \textbf{inductive function type}, we have to convert an inner term with
 $\Pi$ type to an outer function.
 \begin{alignat*}{3}
   &(\Pi\,a\,B)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
-                 &&\to \SigTm_0\,(\down\!\Omega)\,(\Pi\,(\down\!a)\,(\down\!B))\\
+                 &&\to \SigTm_0\,(\down\!\Omega)\,(\Pi\,((\down\!a)[\nu])\,((\down\!B)[\nu\circ\p,\,\q]))\\
   &              &&\to (\alpha : a^A\,(\Gamma^T\,\nu)) \to B^A\,(\Gamma^T\,\nu,\,\alpha)\\
   &\rlap{$(\Pi\,a\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$}
 \end{alignat*}
@@ -3884,7 +4093,7 @@ This is well-typed by $a^T\,\nu :
 a^A\,(\Gamma^T\,\nu)$, which allows us to consider $\alpha$ to be an inner term
 in $\lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$.
 
-For the \textbf{external} function type we just recurse through the specifying
+For the \textbf{external function type} we just recurse through the specifying
 isomorphism:
 \begin{alignat*}{3}
   &(\Pie\,A\,B)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
@@ -3892,16 +4101,45 @@ isomorphism:
   &              &&\to (\alpha : A) \to (B\,\alpha)^A\,(\Gamma^T\,\nu)\\
   &\rlap{$(\Pie\,A\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,(B\,\alpha)^T\,(\nu,\,\alpha)$}
 \end{alignat*}
+This concludes the definition of $\blank^T$.
 \end{mydefinition}
 
+\begin{mydefinition} For $\Omega : \Con_1$ signature, the corresponding \textbf{term algebra}
+is given as $\Omega^T\,\id : \Omega^A$.
+\end{mydefinition}
 
+\subsection{Weak Initiality}
 
+In the following we investigate sufficient conditions for having term algebras
+which are weakly initial. For this though, we first have to look universe sizes.
+We have done a decent job so far at ignoring universes, but now we really have
+to pin down some details.
 
+\subsubsection{Universe Sizes}
+First, consider external function types in $\SigTy_0$:
+\[
+  \Pie : (A : \Ty_0) \to (A \to \SigTy_0\,\Gamma) \to \SigTy_0\,\Gamma
+\]
+Now, if we view $\Pie$ as part of an inductive signature, we have to problem
+that $\SigTy_0\,\Gamma : \Ty_0$, but $\Pie$ abstracts over $\Ty_0$,
+i.e.\ ``contains'' an element of $\Ty_0$.
 
+For comparison, an inductive constructor in Agda which abstracts over $(A :
+\Set)$ can only return in a sort which is in $\Set_1$. Failure to bump levels,
+together with the induction principle for the type in question would let us
+recover $\Set : \Set$, hence an inconsistency. If we \emph{don't} assume
+induction, then it might be fine and sensible to consider specific models where
+levels are not bumped up. But we're aiming for term algebras that are weakly or
+strongly initial, so we don't want to run into inconsistent induction
+principles.
 
+The simplest way to rectify ToS with $\Pie$ is the following: we assume a
+Tarski-style sub-universe of $\Ty_0$, with $\ty_0 : \Ty_0$ and $\tm_0 :
+\Tm_0\,\ty_0 \to \Ty_0$, and have $\Pie$ abstract over $a : \ty_0$. We can view
+$(\ty_0,\,\tm_0)$ as a parameter to ToS. For instance, we can just define
+$\ty_0$ to be $\Bool_0$, and define $\tm_0$ by large elimination. In this case,
+we have signatures which can refer to at most two external types.
 
-
-\subsection{Induction for Term Algebras}
 \subsection{Church Encoding}
 \subsection{Awodey-Frey-Speight Encoding}
 \section{Left Adjoints of Signature Morphisms}

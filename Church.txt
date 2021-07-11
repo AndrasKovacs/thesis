@@ -1,0 +1,88 @@
+
+Assume U₀ < U₁ < Ty₀ where U₀ impredicative
+
+Outer ToS has
+  sorts returning in Set
+  Πᵉ : (A : U₁) → (A → SigTy Γ) → SigTy Γ
+
+Inner layer:
+  impredicative U₀, U₁, Π, Σ, ⊤, Id
+
+Algebras from outer ToS:
+
+  Con = Set
+  Sub Γ Δ = Γ → Δ
+  Ty Γ = Γ → Set
+  Tm Γ A = (γ : Γ) → A γ
+  U γ = U₀                        -- impredicative sorts!
+  Πᵉ A B γ = (x : A) → (B x) γ
+
+Impredicative model of ToS₀
+
+  Con     = U₁            : Ty₀
+  Sub Γ Δ = Γ → Δ         : U₁
+  Ty Γ    = Γ → U₁        : Ty₀
+  Tm Γ A  = (γ : Γ) → A γ : U₁
+
+  U γ    = U₀  : U₁
+  El a γ = a γ : U₁         -- (lifted from U₀ to U₁)
+
+  Πᵉ A B γ = (x : A) → B x γ : U₁
+
+
+Term algebras:
+
+  Γᵀ : Sub ↓Ω ↓Γ → Γᴬ                                     : Set
+  σᵀ : (ν : Sub ↓Ω ↓Γ) → Δᵀ (↓σ ∘ ν) ≡ σᴬ (Γᵀ ν)          : Set
+  Aᵀ : (ν : Sub ↓Ω ↓Γ) → SigTm₀ ↓Ω ((↓A)[ν]) → Aᴬ (Γᵀ ν)  : Set
+  tᵀ : (ν : Sub ↓Ω ↓Γ) → Aᵀ ν ((↓t)[ν]) ≡ tᴬ (Γᵀ ν)       : Set
+
+  Uᵀ : (ν : Sub ↓Ω ↓Γ) → SigTm₀ ↓Ω U → U₀
+  Uᵀ ν a = CTm Ω a
+
+  (El a)ᵀ : (ν : Sub ↓Ω ↓Γ) → SigTm₀ ↓Ω (El (↓a[ν]) → aᴬ (Γᵀ ν)
+  (El a)ᵀ ν t = t OK
+
+    aᵀ ν : CTm Ω (↓a[ν]) ≡ aᴬ (Γᵀ ν)
+
+
+    -- in the impredicative ToS₀ model, Tm is in U₁
+    -- but!    Tm Γ (El a)   *can* be in U₀, but it has to be defined
+    --         in a different way
+
+    CTm : (Γ : Con₁) → (↓Γ → U₀) → U₀
+    CTm ∙       a = a tt
+    CTm (Γ ▶ A) a = CTm Γ (λ (γ : ↓Γ). (α : ↓A γ) → a (γ, α))
+
+    CTm Γ a ~ SigTm₀ ↓Γ (El a)
+    CTm Γ a ~ ((γ : ↓Γ) → a γ)
+
+
+    a tt ~ ((x : ⊤) → a x)        OK
+
+    TODO:
+    CTm Γ (λ (γ : ↓Γ). (α : ↓A γ) → a (γ, α))
+    ~
+    (γ : (γ : ↓Γ)× (↓A γ)) → a γ
+
+  (Π a B)ᵀ : (ν : Sub ↓Ω ↓Γ) → SigTm₀ ↓Ω (Π ↓a[ν] ↓B[ν∘p,q]) → (Π a B)ᴬ (Γᵀ ν)
+           : (ν : Sub ↓Ω ↓Γ) → SigTm₀ ↓Ω (Π ↓a[ν] ↓B[ν∘p,q]) → (α : aᴬ (Γᵀ ν)) → Bᴬ (Γᵀ ν, α)
+
+  (Π a B)ᵀ ν t α =
+
+     Bᵀ (ν, unC α) (t (unC α)) : Bᴬ (Γᵀ ν, unC α)
+
+
+    Bᴬ (Γᴬ ν, unC α) --> Bᴬ (Γᴬ ν, α)
+
+    -- B : Ty (Γ ▶ El a)
+    -- Bᵀ : ((ν, t) : Sub ↓Ω (↓Γ ▶ El ↓a)) → SigTm₀ ↓Ω ↓B[ν, t] → Bᴬ ((Γ ▶ El a)ᵀ (ν, t))
+    --    : ((ν, t) : Sub ↓Ω (↓Γ ▶ El ↓a)) → SigTm₀ ↓Ω ↓B[ν, t] → Bᴬ (Γᵀ ν, t)
+
+    -- t (unC α) : Tm ↓Ω ↓B[ν∘p, q][id, unC α]
+    --           : Tm ↓Ω ↓B[ν, unC α]
+    -- Bᵀ (ν, unC α) : SigTm₀ ↓Ω ↓B[ν, unC α] → Bᴬ (Γᵀ ν, unC α)
+    -- Bᵀ (ν, unC α) (t (unC α)) : Bᴬ (Γᵀ ν, unC α)
+    -- aᴬ (Γᵀ ν) = CTm Ω (↓a[ν])
+
+    -- unC α : Tm ↓Ω (↓a[ν])

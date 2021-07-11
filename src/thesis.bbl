@@ -188,10 +188,23 @@ Gabriel Scherer.
   {POPL} 2017, Paris, France, January 18-20, 2017}, pages 374--386. {ACM},
   2017.
 
+\bibitem[Ste19]{sterling2019algebraic}
+Jonathan Sterling.
+\newblock Algebraic type theory and universe hierarchies.
+\newblock {\em CoRR}, abs/1902.08848, 2019.
+
 \bibitem[Swi08]{alacarte}
 Wouter Swierstra.
 \newblock Data types {\`{a}} la carte.
 \newblock {\em J. Funct. Program.}, 18(4):423--436, 2008.
+
+\bibitem[TS18]{timany18cumulative}
+Amin Timany and Matthieu Sozeau.
+\newblock Cumulative inductive types in coq.
+\newblock In H{\'{e}}l{\`{e}}ne Kirchner, editor, {\em 3rd International
+  Conference on Formal Structures for Computation and Deduction, {FSCD} 2018,
+  July 9-12, 2018, Oxford, {UK}}, volume 108 of {\em LIPIcs}, pages
+  29:1--29:16. Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, 2018.
 
 \bibitem[{Uni}13]{hottbook}
 The {Univalent Foundations Program}.
