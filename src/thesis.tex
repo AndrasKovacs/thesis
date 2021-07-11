@@ -734,7 +734,7 @@ from \emph{any} model of a ToS, not just the ToS syntax; but while term algebras
 constructed from ToS syntax are themselves initial algebras, in other cases they
 may not be initial.
 
-\subsection{Weak Initiality}
+\subsection{Recursor Construction}
 \label{sec:simple-weak-initiality}
 We show that $\TmAlg_{\Omega}$ supports a recursion principle, i.e.\ it is weakly
 initial.
@@ -765,7 +765,7 @@ $\ms{R}$ indeed yields algebra morphisms.
 We skip interpreting terms and substitutions by $\blank^R$. It is necessary to
 do so with more general signatures, but not in the current chapter.
 
-\subsection{Induction}
+\subsection{Eliminator Construction}
 
 We take the idea of the previous section a bit further. We have seen that
 recursion for term algebras is given by evaluation in the ``standard'' model
@@ -2485,7 +2485,7 @@ define $\ms{T} : \Ty_0$ as $\SigTm_0\,(\down\!\Omega)\,\iota$.
 We omit the $\blank^T$ interpretation for terms and substitutions for now, as
 they require a bit more setup, and they are not needed just for term algebras.
 
-\subsection{Weak Initiality}
+\subsection{Recursor Construction}
 
 Recall from Section \ref{sec:simple-weak-initiality} that recursion is
 implemented using the $\blank^A$ interpretation of terms. Since terms are now in
@@ -2554,7 +2554,7 @@ The recursor is defined the same way as in Definition \ref{def:simple-recursor}:
   & \Rec_{\Omega}\,(X,\,\omega) \defn (\ms{R},\,\Omega^R\,\Omega\,\id)
 \end{alignat*}
 
-\subsection{Induction}
+\subsection{Eliminator Construction}
 
 For induction, we need to additionally define $\blank^D$ in the inner layer.
 \begin{alignat*}{3}
@@ -3573,9 +3573,9 @@ an FQII signature, we get an flcwf for free. In some cases, we get exactly
 what's needed. For example, the flcwf of presheaves can be used as it is in the
 presheaf models of type theories.
 
-In other cases, the flcwf ``for free'' has to be extended with extra
-conditions. This often happens if the objects in the model have an internal
-notion of ``equivalence'' which has to be respected by types.
+In other cases, the flcwf that we get ``for free'' has to be extended in some
+ways. This often happens if the objects in the model have an internal notion of
+``equivalence'' which has to be respected by types.
 \begin{itemize}
   \item In the setoid model, objects are setoids and types are displayed
     setoids with additional fibrancy structure \cite{TODO}.
@@ -3585,9 +3585,9 @@ notion of ``equivalence'' which has to be respected by types.
     presheaves together with fibrancy structure (Kan composition).
 \end{itemize}
 
-In all these cases, the semantic objects have FQII signatures. We can take their
-flwcfs internally to $\bs{\Set}$ and add fibrancy conditions. The cubical set
-model is presented exactly in this way in \cite{cubical}, using displayed
+In all these cases, the semantic objects have FQII signatures. We can interpret
+their flwcfs in $\bs{\Set}$ and add fibrancy conditions. The cubical set model
+is presented exactly in this way in \cite{cubical}, using displayed
 algebras. The groupoid model in \cite{hofmann96groupoidmodel} instead presents
 types as $\bs{\Gamma} \to \bs{\ms{Gpd}}$ functors, i.e.\ uses an indexed style
 instead of the displayed style.
@@ -3905,107 +3905,44 @@ omitting formal lifts and isomorphisms.
 
 \section{Term Algebras}
 
-%% In this section we proceed with the construction of term algebras for FQII
-%% signatures, together with their recursors and eliminators.  First, we review our
-%% assumptions in the inner theory.
-
-%% \subsection{Inner Assumptions}
-
-%% \begin{notation} As before, we use $\SigTy_i$ and $\SigTm_i$ for disambiguation, and
-%% now we additionally use $\SigU_i : \SigTy_i\,\Gamma$ for the universe in
-%% ToS$_i$, to disambiguate it from the additional universes that we shall
-%% introduce shortly.
-%% \end{notation}
-
-%% So far, we have been consistently ignoring universe levels, but now we shall
-%% make them more explicit. Perhaps we could still gloss over these details, but
-%% there are some relevant details which were far from obvious to the author.
-%% Consider external function types in $\SigTy_0$:
-%% \begin{alignat*}{3}
-%%   &\SigTy_0 &&: \Con_0 \to \Ty_0\\
-%%   &\Pie &&: (A : \Ty_0) \to (A \to \SigTy_0\,\Gamma) \to \SigTy_0\,\Gamma
-%% \end{alignat*}
-%% First, this type makes little sense as part of an inner inductive
-%% definition, because it entails ``storing'' an proper inner type (not in any
-%% universe) in an inner inductive constructor. Traditionally, we cannot abstract
-%% over arbitrary types in type theories; we can assume \emph{terms} in contexts
-%% with certain types, but cannot assume \emph{types}. Hence, we would not be able
-%% to write down the induction method for $\Pie$ purely in an inner type theory.
-
-%% The solution is to use an inner universe, say $\U$, instead of $\Ty_0$. But we
-%% still have to avoid the problem that $\SigTy_0\,\Gamma : \U$, but $\Pie$
-%% abstracts over $\U$, i.e.\ ``contains'' an element of $\U$. Together with the
-%% induction principle for inner ToS, this would let us recover $\U$-in-$\U$, hence
-%% an inconsistency. If we \emph{don't} assume induction, then it might be
-%% sensible to consider specific models where levels are not bumped up; but we do
-%% need induction for constructing recursors and eliminators.
-
-%% Hence, the abstracted $A$ in $\Pie$ needs to be smaller than $\SigTy_0$.  Also,
-%% we need $\SigTy_0$ to return in an actual inner universe instead of $\Ty_0$,
-%% because we cannot compute types in $\Ty_0$ by inner elimination.
-
-%% \begin{itemize}
-%%   \item We assume $\U_0$, $\U_1$ as sub-universes of $\Ty_0$. These
-%%     are assumed to be \emph{cumulative}, with $\U_0 < \U_1 < \Ty_0$. This
-%%     means that any type in a smaller universe may be implicitly lifted to a
-%%     larger one. Formally, the algebraic specification of cumulativity would
-%%     involve a significant amount of detail, e.g.\ lifting would be an explicit
-%%     operation on types \cite{kovacs2021generalized}. We instead use a Coq-like
-%%     notation, where cumulativity is implicit. We also omit $\Tm_0$ everywhere.
-%%   \item
-%%     We assume an inner ToS (or: ToS$_0$) where $\Con_0$, $\SigTy_0$, $\SigTm_0$ and $\Sub_0$ all
-%%     return in $\U_1$, and we have the following type for $\Pie$:
-%%     \[
-%%       \Pie : (A : \U_0) \to (A \to \SigTy_0\,\Gamma) \to \SigTy_0\,\Gamma
-%%     \]
-%%     We assume that ToS$_0$ supports induction, where we may eliminate into $\Ty_0$, hence
-%%     also into any sub-universe of $\Ty_0$.
-
-  %%   We assume that $\Ty_0$ supports a model of ToS. As before,
-  %%        we use $\SigTy_i$ and $\SigTm_i$ in the following. Thus, we have $\Con_0 :
-  %%        \Ty_0$, $\Sub_0 : \Con_0 \to \Con_0 \to \Ty_0$, $\SigTy_0 : \Con_0 \to \Ty_0$
-  %%        and $\SigTm_0 : (\Gamma : \Con_0) \to \SigTy_0\,\Gamma \to \Ty_0$. At the same
-  %%        time, we still have $\Con_1$, $\Sub_1$ and so on in the outer theory. Note that
-  %%        at this point, we \emph{do not assume} any recursion or induction principle for
-  %%        the inner ToS model.
-  %% \item  We define lowering maps $\down$ similarly as in Definition \ref{def:simple-lowering}.
-  %%        Again, these maps preserve all structure.
-%% \end{itemize}
-
 In this section we proceed with the construction of term algebras for FQII
 signatures, together with their recursors and eliminators.
 
-\begin{mydefinition} [\textbf{Term algebras}]
+\subsection{Term Algebra Construction}
+
 \label{sec:fqiit-term-algebras}
-We fix $\Omega : \Sig_j$ for some $j$ level. We define $\blank^T$ by induction on the outer
-ToS. Formally, we need a displayed ToS model, but we instead present the
-resulting eliminator, which is perhaps easier to read. The underlying functions
-have the following types.
+We fix $\Omega : \Sig_j$ for some $j$ level. We define $\blank^T$ by induction
+on $\syn_j$. In the following we write $\blank^A$ for $\blank^A_{j+1}$,
+i.e.\ the algebra interpretation where underlying sets are in
+$\Set_{j+1}$. Formally, we need a displayed model over $\syn_j$, but we instead
+present the resulting eliminator, which is perhaps easier to read. The
+underlying functions have the following types.
 \begin{alignat*}{3}
-  &\blank^T &&: (\Gamma : \Con_1)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Gamma^A\\
-  &\blank^T &&: (\sigma : \Sub_1\,\Gamma\,\Delta)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \Delta^T\,(\down\!\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)\\
-  &\blank^T &&: (A : \SigTy_1\,\Gamma)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \SigTm_0\,(\down\!\Omega)\,((\down\!A)[\nu])
+  &\blank^T &&: (\Gamma : \Con)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^A\\
+  &\blank^T &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Delta^T\,(\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)\\
+  &\blank^T &&: (A : \Ty\,\Gamma)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Tm\,\Omega\,(A[\nu])
   \to A^A\,(\Gamma^T\,\nu)\\
-  &\blank^T &&: (t : \SigTm_1\,\Gamma\,A)&&(\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to A^T\,\nu\,((\down\!t)[\nu]) \equiv t^A\,(\Gamma^T\,\nu)
+  &\blank^T &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,\nu\,(A[\nu]) \equiv t^A\,(\Gamma^T\,\nu)
 \end{alignat*}
 We review the idea of term algebras. In any model of ToS, we might think of a
 $\Sub\,\emptycon\,\Gamma$ as a $\Gamma$-algebra internal to the model. In the
 $\blank^T$ interpretation we can assume $\Omega \equiv \emptycon$; this means
 that from any internal $\Gamma$-algebra, in any model of ToS, we can extract an
 ``external'' $\Gamma$-algebra. This is possible because every sort $a :
-\SigTm_0\,\Gamma\,\U$ in ToS induces an external type of terms as
-$\SigTm_0\,\Gamma\,(\El\,a)$.
+\Tm\,\Gamma\,\U$ in ToS induces an external type of terms as
+$\Tm\,\Gamma\,(\El\,a)$.
 
 We can view the generalization from $\emptycon$ to arbitrary $\Omega$ as
-switching from working in a given model $\ms{M}$ of ToS, to working in the
-\emph{slice model} $\ms{M}/\Omega$, where contexts are $\Omega$ extended with
-zero or more entries. And in $\ms{M}/\Omega$, we have an $\Omega$-algebra quite
+switching from working in the syntactic model $\syn_j$, to working in the
+\emph{slice model} $\syn_j/\Omega$, where contexts are $\Omega$ extended with
+zero or more entries. And in $\syn_j/\Omega$, we have an $\Omega$-algebra quite
 trivially, by taking the identity morphism $\id :
-\Sub\,\Omega\,\Omega$\footnote{$\Sub_{\ms{M}/\Omega}\,\emptycon\,\Omega$ is
-isomorphic to, but not strictly the same as
-$\Sub_{\ms{M}}\,\Omega\,\Omega$.}. Hence, term algebras arise by first taking
-the trivial internal algebra $\id$ in $\ms{M}/\Omega$, then converting it to an
-external algebra as $\Omega^T\,\id : \Omega^A$.
+\Sub\,\Omega\,\Omega$\footnote{Writing $\blank^{\syn_j/\Omega}$ for the interpretation
+of syntax in the slice model,
+$\Sub_{\syn_j/\Omega}\,\emptycon\,(\Omega^{\syn_j/\Omega})$ is isomorphic to, but not
+strictly the same as $\Sub_{\syn_j}\,\Omega\,\Omega$.}. Hence, term algebras
+arise by first taking the trivial internal algebra $\id$ in $\syn_j/\Omega$,
+then converting it to an external algebra as $\Omega^T\,\id : \Omega^A$.
 
 \emph{Remark.} We could have presented $\blank^T$ and slice models in an
 explicit separate way. We instead chose to merge them into the current
@@ -4019,62 +3956,59 @@ equations are given by UIP. We omit cases for substitutions and terms.
 
 For \textbf{contexts}, we simply recurse on the entries. We use a pattern
 matching notation for
-$\Sub_0\,(\down\!\Omega)\,(\down\!\Gamma\,\,\ext\down\!A)$, since any $\nu$ with
+$\Sub\,\Omega\,(\Gamma\ext A)$, since any $\nu$ with
 this type is uniquely determined by its first and second projections
 $\p\circ\nu$ and $\q[\nu]$.
 \begin{alignat*}{3}
   &\emptycon^T\,\nu           &&\defn \tt\\
   &(\Gamma \ext A)^T(\nu,\,t) &&\defn (\Gamma^T\,\nu,\,A^T\,\nu\,t)
 \end{alignat*}
-\textbf{Type substitution} is as follows. This is well-typed by
-$\sigma^T\,\nu : \Delta^T\,(\down\!\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)$.
-\[ (A[\sigma : \Sub_1\,\Gamma\,\Delta])^T\,\nu\,t \defn A^T\,(\down\!\sigma\circ\nu)\,t \]
-For the \textbf{universe}, note that $\U^A\,\gamma \equiv \Ty_0$.  As we
+\textbf{Type substitution} with $\sigma : \Sub\,\Gamma\,\Delta$ is as follows. This is well-typed by
+$\sigma^T\,\nu : \Delta^T\,(\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)$.
+\[ (A[\sigma])^T\,\nu\,t \defn A^T\,(\sigma\circ\nu)\,t \]
+For the \textbf{universe}, note that $\U^A_{j+1}\,\gamma \equiv \Set_{j+1}$.  As we
 mentioned before, this is the key part when we map from internal sorts to
-$\Ty_0$.
+external sets. The levels line up, since in $\syn_j$ we have $\Tm$ returning in $\Set_{j+1}$.
 \begin{alignat*}{3}
-  &\U^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma)) \to \SigTm_0\,(\down\!\Omega)\,\U \to
-          \Ty_0\\
-  &\U^T\,\nu\,a \defn \SigTm_0\,\Omega\,(\El\,a)
+  &\U^T : (\nu : \Sub\,\Omega\,\Gamma) \to \Tm\,\Omega\,\U \to
+          \Ty\\
+  &\U^T\,\nu\,a \defn Tm\,\Omega\,(\El\,a)
 \end{alignat*}
 For $\El$, we have to define
 \[
-  (\El\,a)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
-          \to \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a)[\nu]))
-          \to a^A\,(\Gamma^T\,\nu)
+  (\El\,a)^T : (\nu : \Sub\,\Omega\,\Gamma)
+          \to \Tm\,\Omega\,(\El\,(a[\nu])) \to a^A\,(\Gamma^T\,\nu)
 \]
-but since $a^T\,\nu : \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a))[\nu])
+but since $a^T\,\nu : \Tm\,\Omega\,(\El\,(a[\nu]))
       \equiv a^A\,(\Gamma^T\,\nu)$, we have
 \begin{alignat*}{3}
-  &(\El\,a)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
-          &&\to \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a)[\nu]))\\
-  &       &&\to \SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a)[\nu]))\\
-  &(\El\,a)^T\,\nu\,t \defn t &&
+  &(\El\,a)^T : (\nu : \Sub\,\Omega\,\Gamma)
+          \to \Tm\,\Omega\,(\El\,(a[\nu])) \to \Tm\,\Omega\,(\El\,(a[\nu]))\\
+  &(\El\,a)^T\,\nu\,t \defn t
 \end{alignat*}
 The $a^T\,\nu$ equation is worth noting. If we have $\nu \equiv \id$, the
-equation is $a^T\,\id : \SigTm_0\,(\down\!\Omega)\,(\El\,(\down\!\,a)) \equiv
+equation is $a^T\,\id : \Tm\,\Omega\,(\El\,a) \equiv
 a^A\,(\Omega^T\,\id)$, that is, if we evaluate a signature sort in the term
 model $\Omega^T\,\id$, we get a type of inner terms.
 
 For the \textbf{identity type}, we have to show that provably equal terms are evaluated
 to the same value in the term model.
 \begin{alignat*}{3}
-  &(\Id\,t\,u)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
-    &&\to \SigTm_0\,(\down\!\Omega)\,(\Id\,((\down\!t)[\nu])\,((\down\!u)[\nu]))\\
-  & &&\to t^A\,(\Gamma^T\,\nu) \equiv u^A\,(\Gamma^T\,\nu)
+  &(\Id\,t\,u)^T : (\nu : \Sub\,\Omega\,\Gamma)
+    \to \Tm\,\Omega\,(\Id\,(t[\nu])\,(u[\nu])) \to t^A\,(\Gamma^T\,\nu) \equiv u^A\,(\Gamma^T\,\nu)
 \end{alignat*}
-We know by equality reflection that $(\down\!t)[\nu] \equiv (\down\!u)[\nu]$, and
+We know by equality reflection that $t[\nu] \equiv u[\nu]$, and
 we also get
 \begin{alignat*}{3}
-  &t^T\,\nu &&: A^T\,\nu\,((\down\!t)[\nu]) &&\equiv t^A\,(\Gamma^T\,\nu)\\
-  &u^T\,\nu &&: A^T\,\nu\,((\down\!u)[\nu]) &&\equiv u^A\,(\Gamma^T\,\nu)
+  &t^T\,\nu &&: A^T\,\nu\,(t[\nu]) &&\equiv t^A\,(\Gamma^T\,\nu)\\
+  &u^T\,\nu &&: A^T\,\nu\,(u[\nu]) &&\equiv u^A\,(\Gamma^T\,\nu)
 \end{alignat*}
 from which the target equality follows. Equality reflection for inner $\Id$ is
 crucial here. It is the reason why $\blank^T$ works for \emph{quotient
 signatures}; equality reflection is in fact the ``quotient'' rule which
 identifies provably equal terms. For a simple example, terms with type
 \[
-  \SigTm_0\,
+  \Tm\,
   (\emptycon \ext (I : \U) \ext (\mi{left} : \El\,I) \ext (\mi{right} : \El\,I) \ext (\mi{seg} : \Id\,l\,r))\,
   (\El\,I)
 \]
@@ -4083,62 +4017,165 @@ are quotiented by $\mi{seg}$, which is a provable equation in the context.
 For the \textbf{inductive function type}, we have to convert an inner term with
 $\Pi$ type to an outer function.
 \begin{alignat*}{3}
-  &(\Pi\,a\,B)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
-                 &&\to \SigTm_0\,(\down\!\Omega)\,(\Pi\,((\down\!a)[\nu])\,((\down\!B)[\nu\circ\p,\,\q]))\\
+  &(\Pi\,a\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)
+                 &&\to \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q]))\\
   &              &&\to (\alpha : a^A\,(\Gamma^T\,\nu)) \to B^A\,(\Gamma^T\,\nu,\,\alpha)\\
   &\rlap{$(\Pi\,a\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$}
 \end{alignat*}
 This is well-typed by $a^T\,\nu :
-\SigTm_0\,(\down\!\Omega)\,(\El\,((\down\!a))[\nu]) \equiv
+\Tm\,\Omega\,(\El\,(a[\nu])) \equiv
 a^A\,(\Gamma^T\,\nu)$, which allows us to consider $\alpha$ to be an inner term
 in $\lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$.
 
 For the \textbf{external function type} we just recurse through the specifying
 isomorphism:
 \begin{alignat*}{3}
-  &(\Pie\,A\,B)^T : (\nu : \Sub_0\,(\down\!\Omega)\,(\down\!\Gamma))
-                 &&\to \SigTm_0\,(\down\!\Omega)\,(\Pie\,A\,(\lambda\,\alpha.\,\down\!(B\,\alpha)))\\
+  &(\Pie\,A\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)
+                 &&\to \Tm\,\Omega\,(\Pie\,A\,(\lambda\,\alpha.\,(B\,\alpha)[\nu]))\\
   &              &&\to (\alpha : A) \to (B\,\alpha)^A\,(\Gamma^T\,\nu)\\
   &\rlap{$(\Pie\,A\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,(B\,\alpha)^T\,(\nu,\,\alpha)$}
 \end{alignat*}
 This concludes the definition of $\blank^T$.
+
+\begin{mydefinition}
+For an $\Omega : \Con_{\syn_j}$ signature, the corresponding \textbf{term
+algebra} is given as $\Omega^T\,\id : \Omega^A_{j+1}$.
 \end{mydefinition}
 
-\begin{mydefinition} For $\Omega : \Con_1$ signature, the corresponding \textbf{term algebra}
-is given as $\Omega^T\,\id : \Omega^A$.
-\end{mydefinition}
+\emph{Remark.} If we start with a signature in $\syn_j$, then the underlying
+sets in the term algebra are all in $\Set_{j+1}$. Hence, the term algebra for
+$\NatSig : \Sig_0$ has an underlying set in $\Set_1$. This is perhaps
+inconvenient, since normally we would have natural numbers in $\Set_0$. However,
+we argue that this is no issue, because we are free to specify $\Set_0$ as we
+like. In particular, we can say that $\Set_0$ is an \emph{empty universe},
+closed under no type formers at all (or explicitly isomorphic to $\bot$) in
+which case $\Sig_0$ stands for \emph{closed} signatures (since $\Pie$ cannot be
+constructed), and it is expected that any closed inductive type would be placed
+in $\Set_1$. Alternatively, we could name the bottom-most universe
+$\Set_{empty}$ or $\Set_{-1}$, and start counting non-empty universes from
+$\Set_0$.
 
-\subsection{Weak Initiality}
+\subsection{Recursor Construction}
 
-In the following we investigate sufficient conditions for having term algebras
-which are weakly initial. For this though, we first have to look universe sizes.
-We have done a decent job so far at ignoring universes, but now we really have
-to pin down some details.
+We continue with the construction of recursors. This is not necessary, strictly
+speaking, since recursion is derivable from elimination, so it would suffice to
+only construct eliminators. We still present recursors, for the sake of matching
+the presentation in Chapter \ref{chap:simple-inductive-signatures}. Also, Church
+encodings in Section \ref{TODO} will support recursion but not elimination, so
+it makes sense to try to ``warm up'' to that case as well.
 
-\subsubsection{Universe Sizes}
-First, consider external function types in $\SigTy_0$:
+As in the term algebra construction, we pick $\Omega : \Sig_j$, use $\blank^A$
+to refer to $\blank^A_{j+1}$, and also use $\blank^M$ for $\blank^M_{j+1}$.  We
+assume $\omega : \Omega^A$. The goal is to exhibit a morphism from the term
+algebra $\Omega^T\,\id$ to $\omega$. We define $\blank^R$ by induction on
+$\syn_j$.
+\begin{alignat*}{3}
+  &\blank^R &&: (\Gamma : \Con)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,(\nu^A\,(\Omega^T\,\id))\,(\nu^A\,\omega)\\
+  &\blank^R &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Delta^R\,(\sigma \circ \nu) \equiv \sigma^M\,(\Gamma^R\,\nu)\\
+  &\blank^R &&: (A : \Ty\,\Gamma)&&(\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(A[\nu]))
+     \to A^M\,(t^A\,(\Omega^T\,\id))\,(t^A\,\omega)\,(\Gamma^R\,\nu)\\
+  &\blank^R &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^R\,\nu\,(t[\nu]) \equiv t^M\,(\Gamma^R\,\nu)
+\end{alignat*}
+Let's refresh some details about the involved operations.
+\begin{itemize}
+\item For $\nu : \Sub\,\Gamma\,\Delta$, we get $\nu^A : \Gamma^A \to \Delta^A$. In the semantics, $\nu$
+  is a functor, and $\nu^A$ is its action on objects. Analogously, for a term $\Tm\,\Gamma\,A$, we
+  have $t^A : (\gamma : \Gamma^A) \to A^A\,\gamma$, also an action on objects.
+\item
+  $\Gamma^M$ is the set of $\Gamma$-morphisms. $A : \Ty\,\Gamma$ is a displayed
+  flcwf in the semantics. $A^M$ yields sets of displayed morphisms,
+  corresponding to the semantic $\Sub$ component. So we have
+  \[ A^M : A^A\,\gamma_0 \to A^A\,\gamma_1 \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Set_{j+1} \]
+\item $t^M$ and $\sigma^M$ yield actions on morphisms. For $t : \Tm\,\Gamma\,A$ and $\sigma : \Sub\,\Gamma\,\Delta$, we have
+  \begin{alignat*}{3}
+    &t^M      &&: (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \to A^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)\,\gamma^M\\
+    &\sigma^M &&: (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \to \Delta^M\,(\sigma^M\,\gamma_0)\,(\sigma^M\,\gamma_1)
+  \end{alignat*}
+\end{itemize}
+
+Again, we follow the ``sliced'' pattern that we have seen in the term model
+construction. Another way to view this, is that getting term algebras or
+recursors by direct induction on signatures is futile, since in the
+construction we have to refer to the \emph{whole} $\Omega$ signature, but when
+we recurse inside $\Omega$ we necessarily get \emph{smaller} signatures.
+
+Hence, the sliced induction can be viewed as induction on arbitrary $\Gamma$
+signatures which are smaller than $\Omega$, in the sense that there is a
+$\Sub\,\Omega\,\Gamma$. Of course, $\Sub\,\Omega\,\Gamma$ includes ``being
+smaller'', but it is more general.
+
+We look at the interpretation of type formers. Again, term and substitution
+equations are given by UIP, and we omit term and substitution formers.  For
+\textbf{contexts}, we again simply recurse:o
+\begin{alignat*}{3}
+  &\emptycon^R\,\nu           &&\defn \tt\\
+  &(\Gamma \ext A)^R(\nu,\,t) &&\defn (\Gamma^R\,\nu,\,A^R\,\nu\,t)
+\end{alignat*}
+\textbf{Type substitution} with $\sigma : \Sub\,\Gamma\,\Delta$ also follows
+the same pattern. The following is well-typed by $\sigma^R\,\nu : \Delta^R\,(\sigma\circ\nu) \equiv \sigma^M\,(\Gamma^R\,\nu)$.
+\[ (A[\sigma])^R\,\nu\,t \defn A^R\,(\sigma\circ\nu)\,t \]
+For the \textbf{universe}, we have the following.
+\begin{alignat*}{3}
+  &\U^R : (\nu : \Sub\,\Omega\,\Gamma)(a : \Tm\,\Omega\,\U) \to \U^M\,(a^A\,(\Omega^T\,\id))\,(a^A\,\omega)\,(\Gamma^R\,\nu)
+\end{alignat*}
+Morphisms in the semantics of $\U$ are simply functions. Moreover, we have
+$a^T\,\id : \Tm\,\Omega\,(\El\,a) \equiv a^A\,(\Omega^T\,\id)$.
+\begin{alignat*}{3}
+  &\U^R : (\nu : \Sub\,\Omega\,\Gamma)(a : \Tm\,\Omega\,\U) \to \Tm\,\Omega\,(\El\,a) \to a^A\,\omega\\
+  &\U^R\,\nu\,a\,t \defn t^A\,\omega
+\end{alignat*}
+Thus, we evaluate $t$ in the $\omega$ algebra, the same way as we did in Chapter
+\ref{chap:simple-inductive-signatures}.
+
+For \textbf{$\El$}, we need to show
 \[
-  \Pie : (A : \Ty_0) \to (A \to \SigTy_0\,\Gamma) \to \SigTy_0\,\Gamma
+  (\El\,a)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Gamma\,(\El\,(a[\nu]))) \to a^M\,(\Gamma^R\,\nu)\,(t^A\,(\Omega^T\,\id)) \equiv t^A\,\omega
 \]
-Now, if we view $\Pie$ as part of an inductive signature, we have to problem
-that $\SigTy_0\,\Gamma : \Ty_0$, but $\Pie$ abstracts over $\Ty_0$,
-i.e.\ ``contains'' an element of $\Ty_0$.
+We have $a^R\,\nu : U^R\,\nu\,(a[\nu]) \equiv a^M\,(\Gamma^R\,\nu)$. Hence,
+$U^R\,\nu\,(a[\nu])\,t \equiv a^M\,(\Gamma^R\,\nu)\,t$, and by computing $\U^R$
+we have $t^A\,\omega \equiv a^M\,(\Gamma^R\,\nu)\,t$. The target equation then
+follows by $a^T\,\id : t^A\,(\Omega^T\,\id) \equiv t$.
 
-For comparison, an inductive constructor in Agda which abstracts over $(A :
-\Set)$ can only return in a sort which is in $\Set_1$. Failure to bump levels,
-together with the induction principle for the type in question would let us
-recover $\Set : \Set$, hence an inconsistency. If we \emph{don't} assume
-induction, then it might be fine and sensible to consider specific models where
-levels are not bumped up. But we're aiming for term algebras that are weakly or
-strongly initial, so we don't want to run into inconsistent induction
-principles.
+For \textbf{the identity type}, we need to show:
+\[
+(\Id\,t\,u)^R : (\nu : \Sub\,\Omega\,\Gamma)(e : \Tm\,\Gamma\,(\Id\,(t[\nu])\,(u[\nu])))
+  \to t^M\,(\Gamma^R\,\nu) \equiv u^M\,(\Gamma^R\,\nu)
+  \]
+This follows from equality reflection on $e$, together with
+\begin{alignat*}{3}
+  & t^R\,\nu &&: A^R\,\nu\,(t[\nu]) \equiv t^M\,(\Gamma^R\,\nu)\\
+  & u^R\,\nu &&: A^R\,\nu\,(u[\nu]) \equiv u^M\,(\Gamma^R\,\nu)
+\end{alignat*}
 
-The simplest way to rectify ToS with $\Pie$ is the following: we assume a
-Tarski-style sub-universe of $\Ty_0$, with $\ty_0 : \Ty_0$ and $\tm_0 :
-\Tm_0\,\ty_0 \to \Ty_0$, and have $\Pie$ abstract over $a : \ty_0$. We can view
-$(\ty_0,\,\tm_0)$ as a parameter to ToS. For instance, we can just define
-$\ty_0$ to be $\Bool_0$, and define $\tm_0$ by large elimination. In this case,
-we have signatures which can refer to at most two external types.
+
+%% (Id t u)ᴿ : (ν : Sub Ω Γ)(e : Tm Γ (Id t[ν] u[ν])) → (Id t u)ᴹ (tᴬ (Ωᵀ id)) (tᴬ ω) (Γᴿ ν)
+%%           : (ν : Sub Ω Γ)(e : Tm Γ (Id t[ν] u[ν])) → tᴹ (Γᴿ ν) ≡ uᴹ (Γᴿ ν)
+
+%%   tᴿ : Aᴿ ν (t[ν]) ≡ tᴹ (Γᴿ ν)
+%%   uᴿ : Aᴿ ν (u[ν]) ≡ uᴹ (Γᴿ ν)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Induction}
+
+
 
 \subsection{Church Encoding}
 \subsection{Awodey-Frey-Speight Encoding}
