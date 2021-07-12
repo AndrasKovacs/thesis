@@ -3794,9 +3794,9 @@ between propositional and definitional inner equality.
 constructions. So far, we have been consistently ignoring universe levels. Now,
 size questions are less obvious, and quite relevant to a) ensuring the
 consistency of assumed induction principles b) laying groundwork for
-self-describing signatures in Chapter \ref{TODO}. In the following, we describe
-the new universe setup, and adapt the previously described signatures and
-semantics to it.
+bootstrapped semantics and self-describing signatures in Chapter \ref{TODO}. In
+the following, we describe the new universe setup, and adapt the previously
+described signatures and semantics to it.
 
 \subsection{Universes \& Metatheory}
 
@@ -3804,13 +3804,14 @@ We have countable Russell-style $\Set_i$ universes, which are \emph{cumulative},
 meaning that any type in $\Set_i$ is also an element of $\Set_{i+1}$. We use a
 surface syntax which is similar to Coq, where cumulativity is implicit. This
 contrasts the formal (``algebraic'') specification of cumulativity
-\cite{sterling2019algebraic,kovacs2021generalized}, which requires a rather
-large amount of explicit lifting annotation.
+\cite{sterling2019algebraic,kovacs2021generalized}, which involves a substantial
+amount of explicit annotations.
 
 Also following Coq, we have implicit \emph{cumulative subtyping}
 \cite{timany18cumulative}. In our case, this means that cumulativity commutes
 through basic type formers. Concretely, we have a $\blank\!\leq\!\blank$
 subtyping relation on types, specified by the following rules:
+\begin{figure}
 \begin{mathpar}
   \inferrule*{i \leq j}
              {\Gamma \vdash \Set_i \leq \Set_j}
@@ -3830,13 +3831,16 @@ subtyping relation on types, specified by the following rules:
   \inferrule*{\Gamma\vdash A \leq A' \\ \Gamma\vdash t : A}
              {\Gamma \vdash t : A'}
 \end{mathpar}
+\caption{Rules for cumulative subtyping}
+\label{fig:cumulativity}
+\end{figure}
 These rules specify subtyping for \emph{surface syntax}; it is expected that
 surface syntax can be elaborated to \emph{coercions} in a formal syntax with
 algebraic cumulativity.
 
-Note that we have an \emph{invariant} rule for function domain types. This is in
-order to match Coq and \cite{timany18cumulative}, and also because we will not
-need a contravariant rule in any case.
+Note that we have an \emph{invariant} rule for function domain types. This is to
+match Coq and \cite{timany18cumulative}, and also because we will not need a
+contravariant rule in any case.
 
 We assume that $\Pi$ and $\Sigma$ types return in least upper bounds of levels. For instance,
 assuming $A : \Set_i$ and $B : A \to \Set_j$, we have $(x : A) \to B : \Set_{i \lub j}$.
@@ -3847,9 +3851,14 @@ First, we parameterize the notion of ToS-model with levels.
 \begin{mydefinition}
 For levels $i$ and $j$, $\ToS_{i,j} : \Set_{i+1\lub j+1}$ is the type of ToS
 models, defined as before, but where $\Con$, $\Sub$, $\Ty$ and $\Tm$ all return
-in $\Set_i$, and $\Pie$ abstracts over $\Set_j$. \emph{Remark:} by the
-cumulativity rules, we have that $\ToS_{i,j} \leq \ToS_{i+1,j}$.
+in $\Set_i$, and $\Pie$ abstracts over $\Set_j$.
 \end{mydefinition}
+
+We have that $\ToS_{i,j} \leq \ToS_{i+1,j}$. This follows from the rules
+in Figure \ref{fig:cumulativity}. All underlying sets return in $\Set_i$, which
+can be bumped to $\Set_{i + 1}$.  Th $j$ level doesn't change, which is as
+expected, since $\Set_j$ appears in a negative position in the type of $\Pie$,
+and has to be invariant.
 
 \textbf{Assumption.} We assume that for all $j$, there exists an inhabitant of
 $\syn_j : \ToS_{j+1,j}$ which supports induction. Note the level bump in the first index;
@@ -3972,7 +3981,7 @@ external sets. The levels line up, since in $\syn_j$ we have $\Tm$ returning in 
 \begin{alignat*}{3}
   &\U^T : (\nu : \Sub\,\Omega\,\Gamma) \to \Tm\,\Omega\,\U \to
           \Ty\\
-  &\U^T\,\nu\,a \defn Tm\,\Omega\,(\El\,a)
+  &\U^T\,\nu\,a \defn \Tm\,\Omega\,(\El\,a)
 \end{alignat*}
 For $\El$, we have to define
 \[
@@ -4064,11 +4073,26 @@ the presentation in Chapter \ref{chap:simple-inductive-signatures}. Also, Church
 encodings in Section \ref{TODO} will support recursion but not elimination, so
 it makes sense to try to ``warm up'' to that case as well.
 
-As in the term algebra construction, we pick $\Omega : \Sig_j$, use $\blank^A$
-to refer to $\blank^A_{j+1}$, and also use $\blank^M$ for $\blank^M_{j+1}$.  We
-assume $\omega : \Omega^A$. The goal is to exhibit a morphism from the term
-algebra $\Omega^T\,\id$ to $\omega$. We define $\blank^R$ by induction on
-$\syn_j$.
+The goal is to construct a morphism from a term algebra to any other $\omega
+: \Omega^A$ algebra. However, we have to handle universe levels as well. We want
+to be able to eliminate from the term algebra, which was constructed at the
+lowest possible level, to any other universe. Right now we don't have a notion
+of ``heterogeneous'' morphism, between algebras at different levels.  We prefer
+to skip this, and keep matters as simple as possible. We do the following:
+\begin{itemize}
+  \item We assume $\Omega : \Sig_j$, for which we already have the term algebra $\Omega^T\,\id : \Omega^A_{j+1}$.
+  \item We assume some $k \geq j + 1$, and an $\omega : \Omega^A_{k}$, the target of recursion.
+  \item We implicitly lift $\Omega^T\,\id$ from level $j + 1$ to level $k$ by cumulativity, and construct
+        a ``homogeneous'' morphism from the lifted term algebra to $\omega$.
+\end{itemize}
+This allows us to eliminate from $\Omega^T\,\id$ to any level. If we want to
+eliminate to $k \geq j + 1$, we can lift the term algebra, and use a constructed
+recursor. On the other hand, if we want to eliminate to $k < j + 1$, we can
+instead lift the target $\omega : \Omega^A_{k}$ algebra to $j + 1$, and again
+use a constructed recursor.
+
+We define $\blank^R$ by induction on $\syn_j$. From this, we will obtain the
+recursor as $\Omega^R\,\id$.
 \begin{alignat*}{3}
   &\blank^R &&: (\Gamma : \Con)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,(\nu^A\,(\Omega^T\,\id))\,(\nu^A\,\omega)\\
   &\blank^R &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Delta^R\,(\sigma \circ \nu) \equiv \sigma^M\,(\Gamma^R\,\nu)\\
@@ -4085,7 +4109,7 @@ Let's refresh some details about the involved operations.
   $\Gamma^M$ is the set of $\Gamma$-morphisms. $A : \Ty\,\Gamma$ is a displayed
   flcwf in the semantics. $A^M$ yields sets of displayed morphisms,
   corresponding to the semantic $\Sub$ component. So we have
-  \[ A^M : A^A\,\gamma_0 \to A^A\,\gamma_1 \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Set_{j+1} \]
+  \[ A^M : A^A\,\gamma_0 \to A^A\,\gamma_1 \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Set_{k} \]
 \item $t^M$ and $\sigma^M$ yield actions on morphisms. For $t : \Tm\,\Gamma\,A$ and $\sigma : \Sub\,\Gamma\,\Delta$, we have
   \begin{alignat*}{3}
     &t^M      &&: (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \to A^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)\,\gamma^M\\
@@ -4106,7 +4130,7 @@ smaller'', but it is more general.
 
 We look at the interpretation of type formers. Again, term and substitution
 equations are given by UIP, and we omit term and substitution formers.  For
-\textbf{contexts}, we again simply recurse:o
+\textbf{contexts}, we again simply recurse:
 \begin{alignat*}{3}
   &\emptycon^R\,\nu           &&\defn \tt\\
   &(\Gamma \ext A)^R(\nu,\,t) &&\defn (\Gamma^R\,\nu,\,A^R\,\nu\,t)
@@ -4126,17 +4150,17 @@ $a^T\,\id : \Tm\,\Omega\,(\El\,a) \equiv a^A\,(\Omega^T\,\id)$.
 \end{alignat*}
 Thus, we evaluate $t$ in the $\omega$ algebra, the same way as we did in Chapter
 \ref{chap:simple-inductive-signatures}.
-
-For \textbf{$\El$}, we need to show
+\\\\
+\noindent For \textbf{$\El$}, we need to show
 \[
   (\El\,a)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Gamma\,(\El\,(a[\nu]))) \to a^M\,(\Gamma^R\,\nu)\,(t^A\,(\Omega^T\,\id)) \equiv t^A\,\omega
 \]
 We have $a^R\,\nu : U^R\,\nu\,(a[\nu]) \equiv a^M\,(\Gamma^R\,\nu)$. Hence,
 $U^R\,\nu\,(a[\nu])\,t \equiv a^M\,(\Gamma^R\,\nu)\,t$, and by computing $\U^R$
 we have $t^A\,\omega \equiv a^M\,(\Gamma^R\,\nu)\,t$. The target equation then
-follows by $a^T\,\id : t^A\,(\Omega^T\,\id) \equiv t$.
-
-For \textbf{the identity type}, we need to show:
+follows by $t^T\,\id : t^A\,(\Omega^T\,\id) \equiv t$.
+\\\\
+\noindent For \textbf{the identity type}, we need to show:
 \[
 (\Id\,t\,u)^R : (\nu : \Sub\,\Omega\,\Gamma)(e : \Tm\,\Gamma\,(\Id\,(t[\nu])\,(u[\nu])))
   \to t^M\,(\Gamma^R\,\nu) \equiv u^M\,(\Gamma^R\,\nu)
@@ -4146,13 +4170,50 @@ This follows from equality reflection on $e$, together with
   & t^R\,\nu &&: A^R\,\nu\,(t[\nu]) \equiv t^M\,(\Gamma^R\,\nu)\\
   & u^R\,\nu &&: A^R\,\nu\,(u[\nu]) \equiv u^M\,(\Gamma^R\,\nu)
 \end{alignat*}
+For the \textbf{inductive function type}, we get the following target type after unfolding $(\Pi\,a\,B)^M$:
+\begin{alignat*}{3}
+ &(\Pi\,a\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
+ & \hspace{2em}\to (\alpha : a^A\,(\nu^A\,(\Omega^T\,\id))) \to B^M\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^A\,\omega\,(a^M\,(\Gamma^R\,\nu)\,\alpha))\,(\Gamma^R\,\nu,\,\refl)
+\end{alignat*}
+We have
+\begin{alignat*}{3}
+  & \nu^T\,\id &&: \Gamma^T\,\nu \equiv \nu^A\,(\Omega^T\,\id) \\
+  & a^T\,\nu   &&: a^A\,(\Gamma^T\,\id) \equiv \Tm\,\Omega\,(\El\,(a[\nu]))
+\end{alignat*}
+Hence, $a^A\,(\nu^A\,(\Omega^T\,\id)) \equiv \Tm\,\Omega\,(\El\,(a[\nu]))$. We
+also have $a^R\,\nu : (\lambda\,\alpha.\,\alpha^A\,\omega) \equiv a^M\,(\Gamma^R\,\nu)$, therefore
+$\alpha^A\,\omega \equiv a^M\,(\Gamma^R\,\nu)$. With this in mind, the goal type can be rewritten as
+\begin{alignat*}{3}
+ &(\Pi\,a\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
+ & \hspace{2em}\to (\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))) \to B^M\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^A\,\omega\,(a^A\,\omega))\,(\Gamma^R\,\nu,\,\refl)
+\end{alignat*}
+We have the following typing now:
+\[
+  B^R\,(\nu,\,\alpha)\,(t\,\alpha) : B^M\,((t\,\alpha)^A\,(\Omega^T\,\id))\,((t\,\alpha)^A\,\omega)\,(\Gamma^T\,\nu,\,\refl)
+\]
+By the action of $\blank^A$ on inductive function application, we have
+\[
+   B^R\,(\nu,\,\alpha)\,(t\,\alpha) :
+      B^M\,(t^A\,(\Omega^T\,\id)\,(\alpha^A\,(\Omega^T\,\id)))\,(t^A\,\omega\,(\alpha^A\,\omega))\,(\Gamma^T\,\nu,\,\refl)
+\]
+But since $\alpha^T\,\id : \alpha^A\,(\Omega^T\,\id) \equiv \alpha$, this is
+exactly the target type. Therefore the definition is:
+\[
+  (\Pi\,a\,B)^R\,\nu\,t \defn \lambda\,\alpha.\,B^R\,(\nu,\,\alpha)\,(t\,\alpha)
+\]
+For the \textbf{external function type}, we again simply recurse through the indexing:
+\begin{alignat*}{3}
+  & (\Pie\,A\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pie\,A\,(\lambda\,\alpha.\,(B\,\alpha)[\nu])))\\
+  & \hspace{2em}\to (\alpha : A) \to (B\,\alpha)^M\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^A\,\omega\,\alpha)\,(\Gamma^R\,\nu)\\
+  &(\Pie\,A\,B)^R\,\nu\,t \defn \lambda\,\alpha.\,(B\,\alpha)^R\,\nu\,(t\,\alpha)
+\end{alignat*}
+This concludes the definition of $\blank^R$.
 
-
-%% (Id t u)ᴿ : (ν : Sub Ω Γ)(e : Tm Γ (Id t[ν] u[ν])) → (Id t u)ᴹ (tᴬ (Ωᵀ id)) (tᴬ ω) (Γᴿ ν)
-%%           : (ν : Sub Ω Γ)(e : Tm Γ (Id t[ν] u[ν])) → tᴹ (Γᴿ ν) ≡ uᴹ (Γᴿ ν)
-
-%%   tᴿ : Aᴿ ν (t[ν]) ≡ tᴹ (Γᴿ ν)
-%%   uᴿ : Aᴿ ν (u[ν]) ≡ uᴹ (Γᴿ ν)
+\begin{mydefinition}[\textbf{Recursors}]
+Assuming $\Omega : \Sig_j$, a $k$ level such that $k \geq j + 1$ and $\omega :
+\Omega^A_{k}$, we have $\Omega^R\,\id : \Omega^M\,(\Omega^T\,\id)\,\omega$ as
+the recursor for the term algebra.
+\end{mydefinition}
 
 
 
