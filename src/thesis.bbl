@@ -1,5 +1,5 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{GKNB20}
+\begin{thebibliography}{MAA{\etalchar{+}}19}
 
 \bibitem[AAC{\etalchar{+}}20]{allais20type}
 Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
@@ -23,6 +23,17 @@ Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, Nicolai Kraus, and
 Danil Annenkov, Paolo Capriotti, Nicolai Kraus, and Christian Sattler.
 \newblock Two-level type theory and applications.
 \newblock {\em ArXiv e-prints}, may 2019.
+
+\bibitem[AHH18]{angiuli2018cartesian}
+Carlo Angiuli, Kuen-Bang~Favonia Hou, and Robert Harper.
+\newblock Cartesian cubical computational type theory: Constructive reasoning
+  with paths and equalities.
+\newblock {\em Computer Science Logic 2018}, 2018.
+
+\bibitem[AHW16]{angiuli2016computational}
+Carlo Angiuli, Robert Harper, and Todd Wilson.
+\newblock Computational higher type theory i: Abstract cubical realizability.
+\newblock {\em arXiv preprint arXiv:1604.08873}, 2016.
 
 \bibitem[AK79]{adamek}
 Jir{\'{\i}} Ad{\'{a}}mek and V{\'{a}}clav Koubek.
@@ -154,6 +165,12 @@ Andres L{\"{o}}h and Jos{\'{e}}~Pedro Magalh{\~{a}}es.
 \newblock In Jaakko J{\"{a}}rvi and Shin{-}Cheng Mu, editors, {\em Proceedings
   of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
   2011, Tokyo, Japan, September 19-21, 2011}, pages 1--12. {ACM}, 2011.
+
+\bibitem[MAA{\etalchar{+}}19]{dijkstramonad}
+Kenji Maillard, Danel Ahman, Robert Atkey, Guido Mart{\'{\i}}nez, Catalin
+  Hritcu, Exequiel Rivas, and {\'{E}}ric Tanter.
+\newblock Dijkstra monads for all.
+\newblock {\em Proc. {ACM} Program. Lang.}, 3({ICFP}):104:1--104:29, 2019.
 
 \bibitem[MFP91]{bananas}
 Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.

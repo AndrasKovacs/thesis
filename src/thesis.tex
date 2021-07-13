@@ -111,13 +111,13 @@
 \newcommand{\emptycon}{\scaleobj{.75}\bullet}
 \newcommand{\Pii}{\Pi}
 \newcommand{\funi}{\Rightarrow}
-\newcommand{\fune}{\Rightarrow^{ext}}
+\newcommand{\fune}{\Rightarrow^{\ms{ext}}}
 \newcommand{\appi}{\mathsf{app}}
 \newcommand{\lami}{\mathsf{lam}}
 \newcommand{\Pie}{\Pi^{\mathsf{ext}}}
 \newcommand{\appe}{\mathsf{app^{ext}}}
 \newcommand{\lame}{\mathsf{lam^{ext}}}
-\newcommand{\toe}{\to^{ext}}
+\newcommand{\toe}{\to^{\ms{ext}}}
 \newcommand{\Piinf}{\Pi^{\mathsf{inf}}}
 \newcommand{\appinf}{\mathsf{app^{inf}}}
 \newcommand{\laminf}{\mathsf{lam^{inf}}}
@@ -141,6 +141,9 @@
 \newcommand{\Kfam}{\mathsf{K}}
 \newcommand{\lamK}{\mathsf{lam}_{\K}}
 \newcommand{\appK}{\mathsf{app}_{\K}}
+
+\newcommand{\toinf}{\to^{\ms{inf}}}
+\newcommand{\lambdainf}{\lambda^{\ms{inf}}}
 
 \newcommand{\p}{\mathsf{p}}
 \newcommand{\q}{\mathsf{q}}
@@ -2662,12 +2665,12 @@ signature. However, this relies on the Agda implementation of pattern matching
 and structurally recursive definitions, so it would require more work to translate
 these definitions to 2LTT in a generic way.
 
-\chapter{Finitary Quotient Inductive-Inductive Types}
+\chapter{Finitary Quotient Inductive-Inductive Signatures}
 \label{chap:fqiit}
 
 In this chapter we bump the expressive power of signatures by a large margin,
 and also substantially extend the semantics. However, we keep the basic approach
-the same; indeed its advantages become more apparent with the more sophisticated
+the same; indeed its advantages become apparent with the more sophisticated
 signatures.
 
 \section{Theory of Signatures}
@@ -2798,7 +2801,7 @@ notation for multiple $\Pi$ binders.
 \begin{notation}
 For more complex signatures, we may entirely switch to an internal notation,
 where we mostly reuse the conventions in the metatheories. We use $(x :
-a) \to B$ for inductive functions, $(x : A) \to^{ext} B$ for external functions,
+a) \to B$ for inductive functions, $(x : A) \toe B$ for external functions,
 but we still write $\Id$ for the identity type and make $\U$ and $\El$
 explicit. In this notation, a signature is just a listing of binders. The category
 signature becomes the following:
@@ -2823,16 +2826,16 @@ For example, we give a signature for lists by assuming $A : \Ty_0$ for the
 \begin{alignat*}{3}
   &\mi{List} &&: \U\\
   &\mi{nil}  &&: \El\,\mi{List}\\
-  &\mi{cons} &&: A \to^{ext} \mi{List} \to \El\,\mi{List}
+  &\mi{cons} &&: A \toe \mi{List} \to \El\,\mi{List}
 \end{alignat*}
 Hence, ``parameters'' are always assumptions made in the metatheory. We can
 also \emph{index} sorts by external values. Let's specify length-indexed vectors
 now; we keep the $A : \Ty_0$ assumption, but also assume that $\Ty_0$ has
 natural numbers, with $\Nat_0 : \Ty_0$, $\zero_0$ and $\suc_0$.
 \begin{alignat*}{3}
-  &\mi{Vec}  &&: \Nat_0 \to^{ext} \U \\
+  &\mi{Vec}  &&: \Nat_0 \toe \U \\
   &\mi{nil}  &&: \El\,(\mi{Vec}\,\zero_0)\\
-  &\mi{cons} &&: (n : \Nat_0) \to^{ext} A \to^{ext} \mi{Vec}\,n \to \El\,(\mi{Vec}\,(\suc_0\,n))
+  &\mi{cons} &&: (n : \Nat_0) \toe A \toe \mi{Vec}\,n \to \El\,(\mi{Vec}\,(\suc_0\,n))
 \end{alignat*}
 \end{myexample}
 
@@ -2858,6 +2861,7 @@ The equation for Russell-style universes is likewise a sort equation:
 \end{myexample}
 
 \begin{myexample}
+\label{ex:presheaf-sig}
 As we mentioned in Definition \ref{def:presheaf-type}, there is a signature for
 presheaves, so let's look at that now. Assume a category $\mbbC$ in the inner
 theory; this means that objects and morphisms of $\mbbC$ are in $\Ty_0$.
@@ -2870,7 +2874,7 @@ theory; this means that objects and morphisms of $\mbbC$ are in $\Ty_0$.
 We depart from the sugary naming scheme in Definition \ref{def:presheaf-type},
 and name the action on objects $\mi{Obj}$ and the action on morphisms
 $\mi{Hom}$. When we give semantics to this signature in Section \ref{TODO}, we
-will get as algebras presheaves from $\mbbC$ to the category of inner
+will get as algebras functors from $\mbbC^{\ms{op}}$ to the category of inner
 types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A \to
 \Tm_0\,B$ functions as morphisms.
 \end{myexample}
@@ -3557,6 +3561,8 @@ a family of displayed flcwfs.
 All structure is defined in the evident pointwise way. $\bs{\appe}$ and $\bs{\lame}$ are
 defined by component-wise flipping of function arguments.
 
+\todo{Examples for computed semantics here maybe}
+
 \subsection{Discussion of Semantics}
 
 \subsubsection{Flcwfs For Free}
@@ -3739,9 +3745,6 @@ other columns as well. The interpretation functions can be defined in two ways:
 \end{itemize}
 However, the two versions coincide because of the initiality of ToS syntax.
 
-%% \begin{mydefinition} From now on, we use $\blank^A$, $\blank^M$, $\blank^D$ and $\blank^S$ to refer
-%% to the families of functions that we described above.
-%% \end{mydefinition}
 
 \begin{figure}
 \begin{center}
@@ -3764,6 +3767,8 @@ However, the two versions coincide because of the initiality of ToS syntax.
 \end{figure}
 
 \section{Moving to the Inner Theory \& Refining Universe Levels}
+
+\todo{Mention this earlier in the chapter?}
 
 In the rest of the chapter, we discuss term algebras and their recursors and
 eliminators. Before we do that, we make two significant modifications to the
@@ -4091,6 +4096,8 @@ recursor. On the other hand, if we want to eliminate to $k < j + 1$, we can
 instead lift the target $\omega : \Omega^A_{k}$ algebra to $j + 1$, and again
 use a constructed recursor.
 
+\todo{maybe give example}
+
 We define $\blank^R$ by induction on $\syn_j$. From this, we will obtain the
 recursor as $\Omega^R\,\id$.
 \begin{alignat*}{3}
@@ -4100,6 +4107,7 @@ recursor as $\Omega^R\,\id$.
      \to A^M\,(t^A\,(\Omega^T\,\id))\,(t^A\,\omega)\,(\Gamma^R\,\nu)\\
   &\blank^R &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^R\,\nu\,(t[\nu]) \equiv t^M\,(\Gamma^R\,\nu)
 \end{alignat*}
+\todo{Maybe do an appendix with full AMDS}
 Let's refresh some details about the involved operations.
 \begin{itemize}
 \item For $\nu : \Sub\,\Gamma\,\Delta$, we get $\nu^A : \Gamma^A \to \Delta^A$. In the semantics, $\nu$
@@ -4185,7 +4193,7 @@ also have $a^R\,\nu : (\lambda\,\alpha.\,\alpha^A\,\omega) \equiv a^M\,(\Gamma^R
 $\alpha^A\,\omega \equiv a^M\,(\Gamma^R\,\nu)$. With this in mind, the goal type can be rewritten as
 \begin{alignat*}{3}
  &(\Pi\,a\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
- & \hspace{2em}\to (\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))) \to B^M\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^A\,\omega\,(a^A\,\omega))\,(\Gamma^R\,\nu,\,\refl)
+ & \hspace{2em}\to (\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))) \to B^M\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^A\,\omega\,(\alpha^A\,\omega))\,(\Gamma^R\,\nu,\,\refl)
 \end{alignat*}
 We have the following typing now:
 \[
@@ -4215,39 +4223,240 @@ Assuming $\Omega : \Sig_j$, a $k$ level such that $k \geq j + 1$ and $\omega :
 the recursor for the term algebra.
 \end{mydefinition}
 
+\subsection{Eliminator Construction}
 
+We assume $\Omega : \Sig_j$ and $\omega^D : \Omega^D_{k}\,(\Omega^T\,\id)$,
+where $k \geq j + 1$. Again we implicitly lift the term algebra from level $j+1$
+to $k$. Here, $\omega^D$ is a displayed algebra over the term algebra. We seek
+to construct an inhabitant of $\Omega^S\,(\Omega^T\,\id)\,\omega^D$. We define
+$\blank^E$ by induction.
 
+Constructing eliminators is on the whole quite similar to the recursor
+construction. The switch from morphisms to sections is mechanical. We shall only
+look at $\U$, $\El$ and $\Pi$ here.
+\begin{alignat*}{3}
+  &\blank^E &&: (\Gamma : \Con)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^S\,(\nu^A\,(\Omega^T\,\id))\,(\nu^D\,\omega^D)\\
+  &\blank^E &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Delta^E\,(\sigma \circ \nu) \equiv \sigma^S\,(\Gamma^E\,\nu)\\
+  &\blank^E &&: (A : \Ty\,\Gamma)&&(\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(A[\nu]))
+     \to A^S\,(t^A\,(\Omega^T\,\id))\,(t^D\,\omega^D)\,(\Gamma^E\,\nu)\\
+  &\blank^E &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^E\,\nu\,(t[\nu]) \equiv t^S\,(\Gamma^E\,\nu)
+\end{alignat*}
+For the \textbf{universe}, we have the following.
+\begin{alignat*}{3}
+  &\U^E : (\nu : \Sub\,\Omega\,\Gamma)(a : \Tm\,\Omega\,\U) \to (\alpha : a^A\,(\Omega^T\,\id)) \to a^D\,\omega^D\,\alpha
+\end{alignat*}
+By $a^T\,\id : a^A\,(\Omega^T\,\id) \equiv \Tm\,\Omega\,(\El\,a)$, we can give the following definition:
+\begin{alignat*}{3}
+  &\U^E : (\nu : \Sub\,\Omega\,\Gamma)(a : \Tm\,\Omega\,\U) \to (\alpha : \Tm\,\Omega\,(\El\,a)) \to a^D\,\omega^D\,\alpha\\
+  &\U^E\,\nu\,a\,\alpha \defn \alpha^D\,\omega^D
+\end{alignat*}
+In other words, we evaluate $\alpha$ in the $\omega^D$ displayed algebra. Let's check that this is well-typed:
+\begin{alignat*}{3}
+  & \alpha^D &&: \{\omega : \Omega^A\}(\omega^D : \Omega^D\,\omega) \to a^D\,\omega^D\,(\alpha^A\,\omega)\\
+  & \alpha^D\,\omega^D &&: a^D\,\omega^D\,(\alpha^A\,(\Omega^T\,\id) \\
+  & \alpha^T\,\id      &&: \alpha^A\,(\Omega^T\,\id) \equiv \alpha
+\end{alignat*}
+Thus $\alpha^D\,\omega^D : a^D\,\omega^D\,\alpha$. Recall that $\alpha^D$ can
+be viewed as the logical predicate interpretation of $\alpha$, which expresses
+that $\alpha^A$ preserves $\blank^D$ predicates.
+\\\\
+\noindent For \textbf{$\El$}, we need to show
+\[
+  (\El\,a)^S : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Gamma\,(\El\,(a[\nu]))) \to a^S\,(\Gamma^E\,\nu)\,(t^A\,(\Omega^T\,\id)) \equiv t^D\,\omega^D
+\]
+This follows from $t^T\,\id : t^A\,(\Omega^T\,\id) \equiv t$ and $a^E\,\nu : (\lambda\,t.\,t^D\,\omega^D) \equiv a^S\,(\Gamma^E\,\nu)$.
+\\\\
+\noindent The \textbf{inductive function} interpretation is defined similarly as before:
+\begin{alignat*}{3}
+ &(\Pi\,a\,B)^E : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
+ & \hspace{2em}\to (\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))) \to B^S\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^D\,\omega^D\,(\alpha^D\,\omega^D))\,(\Gamma^E\,\nu,\,\refl)\\
+ &\rlap{$(\Pi\,a\,B)^E\,\nu\,t \defn \lambda\,\alpha.\,B^E\,(\nu,\,\alpha)\,(t\,\alpha)$}
+\end{alignat*}
+Similarly as before, we make use of $\nu^T\,\id$, $u^T\,\id$, $a^E\,\nu$ and $a^T\,\nu$ to type-check the definition.
 
+Interpretations for contexts and other type formers are also essentially the same as with recursors.
 
+\begin{mydefinition}[\textbf{Eliminators}]
+Assuming $\Omega : \Sig_j$, a $k$ level such that $k \geq j + 1$ and $\omega^D :
+\Omega^D_{k}\,(\Omega^T\,\id)$, we have $\Omega^E\,\id : \Omega^S\,(\Omega^T\,\id)\,\omega^D$ as
+the eliminator.
+\end{mydefinition}
 
+\todo{Some discussion, blah blah}
+\todo{Should we just pare down elims/recursors and put them in an appendix?}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Induction}
-
-
-
-\subsection{Church Encoding}
-\subsection{Awodey-Frey-Speight Encoding}
-\section{Left Adjoints of Signature Morphisms}
-\label{sec:left-adjoints}
-
-\chapter{Infinitary Quotient Inductive-Inductive Types}
+\chapter{Infinitary Quotient Inductive-Inductive Signatures}
 \label{chap:iqiit}
+
+In this chapter we present another theory of signatures, for \emph{infinitary
+quotient inductive-inductive} signatures. As we will see, the reason for
+considering the finitary and infinitary cases separately is that they support
+different semantics.
+
+First, we specify signatures and define semantics in 2LTT. Then, like in the
+previous chapter, we switch to a extensional TT setting and look at term
+algebras and related constructions.
+
 \section{Theory of Signatures}
+
+\textbf{Metatheory.} We work in 2LTT. We assume the following type formers in
+the inner theory: $\top$, $\Sigma$, extensional identity $\blank\!=\!\blank$ and
+$\Pi$. Note that $\Pi$ is an extra assumption compared to what we had in the
+finitary case.
+
+\begin{mydefinition}
+\label{def:iqiit-tos}
+A \textbf{model of the theory of signatures} consists of the following.
+  \begin{itemize}
+    \item A \textbf{cwf} with underlying sets $\Con$, $\Sub$, $\Ty$ and $\Tm$, all returning in
+      the outer $\Set$ universe of 2LTT.
+    \item A \textbf{Tarski-style universe} $\U$ with decoding $\El$. $\U$ is closed under the following type formers:
+      \begin{itemize}
+        \item The \textbf{unit type} $\top$.
+        \item \textbf{$\Sigma$-types} $\Sigma : (a : \Tm\,\Gamma\,\U) \to \Tm\,(\Gamma\,\ext\,\El\,a)\,\U \to \Tm\,\Gamma\,\U$, with specifying isomorphism
+          \[(\proj,\,\blank\!,\!\blank) : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\simeq (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))\]
+        \item \textbf{Infinitary functions} $\Piinf : (A : \Ty_0) \to (A \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U$, specified by $(\appinf,\,\laminf) : \Tm\,\Gamma\,(\Piinf\,A\,b) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(\El\,(b\,\alpha)))$.
+      \end{itemize}
+    \item An \textbf{inductive function type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
+      \Ty\,(\Gamma\ext\El\,a) \to \Ty\,\Gamma$, specified by
+      $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
+    \item An \textbf{external function type} $\Pie : (A : \Ty_0) \to (A \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
+      $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,A\,B) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(B\,\alpha))$.
+  \end{itemize}
+\end{mydefinition}
+Once again we assume that an initial model for ToS exists, and a signature is a
+context in the initial model.
+
+\begin{notation}
+  We employ the same notations for signatures as in Section \ref{sec:fqiit-tos}. In addition to that,
+  we have the usual internal notation for $\top$ and $\Sigma$, and we write $(x : A) \toinf B$ for $\Piinf$
+  and $\lambdainf$ for $\laminf$.
+\end{notation}
+
+Let's do a comparison to the finitary case. First, the new signatures do not
+support sort equations, since there is no identity type for arbitrary terms,
+only for terms with types in $\U$. Second, the universe is not empty anymore, it
+supports $\top$, $\Sigma$ and the infinitary function type $\Piinf$, which can
+be viewed as an analogue of $\Pie$ inside $\U$. We look at example signatures.
+
+\begin{myexample}
+Infinitary constructors can be given with $\Piinf$. A classic example is
+W-types. Assuming $S : \Ty_0$ and $P : S \to \Ty_0$, we have the following
+signature for $P$-branching well-founded trees:
+\begin{alignat*}{3}
+  &W &&: \U\\
+  &\ms{sup} &&: (s : S) \toe (P\,s \toinf W) \to \El\,W
+\end{alignat*}
+Note that since $P\,s \toinf W$ is in $\U$, it can appear on the left side of
+$\to$. Hence the naming ``infinitary'': if $P\,s$ is an infinite type,
+$\ms{sup}$ branches with an infinite number of inductive subtrees. Of course,
+finitary branching can be also expressed with $\Piinf$, but that use case was
+already possible with finitary signatures, by iterating $\to$ finite times.
+\end{myexample}
+
+\begin{myexample} Equations can appear as assumptions now. The simplest
+example for this would be set truncation for some $A : \Ty_0$:
+\begin{alignat*}{3}
+  &|A|_0      &&: \U\\
+  &\ms{embed} &&: A \toe |A|_0 \\
+  &\ms{trunc} &&: (x\,y : |A|_0)(p\,q : \Id\,x\,y) \to \El\,(\Id\,p\,q)
+\end{alignat*}
+However, this will end up being redundant in our semantics, since we assume UIP,
+and every semantic underlying type will be a set. Does this mean that recursive
+equations are useless? We don't think so. In the specification of cubical type
+theories, there are \emph{boundary conditions} which can be given as $\Id$
+assumptions \cite{cchm,angiuli2016computational,angiuli2018cartesian}. Also, it
+seems that these conditions cannot be easily contracted away, or expressed
+equivalently without recursive equation. For an example of contraction, the
+signature
+\[\emptycon \ext (A : \U) \ext (c_1 : \El\,A) \ext (c_2 : (x : A) \to \Id\,x\,c_1 \to \El\,A)\]
+can be rewritten to the equivalent
+\[\emptycon \ext (A : \U) \ext (c_1 : \El\,A) \ext (c_2 : \El\,A)\]
+signature. However, we can't mechanically eliminate the $\Id$ from the following signature.
+\begin{alignat*}{3}
+  &A   &&: \U\\
+  &B   &&: A \to \U\\
+  &b_1 &&: A \to \El\,B\\
+  &b_2 &&: A \to \El\,B\\
+  &...&&\\
+  &a   &&: (x\,y : A) \to \Id\,(b_1\,x)\,(b_2\,y) \to \El\,A
+\end{alignat*}
+Whether we can reformulate $a$ without the $\Id$ condition depends on what kind
+of equational theory we specify for $B$ in the omitted parts of the signature.
+\end{myexample}
+
+\begin{myexample}
+All theories of signatures that we discussed so far, have (infinitary)
+signatures.
+
+For finitary signatures, the ToS is itself infinitary because of $\Pie$. We as
+assume an universe $\U_0$ in $\Ty_0$. In the signature, we have
+\begin{alignat*}{3}
+  &\mi{Con} &&: \U \\
+  &\mi{Ty} &&: \mi{Con} \to \U\\
+  &\Pie &&: \{\Gamma : \mi{Con}\} \to (A : \U_0) \toe (A \toinf \mi{Ty}\,\Gamma) \to \El\,(\mi{Ty}\,\Gamma)\\
+\end{alignat*}
+In the signature for infinitary ToS, we have
+\begin{alignat*}{3}
+  &\mi{Univ} &&: \{\Gamma : \mi{Con}\} \to \mi{Ty}\,\Gamma\\
+  &\Piinf    &&: \{\Gamma : \mi{Con}\} \to (A : \U_0) \toe (A \toinf \mi{Tm}\,\Gamma\,\mi{Univ}) \to \mi{Tm}\,\Gamma\,\mi{Univ}
+\end{alignat*}
+\emph{Remark.}
+When we will take the semantics of the above signature, we won't
+exactly get back the theory of signatures that we're using right now. We have
+ToS in 2LTT now, but the semantics is in the inner theory. What we can do
+though, is to assume that the inner theory is also a 2LTT. Then we might assume
+that the inner theory of \emph{that} is again a 2LTT, and so on. This is a
+possible (and quite natural) generalization of 2LTT to n-level type theory. In
+this setting, one round of self-description requires a bumping of levels in the
+sense of 2LTT. In this thesis we won't explore this, instead in Section
+\ref{TODO} we use a more conventional universe-hierarchy in an extensional TT,
+to investigate self-description.
+\end{myexample}
+
+\begin{myexample}
+We have seen in Example \ref{ex:presheaf-sig} that $\Ty_0$-valued presheaves have finitary signatures.
+With infinitary signatures, we can also cover monads on $\Ty_0$. We assume a
+universe $\U_0 : \Ty_0$.
+\begin{alignat*}{3}
+  &M              &&: \U_0 \to \U\\
+  &\mi{map}       &&: (A \to B) \toe M\,A \to \El\,(M\,B)\\
+  &\mi{map_{id}}   &&: \El\,(\Id\,(\mi{map}\,\id\,x)\,x)\\
+  &\mi{map_{\circ}} &&: \El\,(\Id\,(\mi{map}\,(f \circ g)\,x)\,(\mi{map}\,f\,(\mi{map}\,g\,x)))\\
+  &\mi{return}    &&: A \toe \El\,(M\,A)\\
+  &\mi{bind}      &&: M\,A \to (A \toinf M\,B) \to \El\,(M\,B)
+\end{alignat*}
+We rely on $\toinf$ to specify binding. The $\mi{join}$-based specification
+would not work, since $M\,(M\,A)$ is not valid in signatures. This signature can
+be helpful for deriving some of the metatheory of Dijkstra monads
+\cite[Section~5]{dijkstramonad}.
+
+In the 2LTT-based semantics, we will get $M : \U_0 \to \Ty_0$, which is not
+quite an endofunctor, but it would be straightforward to refine the semantics so
+that we can pick universes for underlying types of algebras, and have $M : \U_0
+\to \U_0$. Alternatively, we will also have the ETT-based semantics, where
+universe levels are explicitly handled.
+\end{myexample}
+
+\begin{myexample}
+It is worth to note that every set-truncated higher inductive type from the
+Homotopy Type Theory book \cite{hottbook} is covered. This includes
+\begin{itemize}
+\item The cumulative hierarchy of sets \cite[Section~10.5]{hottbook}.
+\item Cauchy real numbers \cite[Section~11.3]{hottbook}.
+\item Surreal numbers \cite[Section~11.6]{hottbook}.
+\end{itemize}
+\end{myexample}
+
 \section{Semantics}
 \section{Term Algebras}
+
+%% \subsection{Church Encoding}
+%% \subsection{Awodey-Frey-Speight Encoding}
+%% \section{Left Adjoints of Signature Morphisms}
+%% \label{sec:left-adjoints}
+
+
 
 \chapter{Levitation, Bootstrapping and Universe Levels}
 \label{chap:levitation}
