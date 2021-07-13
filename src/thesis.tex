@@ -853,7 +853,12 @@ extensions are required to the idea of $F$-algebras:
 \item
   For inductive-inductive definitions with two sorts, Forsberg gives a
   specification with two functors, and a considerably more complex notion of
-  algebras, involving dialgebras \cite{forsberg-phd}.
+  algebras, involving dialgebras \cite{forsberg-phd}\footnote{However, the
+  dialgebra specification only covers restricted signatures, where $B : A \to
+  \Set$ constructor types may refer to $A : \Set$ constructors, but no other
+  dependency is allowed.  There is a more general and yet more complicated
+  notion of signature in \cite{forsberg-phd}, which is not anymore represented
+  with functors.}.
 \item
   For an arbitrary number of sorts, Altenkirch et
   al.\ \cite{altenkirch18qiit} use a ``list'' of functors, specified mutually
@@ -4448,7 +4453,39 @@ Homotopy Type Theory book \cite{hottbook} is covered. This includes
 \end{itemize}
 \end{myexample}
 
+\todo{Section on model constructions using signature morphisms}
+
 \section{Semantics}
+
+As we mentioned, we need a different semantics for infinitary signatures.
+First, we look at why the previous semantics fails. We try to model signatures
+again as flcwfs, and morphisms as strict flcwf-morphisms. The simplest point of
+failure is the interpretation of the unit type $\bs{\top : \Tm\,\Gamma\,\U}$.
+
+In the semantics, this is the same as defining $\bs{\top :
+  \Sub\,\Gamma\,\Ty_0}$, where $\bs{\Ty_0}$ is the flcwf of inner types. The
+only sensible definition here is the functor which is constantly $\top_0$. But
+this does not strictly preserve comprehension or the finite limit type formers.
+If we have
+\begin{alignat*}{3}
+  &\bs{\top} : \Con_{\bGamma} \to \Ty_0\\
+  &\bs{\top}\,\Gamma \defn \top_0
+\end{alignat*}
+then we have $\bs{\top}\,(\Gamma \ext_{\bGamma} A) \equiv \top_0$, but
+$\bs{\top}\,\Gamma \ext_{\bs{\Ty_0}} \bs{\top}\,A \equiv \top_0 \times \top_0$.
+Thus, $\top_0 \not\equiv \top_0 \times \top_0$, but of course $\top_0 \simeq \top_0 \times \top_0$.
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Term Algebras}
 
 %% \subsection{Church Encoding}
