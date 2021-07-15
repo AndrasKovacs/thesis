@@ -67,6 +67,12 @@ Marc Bezem, Thierry Coquand, and Simon Huber.
 \newblock In {\em 19th International Conference on Types for Proofs and
   Programs (TYPES 2013)}, volume~26, pages 107--128, 2014.
 
+\bibitem[BCM{\etalchar{+}}20]{dependentrightadjoints}
+Lars Birkedal, Ranald Clouston, Bassel Mannaa, Rasmus~Ejlers M{\o}gelberg,
+  Andrew~M. Pitts, and Bas Spitters.
+\newblock Modal dependent type theory and dependent right adjoints.
+\newblock {\em Math. Struct. Comput. Sci.}, 30(2):118--138, 2020.
+
 \bibitem[BH11]{compdata}
 Patrick Bahr and Tom Hvitved.
 \newblock Compositional data types.
@@ -95,6 +101,12 @@ Paolo Capriotti.
 John Cartmell.
 \newblock {\em Generalised algebraic theories and contextual categories}.
 \newblock PhD thesis, Oxford University, 1978.
+
+\bibitem[CCHM17]{cchm}
+Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
+\newblock Cubical type theory: {A} constructive interpretation of the
+  univalence axiom.
+\newblock {\em {FLAP}}, 4(10):3127--3170, 2017.
 
 \bibitem[CD14]{clairambault2014biequivalence}
 Pierre Clairambault and Peter Dybjer.
