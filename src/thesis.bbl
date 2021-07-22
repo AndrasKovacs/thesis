@@ -158,6 +158,12 @@ Peter~T Johnstone.
 \newblock {\em Sketches of an elephant: A topos theory compendium}, volume~2.
 \newblock Oxford University Press, 2002.
 
+\bibitem[KKA19]{kaposi2019constructing}
+Ambrus Kaposi, Andr{\'a}s Kov{\'a}cs, and Thorsten Altenkirch.
+\newblock Constructing quotient inductive-inductive types.
+\newblock {\em Proceedings of the ACM on Programming Languages}, 3(POPL):2,
+  2019.
+
 \bibitem[Kov21]{kovacs2021generalized}
 András Kovács.
 \newblock Generalized universe hierarchies and first-class universe levels,

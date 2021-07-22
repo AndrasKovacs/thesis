@@ -37,6 +37,13 @@
 %% \bibliographystyle{IEEEtran}
 \bibliographystyle{alpha}
 
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\thepage}
+\fancyhead[RE]{\small\rightmark}
+\fancyhead[LO]{\small\leftmark}
+
 %% Environments
 %% --------------------------------------------------------------------------------
 
@@ -259,7 +266,6 @@
 
 \frontmatter
 \tableofcontents{}
-
 
 \mainmatter
 
@@ -2670,7 +2676,7 @@ signature. However, this relies on the Agda implementation of pattern matching
 and structurally recursive definitions, so it would require more work to translate
 these definitions to 2LTT in a generic way.
 
-\chapter{Finitary Quotient Inductive-Inductive Signatures}
+\chapter[Finitary QII Signatures]{Finitary Quotient Inductive-Inductive Signatures}
 \label{chap:fqiit}
 
 In this chapter we bump the expressive power of signatures by a large margin,
@@ -3723,10 +3729,17 @@ as an \emph{output} of a generic operation, instead of assuming it to begin
 with. Exploring ornaments with QII signatures could be part of future work.
 \\\\
 \indent In a broader context, ToS provides a synthetic language for specifying
-\textbf{model constructions}. For example, we can show that constant families
-and democracy are equivalent, by defining an invertible $\Sub$ between
-signatures of $\ms{cwf}+\K$ and $\ms{cwf^{dem}}$, and getting an isomorphism of
-categories of models.
+\textbf{model constructions}.
+\begin{myexample}
+For a simple example, we might want to show that constant families are
+equivalent to democracy in cwfs. Democracy means
+
+\end{myexample}
+
+%% For example, we can show that constant families
+%% and democracy are equivalent, by defining an invertible $\Sub$ between
+%% signatures of $\ms{cwf}+\K$ and $\ms{cwf^{dem}}$, and getting an isomorphism of
+%% categories of models.
 
 In many cases, this does not work, since ToS is rather restricted as a
 language. In Chapter \ref{chap:iqiit}, we present a more expressive ToS which
@@ -4292,7 +4305,7 @@ This follows from $t^T\,\id : t^A\,(\Omega^T\,\id) \equiv t$ and $a^E\,\nu : (\l
  & \hspace{2em}\to (\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))) \to B^S\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^D\,\omega^D\,(\alpha^D\,\omega^D))\,(\Gamma^E\,\nu,\,\refl)\\
  &\rlap{$(\Pi\,a\,B)^E\,\nu\,t \defn \lambda\,\alpha.\,B^E\,(\nu,\,\alpha)\,(t\,\alpha)$}
 \end{alignat*}
-Similarly as before, we make use of $\nu^T\,\id$, $u^T\,\id$, $a^E\,\nu$ and $a^T\,\nu$ to type-check the definition.
+We make use of $\nu^T\,\id$, $u^T\,\id$, $a^E\,\nu$ and $a^T\,\nu$ to type-check the definition.
 
 Interpretations for contexts and other type formers are also essentially the same as with recursors.
 
@@ -4305,7 +4318,7 @@ the eliminator.
 \todo{Some discussion, blah blah}
 \todo{Should we just pare down elims/recursors and put them in an appendix?}
 
-\chapter{Infinitary Quotient Inductive-Inductive Signatures}
+\chapter[Infinitary QII Signatures]{Infinitary Quotient Inductive-Inductive Signatures}
 \label{chap:iqiit}
 
 In this chapter we present another theory of signatures, for \emph{infinitary
@@ -4377,13 +4390,13 @@ already possible with finitary signatures, by iterating $\to$ finite times.
 \end{myexample}
 
 \begin{myexample} Equations can appear as assumptions now. The simplest
-example for this would be set truncation for some $A : \Ty_0$:
+example would be set truncation for some $A : \Ty_0$:
 \begin{alignat*}{3}
   &|A|_0      &&: \U\\
   &\mi{embed} &&: A \toe \El\,|A|_0 \\
   &\mi{trunc} &&: (x\,y : |A|_0)(p\,q : \Id\,x\,y) \to \El\,(\Id\,p\,q)
 \end{alignat*}
-However, this will end up being redundant in our semantics, since we assume UIP,
+However, this ends up being redundant in our semantics, since we assume UIP,
 and every semantic underlying type will be a set. Does this mean that recursive
 equations are useless? We don't think so. In the specification of cubical type
 theories, there are \emph{boundary conditions} which can be given as $\Id$
@@ -4540,13 +4553,13 @@ semantics:
 \subsubsection{Univalent Semantics}
 
 The isofibrant semantics will turn out to be significantly more technical than
-the strict semantics. What about working in homotopy type theory though: instead
-of working with isofibrations in an extensional setting, could we work with
-univalent structures in HoTT? In other words, work with univalent categories of
-algebras, and univalent displayed categories over them \cite{displayedcats}. A
-major benefit of the univalent setting is that we would get a \emph{structure
-identity principle} \cite{TODO} out of the semantics, which says that for algebras,
-isomorphism is the same as equality.
+the strict semantics. Instead of working with isofibrations in an extensional
+setting, could we work with univalent structures in homotopy type theory? In
+other words, work with univalent categories of algebras, and univalent displayed
+categories over them \cite{displayedcats}. A major benefit of the univalent
+setting is that we would get a \emph{structure identity principle} \cite{TODO}
+out of the semantics, which says that for algebras, isomorphism is the same as
+equality.
 
 However, it appears that univalent \emph{cwfs} are overall yet more technical to
 handle than isofibrations. In an univalent cwf, objects and types are generally
@@ -4575,8 +4588,14 @@ semantics in this thesis; we only present a fragment of it in Chapter
 In the following we present a model of ToS. We call it $\bM$, and like before,
 we use \textbf{bold} font to refer to components of $\bM$.
 
-Contexts are the same as before, namely flcwfs, so we start the exposition with
-substitutions.
+\subsection{Cwf}
+
+\subsubsection{Contexts}
+
+$\bGamma : \bCon$ is again an flcwf, but with a minor change: $\K$ is not strict
+anymore, so we have $(\appK,\,\lamK) : \Tm\,\Gamma\,(\K\,\Delta) \simeq
+\Sub\,\Gamma\,\Delta$. As well will see shortly, $\bs{A[\sigma]}$ does not
+support strict displayed $\K$ anymore, hence the change.
 
 \subsubsection{Substitutions}
 \label{sec:iqiit-substitutions}
@@ -4645,6 +4664,7 @@ formers in the fl-structure.
 \end{proof}
 
 \subsubsection{Identity and Composition}
+\label{sec:idcomp}
 
 $\bid : \bSub\,\bGamma\,\bGamma$ is defined in the obvious way, with identities for
 underlying functions and for preservation morphisms.
@@ -4752,64 +4772,315 @@ Additionally, for $\sigma : \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma$, we have
 \begin{mydefinition} A \emph{split flcwf isofibration} is a displayed flCwF equipped with iso-cleaving for contexts and types.
 \end{mydefinition}
 
-\todo{Add more explanation}
-
 \emph{Remark.} It is not possible to model types as fibrations or opfibrations,
 because we have no restriction on the variance of ToS types. For example, the
-type which extends a pointed set to a natural number signature, is neither a
-fibration nor an opfibration.
+type which extends a pointed set signature to a natural number signature, is
+neither a fibration nor an opfibration.
 
-\subsection{Type Substitution}
+\subsubsection{Type Substitution}
 We aim to define $\bs{\blank[\blank] : \Ty\,\Delta \ra \Sub\,\Gamma\,\Delta \ra
-  \Ty\,\Gamma}$, such that $\bs{A[\id]} = \bA$ and $\bs{A[\sigma\circ\delta]} =
+  \Ty\,\Gamma}$, such that $\bs{A[\id]} \equiv \bA$ and $\bs{A[\sigma\circ\delta]} \equiv
 \bs{A[\sigma][\delta]}$. As before, the underlying sets are given by simple
 composition:
 \begin{alignat*}{3}
-  & \Con_{\bs{A[\sigma]}}\,\ulGamma && := \Con_{\bA}\,(\bsigma\,\ulGamma)\\
-  & \Sub_{\bs{A[\sigma]}}\,\Gamma\,\Delta\,\ulsigma && :=
+  & \Con_{\bs{A[\sigma]}}\,\ulGamma && \defn \Con_{\bA}\,(\bsigma\,\ulGamma)\\
+  & \Sub_{\bs{A[\sigma]}}\,\Gamma\,\Delta\,\ulsigma && \defn
     \Sub_{\bA}\,\Gamma\,\Delta\,(\bsigma\,\ulsigma)\\
-  & \Ty_{\bs{A[\sigma]}}\,\Gamma\,\ulA && :=
+  & \Ty_{\bs{A[\sigma]}}\,\Gamma\,\ulA && \defn
       \Ty_{\bA}\,\Gamma\,(\bsigma\,\ulA)\\
-  & \Tm_{\bs{A[\sigma]}}\,\Gamma\,A\,\ult && :=
+  & \Tm_{\bs{A[\sigma]}}\,\Gamma\,A\,\ult && \defn
       \Tm_{\bA}\,\Gamma\,A\,(\bsigma\,\ult)
 \end{alignat*}
 The difference from the finitary case is that instead of preservation equations,
 we have isomorphisms, coercions and coherence. However, we can recover
-essentially the same reasoning as before, as all the previous transports still
-work. Context and type formers are given by coercing $\bA$ structures along
-$\bsigma$ preservation isomorphisms. For example:
+essentially the same reasoning as before, because all the previous transports
+still work. Context and type formers are given by coercing $\bA$ structures
+along preservation isomorphisms by $\bsigma$. For example:
 \begin{alignat*}{3}
-  &\emptycon_{\bs{A[\sigma]}} && :=
+  &\emptycon_{\bs{A[\sigma]}} && \defn
     \coe\,\bsigma_{\emptycon}^{-1}\,\emptycon_{\bA}\\
-  &\Gamma\ext_{\bs{A[\sigma]}}A && :=
+  &\Gamma\ext_{\bs{A[\sigma]}}A && \defn
     \coe\,\bsigma_{\ext}^{-1}\,(\Gamma\ext_{\bA} A)\\
-  &\Id_{\bs{A[\sigma]}}\,t\,u && :=
-    \coe\,\bsigma_{\Id}^{-1}\,(\Id_{\bA}\,t\,u)
+  &\Id_{\bs{A[\sigma]}}\,t\,u && \defn
+    \coe\,\bsigma_{\Id}^{-1}\,(\Id_{\bA}\,t\,u)\\
+  &\K_{\bs{A[\sigma]}}\,\Delta && \defn
+    \coe\,\bsigma_{\K}^{-1}\,(\K_{\bA}\,\Delta)
 \end{alignat*}
-
 Term and substitution formers are given by composing $\coh$-lifted
 isomorphisms with term and substitution formers from $\bA$. For example:
 \begin{alignat*}{3}
-  & \epsilon_{\bs{A[\sigma]}} && :=
+  & \epsilon_{\bs{A[\sigma]}} && \defn
     \coh\,\bsigma_{\emptycon}^{-1}\,\emptycon_{\bA} \circ \epsilon_{\bA}\\
-  & \p_{\bs{A[\sigma]}} && :=
-    \p_{\bA} \circ (\coh\,\bsigma_{\ext}^{-1}\,(\Gamma\ext A))^{-1}
+  & \p_{\bs{A[\sigma]}} && \defn
+    \p_{\bA} \circ (\coh\,\bsigma_{\ext}^{-1}\,(\Gamma\ext A))^{-1}\\
+  & (\sigma,_{\bs{A[\sigma]}}\,t) && \defn \coh\,\bsigma_{\ext}^{-1}\,(\Delta\ext A) \circ (\sigma,_{\bA}\,t)
 \end{alignat*}
+As we mentioned, only weak $\K$ is supported in $\bs{A[\sigma]}$. For strict $\K$
+we would have to show:
+\[
+\Sub_{\bA}\,\Gamma\,\Delta\,(\bsigma\,\ulsigma)
+\equiv \Tm_{\bA}\,\Gamma\,(\coe\,\bsigma_{\K}^{-1}\,(\K_{\bA}\,\Delta))\,(\bsigma\,\ulsigma)
+\]
+By strict $\K$ in $\bA$, it would be enough to show
+\[
+\Tm_{\bA}\,\Gamma\,(\K_{\bA}\,\Delta)\,(\bsigma\,\ulsigma)
+\equiv \Tm_{\bA}\,\Gamma\,(\coe\,\bsigma_{\K}^{-1}\,(\K_{\bA}\,\Delta))\,(\bsigma\,\ulsigma)
+\]
+But there is no reason why these sets should be equal, so we instead produce an isomorphism.
+
 Equations for term and type substitution follow from naturality of preservation
 isomorphisms in $\bsigma$, $\coe[]$, $\coh[]$ and substitution equations in
 $\bA$.
 
-  %% & \appK_{\bs{A[\sigma]}}\,t && :=
+  %% & \appK_{\bs{A[\sigma]}}\,t && \defn
   %%   \appK_{\bA}\,((\coh\,\bsigma_{\K}\,(\K\,\Delta))^{-1}\circ t)
 
 Iso-cleaving is given by iso-cleaving in $\bA$ and the action of $\bsigma$ on
-isomorphisms, e.g.\ we have $\coe_{\bs{A[\sigma]}}\,\ulsigma\,\Gamma
-:= \coe_{\bA}\,(\bsigma\,\ulsigma)\,\Gamma$.
+isomorphisms, so that we have $\coe_{\bs{A[\sigma]}}\,\ulsigma\,\Gamma
+\defn \coe_{\bA}\,(\bsigma\,\ulsigma)\,\Gamma$ and $\coh_{\bs{A[\sigma]}}\,\ulsigma\,\Gamma
+\defn \coh_{\bA}\,(\bsigma\,\ulsigma)\,\Gamma$.
 
-Functoriality of type substitution, i.e.\ $\bs{A[\id]} = \bA$ and
-$\bs{A[\sigma\circ\delta]} = \bs{A[\sigma][\delta]}$, follows
+Functoriality of type substitution, i.e.\ $\bs{A[\id]} \equiv \bA$ and
+$\bs{A[\sigma\circ\delta]} \equiv \bs{A[\sigma][\delta]}$, follows
 from Lemma \ref{lem:idcomppres} and split cleaving given by $\coe^{\id}$,
 $\coe^{\circ}$, $\coh^{\id}$ and $\coh^{\circ}$ laws in $\bA$.
+
+\subsubsection{Terms}
+
+$\bs{\Tm\,\Gamma\,A} : \Set$ is defined as the type of
+\emph{weak flCwF sections} of $\bA$. The underlying functions of $\bt :
+\bTm\,\bGamma\,\bA$ are as follows:
+\begin{alignat*}{3}
+  & \bt : (\ulGamma : \Con_{\bGamma}) \ra \Con_{\bA}\,\ulGamma\\
+  & \bt : (\ulsigma : \Sub_{\bGamma}\,\ulGamma\,\ulDelta)
+         \ra \Sub_{\bA}\,(\bt\,\ulGamma)\,(\bt\,\ulDelta)\,\ulsigma\\
+  & \bt : (\ulA : \Ty_{\bGamma}) \ra \Ty_{\bA}\,(\bt\,\ulGamma)\,\ulA\\
+  & \bt : (\ult : \Tm_{\bGamma}\,\ulGamma\,\ulA) \ra
+          \Tm_{\bA}\,(\bt\,\ulGamma)\,(\bt\,\ulA)\,\ult
+\end{alignat*}
+Such that
+\begin{enumerate}
+  \item $\bt\,(\ulA[\ulsigma]) \equiv (\bt\,\ulA)\,[\bt\,\ulsigma]$
+  \item $\bt\,(\ult[\ulsigma]) \equiv (\bt\,\ult)\,[\bt\,\ulsigma]$
+  \item The unique $\epsilon_{\bA} : \Sub\,(\bt\,\emptycon)\,\emptycon\,\id$ has a vertical retraction.
+  \item Each $(\bt\,\p,\,\bt\,\q) : \Sub\,(\bt\,(\ulGamma\,\ext\,\ulA))\,(\bt\,\ulGamma\,\ext\,\bt\,\ulA)\,\id$ has a vertical inverse.
+\end{enumerate}
+
+Similarly to what we had in $\bSub$, we denote the evident preservation
+isomorphisms as $\bt_{\emptycon} : \bt\,\emptycon \simeq_{\id} \emptycon$ and
+$\bt_{\ext} : \bt\,(\ulGamma\ext \ulA) \simeq_{\id} \bt\,\ulGamma \ext
+\bt\,\ulA$. In short, weak sections are dependently typed analogues of weak
+morphisms, with dependent underlying functions and displayed preservation
+isomorphisms. We also have the derived fl-preservation isomorphisms.
+
+\begin{theorem} A weak section $\bs{t : \Tm\,\Gamma\,A}$ preserves fl-structure up to vertical type isomorphisms, that is, the following are derivable:
+\begin{alignat*}{3}
+  & \bt_{\Sigma} : \bt\,(\Sigma\,\ulA\,\ulB) \simeq_{\id} \Sigma\,(\bt\,\ulA)\,((\bt\,\ulB)[\bt_{\ext}^{-1}]) \\
+  & \bt_{\K} : \bt\,(\K\,\ulDelta) \simeq_{\id} \K\,(\bt\,\ulDelta) \\
+  & \bt_{\Id} : \bt\,(\Id\,\ult\,\ulu) \simeq_{\id} \Id\,(\bt\,\ult)\,(\bt\,\ulu)
+\end{alignat*}
+Also, the above isomorphisms are natural in the sense of Theorem
+\ref{thm:flpres}, and $\bt$ preserves term and substitution formers in the
+fl-structure.
+\end{theorem}
+\begin{proof}
+The construction of isomorphisms is the same as in Theorem
+\ref{thm:flpres}. Indeed, every construction there has a displayed counterpart
+which we can use here.
+\end{proof}
+
+We note though that the move from Theorem \ref{thm:flpres} to here is not simply a
+logical predicate translation, because we are only lifting the codomain of a
+weak morphism to a displayed version, and we leave the domain non-displayed. We
+leave to future work the investigation of such asymmetrical (or
+``modal'') logical predicate translations.
+
+\subsubsection{Term Substitution}
+
+$\bs{\blank[\blank] : \Tm\,\Delta\,A \ra (\sigma : \Sub\,\Gamma\,\Delta)
+  \ra \Tm\,\Gamma\,(A[\sigma])}$ is given similarly to
+$\bs{\blank\!\circ\!\blank}$ in Section \ref{sec:idcomp}. Underlying functions
+are given by function composition, and preservation morphisms are also similar:
+\begin{alignat*}{3}
+  & (\bs{t[\sigma]})_{\emptycon}^{-1} \defn
+    \bt\,\bsigma_{\emptycon}^{-1} \circ \bt_{\emptycon}^{-1} \\
+  & (\bs{t[\sigma]})_{\ext}^{-1} \defn
+    \bt\,\bsigma_{\ext}^{-1} \circ \bt_{\ext}^{-1}
+\end{alignat*}
+We also have the same decomposition of derived isomorphisms as in Lemma
+\ref{lem:idcomppres}. We do not have to show functoriality of term substitution
+here, since that is derivable in any cwf, see e.g. \cite{kaposi2019constructing}.
+
+\subsubsection{Comprehension}
+
+$\bs{\Gamma\,\ext A : \Con}$ is defined as the total flcwf of $\bA$, in exactly
+the same way as in the finitary case, since the additional iso-cleaving
+structure plays no role in the result. $\bs{\p : \Sub\,(\Gamma\ext A)\,\Gamma}$
+and $\bs{\q : \Tm\,(\Gamma\ext A)\,(A[\p])}$ are likewise unchanged; they are
+strict morphisms, so also automatically weak morphisms. Substitution extension
+$\bs{(\sigma,\,t)}$ is given by pointwise combining $\bsigma$ and $\bt$,
+e.g.\ $\Con_{\bs{(\sigma,t)}}\,\ulGamma \defn (\bsigma\,\ulGamma,\,\bt\,\ulGamma)$.
+
+\subsection{Type Formers}
+
+\subsubsection{Strict Constant Families}
+We have the same definition for $\bs{\K\,\Delta : \Ty\,\Gamma}$ as in the
+finitary case, although we need to define iso-cleaving in addition. Fortunately,
+coercions and coherences are all trivial, because $\bK\,\bDelta$ does not actually
+depend on $\bGamma$.
+\begin{alignat*}{3}
+  &\coe_{\bs{\K\,\Delta}}\,\ulsigma\,\Gamma &&\defn \Gamma\\
+  &\coe_{\bs{\K\,\Delta}}\,\ult\,A          &&\defn A
+\end{alignat*}
+
+\subsubsection{Universe}
+
+$\bU : \bTy\,\bGamma$ is exactly the same as before. We define it as the type
+which is constantly the flcwf of inner types, so it inherits the trivial
+iso-cleaving from $\bK$.
+
+$\bs{\El\,a : \Ty\,\Gamma}$ is again the displayed flcwf of
+the elements of $\bs{a : \Tm\,\Gamma\,\U}$. The underlying sets are unchanged:
+\begin{alignat*}{3}
+  & \Con_{\bEl\,\ba}\,\ulGamma && \defn \Tm_0\,(\ba\,\ulGamma)\\
+  & \Sub_{\bEl\,\ba}\,\Gamma\,\Delta\,\ulsigma && \defn \ba\,\ulsigma\,\Gamma \equiv \Delta\\
+  & \Ty_{\bEl\,\ba}\,\Gamma\,\ulA && \defn \Tm_0\,(\ba\,\ulA\,\Gamma)\\
+  & \Tm_{\bEl\,\ba}\,\Gamma\,A\,\ult && \defn \ba\,\ult\,\Gamma \equiv A
+\end{alignat*}
+We need to adjust definitions to show that $\bs{\El\,a}$ supports all required
+structure. Previously, all context and type formers were inherited from $\bU$,
+since $\ba$ strictly preserved them. Now, $\ba$ preserves structure up to
+(definitional) isomorphism of inner types. Hence, the adjustments are quite
+mechanical; they are like wrapping all definitions in ``unary record constructors''
+given by preservation isomorphisms. For example:
+\begin{alignat*}{3}
+  & \emptycon_{\bEl\,\ba} && \defn \ba_{\emptycon}^{-1}\,\tt\\
+  & (\Gamma\ext_{\bEl\,\ba} A) && \defn \ba_{\ext}^{-1}\,(\Gamma,\,A)
+\end{alignat*}
+We likewise use preservation isomorphisms to define $\K$, $\Id$ and $\Sigma$.
+Context coercion is $\coe\,\ulsigma\,\Gamma \defn \ba\,\ulsigma\,\Gamma$. Type
+coercion, for $A : \ba\,\ulA\,\Gamma$ is given as $\coe\,\ult\,A \defn
+\ba\,\ult\,(\ba_{\ext}^{-1}\,(\Gamma,\,A))$.
+
+\subsubsection{Unit Type}
+
+$\bs{\top : \Tm\,\Gamma\,\U}$ is the constantly $\top$ morphism, i.e.\ it maps
+objects to $\top$ and types to $\lambda\,\_.\,\top$, and maps morphisms and
+terms to the identity function. It clearly preserves $\emptycon$ and $\blank\!\ext\!\blank$
+up to isomorphism.
+
+\subsubsection{Sigma Type}
+
+For $\bs{a : \Tm\,\Gamma\,\U}$ and $\bs{b : \Tm\,(\Gamma\ext \El\,a)\,\U}$, we
+define $\bs{\Sigma\,a\,b : \Tm\,\Gamma\,\U}$ as the evident component-wise
+$\Sigma$ of $\ba$ and $\bb$.
+\begin{alignat*}{3}
+  &(\bs{\Sigma\,a\,b})\,\ulGamma &&\defn (\alpha : \ba\,\ulGamma) \times \bb\,(\ulGamma,\,\alpha)\\
+  &(\bs{\Sigma\,a\,b})\,\ulsigma\,(\alpha,\,\beta) &&\defn (\ba\,\ulsigma\,\alpha,\,\bb\,(\ulsigma,\,\refl)\,\beta)\\
+  &(\bs{\Sigma\,a\,b})\,\ulA\,\gamma &&\defn (\alpha : \ba\,\ulA\,\gamma) \times \bb\,(\ulA,\,\alpha)\,\gamma
+\end{alignat*}
+\todo{TODO}
+
+\subsubsection{Identity}
+
+For $\bt$ and $\bu$ in $\bTm\,\bGamma\,(\bEl\,\ba)$, we define $\bId\,\bt\,\bu
+\boldsymbol{:} \bTm\,\bGamma\,\bU$ as expressing pointwise equality of weak
+sections.
+\begin{alignat*}{3}
+& (\bId\,\bt\,\bu)\,\ulGamma &&\defn (\bt\,\ulGamma = \bu\,\ulGamma)\\
+& (\bId\,\bt\,\bu)\,\ulA     &&\defn \lambda\,e.\, (\bt\,\ulA = \bu\,\ulA)
+\end{alignat*}
+Above, $\bt\,\ulA = \bu\,\ulA$ is well-typed because of $e :
+\bt\,\ulGamma = \bu\,\ulGamma$. For substitutions, we have to complete a square
+of equalities:
+\begin{alignat*}{3}
+  (\bId\,\bt\,\bu)\,(\ulsigma : \Sub\,\ulGamma\,\ulDelta) : (\bt\,\ulGamma = \bu\,\ulGamma) \ra
+       (\bt\,\ulDelta = \bu\,\ulDelta)
+\end{alignat*}
+This can be given by $\bt\,\ulsigma : \ba\,\ulsigma\,(\bt\,\ulGamma) =
+\bt\,\ulDelta$ and $\bu\,\ulsigma : \ba\,\ulsigma\,(\bu\,\ulGamma) =
+\bu\,\ulDelta$. The action on terms is analogous. We omit preservation morphisms
+as they are straightforward. Equality reflection and $\bs{\refl :}
+\bId\,\bt\,\bt$ are also evident.
+
+\subsubsection{Infinitary Function Type}
+
+For $\mi{Ix} : \Set_j$ and $\bb : \mi{Ix} \ra \bTm\,\bGamma\,\bU$, we aim to define
+$\bPiinf\,\mi{Ix}\,\bb \bs{:} \bTm\,\bGamma\,\bU$. The underlying functions
+are:
+\begin{alignat*}{3}
+  & (\bPiinf\,\mi{Ix}\,\bb)\,\ulGamma    &&:= (i : \mi{Ix})\ra \bb\,i\,\ulGamma\\
+  & (\bPiinf\,\mi{Ix}\,\bb)\,\ulsigma    &&:= \lambda\,i.\, \bb\,i\,\ulsigma\\
+  & (\bPiinf\,\mi{Ix}\,\bb)\,\ulA\       &&:= \lambda\,\Gamma.\,(i : \mi{Ix})\ra \bb\,i\,\ulA\,(\Gamma\, a)\\
+  & (\bPiinf\,\mi{Ix}\,\bb)\,\ult        &&:= \lambda\,i.\, \bb\,i\,\ult
+\end{alignat*}
+The preservation isomorphisms are pointwise inherited from $\bb$. For example,
+one direction is defined as follows. Recall that $\emptycon_{\bU} \equiv \top$
+and $\ext_{\bU}$ is $\Sigma$.
+\begin{alignat*}{3}
+  &(\bPiinf\,\mi{Ix}\,\bb)_{\emptycon}^{-1} && : \top\ra (\bPiinf\,\mi{Ix}\,\bb)\,\emptycon\\
+  &(\bPiinf\,\mi{Ix}\,\bb)_{\emptycon}^{-1} && \defn \lambda\,\_\,i.\,(\bb\,i)_{\emptycon}^{-1}\,\tt\\
+  & &&\\
+  &(\bPiinf\,\mi{Ix}\,\bb)_{\ext}^{-1} && : (\Gamma : (\bPiinf\,\mi{Ix}\,\bb)\,\ulGamma)\times((\bPiinf\,\mi{Ix}\,\bb)\,\ulA\,\Gamma)\\
+  & && \hspace{0.5em}\ra (\bPiinf\,\mi{Ix}\,\bb)\,(\ulGamma \ext \ulA)\\
+  & (\bPiinf\,\mi{Ix}\,\bb)_{\ext}^{-1} && \defn \lambda\,(\Gamma,A)\,i.\,(\bb\,i)_{\ext}^{-1}(\Gamma\,i,\,A\,i)
+\end{alignat*}
+
+\subsubsection{Inductive Function Type}
+
+For $\boldsymbol{a : \Tm\,\Gamma\,\U}$ and $\boldsymbol{B :
+  \Ty\,(\Gamma\ext\El\,a)}$, we aim to define $\boldsymbol{\Pi\,a\,B}
+\boldsymbol{:} \bTy\,\bGamma$. The underlying sets are unchanged.
+\begin{alignat*}{3}
+  & \Con_{\bs{\Pi\,a\,B}}\,\ulGamma &&\defn (\gamma : \ba\,\ulGamma) \to \Con_{\bB}\,(\ulGamma,\,\gamma)\\
+  & \Sub_{\bs{\Pi\,a\,B}}\,\Gamma\,\Delta\,\ulsigma &&\defn
+    (\gamma : \ba\,\ulGamma)\to \Sub_{\bB}\,(\Gamma\,\gamma)\,(\Delta\,(\ba\,\ulsigma\,\gamma))\,(\ulsigma,\,\refl)\\
+  & \Ty_{\bs{\Pi\,a\,B}}\,\Gamma\,\ulA &&\defn
+  \{\gamma : \ba\,\ulGamma\}(\alpha : \ba\,\ulA\,\gamma)
+  \to \Ty_{\bB}\,(\Gamma\,\gamma)\,(\ulA,\,\alpha)\\
+  & \Tm_{\bs{\Pi\,a\,B}}\,\Gamma\,A\,\ult &&\defn
+    (\gamma : \ba\,\ulGamma) \to \Tm_{\bB}\,(\Gamma\,\gamma)\,(\A\,(\ba\,\ult\,\gamma))\,(\ult,\,\refl)
+\end{alignat*}
+Likewise, all structure is defined pointwise using $\bB$ structure. Similarly to
+the $\bEl$ case, we have to sometimes fall through the defining isomorphisms for
+$\ba$ structure. For comparison, in the finitary case we had the following definition:
+\[
+  (\Gamma \ext_{\bs{\Pi\,a\,B}} A)\,(\gamma,\,\alpha) \defn (\Gamma\,\gamma \ext_{\bB} A\,\alpha)
+\]
+Here, $(\gamma,\,\alpha) : \ba\,(\ulGamma \ext \ulA)$, so also
+$(\gamma,\,\alpha) : (\gamma : \ba\,\ulGamma) \times \ba\,\ulA\,\gamma$, so the
+$\Sigma$ pattern-matching notation is justified in the definition. In the
+current infinitary case, we have $(\ba_{\ext},\,\ba_{\ext}^{-1}) :
+\ba\,(\ulGamma \ext \ulA) \simeq ((\gamma : \ba\,\ulGamma) \times
+\ba\,\ulA\,\gamma)$ instead. But we can use the intuition that set isomorphisms
+are like unary record types, so we can still give a pattern-matching definition:
+\[
+  (\Gamma \ext_{\bs{\Pi\,a\,B}} A)\,(\ba_{\ext}^{-1}(\gamma,\,\alpha)) \defn
+   (\Gamma\,\gamma \ext_{\bB} A\,\alpha)
+\]
+For the definitions of other type and term formers, we likewise insert the
+isomorphisms appropriately. It remains to define iso-cleaving
+$\bs{\Pi}$. Coercion is given by mapping indices backwards in $\bEl\,\ba$ and
+coercing outputs forwards in $\bB$.
+\begin{alignat*}{3}
+  & \coe\,\ulsigma\,\Gamma &&\defn
+    \lambda\,\gamma.\,\coe_{\bB}\,(\ulsigma,\refl)\,(\Gamma\,(\ba\,(\ulsigma^{-1})\,\gamma))\\
+  & \coe\,\ult\,A &&\defn
+    \lambda\,\gamma\,a.\,\coe_{\bB}\,(\ult,\refl)\,(A\,(\ba\,(\ult^{-1})\,(\ba_{\ext}^{-1}(\gamma,a))))
+\end{alignat*}
+Likewise, $\coh$-s are given by backwards-forwards $\coh$-s. As before,
+$\bs{\appi}$ and $\bs{\lami}$ are defined as currying and uncurrying the
+underlying functions.
+
+\subsubsection{External Function Type}
+
+For $\mi{Ix} : \Set_j$ and $\bB : \mi{Ix} \ra \bTy\,\bGamma$, we define $\bPie\,\mi{Ix}\,\bB
+\bs{:} \bTy\,\bGamma$ as the $\mi{Ix}$-indexed direct product of $\bB$. Since the
+indexing is given by a metatheoretic function, every component is given in the
+evident pointwise way, including iso-cleaving.
+
+
+
 
 
 
