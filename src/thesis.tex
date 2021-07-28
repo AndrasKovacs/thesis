@@ -262,15 +262,15 @@
 %% --------------------------------------------------------------------------------
 
 \begin{document}
-\maketitle
+
+\clearpage\maketitle
+\thispagestyle{empty}
 
 \frontmatter
 \tableofcontents{}
 
 \mainmatter
-
 \chapter{Introduction}
-
 \section{Specification and Semantics for Inductive Types}
 \section{Overview of the Thesis and Contributions}
 \section{Notation and Conventions}
@@ -736,12 +736,14 @@ $\blank^T$, while the right hand side evaluates $t$ in the term model.
 A way to view the term algebra construction, is that we are working in a
 \emph{slice model} over the fixed $\Omega$, and every $\nu :
 \Sub\,\Omega\,\Gamma$ can be viewed as an internal $\Gamma$-algebra in this
-model. The term algebra construction demonstrates that
-every such internal algebra yields an external element of $\Gamma^A$. We will
-see in Section \ref{sec:fqiit-term-algebras} that we can construct term algebras
-from \emph{any} model of a ToS, not just the ToS syntax; but while term algebras
-constructed from ToS syntax are themselves initial algebras, in other cases they
-may not be initial.
+model. The term algebra construction demonstrates that every such internal
+algebra yields an external element of $\Gamma^A$.
+
+%% We will
+%% see in Section \ref{sec:fqiit-term-algebras} that we can construct term algebras
+%% from \emph{any} model of a ToS, not just the ToS syntax; but while term algebras
+%% constructed from ToS syntax are themselves initial algebras, in other cases they
+%% may not be initial.
 
 \subsection{Recursor Construction}
 \label{sec:simple-weak-initiality}
@@ -754,10 +756,11 @@ as $\ms{R}\,t \equiv t^A\,\omega$. We additionally define the following.
 \begin{alignat*}{3}
 & \hspace{-6em}\rlap{$\blank^R : (A : \Ty)(t : \Tm\,\Omega\,A) \to A^M\,\ms{R}\,(A^T\,t)\,(t^A\,\omega)$}\\
 & \hspace{-6em}\iota^R\,&&t \defn (\refl : t^A\,\omega = t^A\,\omega)\\
-& \hspace{-6em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
-& \hspace{-6em}&& \\
-& \hspace{-6em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
-& \hspace{-6em}\rlap{$\Gamma^R\,\nu\,x \defn A^R\,(\nu\,x)$}
+& \hspace{-6em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)
+\end{alignat*}
+\begin{alignat*}{3}
+& \hspace{-10em}\rlap{$\blank^R : (\Gamma : \Con)(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
+& \hspace{-10em}\rlap{$\Gamma^R\,\nu\,x \defn A^R\,(\nu\,x)$}
 \end{alignat*}
 We define the recursor for $\Omega$ as
 \begin{alignat*}{3}
@@ -911,10 +914,11 @@ requirements for practical generic programming are a bit more stringent.
     counterparts.
 \end{itemize}
 
-\paragraph{Fixpoints of functors.}There is a sizable literature
-of using fixpoints of functors in generic programming, mainly in Haskell
-\cite{alacarte,compdata,multirec} and Agda \cite{loh11generic,allais20type}. We
-give a minimal example below for an Agda-like implementation.
+\subsubsection{Fixpoints of functors}
+There is a sizable literature of using fixpoints of functors in generic
+programming, mainly in Haskell \cite{alacarte,compdata,multirec} and Agda
+\cite{loh11generic,allais20type}. We give a minimal example below for an
+Agda-like implementation.
 
 We have an inductive syntax for some strictly positive functors, covering essentially the
 same signatures as $\Con$.
@@ -979,8 +983,9 @@ and it is practically unusable for generic programming. Another drawback is that
 defining colimits requires quotient types, which are often not available
 natively.
 
-\paragraph{W-types.} Given a polynomial $(S,\,P) : (S : \Set) \times (S \to \Set)$,
-the corresponding W-type is inductively specified as below:
+\subsubsection{W-types}
+Given a polynomial $(S,\,P) : (S : \Set) \times (S \to \Set)$, the corresponding
+W-type is inductively specified as below:
 \begin{alignat*}{3}
   & \ms{W}_{S,\,P} &&: \Set \\
   & \ms{sup} &&: (s : S) \to (P\,s \to \ms{W}_{S,\,P}) \to \ms{W}_{S,\,P}
@@ -1007,7 +1012,7 @@ constructors. W-types are a great way to have a small basis in a formal setting,
 both in intensional and extensional type theories, but they are a bit too heavy
 for practical purposes.
 
-\paragraph{Term algebras.}
+\subsubsection{Term algebras}
 The main advantage of the term algebras described in this chapter is that they
 can be defined using plain inductive families, which are available in every
 major dependently typed language. Even in GHC Haskell, the support for
@@ -1139,7 +1144,7 @@ missing many convenience features of type theories.
   style or chase diagrams; both become difficult to write and read after a
   certain point of complexity.
 \item
-  There no functions, universes or inductive types.
+  There are no functions, universes or inductive types.
 \item
   Substitution (with weakening as a special case) has to be handled explicitly
   and manually. Substitutions are certain morphisms, while ``terms'' are also
@@ -1168,8 +1173,8 @@ structures $\mbbC$ supports, and which type formers we assume in the outer
 layer. Although it is possible to add assumptions to a 2LTT which preclude
 standard presheaf semantics \cite[Section 2.4.]{twolevel}, we stick to basic
 2LTT in this thesis. By using 2LTT, we are able to use a type-theoretic syntax
-in the rest of the thesis which differs only modestly from the style of
-definitions that we have seen so far.
+which differs only modestly from the style of definitions that we have seen so
+far.
 
 From a programming perspective, basic 2LTT provides a convenient syntax for
 writing metaprograms. This can be viewed as \emph{two-stage compilation}: if we
@@ -1179,7 +1184,7 @@ program, which lives purely in the inner theory.
 \section{Models of Type Theories}
 \label{sec:models-of-tts}
 
-Before elaborating on 2LTT-specific features, we review models of type theories
+Before explaining 2LTT-specific features, we review models of type theories
 in general. Variants of 2LTT will be obtained by adding extra features on the
 top of more conventional TTs.
 
@@ -1203,18 +1208,18 @@ signatures, and their initial models are quotient inductive-inductive types
 (QIITs). Hence, 2LTT is also a QII theory. We will first talk about QIITs in
 Chapter \ref{chap:fqiit}. Until then, we shall make do with an informal
 understanding of categorical semantics for type theories, without using anything
-in particular from the metatheory of QIITs. There is some annoying circularity
-here, that we talk about QIITs in this thesis, but we employ QIITs when talking
-about them. However, this is only an annoyance in exposition and not a
-fundamental issue: Chapter \ref{chap:levitation} describes how to eliminate
-circularity by a form of bootstrapping.
+in particular from the metatheory of QIITs. There is some circularity here, that
+we talk about QIITs in this thesis, but we employ QIITs when talking about
+them. However, this is only an annoyance in exposition and not a fundamental
+issue: Chapter \ref{chap:levitation} describes how to eliminate circularity by a
+form of bootstrapping.
 
 The algebraic view lets us dispense with all kinds of ``raw'' syntactic objects.
 We only ever talk about well-typed and well-formed objects, moreover, every
 construction must respect definitional equalities. For terms in the algebraic
 syntax, definitional equality coincides with metatheoretic equality. This
 mirrors equality of morphisms in 1-category theory, where we usually reuse
-metatheoretic equality.
+metatheoretic equality in the same way.
 
 In the following we specify notions of models for type theories. We split this
 in two parts: categories with families and type formers.
@@ -1875,7 +1880,7 @@ the presheaf model of 2LTT. We use $\hmbbC$ to refer to the model which is being
 defined. We use the same component names for $\hmbbC$ as in Section
 \ref{sec:models-of-tts}.
 
-\subsubsection{Model of Cwf}
+\subsubsection{Model of cwf}
 
 \begin{mydefinition}
 $\Gamma : \Con$ is a presheaf over $\mbbC$. Its components
@@ -1961,7 +1966,7 @@ It's easy to check that the above definitions can be extended to a cwf.
     context extension.
 \end{itemize}
 
-\subsubsection{Yoneda Embedding}
+\subsubsection{Yoneda embedding}
 
 Before continuing with interpreting type formers in $\hmbbC$, we review the
 Yoneda embedding, as it is useful in subsequent definitions.
@@ -1990,7 +1995,7 @@ lemma. In the other direction we don't really need a notation, since from
 $\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id : |\Gamma|\,i$.
 \end{notation}
 
-\subsubsection{Type Formers}
+\subsubsection{Type formers}
 
 \begin{mydefinition}
 \label{def:k-psh}
@@ -2141,7 +2146,7 @@ $A : \Sub\,\Gamma\,\Ty_{\mbbC}$. In other words, $A$ is a natural transformation
 from $\Gamma$ to the presheaf of inner types.
 \end{mydefinition}
 
-\subsubsection{Inner Type Formers}
+\subsubsection{Inner type formers}
 
 Can type formers in $(\Ty_{\mbbC},\,\Tm_{\mbbC})$ be transferred to
 $(\Ty_0,\,\Tm_0)$ in the presheaf model of 2LTT? For example, if $\mbbC$
@@ -2896,7 +2901,7 @@ theory; this means that objects and morphisms of $\mbbC$ are in $\Ty_0$.
 \end{alignat*}
 We depart from the sugary naming scheme in Definition \ref{def:presheaf-type},
 and name the action on objects $\mi{Obj}$ and the action on morphisms
-$\mi{Hom}$. When we give semantics to this signature in Section \ref{TODO}, we
+$\mi{Hom}$. When we give semantics to this signature in Section \ref{sec:fqiit-semantics}, we
 will get as algebras functors from $\mbbC^{\ms{op}}$ to the category of inner
 types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A \to
 \Tm_0\,B$ functions as morphisms.
@@ -3171,7 +3176,7 @@ The terminal object $\bemptycon:\bCon$ is given by having $\Con_{\bemptycon} \de
 \top$, $\Sub_{\bemptycon}\,\Gamma\,\Delta \defn \top$, $\Ty_{\bemptycon}\,\Gamma \defn \top$ and
 $\Tm_{\bemptycon}\,\Gamma\,A \defn \top$, and all structure and equations are defined trivially.
 
-\subsubsection{Family Structure}
+\subsubsection{Family structure}
 \label{sec:fqiit-family}
 
 A type $\bA : \bTy\,\bGamma$ is a displayed flcwf over $\bGamma$.  As we have
@@ -3304,7 +3309,7 @@ other finitary QII theory.
 
 \subsection{Type Formers}
 
-\subsubsection{Strict Constant Families}
+\subsubsection{Strict constant families}
 
 This was not included in the ToS specification, but it's quite useful, so we
 shall define it. $\bs{\K\,\Delta : \Ty\,\Gamma}$ is defined by ignoring
@@ -3502,7 +3507,7 @@ e.g. both sides have $\Con\,\ulGamma \equiv (\bt\,(\bsigma\,\ulGamma) \equiv
 $\bs{\Tm\,\Gamma\,(\Id\,t\,u)}$ is equivalent to $\bt \equiv \bu$, that is, we
 have reflexivity and equality reflection.
 
-\subsubsection{Inductive Function Type}
+\subsubsection{Inductive function type}
 
 For $\bs{a : \Tm\,\Gamma\,\U}$ and $\bs{B : \Ty\,(\Gamma \ext \El\,a)}$, we aim
 to define $\bs{\Pi\,a\,B : \Ty\,\Gamma}$. This is dependent product of displayed
@@ -3571,7 +3576,7 @@ currying respectively.  Naturality of $\bs{\Pi}$ and $\bs{\app}$ again follows
 from the fact that flcwf morphisms strictly preserve all structure, and
 substitution is component-wise function composition.
 
-\subsubsection{External Function Type}
+\subsubsection{External function type}
 
 For $\Ix : \Ty_0$ and $\bB : \Tm_0\,\Ix \to \bs{\Ty\,\Gamma}$, we define
 $\bs{\Pie}\,\Ix\,\bB : \bs{\Ty\,\Gamma}$ as the $\Ix$-indexed direct product of
@@ -3587,9 +3592,9 @@ defined by component-wise flipping of function arguments.
 
 \todo{Examples for computed semantics here maybe}
 
-\subsection{Discussion of Semantics}
+\section{Discussion of Semantics}
 
-\subsubsection{Flcwfs For Free}
+\subsection{Flcwfs For Free}
 
 We give a quick summary for using the semantics of FQII signatures. As input we
 pick a) a signature $\Gamma$ b) a cwf $\mbbC$ with $\Sigma$, $\top$ and
@@ -3629,7 +3634,7 @@ every FQII theory. Again, although finitely complete categories can be always
 strictified to cwfs, if we ever need to perform calculations with the
 internal definitions of a model, the displayed style is much more compact.
 
-\subsubsection{Variations of the Semantics}
+\subsection{Variations of the Semantics}
 
 In Section \ref{sec:fqiit-tos}, we required that the inner theory has $\Sigma$,
 $\top$ and extensional $\Id$. Hence, when we interpret a signature, we again
@@ -3670,14 +3675,16 @@ family of objects.
 With the small limit semantics, if we want to have a simply typed
 interpretation, we can start with a cartesian closed $\mbbC$.
 
-\subsubsection{Substitutions}
+\subsection{Substitutions}
 
 Interpreting signatures is not the only potentially useful thing that we get out
 of the semantics. Each $\sigma : \Sub\,\Gamma\,\Delta$ can be viewed as a free
 interpretation of the $\Delta$ theory in $\Gamma$, and we get a strict flcwf
 morphism from the semantics.
-\\\\
-\indent One use case of $\Sub$ is to specify \textbf{ornaments} \cite{TODO}, i.e.\ ways
+
+\subsubsection{Ornaments}
+
+One use case of $\Sub$ is to specify \emph{ornaments} \cite{TODO}, i.e.\ ways
 to decorate structures with additional information, or dually, to erase parts of
 some structure. Ornaments differ from the usual forgetful maps, because they
 forget structure in \emph{negative} position, i.e.\ in assumptions of
@@ -3727,26 +3734,80 @@ are not yet reproduced. For example, we don't yet have an analogue of
 \emph{algebraic ornaments}, which would allow us produce an ornamented signature
 as an \emph{output} of a generic operation, instead of assuming it to begin
 with. Exploring ornaments with QII signatures could be part of future work.
-\\\\
-\indent In a broader context, ToS provides a synthetic language for specifying
-\textbf{model constructions}.
+
+\subsubsection{Model constructions}
+
+In a broader context, ToS provides a synthetic language for specifying
+\emph{model constructions}.
+
 \begin{myexample}
 For a simple example, we might want to show that constant families are
-equivalent to democracy in cwfs. Democracy means
+equivalent to democracy in cwfs. Democracy means that for each $\Gamma : \Con$
+there is a $\overline{\Gamma} : \Ty\,\emptycon$ such that $\Gamma \simeq
+(\emptycon\ext\overline{\Gamma})$ \cite[Section~3.1]{flccc-undecidability}.
 
+We can define a $\sigma : \Sub\,\ms{cwf^K}\,\ms{cwf^{dem}}$ which interprets
+democracy using constant families. It is the identity morphism on the cwf parts
+and interprets democracy as $\overline{\Gamma} \defn \ms{K}\,\Gamma$. The
+isomorphism $\Gamma \simeq (\emptycon \ext \K\,\Gamma)$ follows from the
+specification of $\K$. We can also define a morphism $\sigma^{-1} :
+\Sub\,\ms{cwf^K}\,\ms{cwf^{dem}}$, which interprets $\K\,\Delta$ as
+$\overline{\Delta}[\epsilon]$. It is easy to check that $\sigma^{-1}$ is indeed
+the inverse of $\sigma$. Thus we get an isomorphism of categories of models
+from the ToS semantics.
+
+This construction is very simple, and would not be difficult to check without
+the ToS semantics. But it is generally not obvious that a certain mapping from
+models to models extends to a functor (or flcwf-morphism), so it may be helpful
+to work inside ToS.
 \end{myexample}
 
-%% For example, we can show that constant families
-%% and democracy are equivalent, by defining an invertible $\Sub$ between
-%% signatures of $\ms{cwf}+\K$ and $\ms{cwf^{dem}}$, and getting an isomorphism of
-%% categories of models.
+\begin{myexample}
+There is a simple way to show that if a type theory does not support $\eta$ for
+$\Pi$, then function extensionality is not provable in the theory
+\cite{next700}\footnote{It is also possible to show unprovability of function
+extensionality \emph{assuming} $\eta$ for functions, but in significantly more
+complicated ways. To the author's best knowledge, the set-based polynomial model
+is the easiest solution \cite{TODO}.}.  Assume some type theory with $\Sigma$,
+$\Pi$, $\Id$ and $\Bool$, and abbreviate its signature as $\ms{TT}$. We define a
+$\sigma : \Sub\,\ms{TT}\,\ms{TT}$ which has identity action everywhere except on
+$\Pi$. There, we have
+\begin{alignat*}{3}
+  &\Pi    &&\defn \lambda\,A\,B.\,\Pi\,A\,B \times \Bool \\
+  &\app   &&\defn \lambda\,t.\,\app\,(\proj_1\,t)\\
+  &\lam   &&\defn \lambda\,t.\,(\lam\,t,\,\true)
+\end{alignat*}
+In short, we tag functions with a $\Bool$ value. This equips $\Pi$ with
+``intensional'' information, contradicting extensionality. If we have two
+functions which are pointwise equal, that only specifies that the function parts
+are equal, but does not say anything about the $\Bool$ tags. Hence, if we take
+any model of $\ms{TT}$, we get a new model by the semantic action of $\sigma$,
+where function extensionality is false. Note though that the $\eta$ rule also
+fails in the new model, so we had to drop $\eta$ from the $\ms{TT}$ signature
+as well.
 
-In many cases, this does not work, since ToS is rather restricted as a
-language. In Chapter \ref{chap:iqiit}, we present a more expressive ToS which
-is sufficient to rephrase many syntactic models \cite{next700} as signature
-morphisms, thus morphisms of categories of models.
+In \cite{next700}, this construction is presented for the special case where the
+starting model is initial. While it is easy to generalize to arbitrary starting
+models, it is less obvious to extend the construction to a functor of categories
+of models - which we do get for free here.
+\end{myexample}
 
-\subsubsection{Recovering AMDS Interpretations}
+\textbf{Limitations.} In the finitary ToS syntax, when defining substitutions
+(that is, model constructions) we can only ever use assumed type constructors.
+For a counter-example, take the substitution in
+$\Sub\,\ms{MonoidSig}\,\ms{CatSig}$ which maps a monoid to a single-object
+category. Assuming $\ms{M} : \U$ is the carrier set in $\ms{MonoidSig}$, we would
+need to have the following:
+\begin{alignat*}{3}
+  &\ms{Obj} &&\defn \top \\
+  &\ms{Hom} &&\defn \lambda\,\_\,\_.\, \ms{M}
+\end{alignat*}
+But we have $\Obj : \U$ in $\ms{CatSig}$, so we would need to have $\top : \U$.
+In Chapter \ref{chap:iqiit}, we present a more expressive ToS which does include
+$\top : \U$, and it will be sufficient to rephrase a wide range of constructions
+as signature substitutions.
+
+\subsection{Recovering AMDS Interpretations}
 
 We have defined the $\bM$ model in a ``bundled'' fashion, but sometimes we will
 also need to refer to pieces of it. On Figure \ref{fig:fqiit-model} we have a
@@ -3797,14 +3858,13 @@ However, the two versions coincide because of the initiality of ToS syntax.
 \label{fig:fqiit-model}
 \end{figure}
 
-\section{Moving to the Inner Theory \& Refining Universe Levels}
-\label{sec:fqiit-levels}
 
-\todo{Mention this earlier in the chapter?}
+\section{Term Algebras}
+\label{sec:fqiit-term-algebras}
 
-In the rest of the chapter, we discuss term algebras and their recursors and
-eliminators. Before we do that, we make two significant modifications to the
-setup.
+In this section we proceed with the construction of term algebras for FQII
+signatures, together with their recursors and eliminators. However, first we
+make two significant modifications to the setup.
 \\\\
 \indent First, \textbf{we drop the outer theory}, and work exclusively inside an
 extensional type theory. The reason is the following. The main purpose of 2LTT
@@ -3813,6 +3873,7 @@ presented semantics for signatures, where algebras are internal to arbitrary
 cwfs with $\Sigma$, $\top$ and extensional $\Id$. This is quite general; in
 particular we can interpret signatures in any finitely complete category. We
 also allowed dropping $\Id$ from the assumptions.
+
 
 In contrast, we make a lot more assumptions in the inner theory when we develop
 initial term algebras; we essentially have to replicate the outer features
@@ -3836,6 +3897,7 @@ the following, we describe the new universe setup, and adapt the previously
 described signatures and semantics to it.
 
 \subsection{Universes \& Metatheory}
+\label{sec:cumulative-ett}
 
 We have countable Russell-style $\Set_i$ universes, which are \emph{cumulative},
 meaning that any type in $\Set_i$ is also an element of $\Set_{i+1}$. We use a
@@ -3883,6 +3945,7 @@ We assume that $\Pi$ and $\Sigma$ types return in least upper bounds of levels. 
 assuming $A : \Set_i$ and $B : A \to \Set_j$, we have $(x : A) \to B : \Set_{i \lub j}$.
 
 \subsection{Signatures \& Semantics}
+\label{sec:ett-signatures}
 
 First, we parameterize the notion of ToS-model with levels.
 \begin{mydefinition}
@@ -3947,13 +4010,6 @@ which is isomorphic to $\Gamma^A_{i}$. Instead, we take liberties, and work as
 if we had actual cumulative subtyping. This seems acceptable, since by using
 implicit cumulativity, we are already taking the same liberty everywhere, by
 omitting formal lifts and isomorphisms.
-
-
-\section{Term Algebras}
-\label{sec:fqiit-term-algebras}
-
-In this section we proceed with the construction of term algebras for FQII
-signatures, together with their recursors and eliminators.
 
 \subsection{Term Algebra Construction}
 
@@ -4483,8 +4539,6 @@ Homotopy Type Theory book \cite{hottbook} is covered. This includes
 \end{itemize}
 \end{myexample}
 
-\todo{Section on model constructions using signature morphisms}
-
 \section{Semantics}
 
 \subsection{Overview}
@@ -4550,7 +4604,7 @@ semantics:
       $A \simeq C$, it's not necessarily the case that $B \equiv C$.
 \end{enumerate}
 
-\subsubsection{Univalent Semantics}
+\subsubsection{Univalent semantics}
 
 The isofibrant semantics will turn out to be significantly more technical than
 the strict semantics. Instead of working with isofibrations in an extensional
@@ -4583,12 +4637,10 @@ semantics in this thesis; we only present a fragment of it in Chapter
 
 \todo{Refer to Sattler \& Capriotti in HIIT chapter, or here?}
 
-\section{Model of the Theory of Signatures}
+\subsection{Model of the Theory of Signatures}
 
 In the following we present a model of ToS. We call it $\bM$, and like before,
 we use \textbf{bold} font to refer to components of $\bM$.
-
-\subsection{Cwf}
 
 \subsubsection{Contexts}
 
@@ -4663,7 +4715,7 @@ verification of naturality and that $\bsigma$ preserves term and substitution
 formers in the fl-structure.
 \end{proof}
 
-\subsubsection{Identity and Composition}
+\subsubsection{Identity and composition}
 \label{sec:idcomp}
 
 $\bid : \bSub\,\bGamma\,\bGamma$ is defined in the obvious way, with identities for
@@ -4700,7 +4752,7 @@ $\K$, we prove by flcwf computation and straightforward unfolding of
 definitions.
 \end{proof}
 
-\subsubsection{Empty Context}
+\subsubsection{Empty context}
 The empty context $\bemptycon : \bCon$ is the same as before, i.e.\ the terminal
 flcwf. Since the unique $\bs{\epsilon} : \bSub\,\bGamma\,\bemptycon$ morphism
 strictly preserves all structure, it also a weak morphism.
@@ -4723,6 +4775,7 @@ composition of $t$ and $u$ is $t[\p_{\bA},u]$. Analogously to Definition
 \end{mydefinition}
 
 \begin{mydefinition}[Displayed isomorphisms]
+\label{def:displayed-iso}
 A \emph{displayed context isomorphism} over $\ulsigma : \ulGamma \simeq
 \ulDelta$, notated $\sigma : \Gamma \simeq_{\ulsigma} \Delta$, is an invertible
 displayed morphism $\sigma : \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma$, with inverse
@@ -4777,7 +4830,7 @@ because we have no restriction on the variance of ToS types. For example, the
 type which extends a pointed set signature to a natural number signature, is
 neither a fibration nor an opfibration.
 
-\subsubsection{Type Substitution}
+\subsubsection{Type substitution}
 We aim to define $\bs{\blank[\blank] : \Ty\,\Delta \ra \Sub\,\Gamma\,\Delta \ra
   \Ty\,\Gamma}$, such that $\bs{A[\id]} \equiv \bA$ and $\bs{A[\sigma\circ\delta]} \equiv
 \bs{A[\sigma][\delta]}$. As before, the underlying sets are given by simple
@@ -4895,7 +4948,9 @@ weak morphism to a displayed version, and we leave the domain non-displayed. We
 leave to future work the investigation of such asymmetrical (or
 ``modal'') logical predicate translations.
 
-\subsubsection{Term Substitution}
+
+
+\subsubsection{Term substitution}
 
 $\bs{\blank[\blank] : \Tm\,\Delta\,A \ra (\sigma : \Sub\,\Gamma\,\Delta)
   \ra \Tm\,\Gamma\,(A[\sigma])}$ is given similarly to
@@ -4921,9 +4976,7 @@ strict morphisms, so also automatically weak morphisms. Substitution extension
 $\bs{(\sigma,\,t)}$ is given by pointwise combining $\bsigma$ and $\bt$,
 e.g.\ $\Con_{\bs{(\sigma,t)}}\,\ulGamma \defn (\bsigma\,\ulGamma,\,\bt\,\ulGamma)$.
 
-\subsection{Type Formers}
-
-\subsubsection{Strict Constant Families}
+\subsubsection{Strict constant families}
 We have the same definition for $\bs{\K\,\Delta : \Ty\,\Gamma}$ as in the
 finitary case, although we need to define iso-cleaving in addition. Fortunately,
 coercions and coherences are all trivial, because $\bK\,\bDelta$ does not actually
@@ -4962,24 +5015,98 @@ Context coercion is $\coe\,\ulsigma\,\Gamma \defn \ba\,\ulsigma\,\Gamma$. Type
 coercion, for $A : \ba\,\ulA\,\Gamma$ is given as $\coe\,\ult\,A \defn
 \ba\,\ult\,(\ba_{\ext}^{-1}\,(\Gamma,\,A))$.
 
-\subsubsection{Unit Type}
+\subsubsection{Unit type}
 
-$\bs{\top : \Tm\,\Gamma\,\U}$ is the constantly $\top$ morphism, i.e.\ it maps
-objects to $\top$ and types to $\lambda\,\_.\,\top$, and maps morphisms and
+$\bs{\top : \Tm\,\Gamma\,\U}$ is the constantly $\top_0$ morphism, i.e.\ it maps
+objects to $\top_0$ and types to $\lambda\,\_.\,\top_0$, and maps morphisms and
 terms to the identity function. It clearly preserves $\emptycon$ and $\blank\!\ext\!\blank$
 up to isomorphism.
 
-\subsubsection{Sigma Type}
+\subsubsection{Sigma type}
 
 For $\bs{a : \Tm\,\Gamma\,\U}$ and $\bs{b : \Tm\,(\Gamma\ext \El\,a)\,\U}$, we
-define $\bs{\Sigma\,a\,b : \Tm\,\Gamma\,\U}$ as the evident component-wise
-$\Sigma$ of $\ba$ and $\bb$.
+define $\bs{\Sigma\,a\,b : \Tm\,\Gamma\,\U}$ as the component-wise $\Sigma$ of $\ba$
+and $\bb$. For the action on $\ulGamma : \Con_{\bGamma}$, we have:
 \begin{alignat*}{3}
-  &(\bs{\Sigma\,a\,b})\,\ulGamma &&\defn (\alpha : \ba\,\ulGamma) \times \bb\,(\ulGamma,\,\alpha)\\
-  &(\bs{\Sigma\,a\,b})\,\ulsigma\,(\alpha,\,\beta) &&\defn (\ba\,\ulsigma\,\alpha,\,\bb\,(\ulsigma,\,\refl)\,\beta)\\
-  &(\bs{\Sigma\,a\,b})\,\ulA\,\gamma &&\defn (\alpha : \ba\,\ulA\,\gamma) \times \bb\,(\ulA,\,\alpha)\,\gamma
+  &(\bs{\Sigma\,a\,b})\,\ulGamma && : \Ty_0 \\
+  &(\bs{\Sigma\,a\,b})\,\ulGamma &&\defn (\alpha : \ba\,\ulGamma) \times \bb\,(\ulGamma,\,\alpha)
 \end{alignat*}
-\todo{TODO}
+For the action on $\ulsigma : \Sub\,\ulGamma\,\ulDelta$, we have:
+\begin{alignat*}{3}
+  &(\bs{\Sigma\,a\,b})\,\ulsigma && : (\alpha : \ba\,\ulGamma) \times \bb\,(\ulGamma,\,\alpha)
+    \to (\alpha : \ba\,\ulDelta) \times \bb\,(\ulDelta,\,\alpha)\\
+  &(\bs{\Sigma\,a\,b})\,\ulsigma &&\defn \lambda\,(\alpha,\,\beta).\,(\ba\,\ulsigma\,\alpha,\,\bb\,(\ulsigma,\,\refl)\,\beta)
+\end{alignat*}
+Above, the second field should have type
+$\bb\,(\ulDelta,\,\ba\,\ulsigma\,\alpha)$, while $\beta :
+\bb\,(\ulGamma,\,\alpha)$. Therefore we need a morphism in $\bs{\Gamma \ext
+  \El\,a}$ from $(\ulGamma,\,\alpha)$ to $(\ulDelta,\,\ba\,\ulsigma\,\alpha)$,
+which is defined as $(\ulsigma,\,\refl)$, where $\refl : \ba\,\ulsigma\,\alpha
+\equiv \ba\,\ulsigma\,\alpha$.
+The action on $\ulA : \Ty\,\ulGamma$ is
+\begin{alignat*}{3}
+  &(\bs{\Sigma\,a\,b})\,\ulA &&: (\alpha : \ba\,\ulGamma) \times \bb\,(\ulGamma,\,\alpha)
+    \to \Ty_0\\
+  &(\bs{\Sigma\,a\,b})\,\ulA &&\defn \lambda\,(\alpha,\,\beta).\,(\alpha' : \ba\,\ulA\,\alpha) \times \bb\,(\ulA,\,\alpha')\,\beta
+\end{alignat*}
+Here we are somewhat running out of notation: we use $\alpha'$ to refer to a
+\emph{type} over $\alpha : \ba\,\ulGamma$ in the displayed cwf of elements
+$\bs{\El\,a}$. The action on terms is analogous:
+\begin{alignat*}{3}
+  &(\bs{\Sigma\,a\,b})\,\ult && : ((\alpha,\,\beta) : (\alpha : \ba\,\ulGamma) \times \bb\,(\ulGamma,\,\alpha))
+    \to (\alpha' : \ba\,\ulA\,\alpha) \times \bb\,(\ulA,\,\alpha')\,\beta\\
+  &(\bs{\Sigma\,a\,b})\,\ult &&\defn \lambda\,(\alpha,\,\beta).\,(\ba\,\ult\,\alpha,\,\bb\,(\ult,\,\refl)\,\beta)
+\end{alignat*}
+For the preservation of $\emptycon$, we need to show
+$(\bs{\Sigma\,a\,b})\,\ulemptycon \simeq \top_0$. Unfolding the definition, we
+get $((\alpha : \ba\,\ulemptycon) \times \bb\,(\ulemptycon,\,\alpha)) \simeq
+\top_0$. This holds since $\ba\,\ulemptycon \simeq \top_0$, so
+$\ba\,\ulemptycon$ is contractible, thus $(\ulemptycon,\,\alpha) \equiv
+\ulemptycon_{\bs{\Gamma \ext \El\,a}}$, and we also know $\bb\,\ulemptycon
+\simeq \top_0$. For the preservation $\blank\!\ext\!\blank$, we need
+\[
+(\bs{\Sigma\,a\,b})\,(\ulGamma \ext \ulA) \simeq (\gamma : (\bs{\Sigma\,a\,b})\,\ulGamma) \times
+  (\bs{\Sigma\,a\,b})\,\ulA\,\gamma
+\]
+Unfolding definitions and reassociating $\Sigma$ on the right side:
+\begin{alignat*}{3}
+   &(\alpha : \ba\,(\ulGamma \ext \ulA)) \times \bb\,((\ulGamma \ext \ulA),\,\alpha) \\
+   &\simeq \\
+   &(\alpha : \ba\,\ulGamma)
+           \times (\beta : \bb\,(\ulGamma,\,\alpha))
+           \times (\alpha' : \ba\,\ulA\,\alpha)
+           \times \bb\,(\ulA,\,\alpha')\,\beta
+\end{alignat*}
+Since $\ba_{\ext} : \ba\,(\ulGamma \ext \ulA)) \simeq (\alpha : \ba\,\ulGamma)
+\times (\beta : \bb\,(\ulGamma,\,\alpha))$, we can rewrite the left side using
+pattern matching notation as
+\[
+  (\ba_{\ext}^{-1}\,(\gamma,\,\alpha) : \ba\,(\ulGamma \ext \ulA))
+     \times \bb\,((\ulGamma \ext \ulA),\,(\gamma,\,\alpha))
+\]
+Now, since $((\ulGamma \ext \ulA),\,(\gamma,\,\alpha)) \equiv (\ulGamma,\,\gamma)
+\ext_{\bs{\Gamma\ext\El\,a}} (\ulA,\,\alpha)$, we know that $\bb\,((\ulGamma
+\ext \ulA),\,(\gamma,\,\alpha))$ is also isomorphic to the evident $\Sigma$
+type, and the preservation isomorphism follows.
+
+Projections and pairing for $\bs{\Sigma\,a\,b}$ are defined in the obvious way by
+component-wise projection and pairing.
+
+
+
+
+
+
+%% It makes sense to call an element
+%% of $\ba\,\ulGamma$ $\alpha$, but we also need to refer to displayed elements over $\alpha$
+
+
+
+
+%%   &(\bs{\Sigma\,a\,b})\,\ulA &&\defn \lambda\,(\alpha,\,\beta).\,(\alpha' : \ba\,\ulA\,\alpha) \times \bb\,(\ulA,\,\alpha')\,\beta\\
+%%   &(\bs{\Sigma\,a\,b})\,\ult &&\defn \lambda\,(\alpha,\,\beta).\,(\ba\,\ult\,\alpha,\,\bb\,(\ult,\,\refl)\,\beta)
+%% \end{alignat*}
+%% \todo{TODO}
 
 \subsubsection{Identity}
 
@@ -4999,13 +5126,21 @@ of equalities:
 \end{alignat*}
 This can be given by $\bt\,\ulsigma : \ba\,\ulsigma\,(\bt\,\ulGamma) =
 \bt\,\ulDelta$ and $\bu\,\ulsigma : \ba\,\ulsigma\,(\bu\,\ulGamma) =
-\bu\,\ulDelta$. The action on terms is analogous. We omit preservation morphisms
-as they are straightforward. Equality reflection and $\bs{\refl :}
-\bId\,\bt\,\bt$ are also evident.
+\bu\,\ulDelta$. The action on terms is analogous.
 
-\subsubsection{Infinitary Function Type}
+The $\emptycon$-preservation $(\bt\,\ulemptycon = \bu\,\ulemptycon) \simeq
+\top_0$ follows from $\ba\,\ulemptycon \simeq \top_0$. For $\ext$-preservation,
+we need to show
+\[
+ (\bt\,(\ulGamma \ext \ulA) = \bu\,(\ulGamma \ext \ulA)) \simeq
+ ((e : \bt\,\ulGamma = \bu\,\ulGamma) \times (\bt\,\ulA = \bu\,\ulA))
+\]
+This follows from $\ext$-preservation by $\ba$. Equality reflection and
+$\bs{\refl :} \bId\,\bt\,\bt$ are also evident.
 
-For $\mi{Ix} : \Set_j$ and $\bb : \mi{Ix} \ra \bTm\,\bGamma\,\bU$, we aim to define
+\subsubsection{Infinitary function type}
+
+For $\mi{Ix} : \Ty_0$ and $\bb : \mi{Ix} \ra \bTm\,\bGamma\,\bU$, we aim to define
 $\bPiinf\,\mi{Ix}\,\bb \bs{:} \bTm\,\bGamma\,\bU$. The underlying functions
 are:
 \begin{alignat*}{3}
@@ -5014,19 +5149,20 @@ are:
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ulA\       &&:= \lambda\,\Gamma.\,(i : \mi{Ix})\ra \bb\,i\,\ulA\,(\Gamma\, a)\\
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ult        &&:= \lambda\,i.\, \bb\,i\,\ult
 \end{alignat*}
-The preservation isomorphisms are pointwise inherited from $\bb$. For example,
-one direction is defined as follows. Recall that $\emptycon_{\bU} \equiv \top$
-and $\ext_{\bU}$ is $\Sigma$.
+The preservation isomorphisms are pointwise inherited from $\bb$. One direction
+of the isomorphisms is defined as follows. Note that $\emptycon_{\bU} \equiv
+\top$ and $\ext_{\bU}$ is $\Sigma$.
 \begin{alignat*}{3}
   &(\bPiinf\,\mi{Ix}\,\bb)_{\emptycon}^{-1} && : \top\ra (\bPiinf\,\mi{Ix}\,\bb)\,\emptycon\\
-  &(\bPiinf\,\mi{Ix}\,\bb)_{\emptycon}^{-1} && \defn \lambda\,\_\,i.\,(\bb\,i)_{\emptycon}^{-1}\,\tt\\
-  & &&\\
+  &(\bPiinf\,\mi{Ix}\,\bb)_{\emptycon}^{-1} && \defn \lambda\,\_\,i.\,(\bb\,i)_{\emptycon}^{-1}\,\tt
+\end{alignat*}
+\begin{alignat*}{3}
   &(\bPiinf\,\mi{Ix}\,\bb)_{\ext}^{-1} && : (\Gamma : (\bPiinf\,\mi{Ix}\,\bb)\,\ulGamma)\times((\bPiinf\,\mi{Ix}\,\bb)\,\ulA\,\Gamma)\\
   & && \hspace{0.5em}\ra (\bPiinf\,\mi{Ix}\,\bb)\,(\ulGamma \ext \ulA)\\
   & (\bPiinf\,\mi{Ix}\,\bb)_{\ext}^{-1} && \defn \lambda\,(\Gamma,A)\,i.\,(\bb\,i)_{\ext}^{-1}(\Gamma\,i,\,A\,i)
 \end{alignat*}
 
-\subsubsection{Inductive Function Type}
+\subsubsection{Inductive function type}
 
 For $\boldsymbol{a : \Tm\,\Gamma\,\U}$ and $\boldsymbol{B :
   \Ty\,(\Gamma\ext\El\,a)}$, we aim to define $\boldsymbol{\Pi\,a\,B}
@@ -5072,24 +5208,295 @@ Likewise, $\coh$-s are given by backwards-forwards $\coh$-s. As before,
 $\bs{\appi}$ and $\bs{\lami}$ are defined as currying and uncurrying the
 underlying functions.
 
-\subsubsection{External Function Type}
+\subsubsection{External function type}
 
 For $\mi{Ix} : \Set_j$ and $\bB : \mi{Ix} \ra \bTy\,\bGamma$, we define $\bPie\,\mi{Ix}\,\bB
 \bs{:} \bTy\,\bGamma$ as the $\mi{Ix}$-indexed direct product of $\bB$. Since the
 indexing is given by a metatheoretic function, every component is given in the
 evident pointwise way, including iso-cleaving.
 
+\section{Discussion of Semantics}
 
+\subsubsection{Iso-fibrancy as a structure identity principle}
 
+The flcwfs of algebras that we get from the infinitary semantics are exactly the
+same as in the finitary case. However, signature types are a bit more
+interesting. The iso-fibrancy of types can be understood as a weaker version of
+the \emph{structure identity principle} in homotopy type theory.
 
+The structure identity principle says that isomorphism of algebras is equivalent
+to equality of algebras. This is the same as saying that categories of algebras
+are univalent \cite{univalent-categories}. Assuming a signature $\Gamma$ and
+algebras $\gamma \simeq \gamma'$, we have $\gamma = \gamma'$. This equality is
+respected by every construction in HoTT, which implies that for any HoTT type
+family $F : \Gamma^A \to \ms{Type}$, we have a function $F\,\gamma \to
+F\,\gamma'$.
+
+We get a similar but weaker statement from the infinitary semantics: for $\sigma
+: \gamma \simeq \gamma'$ and some ToS type $A : \Ty\,\Gamma$, we have a function
+$\coe\,\sigma : A^A\,\gamma \to A^A\,\gamma'$. We also have
+$\coh\,\sigma\,\alpha : \alpha \simeq_{\sigma} \coe\,\sigma\,\alpha$ for some
+$\alpha : A^A\,\gamma$. So we can transport over isomorphisms, but not all
+metatheoretic families can be transported, only those which arise as ToS types.
+
+Of course, we can transport over multiple types, or telescopes of types too, by
+iterated transport. For instance, given $A : \Ty\,\Gamma$, $B : \Ty\,(\Gamma
+\ext A)$, $\alpha : A^A\,\gamma$ and $\beta : B^A\,(\gamma,\,\alpha)$, we can
+transport $\alpha$ first, then transport $\beta$ by
+$(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, we could add large $\Sigma$
+types to ToS, as $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty
+\Gamma$, thereby making iterated transport superfluous.
+
+\subsubsection{Substitutions}
+
+\todo{Add section on signature semantics of signatures!!}
+
+In this chapter we gain significant expressive power in defining model
+constructions. Generally speaking, almost all constructions in the literature
+which have been dubbed ``syntactic translations'' or ``syntactic models'' can be
+now defined as ToS substitutions. Intuitively, this works because
+\begin{itemize}
+\item
+  Syntactic translations usually do not rely on models being actually syntactic.
+  They don't use induction on syntax in the \emph{target} theory. A rare and
+  notable counterexample is our construction of recursors and eliminators for
+  term models. These are perhaps ``syntactic'' in the sense that they
+  prominently involve the syntax of some type theory. And they actually rely on
+  syntax being syntax, because they construct recursor/eliminator functions by
+  induction on terms.
+\item
+  Syntactic translations rarely if ever involve higher-order constructions.
+  Such would be interpreting $\Con$ with $(\Con \to \Con) \to \Con$, for a
+  contrived example.
+\end{itemize}
+
+\begin{myexample}
+For a warmup example, now we can construct categories from monoids. Let us have
+$\ms{MonoidSig}$ as the signature for monoids, with $\ms{M} : \U$ as the carrier
+set, $\blank\!\cdot\!\blank : \ms{M} \to \ms{M} \to \El\,\ms{M}$ as
+multiplication and $\epsilon : \El\,\ms{M}$ as identity the element. We define
+$\sigma : \Sub\,\ms{MonoidSig}\,\ms{CatSig}$ to contain $\ms{Obj} \defn \top$,
+$\ms{Hom} \defn \lambda\,\_\,\_.\,\ms{M}$, $\id \defn \epsilon$ and
+$\blank\!\circ\!\blank \defn \blank\!\cdot\!\blank$.
+\end{myexample}
+
+\todo{Add section on signature semantics of signatures!!}
 
 
 \section{Term Algebras}
+\label{sec:inf-term-algebras}
 
-%% \subsection{Church Encoding}
-%% \subsection{Awodey-Frey-Speight Encoding}
-%% \section{Left Adjoints of Signature Morphisms}
-%% \label{sec:left-adjoints}
+We adapt now the previous term algebra construction to the infinitary
+case. We again switch to the ETT setup with cumulative universes. We
+assume Section \ref{sec:cumulative-ett} without any change. Also, we adapt
+\ref{sec:ett-signatures} to infinitary signatures and semantics. All definitions
+are the same, the only change is that the $\bM_{i,j}$ model is now the
+isofibrant flcwf model, and we have the infinitary ToS. The differences are not
+actually relevant when setting up universe levels.
+
+\subsection{Term Algebra Construction}
+
+The term algebra construction changes significantly. The reason is the
+following. In the finitary case, the key property was that ``small types
+evaluated in the term model are sets of terms''. Formally, we had for $a :
+\Tm\,\Omega\,\U$ that $a^A\,(\Omega^T\,\id) \equiv \Tm\,\Omega\,(\El\,a)$.  This
+is now weakened to an isomorphism, i.e.\ $a^A\,(\Omega^T\,\id) \simeq
+\Tm\,\Omega\,(\El\,a)$.
+
+This is again necessary because of the closure of $\U$ under type formers. For
+example, $\top^A\,(\Omega^T\,\id) \equiv \top$, and $\Tm\,\Omega\,(\El\,\top)$
+is merely isomorphic to $\top$. We assume $\Omega : \Sig_j$ for some $j$
+level, and define $\blank^T$ by induction on $\syn_j$.
+\begin{alignat*}{3}
+  &\blank^T &&: (\Gamma : \Con)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^A\\
+  &\blank^T &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Delta^T\,(\sigma \circ \nu) \simeq \sigma^A\,(\Gamma^T\,\nu)\\
+  &\blank^T &&: (A : \Ty\,\Gamma)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Tm\,\Omega\,(A[\nu])
+  \to A^A\,(\Gamma^T\,\nu)\\
+  &\blank^T &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^T\,\nu\,(A[\nu]) \simeq_{\id} t^A\,(\Gamma^T\,\nu)
+\end{alignat*}
+In short, interpretations of substitutions and terms are weakened to
+isomorphisms.  By $\simeq_{\id}$ we mean a displayed isomorphism of objects in
+the semantic $A$ (which is an flcwf isofibration); recall Definition
+\ref{def:displayed-iso}.  The isomorphism is ``vertical'' since it lies over
+$\id$.
+
+The interpretation of the cwf is the same as before, but like in the isofibrant
+semantics, we have to use explicit $\coe$ instead of silently transporting over
+equalities. In the interpretations of substitutions and terms, we have to
+explicitly compose isomorphisms and sometimes lift them using $\coh$. We give
+some examples. The interpretation of context formers is the same as before:
+\begin{alignat*}{3}
+  &\emptycon^T\,\nu           &&\defn \tt\\
+  &(\Gamma \ext A)^T(\nu,\,t) &&\defn (\Gamma^T\,\nu,\,A^T\,\nu\,t)
+\end{alignat*}
+Type substitution with $\sigma : \Sub\,\Gamma\,\Delta$ is
+interpreted as coercion:
+\begin{alignat*}{3}
+  &(A[\sigma])^T : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(A[\sigma][\nu]) \to A^A\,(\sigma^A\,(\Gamma^T\,\nu)) \\
+  &(A[\sigma])^T\,\nu\,t \defn \coe\,(\sigma^T\,\nu)\,(A^T\,(\sigma\circ\nu)\,t)
+\end{alignat*}
+Composition of $\sigma : \Sub\,\Delta\,\Xi$ and $\delta : \Sub\,\Gamma\,\Delta$
+is the following:
+\begin{alignat*}{3}
+  &(\sigma \circ \delta)^T : (\nu : \Sub\,\Omega\,\Gamma) \to \Delta^T\,(\sigma\circ\delta\circ\nu) \simeq \sigma^A\,(\delta^A\,(\Gamma^T\,\nu))\\
+  &(\sigma \circ \delta)^T\,\nu \defn \sigma^M\,(\delta^T\,\nu) \circ \sigma^T\,(\delta\circ\nu)
+\end{alignat*}
+Above, we have
+\begin{alignat*}{3}
+& \delta^T\,\nu &&: \Xi^T\,(\delta\circ\nu) \simeq \delta^A\,(\Gamma^T\,\nu)\\
+& \sigma^M\,(\delta^T\,\nu) &&: \sigma^A\,(\Xi^T\,(\delta\circ\nu)) \simeq \sigma^A\,(\delta^A\,(\Gamma^T\,\nu))\\
+& \sigma^T\,(\delta\circ\nu) &&: \Delta^T\,(\sigma\circ\delta\circ\nu) \simeq \sigma^A\,(\Xi^T\,(\delta\circ \nu))
+\end{alignat*}
+Hence, the type of the composition in the definition checks out. We make use of
+the fact that $\sigma^M$ sends an isomorphism in $\Gamma$ to an isomorphism in
+$\Delta$.
+
+Substitution extension is a somewhat more complicated case. We want to interpret
+the extension of $\sigma : \Sub\,\Gamma\,\Delta$ with $t :
+\Tm\,\Gamma\,(A[\sigma])$:
+\[
+      (\sigma,\,t)^T : (\nu : \Sub\,\Omega\,\Gamma)
+  \to (\Delta \ext A)^T\,((\sigma,\,t)\circ\nu)\simeq(\sigma,\,t)^A\,(\Gamma^T\,\nu)
+\]
+The goal is an isomorphism in the semantic $\Gamma \ext A$ category, i.e.\ the
+total category of $A$. Every isomorphism in $\Gamma \ext A$ arises as packing
+together a $\Gamma$ isomorphism and a displayed $A$ isomorphism over it. We can compute
+the type further:
+\[
+      (\sigma,\,t)^T : (\nu : \Sub\,\Omega\,\Gamma)
+  \to (\Delta^T\,(\sigma \circ \nu),\,A^T\,(\sigma\circ\nu)\,(t[\nu])) \simeq (\sigma^A\,(\Gamma^T\,\nu),\,t^A\,(\Gamma^T\,\nu))
+\]
+We can exhibit $\sigma^T\,\nu : \Delta^T\,(\sigma \circ \nu) \simeq
+\sigma^A\,(\Gamma^T\,\nu)$ as the base component of the goal isomorphism. Now we
+need a displayed isomorphism over it. Following the pattern, we may try
+$t^T\,\nu$:
+\[
+  t^T\,\nu : (A[\sigma])^T\,\nu\,(t[\nu]) \simeq_{\id} t^A\,(\Gamma^T\,\nu)
+\]
+Computing the type:
+\[
+  t^T\,\nu : \coe\,(\sigma^T\,\nu)\,(A^T\,(\sigma\circ\nu)\,(t[\nu])) \simeq_{\id} t^A\,(\Gamma^T\,\nu)
+\]
+So this is not quite what is needed; we want a displayed iso over $\sigma^T\,\nu$, but we have
+something over $\id$. We can fix this using $\coh$:
+\[
+\coh\,(\sigma^T\,\nu)\,(A^T\,(\sigma\circ\nu)\,(t[\nu])) :
+A^T\,(\sigma\circ\nu)\,(t[\nu]) \simeq_{\sigma^T\,\nu} \coe\,(\sigma^T\,\nu)\,(A^T\,(\sigma\circ\nu)\,(t[\nu]))
+\]
+The composition of $t^T\,\nu$ and the above now checks out:
+\[
+  (\sigma,\,t)^T\,\nu \defn (\sigma^T\,\nu,\,t^T\,\nu\circ \coh\,(\sigma^T\,\nu)\,(A^T\,(\sigma\circ\nu)\,(t[\nu])))
+\]
+We omit the rest of the cwf interpretation. It should be apparent that explicit
+$\coe$ and $\coh$-handling is fairly technical. It should be noted though that
+in a proof assistant, the finitary and infinitary constructions would be of
+similar difficulty, because there we cannot rely on equality reflection and
+implicit transports to magically tidy up the formalization. In fact, even in the
+finitary case it would be a good idea to structure the formalization around coercions
+and coherences.
+
+The high-level explanation for why the weakened constructions continue to work,
+is the same as what we gave in the section on iso-fibrant semantics: we do
+nothing which would violate stability under isomorphisms; additionally, because
+our isofibrations are \emph{split}, coercion and coherence compute strictly on
+identities and compositions, which ensures that conversion equations in the syntax
+are respected. For example, functoriality of the type substitution defined above
+relies on $\coe$ computation on identity and composition.
+
+The universe is interpreted as follows.
+\begin{alignat*}{3}
+  &\U^T : (\nu : \Sub\,\Omega\,\Gamma) \to \Tm\,\Omega\,\U \to \Set_{j + 1} \\
+  &\U^T\,\nu\,a \defn \Tm\,\Omega\,(\El\,a) \\
+  &\\
+  &(\El\,a)^T : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\El\,(a[\nu]))) \to a^A\,(\Gamma^T\,\nu)\\
+  &(\El\,a)^T\,\nu\,t \defn (a^T\,\nu)\,t
+\end{alignat*}
+In the interpretation of $\El$, note that
+\[
+a^T\,\nu : \Tm\,\Omega\,(\El\,(a[\nu])) \simeq_{\id} a^A\,(\Gamma\,\nu)
+\]
+But this is an isomorphism in the semantic $\U$, which is the category of sets
+in $\Set_{j + 1}$. So coercion along $a^T\,\nu$ is simply function application,
+and we are justified in writing $(a^T\,\nu)\,t$.
+
+For each type former in $\U$, we have to exhibit an isomorphism of sets in the
+interpretation. For $\top$, we need
+\[
+  \top^T : (\nu : \Sub\,\Omega\,\Gamma) \to \U^T\,\nu\,(\top[\nu]) \simeq_{\id} \top^A\,(\Gamma^T\,\nu)
+\]
+The result type computes to $\Tm\,\Omega\,(\El\,\top) \simeq \top$, which is evident. For $\Sigma$, we
+have to show
+\[
+   \Tm\,\Omega\,(\El\,(\Sigma\,(a[\nu])\,(b[\nu\circ\p,\,\q]))) \simeq ((\alpha : a^A\,(\Gamma^T\,\nu)) \times b^A\,(\Gamma^T\,\nu,\,\alpha))
+\]
+This follows from the induction hypotheses $a^T$ and $b^T$, which establish the
+first and second components of the desired isomorphism.
+
+For the identity type, we need
+\[
+  \Tm\,\Omega\,(\El\,(\Id\,(t[\nu])\,(u[\nu])) \simeq (t^A\,(\Gamma^T\,\nu) \equiv u^A\,(\Gamma^T\,\nu))
+\]
+This follows from $t^T\,\nu$, $u^T\,\nu$ and the specifying isomorphism of
+$\Id$.
+
+The infinitary function type follows the same pattern. We define the isomorphism
+below using induction hypotheses and the specifying isomorphism of $\Piinf$.
+\[
+\Tm\,\Omega\,(\El\,(\Piinf\,\mi{Ix}\,(\lambda\,i.\,(b\,i)[\nu])))
+\simeq
+((i : \mi{Ix}) \to (b\,i)^A\,(\Gamma\,\nu))
+\]
+
+Inductive functions are interpreted by transport along the $a^T\,\nu$
+isomorphism from the domain type:
+\begin{alignat*}{3}
+  &(\Pii\,a\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pii\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
+  & \hspace{3.5em}\to (\alpha : a^A\,(\Gamma^T\,\nu)) \to B^A\,(\Gamma^T\,\nu,\,\alpha)\\
+  &(\Pii\,a\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,
+         B\,(\nu,\,(a^T\,\nu)^{-1}\,\alpha)\,(t\,((a^T\,\nu)^{-1}\,\alpha))
+\end{alignat*}
+
+External functions are interpreted the same way as in the finitary case.
+
+\subsection{Recursor and Eliminator Construction}
+
+
+\section{Lambda-Encodings}
+
+In a \emph{lambda-encodings} of a signatures, inductive data is represented as
+functions. The core trade-off is that we get inductive types from few
+assumptions (basic type formers and universes), but the constructed types only
+support weakened elimination principles.
+\begin{itemize}
+  \item The Böhm-Berarducci encodings \cite{boehm-berarducci}, or BB-encodings
+    henceforth, require an impredicative base universe, and they support
+    non-dependent elimination from encoded types to that universe.
+  \item Impredicative encodings as given by Awodey, Frey and Speight
+    \cite{afs-encoding}, or AFS-encodings in short, additionally assume that the
+    base universe is closed under an intensional identity type which supports
+    function extensionality. These encodings allow dependent elimination, but
+    also only targeting the impredicative universe.
+\end{itemize}
+It turns out that lambda-encodings are obtained as modest variations of the term
+algebra construction in Section \ref{sec:inf-term-algebras}. Additionally, we shall see that lambda-encodings also rely
+on isofibrancy, so it makes sense to present them for the infinitary ToS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Left Adjoints of Substitutions}
+
 
 
 \chapter{Levitation, Bootstrapping and Universe Levels}

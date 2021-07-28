@@ -24,6 +24,13 @@ Danil Annenkov, Paolo Capriotti, Nicolai Kraus, and Christian Sattler.
 \newblock Two-level type theory and applications.
 \newblock {\em ArXiv e-prints}, may 2019.
 
+\bibitem[AFS18]{afs-encoding}
+Steve Awodey, Jonas Frey, and Sam Speight.
+\newblock Impredicative encodings of (higher) inductive types.
+\newblock In {\em Proceedings of the 33rd Annual ACM/IEEE Symposium on Logic in
+  Computer Science}, LICS ’18, page 76–85, New York, NY, USA, 2018.
+  Association for Computing Machinery.
+
 \bibitem[AHH18]{angiuli2018cartesian}
 Carlo Angiuli, Kuen-Bang~Favonia Hou, and Robert Harper.
 \newblock Cartesian cubical computational type theory: Constructive reasoning
@@ -39,6 +46,11 @@ Carlo Angiuli, Robert Harper, and Todd Wilson.
 Jir{\'{\i}} Ad{\'{a}}mek and V{\'{a}}clav Koubek.
 \newblock Least fixed point of a functor.
 \newblock {\em J. Comput. Syst. Sci.}, 19(2):163--178, 1979.
+
+\bibitem[AKS15]{univalent-categories}
+Benedikt Ahrens, Krzysztof Kapulkin, and Michael Shulman.
+\newblock Univalent categories and the rezk completion.
+\newblock {\em Math. Struct. Comput. Sci.}, 25(5):1010--1039, 2015.
 
 \bibitem[AL19]{displayedcats}
 Benedikt Ahrens and Peter~LeFanu Lumsdaine.
@@ -60,6 +72,11 @@ Andreas Abel, Andrea Vezzosi, and Th{\'{e}}o Winterhalter.
 Steve Awodey.
 \newblock Natural models of homotopy type theory.
 \newblock {\em Math. Struct. Comput. Sci.}, 28(2):241--286, 2018.
+
+\bibitem[BB85]{boehm-berarducci}
+Corrado B{\"{o}}hm and Alessandro Berarducci.
+\newblock Automatic synthesis of typed lambda-programs on term algebras.
+\newblock {\em Theor. Comput. Sci.}, 39:135--154, 1985.
 
 \bibitem[BCH14]{cubical}
 Marc Bezem, Thierry Coquand, and Simon Huber.
@@ -101,6 +118,12 @@ Paolo Capriotti.
 John Cartmell.
 \newblock {\em Generalised algebraic theories and contextual categories}.
 \newblock PhD thesis, Oxford University, 1978.
+
+\bibitem[CCD17]{flccc-undecidability}
+Simon Castellan, Pierre Clairambault, and Peter Dybjer.
+\newblock Undecidability of equality in the free locally cartesian closed
+  category (extended version).
+\newblock {\em Log. Methods Comput. Sci.}, 13(4), 2017.
 
 \bibitem[CCHM17]{cchm}
 Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
