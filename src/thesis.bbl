@@ -47,6 +47,14 @@ Jir{\'{\i}} Ad{\'{a}}mek and V{\'{a}}clav Koubek.
 \newblock Least fixed point of a functor.
 \newblock {\em J. Comput. Syst. Sci.}, 19(2):163--178, 1979.
 
+\bibitem[AK16]{ttintt}
+Thorsten Altenkirch and Ambrus Kaposi.
+\newblock Type theory in type theory using quotient inductive types.
+\newblock In Rastislav Bodik and Rupak Majumdar, editors, {\em Proceedings of
+  the 43rd Annual {ACM} {SIGPLAN-SIGACT} Symposium on Principles of Programming
+  Languages, {POPL} 2016, St. Petersburg, FL, USA, January 20 - 22, 2016},
+  pages 18--29. {ACM}, 2016.
+
 \bibitem[AKS15]{univalent-categories}
 Benedikt Ahrens, Krzysztof Kapulkin, and Michael Shulman.
 \newblock Univalent categories and the rezk completion.
@@ -109,6 +117,12 @@ Simon Boulier, Pierre-Marie P{\'e}drot, and Nicolas Tabareau.
 \newblock In {\em Proceedings of the 6th ACM SIGPLAN Conference on Certified
   Programs and Proofs}, CPP 2017, pages 182--194, New York, NY, USA, 2017. ACM.
 
+\bibitem[Bru19]{brunerie}
+Guillaume Brunerie.
+\newblock A formalization of the initiality conjecture in agda.
+\newblock Slides of a talk at the Homotopy Type Theory 2019 Conference,
+  Carnegie Mellon University, Pittsburgh, Pennsylvania, August 2019.
+
 \bibitem[Cap17]{capriotti2017models}
 Paolo Capriotti.
 \newblock Models of type theory with strict equality.
@@ -136,6 +150,12 @@ Pierre Clairambault and Peter Dybjer.
 \newblock The biequivalence of locally cartesian closed categories and
   martin-l{\"o}f type theories.
 \newblock {\em Mathematical Structures in Computer Science}, 24(6), 2014.
+
+\bibitem[CKS07]{carette2007finally}
+Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
+\newblock Finally tagless, partially evaluated.
+\newblock In {\em Asian Symposium on Programming Languages and Systems}, pages
+  222--238. Springer, 2007.
 
 \bibitem[dVL14]{sop}
 Edsko de~Vries and Andres L{\"{o}}h.
@@ -207,6 +227,12 @@ Andres L{\"{o}}h and Jos{\'{e}}~Pedro Magalh{\~{a}}es.
   of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
   2011, Tokyo, Japan, September 19-21, 2011}, pages 1--12. {ACM}, 2011.
 
+\bibitem[LS]{lumsdaineShulman}
+Peter~LeFanu Lumsdaine and Michael Shulman.
+\newblock Semantics of higher inductive types.
+\newblock {\em Mathematical Proceedings of the Cambridge Philosophical
+  Society}, page 1–50.
+
 \bibitem[MAA{\etalchar{+}}19]{dijkstramonad}
 Kenji Maillard, Danel Ahman, Robert Atkey, Guido Mart{\'{\i}}nez, Catalin
   Hritcu, Exequiel Rivas, and {\'{E}}ric Tanter.
@@ -251,6 +277,13 @@ Jonathan Sterling.
 \newblock Algebraic type theory and universe hierarchies.
 \newblock {\em CoRR}, abs/1902.08848, 2019.
 
+\bibitem[Str93]{streicher93habil}
+Thomas Streicher.
+\newblock Investigations into intensional type theory. habilitation thesis,
+  1993.
+\newblock
+  \url{http://www.mathematik.tu-darmstadt.de/~streicher/HabilStreicher.pdf}.
+
 \bibitem[Swi08]{alacarte}
 Wouter Swierstra.
 \newblock Data types {\`{a}} la carte.
@@ -269,6 +302,19 @@ The {Univalent Foundations Program}.
 \newblock {\em Homotopy Type Theory: Univalent Foundations of Mathematics}.
 \newblock \url{https://homotopytypetheory.org/book}, Institute for Advanced
   Study, 2013.
+
+\bibitem[Voe17]{voevodsky-initiality}
+Vladimir Voevodsky.
+\newblock {Models, Interpretations and the Initiality Conjectures}.
+\newblock August 18, 2017.
+\newblock A talk the Special session on category theory and type theory in
+  honor of Per Martin-Löf on his 75th birthday, August 17–19, 2017, during
+  the Logic Colloquium 2017, August 14-20, in Stockholm.
+
+\bibitem[Win20]{winterhalter-thesis}
+Théo Winterhalter.
+\newblock {\em Formalisation and Meta-Theory of Type Theory}.
+\newblock PhD thesis, University of Nantes, 2020.
 
 \bibitem[YHLJ09]{multirec}
 Alexey~Rodriguez Yakushev, Stefan Holdermans, Andres L{\"{o}}h, and Johan

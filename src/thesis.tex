@@ -2406,6 +2406,8 @@ strict preservation; below we have weak preservation.
 \subsection{Term Algebras}
 \label{sec:simple-2ltt-term-algebras}
 
+\todo{Try to skip the lowering isomorphisms altogether by only using inner AD and outer MS}
+
 For term algebras, we need to assume a bit more in the inner theory. For
 starters, it has to support the theory of signatures. In order to avoid name
 clashes down the line, we use $\SigTy_0$ to refer to signature types, and
@@ -2423,7 +2425,7 @@ $\Pi$-types, because we previously defined $\Sub$ using functions.
 \emph{Remark.} If we only want to construct term algebras, it is not necessary
 to assume inner induction principles. It is sometimes useful to construct term
 algebras from models which are explicitly \emph{not} initial; we will see such
-examples in \ref{TODO}. In this section, our goal is to redo the constructions
+examples in \ref{sec:lambda-encodings}. In this section, our goal is to redo the constructions
 of Chapter \ref{chap:simple-inductive-signatures} without making essential changes, so
 we just assume everything that was available there.
 
@@ -2689,7 +2691,7 @@ and also substantially extend the semantics. However, we keep the basic approach
 the same; indeed its advantages become apparent with the more sophisticated
 signatures.
 
-We have two somewhat different setups for semantics in this chapter.
+We use two different setups for semantics in this chapter.
 \begin{itemize}
   \item In Sections \ref{sec:fqiit-tos}-\ref{sec:fqiit-semantics} we work in 2LTT, thereby
         getting a generalized semantics for signatures. However, we keep details about universe
@@ -3650,10 +3652,17 @@ the constructed ``simply typed'' cwf. On the other hand, we get less out of the
 semantics. For instance, we cannot show equivalence of initiality and induction
 without $\Id$.
 
-We could also add more type formers to the semantics. We may add \textbf{small
+If we want to trim down the assumptions on the inner theory to the minimum, we
+can make do with simply an inner cwf with no type formers at all. This
+implies that for each signature we can build a category of algebras, plus extra
+structure which does not require $\Sigma$ or $\top$ in the $\bU$ definition. So
+we may have displayed algebras, sections, and also functorial substitution for
+these, but we don't have terminal algebras and total algebras (i.e.\ $\blank\!\ext_{\bU}\!\blank$).
+
+We could also add more type formers to the semantics. We may add \emph{small
   limits} via the external function type $\Pie$ that we already have in
 signatures. Extending flcwfs with $\Pie$ requires $\Pi$-types in the inner
-theory of 2LTT, hence in $\mbbC$ as well. Intuitively, indexed products of
+theory of 2LTT, hence in $\mbbC$ as well. The reason is that indexed products of
 algebras require functions in the underlying sorts. More concretely, in the
 definition of $\bU$, we have to interpret
 \[
@@ -3863,8 +3872,8 @@ However, the two versions coincide because of the initiality of ToS syntax.
 \label{sec:fqiit-term-algebras}
 
 In this section we proceed with the construction of term algebras for FQII
-signatures, together with their recursors and eliminators. However, first we
-make two significant modifications to the setup.
+signatures, together with their recursors and eliminators. First we make two
+significant modifications to the setup.
 \\\\
 \indent First, \textbf{we drop the outer theory}, and work exclusively inside an
 extensional type theory. The reason is the following. The main purpose of 2LTT
@@ -3949,6 +3958,7 @@ assuming $A : \Set_i$ and $B : A \to \Set_j$, we have $(x : A) \to B : \Set_{i \
 
 First, we parameterize the notion of ToS-model with levels.
 \begin{mydefinition}
+\label{def:ftos-models}
 For levels $i$ and $j$, $\ToS_{i,j} : \Set_{i+1\lub j+1}$ is the type of ToS
 models, defined as before, but where $\Con$, $\Sub$, $\Ty$ and $\Tm$ all return
 in $\Set_i$, and $\Pie$ abstracts over $\Set_j$.
@@ -4366,13 +4376,340 @@ We make use of $\nu^T\,\id$, $u^T\,\id$, $a^E\,\nu$ and $a^T\,\nu$ to type-check
 Interpretations for contexts and other type formers are also essentially the same as with recursors.
 
 \begin{mydefinition}[\textbf{Eliminators}]
+\label{def:fqiit-eliminator}
 Assuming $\Omega : \Sig_j$, a $k$ level such that $k \geq j + 1$ and $\omega^D :
 \Omega^D_{k}\,(\Omega^T\,\id)$, we have $\Omega^E\,\id : \Omega^S\,(\Omega^T\,\id)\,\omega^D$ as
 the eliminator.
 \end{mydefinition}
 
+\begin{theorem}
+  $\Omega^T\,\id$ is initial when lifted to any $k \geq j + 1$ level.
+\end{theorem}
+\begin{proof}
+  $\Omega^T\,\id : \Omega^A_{k}$ supports elimination by Definition \ref{def:fqiit-eliminator},
+  and elimination is equivalent to initiality by Theorem \ref{thm:initiality-induction}.
+\end{proof}
+
+
 \todo{Some discussion, blah blah}
 \todo{Should we just pare down elims/recursors and put them in an appendix?}
+
+\section{Levitation and Bootstrapping for Closed Signatures}
+\label{sec:closed-levitation}
+
+When we previously introduced the ToS, we only specified the notion of model,
+and simply assumed that there is an evident notion of model morphism, and also a
+notion of induction. For the theory of \emph{closed} signatures, we can do
+better, because that ToS is itself a closed FQII theory. This is
+\emph{levitation} \cite{TODO}, i.e.\ the situation where a ToS contains a
+signature for itself. Levitation is useful for bootstrapping: it shall be
+sufficient to specify \emph{only the notion of model} for ToS, and notions of
+ToS-morphisms, initiality and induction can be computed from that. This
+bootstrapping process eliminates the need for either
+\begin{itemize}
+  \item Assuming that the syntax of ToS already exists as a QIIT. This is
+        not too elegant, since we are in the process of building metatheory
+        for QII theories.
+  \item Bootstrapping the ToS syntax as ``raw'' syntax, using simple
+        inductive types, typing/conversion relations and quotients. This
+        would be very tedious and none too enlightening.
+\end{itemize}
+
+In this section we describe levitation for closed signatures. The theory of
+closed signatures does not have $\Pie$, but is otherwise the same as before.  As
+we have seen, the inclusion of $\Pie$ yields a ToS which is itself infinitary,
+which breaks levitation. Moving to a theory of infinitary signatures will
+restore levitation; we revisit this is Section \ref{TODO}.
+
+\subsection{Models \& Signatures}
+
+Since we don't have $\Pie$, we only need a single universe level for indexing models.
+
+\begin{mydefinition} For some $i$ level, we have $\ToS_i : \Set_{i+1}$ as the type of
+models of ToS, where all underlying sets return in $\Set_i$.
+\end{mydefinition}
+
+\begin{mydefinition}[\textbf{Flcwf model}]
+For $i$, we have $\bM_{i} : \ToS_{i + 2}$ as the model where contexts are flcwfs
+of algebras, and algebras have underlying sets in $\Set_i$. To see how $i + 2$
+checks out: if algebras contain $\Set_i$-s, the category of algebras has a
+$\Set_{i + 1}$ for a set of objects, and $\bM_{i}$ itself includes a category of
+these categories.
+\end{mydefinition}
+So far, this can be defined while only using the notion of model for ToS. What
+about signatures though? Previously we had that signatures are contexts in ToS
+\emph{syntax}, and to talk about syntax, we need to know at least the notion of
+ToS model morphism.
+
+Actually, if we only want to be able to write down signatures and interpret them
+in the semantics, we don't need a ToS syntax. A Church-like encoding suffices.
+
+\begin{mydefinition} A \textbf{signature} is a function which for every ToS model
+yields a signature in that model. The type of signatures is:
+\[
+  \ms{Sig} \defn (i : \ms{Level}) \to (M : \ToS_i) \to \Con_{M}
+\]
+Note that this is a universe-polymorphic type. This is not an issue; universe
+polymorphism is a sensible feature in type theories, or alternatively we may
+assume that quantification over levels takes place in some outer theory.
+\end{mydefinition}
+
+\begin{myexample}
+For $\ms{NatSig}$, we define the expected signature, but we specify it in an arbitrary
+$M$ model instead of the syntax.
+\begin{alignat*}{3}
+  & \NatSig : \Sig\\
+  & \NatSig \defn \lambda (i :\ms{Level})(M : \ToS_i).\\
+  & \hspace{5.2em}(\emptycon_M\,\ext_M\, (N : \U_M) \,\ext_M\,(\mi{zero} : \El_M\,N)
+      \ext_M (\mi{suc} : N\arri_M\El_M\,N))
+\end{alignat*}
+\end{myexample}
+We might as well use the same notations for signatures as in Section
+\ref{sec:fqiit-tos}, as every signature from before can be unambiguously
+rewritten as an encoded signature.
+
+With this, we can interpret each signature in an arbitrary ToS model, by
+applying a signature to a model. $\Sig_j$ can be viewed as a precursor to a
+Böhm-Berarducci-encoding for the theory of signatures, but we only need contexts
+encoded in this way, and not other ToS components. In functional programming,
+this style of encoding is sometimes called ``finally tagless''
+\cite{carette2007finally}.
+
+If we only want to build the 2LTT-based semantics of signatures, we are done
+with bootstrapping right now. In the 2LTT semantics, we never needed induction
+on ToS, we only needed to be able to write down signatures and interpret them in
+models - which we can do. Going forward, we only need to assume an inner
+$(\Ty_0,\,\Tm_0)$ layer with appropriate type formers, and define the flcwf model
+the same way as before.
+
+On the other hand, if we want to consider term models, we do need a notion of
+induction on ToS.
+
+\begin{mydefinition}[\textbf{Signature for ToS}]
+We define $\ToSSig : \Sig$ as the signature for the theory of signatures.  We
+present an excerpt from $\ToSSig$ below using internal notation; it should be
+clear that every component can be reproduced. We use $\ms{SigU}$ and
+$\ms{SigEl}$ to disambiguate components inside the signature from ToS
+components.
+\begin{alignat*}{3}
+  & \Con       &&: \U\\
+  & \Sub       &&: \Con \to \Con \to \U\\
+  & \Ty        &&: \Con \to \U\\
+  & \Tm        &&: (\Gamma : \Con) \to \Ty\,\Gamma \to \U\\
+  & ...        &&\\
+  & \ms{SigU}  &&: \{\Gamma : \Con\} \to \El\,(\Ty\,\Gamma)\\
+  & \ms{SigEl} &&: \{\Gamma : \Con\} \to \Tm\,\Gamma\,\ms{SigU} \to \El\,(\Ty\,\Gamma)\\
+  & \Pi        &&: \{\Gamma : \Con\}(a : \Tm\,\Gamma) \to \Ty\,(\Gamma\ext\,\ms{SigEl}\,a)
+                   \to \El\,(\Ty\,\Gamma)\\
+  & ...        &&
+\end{alignat*}
+\end{mydefinition}
+For each $i$, the interpretation of $\ToSSig$ in $\bM_{i}$ yields an flcwf where
+$\bGamma$ such that $\Con_{\bGamma} \equiv \ToS_{i}$, that is, objects are
+models of ToS at level $i$. This yields a model theory for ToS, including the notion
+of induction.
+
+\section{Reductions to Basic Type Formers}
+
+From the construction of term algebras and eliminators, we get a reduction of
+all QIITs to a single infinitary QIIT, namely the syntax of ToS. We spell this out:
+
+\begin{theorem} If an extensional type theory supports syntax for $\ToS_{j+1,j}$, it supports
+initial algebras for each signature in $\Sig_j$.
+\end{theorem}
+
+Ideally, we would like to reduce QIITs to some collection of basic type
+formers. The ToS syntax is far from being a basic type former, it is rather
+large and complicated. Therefore, the remaining job is to reduce the ToS syntax
+to basic type formers.
+
+We do not attempt here to construct the entire ToS syntax as specified. The
+reason is the following: \cite[Section 9]{lumsdaineShulman} shows that
+infinitary QIITs are not constructible from inductive types and simple
+quotienting with relations. We do not actually know what is the basic type
+former, the magic ingredient from which infinitary QIITs are actually
+constructible, and which is simple enough. Simplicity is key, of course; in
+Chapter \ref{chap:iqiit} we construct infinitary QIITs from the infinitary ToS
+syntax, but that's again far from simple.
+
+In \cite[Section~2.2]{ttintt}, there is an argument that infinitary quotient
+inductive types extend the base type theory with constructive choice
+principles. We conjecture that the magic ingredient would be an infinitary QIT
+which expresses some kind of generic choice principle. We leave this to future
+work.
+
+What we can do is to show constructions of certain fragments of the full ToS
+syntax. In the following, we first give a general description of QIIT constructions,
+then describe two specific constructions, for a) finitary inductive-inductive signatures
+b) closed QII signatures.
+
+\subsection{Finitary QIIT Constructions}
+
+The general recipe of constructing finitary QIITs from basic type formers is the
+following. This is more-or-less adapted from Streicher \cite{streicher93habil}
+and Brunerie et al.\ \cite{brunerie}.
+\begin{enumerate}
+  \item
+    We define the \emph{raw} syntax, using at most inductive families, but
+    no induction-induction. These definitions include all value constructors of
+    the goal QIIT, but there is no indexing involved, constructors only store
+    the raw inductive data. For example, the raw syntax of closed ToS would
+    include the following:
+    \begin{alignat*}{3}
+      & \Con &&: \Set \\
+      & \Sub &&: \Set \\
+      & \Ty  &&: \Set \\
+      & \Tm  &&: \Set \\
+      & \emptycon &&: \Con \\
+      & \blank\!\ext\!\blank &&: \Con \to \Ty \to \Ty \\
+      & \id &&: \Con \to \Sub \\
+      & \blank\!\circ\!\blank &&: \Con \to \Con \to \Con \to \Sub \to \Sub \to \Sub\\
+      & ... &&
+    \end{alignat*}
+    This can be given by a simple mutual inductive definition, which can be
+    represented as an indexed inductive family. Indexed families can be
+    reduced in turn to indexed W-types \cite{mutualinductive}, which can be
+    reduced in turn to W-types and the identity type.
+  \item
+    We define typing and conversion relations on the raw syntax. For dependent
+    type theories, the two are usually mutual: typing includes the rule which
+    coerces terms along type conversion, and conversion is usually defined only
+    on well-typed terms.  However, it is still possible to define everything
+    using only indexed inductive families.
+  \item
+    The underlying sets are given as follows: we take raw syntactic objects
+    which are \emph{merely} well-formed (i.e.\ proofs of well-formedness are
+    propositionally truncated, or defined in a universe of irrelevant
+    propositions to begin with), and quotient them by conversion.
+  \item
+    We show that these underlying sets support all constructor of the target
+    QIIT: value constructors are defined using raw constructors, while
+    equality constructors follow from conversion rules and quotienting.
+  \item
+    We construct a unique morphism from the above term model to an arbitrary
+    model of the QII theory. This usually requires several steps. One approach
+    is to first define by induction on raw syntax a family of \emph{partial
+    functions} into the assumed model, then separately show that these functions
+    are total on well-typed input. The separation is necessary because the
+    induction principle for the raw syntax is \emph{too weak}: it cannot express
+    the inductive-inductive indexing dependencies which would be required to
+    construct the morphism in one go. For instance, if we have the QIIT syntax
+    for ToS, and we have some displayed model $A$ over the syntax, the
+    eliminator contains the following:
+    \begin{alignat*}{3}
+      &\Con^S &&: (\Gamma : \Con) \to \Con_A\,\Gamma \\
+      &\Sub^S &&: (\Gamma\,\Delta : \Con)(\sigma : \Sub\,\Gamma\,\Delta) \to \Sub_{A}\,(\Con^S\,\Gamma)\,(\Con^S\,\Delta)\,\sigma
+    \end{alignat*}
+    But with the raw syntax, we can only eliminate using a displayed model of
+    the raw syntax, and the eliminator contains the following:
+    \begin{alignat*}{3}
+      &\Con^S &&: (\Gamma : \Con) \to \Con_A\,\Gamma \\
+      &\Sub^S &&: (\sigma : \Sub) \to \Sub_A\,\sigma
+    \end{alignat*}
+    Lastly, we show that the constructed morphism is unique. This is done by
+    induction on raw syntax, and is generally possible in just one elimination.
+\end{enumerate}
+
+Note that the above recipe permits a large number of design variations. Some
+examples:
+\begin{itemize}
+\item We may omit fields from raw syntax which are fully determined by type indices.
+      This may make subsequent work easier or harder depending on particulars.
+\item We may start from a \emph{well-scoped} raw syntax, if there is a notion of
+      scoping in the goal QIIT. In general, we may start from some kind of partially
+      raw syntax, which is well-typed to some extent. This extent is bounded by what
+      is expressible only using indexed inductive families but not
+      induction-induction.
+\item We may move along a spectrum of ``paranoia'' in the specification of
+      well-typing \cite[Section~9.2]{winterhalter-thesis}. A paranoid typing rule
+      assumes the well-formedness of everything involved, for example assumes the
+      well-formedness of a context $\Gamma$ before it assumes well-formedness of a
+      type in $\Gamma$. In contrast, an ``economic'' specification tries to make the
+      minimum necessary assumptions, relying on admissibility properties. It's
+      possible that well-formedness of $\Gamma$ is derivable from the
+      well-formedness of a type in $\Gamma$, so the assumption can be dropped.
+
+      However, if we omit too much, then some other admissibility properties may
+      break! Design decisions along the paranoia spectrum are often all tangled
+      up like this; hence the name ``paranoid'', which probably stems from the
+      anxiety of breaking things by making too much shortcuts.
+\end{itemize}
+
+It should be apparent that constructing QIITs is tedious, and especially so for
+large QIITs like type theories. Hence, it is best if we do it just once, for a
+theory of signatures from which every other QIIT can be constructed.
+
+\subsubsection{Relation to the initiality conjecture}
+
+The initiality conjecture was made by Voevodsky \cite{voevodsky-initiality}, and
+it is essentially the conjecture that the above construction (``initiality
+construction'') can be carried out in sufficient formal detail for ``usual''
+type theories.
+
+There has been a prolonged debate about the merits of initiality constructions.
+On one hand, some people believed that the initiality construction is essential
+for morally justifying the usage of raw syntax, while using categorical notions
+of models in the metatheory of type theory. On the other hand, some people
+dismissed the initiality construction as a pointless exercise, considering the
+categorical (QIIT-based) syntax the actual syntax, and raw syntax as merely
+notation for that. The author of this thesis is on a somewhat different opinion
+than either of the above.
+
+First, as a moral justification of the usage of raw syntax, the initiality
+construction is indeed mostly pointless. That's because \emph{elaboration}
+comprises the actual justification for that. Elaboration is the effective
+algorithm which converts raw syntax to ``core syntax'', i.e.\ typed categorical
+syntax. Given a piece of raw syntax, even if I have done the initiality construction,
+I have no effective way of learning which core syntactic object it corresponds to!
+The elaboration literature is \emph{all about} practical justifications for using
+certain raw syntaxes, and it comes with established ways to talk about power and
+correctness of elaboration algorithms.
+
+Second, there is a different motivation for the initiality construction:
+\emph{foundational minimalism}, the reduction of a complicated QIIT to basic
+type formers. Elaboration merely assumes that a categorical core syntax already
+exists, as a target of elaboration, but it is orthogonal to the construction of
+the core syntax. If we have elaboration, we may still want to show a reduction
+of the core syntax, but now are free do perform this construction in whatever
+way is the easiest. We don't have to construct the QIIT out of a raw syntax
+which is intentionally close to the raw syntax that we use in practice! In the
+author's opinion, a great deal of confusion arises from the conflation of the
+two different motivations for the initiality construction. And of these, the second
+motivation is actually valid.
+
+As to which way of construction is easiest: there does not seem to be any truly
+easy way to construct QIITs, but this thesis show that we only have to do it
+once, for a theory of signatures, and then we can construct all other QIITs from
+that in a generic way. In particular, almost all type theories in the wild are
+closed QII theories (with the notable exceptions of our ToS-es), so if we can
+construct closed signatures, we can construct initial models of almost all type
+theories.
+
+What about generic ways to formalize elaboration? It seems to be rather bad to
+repeat this for every single type theory. To the author's knowledge, elaboration
+has not been formalized even for a \emph{single} type theory in a practically
+realistic way (i.e.\ involving inference and unification), let alone for a
+large class of type theories.
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Reduction of Finitary Inductive-Inductive Types}
+
+
+
+\subsection{Reduction of Closed QIITs}
+
+
+
 
 \chapter[Infinitary QII Signatures]{Infinitary Quotient Inductive-Inductive Signatures}
 \label{chap:iqiit}
@@ -5112,7 +5449,7 @@ component-wise projection and pairing.
 
 For $\bt$ and $\bu$ in $\bTm\,\bGamma\,(\bEl\,\ba)$, we define $\bId\,\bt\,\bu
 \boldsymbol{:} \bTm\,\bGamma\,\bU$ as expressing pointwise equality of weak
-sections.
+sections. We rely on the assumption that $\Ty_0$ has identity type.
 \begin{alignat*}{3}
 & (\bId\,\bt\,\bu)\,\ulGamma &&\defn (\bt\,\ulGamma = \bu\,\ulGamma)\\
 & (\bId\,\bt\,\bu)\,\ulA     &&\defn \lambda\,e.\, (\bt\,\ulA = \bu\,\ulA)
@@ -5149,9 +5486,9 @@ are:
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ulA\       &&:= \lambda\,\Gamma.\,(i : \mi{Ix})\ra \bb\,i\,\ulA\,(\Gamma\, a)\\
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ult        &&:= \lambda\,i.\, \bb\,i\,\ult
 \end{alignat*}
-The preservation isomorphisms are pointwise inherited from $\bb$. One direction
-of the isomorphisms is defined as follows. Note that $\emptycon_{\bU} \equiv
-\top$ and $\ext_{\bU}$ is $\Sigma$.
+We rely on $\Pi$ in the inner theory. The preservation isomorphisms are
+pointwise inherited from $\bb$. One direction of the isomorphisms is defined as
+follows. Note that $\emptycon_{\bU} \equiv \top$ and $\ext_{\bU}$ is $\Sigma$.
 \begin{alignat*}{3}
   &(\bPiinf\,\mi{Ix}\,\bb)_{\emptycon}^{-1} && : \top\ra (\bPiinf\,\mi{Ix}\,\bb)\,\emptycon\\
   &(\bPiinf\,\mi{Ix}\,\bb)_{\emptycon}^{-1} && \defn \lambda\,\_\,i.\,(\bb\,i)_{\emptycon}^{-1}\,\tt
@@ -5246,6 +5583,28 @@ transport $\alpha$ first, then transport $\beta$ by
 $(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, we could add large $\Sigma$
 types to ToS, as $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty
 \Gamma$, thereby making iterated transport superfluous.
+
+\subsubsection{Variations of semantics}
+
+First, unlike in the finitary case, we have no opportunity to minimize
+assumptions on the inner theory. Already when we compute algebras, we need inner
+$\Pi$ for infinitary functions, inner $\top$ for $\top$, inner $\Sigma$ for
+$\Sigma$ and inner $\blank\!=\!\blank$ for $\Id$.
+
+Second: can we add the ``large'' equality type, which includes sort equations,
+back to infinitary signatures? We dropped sort equations in this chapter because
+they are clearly not isofibrant. We can add them back into the mix though, at
+the price of dropping things from the semantics of signatures. The reason for
+having isofibrant types is that type formers in $\U$ preserve $\emptycon$ and
+$\blank\!\ext\!\blank$ only up to isomorphism. If we drop all semantic
+components which depend on $\emptycon$ and $\blank\!\ext\!\blank$, we can drop
+isofibrancy too from the model, and everything works. In this case, we still get
+a category of algebras, plus a notion of induction, but we cannot show that
+initiality is equivalent to induction, as the proof of Theorem
+\ref{thm:initiality-induction} depends on $\blank\!\ext\!\blank$. We cannot do
+term algebra constructions (see in Section \ref{sec:inf-term-algebras}) and
+lambda-encodings (in Section \ref{sec:lambda-encodings}) either, since they rely
+on isofibrancy.
 
 \subsubsection{Substitutions}
 
@@ -5455,13 +5814,14 @@ isomorphism from the domain type:
   &(\Pii\,a\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,
          B\,(\nu,\,(a^T\,\nu)^{-1}\,\alpha)\,(t\,((a^T\,\nu)^{-1}\,\alpha))
 \end{alignat*}
-
 External functions are interpreted the same way as in the finitary case.
+
 
 \subsection{Recursor and Eliminator Construction}
 
 
 \section{Lambda-Encodings}
+\label{sec:lambda-encodings}
 
 In a \emph{lambda-encodings} of a signatures, inductive data is represented as
 functions. The core trade-off is that we get inductive types from few
@@ -5499,22 +5859,17 @@ on isofibrancy, so it makes sense to present them for the infinitary ToS.
 
 
 
-\chapter{Levitation, Bootstrapping and Universe Levels}
-\label{chap:levitation}
-\section{Levitation for Closed QIITs}
-\section{Levitation for Infinitary QIITs}
+%% \chapter{Levitation, Bootstrapping and Universe Levels}
+%% \label{chap:levitation}
 
-\chapter{Higher Inductive-Inductive Types}
+%% \section{Levitation for Closed QIITs}
+%% \section{Levitation for Infinitary QIITs}
+
+\chapter{Higher Inductive-Inductive Signatures}
 \label{chap:hiit}
 
 \section{Theory of Signatures}
 \section{Semantics}
-
-\chapter{Reductions}
-
-\section{Finitary Inductive Types}
-\section{Finitary Inductive-Inductive Types}
-\section{Closed Quotient Inductive-Inductive Types}
 
 \chapter{Conclusion}
 
