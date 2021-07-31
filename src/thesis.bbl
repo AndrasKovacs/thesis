@@ -98,6 +98,10 @@ Lars Birkedal, Ranald Clouston, Bassel Mannaa, Rasmus~Ejlers M{\o}gelberg,
 \newblock Modal dependent type theory and dependent right adjoints.
 \newblock {\em Math. Struct. Comput. Sci.}, 30(2):118--138, 2020.
 
+\bibitem[BdB20]{initiality-agda}
+Guillaume Brunerie and Menno de~Boer.
+\newblock Formalization of the initiality conjecture, 2020.
+
 \bibitem[BH11]{compdata}
 Patrick Bahr and Tom Hvitved.
 \newblock Compositional data types.
@@ -157,6 +161,16 @@ Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
 \newblock In {\em Asian Symposium on Programming Languages and Systems}, pages
   222--238. Springer, 2007.
 
+\bibitem[Con19]{initiality-project}
+Initiality~Project Contributors.
+\newblock Initiality project, 2019.
+
+\bibitem[dB20]{deboer-initiality}
+Menno de~Boer.
+\newblock {\em A Proof and Formalization of the Initiality Conjecture of
+  Dependent Type Theory}.
+\newblock PhD thesis, Department of Mathematics, Stockholm University, 2020.
+
 \bibitem[dVL14]{sop}
 Edsko de~Vries and Andres L{\"{o}}h.
 \newblock True sums of products.
@@ -206,6 +220,14 @@ Ambrus Kaposi, Andr{\'a}s Kov{\'a}cs, and Thorsten Altenkirch.
 \newblock Constructing quotient inductive-inductive types.
 \newblock {\em Proceedings of the ACM on Programming Languages}, 3(POPL):2,
   2019.
+
+\bibitem[KKL19]{ind-ind-reduction}
+Ambrus Kaposi, Andr{\'{a}}s Kov{\'{a}}cs, and Ambroise Lafont.
+\newblock For finitary induction-induction, induction is enough.
+\newblock In Marc Bezem and Assia Mahboubi, editors, {\em 25th International
+  Conference on Types for Proofs and Programs, {TYPES} 2019, June 11-14, 2019,
+  Oslo, Norway}, volume 175 of {\em LIPIcs}, pages 6:1--6:30. Schloss Dagstuhl
+  - Leibniz-Zentrum f{\"{u}}r Informatik, 2019.
 
 \bibitem[Kov21]{kovacs2021generalized}
 András Kovács.

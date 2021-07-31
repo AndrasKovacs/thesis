@@ -4022,6 +4022,7 @@ implicit cumulativity, we are already taking the same liberty everywhere, by
 omitting formal lifts and isomorphisms.
 
 \subsection{Term Algebra Construction}
+\label{sec:fqii-term-algebra-construction}
 
 \label{sec:fqiit-term-algebras}
 We fix $\Omega : \Sig_j$ for some $j$ level. We define $\blank^T$ by induction
@@ -4323,6 +4324,7 @@ the recursor for the term algebra.
 \end{mydefinition}
 
 \subsection{Eliminator Construction}
+\label{sec:fqii-eliminator-construction}
 
 We assume $\Omega : \Sig_j$ and $\omega^D : \Omega^D_{k}\,(\Omega^T\,\id)$,
 where $k \geq j + 1$. Again we implicitly lift the term algebra from level $j+1$
@@ -4544,9 +4546,10 @@ then describe two specific constructions, for a) finitary inductive-inductive si
 b) closed QII signatures.
 
 \subsection{Finitary QIIT Constructions}
+\label{sec:fqiit-constructions}
 
 The general recipe of constructing finitary QIITs from basic type formers is the
-following. This is more-or-less adapted from Streicher \cite{streicher93habil}
+following. This is more or less adapted from Streicher \cite{streicher93habil}
 and Brunerie et al.\ \cite{brunerie}.
 \begin{enumerate}
   \item
@@ -4633,42 +4636,57 @@ examples:
       break! Design decisions along the paranoia spectrum are often all tangled
       up like this; hence the name ``paranoid'', which probably stems from the
       anxiety of breaking things by making too much shortcuts.
+    \item Instead of using partial maps from raw syntax to the the assumed model
+      in step 5, we may define \emph{relations} between \emph{well-formed} raw
+      syntax and the given model, and later show that these relations are
+      functional.  This seems to be a technically easier approach. The reason is
+      that we do not have decidable definedness of the partial maps, which makes
+      them more complicated.  A decidably defined partial function has type $A
+      \to \ms{Maybe}\,B$. For any $a : A$ we can look at whether the function is
+      defined on it. A more general partial function has type $A \to ((P :
+      \ms{Prop}) \times (P \to B))$.  If we forget about the $\ms{Prop}$-ness of
+      $P$ for the time being, we can equivalently have a relation $A \to B \to
+      \Set$ instead.  This is a more ``indexed'' definition compared to the
+      ``fibered'' presentation with $P : \ms{Prop}$, and indexed presentations
+      in type theory usually enjoy more definitional computation rules - this
+      is also the reason why displayed algebras are better-behaved computationally
+      than fibered algebras.
 \end{itemize}
 
 It should be apparent that constructing QIITs is tedious, and especially so for
 large QIITs like type theories. Hence, it is best if we do it just once, for a
 theory of signatures from which every other QIIT can be constructed.
 
-\subsubsection{Relation to the initiality conjecture}
+\subsubsection{Connection to the initiality conjecture}
 
 The initiality conjecture was made by Voevodsky \cite{voevodsky-initiality}, and
 it is essentially the conjecture that the above construction (``initiality
 construction'') can be carried out in sufficient formal detail for ``usual''
 type theories.
 
-There has been a prolonged debate about the merits of initiality constructions.
-On one hand, some people believed that the initiality construction is essential
-for morally justifying the usage of raw syntax, while using categorical notions
-of models in the metatheory of type theory. On the other hand, some people
-dismissed the initiality construction as a pointless exercise, considering the
-categorical (QIIT-based) syntax the actual syntax, and raw syntax as merely
-notation for that. The author of this thesis is on a somewhat different opinion
-than either of the above.
+There has been much debate about the merits of initiality constructions. See
+\cite{initiality-project} for a hub of such discussions.  On one hand, some
+people believed that the initiality construction is essential for reconciling
+the usage of raw syntax and categorical notions of models. On the other hand,
+some people dismissed the initiality construction as a pointless exercise,
+considering the categorical syntax to be the actual syntax, and raw syntax as
+merely notation for that. The author of this thesis is of a somewhat different
+opinion than either of the above.
 
-First, as a moral justification of the usage of raw syntax, the initiality
+First, as a moral justification for the usage of raw syntax, the initiality
 construction is indeed mostly pointless. That's because \emph{elaboration}
-comprises the actual justification for that. Elaboration is the effective
+comprises the true justification for that. Elaboration is the effective
 algorithm which converts raw syntax to ``core syntax'', i.e.\ typed categorical
-syntax. Given a piece of raw syntax, even if I have done the initiality construction,
-I have no effective way of learning which core syntactic object it corresponds to!
-The elaboration literature is \emph{all about} practical justifications for using
-certain raw syntaxes, and it comes with established ways to talk about power and
-correctness of elaboration algorithms.
+syntax. Given a piece of raw syntax, even if I have done the initiality
+construction, I have no effective way of learning which core syntactic object it
+corresponds to!  The elaboration literature is \emph{all about} practical
+justifications for using certain raw syntaxes, and it comes with established
+ways to talk about power and correctness of elaboration algorithms.
 
 Second, there is a different motivation for the initiality construction:
 \emph{foundational minimalism}, the reduction of a complicated QIIT to basic
 type formers. Elaboration merely assumes that a categorical core syntax already
-exists, as a target of elaboration, but it is orthogonal to the construction of
+exists, as the target of elaboration, but it is orthogonal to the construction of
 the core syntax. If we have elaboration, we may still want to show a reduction
 of the core syntax, but now are free do perform this construction in whatever
 way is the easiest. We don't have to construct the QIIT out of a raw syntax
@@ -4685,30 +4703,134 @@ closed QII theories (with the notable exceptions of our ToS-es), so if we can
 construct closed signatures, we can construct initial models of almost all type
 theories.
 
-What about generic ways to formalize elaboration? It seems to be rather bad to
-repeat this for every single type theory. To the author's knowledge, elaboration
-has not been formalized even for a \emph{single} type theory in a practically
-realistic way (i.e.\ involving inference and unification), let alone for a
-large class of type theories.
-
-
-
-
-
-
-
-
-
-
-
+What about generic ways to formalize elaboration algorithms? This seems to be a
+lot more difficult. To the author's knowledge there have not been notable
+research in this area. Decidability of conversion is already very hard to
+analyze in a generic way, and the simplest possible bidirectional elaboration
+algorithms rely on decidable conversion. To formalize practically realistic
+elaboration (i.e.\ elaboration which includes unification) is yet more
+difficult.
 
 \subsection{Reduction of Finitary Inductive-Inductive Types}
 
+This section is based on the author's joint work with Kaposi and Lafont
+\cite{ind-ind-reduction}. The core idea is the following: a certain fragment of
+ToS can be constructed in a far simpler way than what we described in Section
+\ref{sec:fqiit-constructions}, with fewer assumptions in the ambient theory.  We
+call this fragment the theory of \emph{finitary inductive-inductive} signatures.
+This theory has the following type formers (on the top of the base cwf):
+\begin{itemize}
+  \item The $\U$ universe with $\El$.
+  \item Inductive function type $\Pi$, but without $\lami$, and thus without $\beta\eta$-rules.
+  \item External function type $\Pie$, but again without $\lame$.
+\end{itemize}
+Concretely, this ToS is tuned so that
+\begin{enumerate}
+  \item No quotients are required in its construction.
+  \item The generic term model construction still goes through for every signature in
+        the ToS.
+\end{enumerate}
+We explain in the following. First, the equational theory of ToS only specifies
+substitution, but it contains no computation rules for type formers. Thus, ToS
+is a theory of \emph{neutral terms} and substitutions. This allows us to define
+a raw syntax which only includes normal forms, and to define substitution as
+recursive functions acting on normal forms. This trivializes the conversion
+relation: conversion is simply propositional equality of raw terms. Thus, there
+is no need to quotient by conversion.
 
+Second, we do not include an identity type in ToS. This blocks the other way for
+quotients to enter the picture. With identity types, the generic term model
+construction relies on equality reflection in ToS. But when we construct ToS
+syntax, the only way to show equality reflection is to quotient raw syntax by
+internally provable equalities.
+
+Third, it remains to check that the generic term model construction works with
+the pared-down ToS. We only need to check that the omission of $\lam$ and
+$\lame$ does not mess things up. Looking at Sections
+\ref{sec:fqii-term-algebra-construction} and
+\ref{sec:fqii-eliminator-construction}, we see that they don't: the
+interpretations of $\Pi$ and $\Pie$ only require applications in ToS, not
+abstractions.
+
+\emph{Remark.} Although we have not yet talked about infinitary signatures, we
+can give a short summary why the current construction fails to work for their
+ToS.  The generic term algebra construction in Section
+\ref{sec:iqii-term-algebra-construction} for infinitary signatures relies on
+there being both $\lam$ and $\app$ for ``infinitary'' function types, with
+$\beta\eta$-rules. This makes the equational theory of ToS non-trivial, so
+quotients must be introduced back to the construction of ToS.
+
+We summarize the construction of the ToS syntax below. We refer the reader to
+\cite{ind-ind-reduction}.
+
+\begin{enumerate}
+\item We define raw syntax by mutual induction. Substitution are in normal form:
+      they are just lists of raw terms. Variables are also normalized as de Bruijn indices.
+      We define the action of substitution by recursion on raw syntax. In \cite{ind-ind-reduction},
+      raw syntax is not well-scoped, and substitution is partial, but it would be also possible
+      to start from well-scoped raw syntax.
+\item We inductively define well-formedness relations for contexts,
+      substitutions, types and terms, and show by induction on raw syntax that
+      well-formedness is propositional, i.e.\ proof-irrelevant. Alternatively, we
+      could have defined well-formedness by recursion on raw syntax.
+\item We construct a term model of ToS from well-formed raw syntax. All equations in the model
+      are provable from the properties of recursive substitution on raw terms.
+\item We pick a ToS model, and inductively define a family of relations between
+      the term model and the given model, which define the function graphs of the
+      model morphism that we aim to define. Then we show in order:
+      \begin{enumerate}
+        \item Right-uniqueness of the relation, by induction on well-formedness derivations.
+        \item Stability of the relation under substitution.
+        \item Left-totality of the relation, by induction on well-formedness derivations.
+      \end{enumerate}
+      We then define the actual model morphism using the functionality of the relation.
+\item For the uniqueness of the constructed morphism, we exploit
+      right-uniqueness of the relation: it is enough to show that any other model
+      morphism maps syntactic input to related semantic output.
+\end{enumerate}
+
+This construction is formalized in Agda; see \cite{ind-ind-reduction}. It uses
+indexed inductive families, UIP, function extensionality, and equality
+reflection in the form of Agda rewrite rules, although the latter could be in
+principle omitted from the formalization. Thus, it follows that any model
+of ETT with inductive families supports finitary inductive-inductive types.
 
 \subsection{Reduction of Closed QIITs}
 
+For closed QIITs, there is unfortunately no direct formalization which
+constructs the ToS. There is one though which is \emph{close enough}, by Menno
+de Boer and Guillaume Brunerie \cite{initiality-agda}, see also De Boer's thesis
+\cite{deboer-initiality}. This constructs a type theory with the following
+features:
+\begin{itemize}
+  \item A contextual category for base (instead of a cwf).
+  \item Countable predicative universes.
+  \item $\mathbb{N}$, $\Sigma$, $\Pi$, $\top$, $\bot$, $\blank\!+\!\blank$ and
+        intensional $\Id$.
+\end{itemize}
+The construction follows the 1-5 steps that we described previously. It makes the following assumptions:
+\begin{itemize}
+\item A universe of strict propositions $\ms{Prop}$. Every type in this universe
+      enjoys definitional proof-irrelevance. This $\ms{Prop}$ is used to define
+      partial functions and well-formedness relations.
+\item Function extensionality.
+\item Propositional extensionality for $\ms{Prop}$.
+\item Quotients of relations valued in $\ms{Prop}$.
+\item Indexed inductive families returning in $\Set$ or in $\ms{Prop}$.
+\end{itemize}
+Notably, UIP is not assumed. It appears that the irrelevance of equalities in
+$\ms{Prop}$ in sufficient to obviate UIP.
 
+It is very plausible that this construction can be adapted to our theory of
+closed QII signatures. De Boer and Brunerie construct a complicated open
+finitary QIIT, while ours is a fairly similar closed QIIT, with fewer and more
+restricted type formers. The openness comes from the use of contextual
+categories, which involve indexing by external natural numbers. Contextuality
+does not make much difference in the construction though, since raw syntax is
+always contextual by the inductive nature of raw contexts.
+
+Hence, it is safe to say that any model of a type theory which supports the
+assumptions of De Boer and Brunerie, also supports all closed QIITs.
 
 
 \chapter[Infinitary QII Signatures]{Infinitary Quotient Inductive-Inductive Signatures}
@@ -5654,6 +5776,7 @@ isofibrant flcwf model, and we have the infinitary ToS. The differences are not
 actually relevant when setting up universe levels.
 
 \subsection{Term Algebra Construction}
+\label{sec:iqii-term-algebra-construction}
 
 The term algebra construction changes significantly. The reason is the
 following. In the finitary case, the key property was that ``small types
