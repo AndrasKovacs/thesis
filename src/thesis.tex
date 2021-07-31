@@ -4174,9 +4174,9 @@ $\Set_0$.
 We continue with the construction of recursors. This is not necessary, strictly
 speaking, since recursion is derivable from elimination, so it would suffice to
 only construct eliminators. We still present recursors, for the sake of matching
-the presentation in Chapter \ref{chap:simple-inductive-signatures}. Also, Church
-encodings in Section \ref{TODO} will support recursion but not elimination, so
-it makes sense to try to ``warm up'' to that case as well.
+the presentation in Chapter \ref{chap:simple-inductive-signatures}. Also, the
+Böhm-Beraducci encodings in Section \ref{TODO} will support recursion but not
+elimination, so it makes sense to try to ``warm up'' to that case as well.
 
 The goal is to construct a morphism from a term algebra to any other $\omega
 : \Omega^A$ algebra. However, we have to handle universe levels as well. We want
@@ -4444,7 +4444,7 @@ about signatures though? Previously we had that signatures are contexts in ToS
 ToS model morphism.
 
 Actually, if we only want to be able to write down signatures and interpret them
-in the semantics, we don't need a ToS syntax. A Church-like encoding suffices.
+in the semantics, we don't need a ToS syntax. A functional encoding suffices.
 
 \begin{mydefinition} A \textbf{signature} is a function which for every ToS model
 yields a signature in that model. The type of signatures is:
@@ -4736,7 +4736,11 @@ is a theory of \emph{neutral terms} and substitutions. This allows us to define
 a raw syntax which only includes normal forms, and to define substitution as
 recursive functions acting on normal forms. This trivializes the conversion
 relation: conversion is simply propositional equality of raw terms. Thus, there
-is no need to quotient by conversion.
+is no need to quotient by conversion. Note that our raw syntax is infinitary,
+because we have to represent the branching in $\Piinf$. This is fine though: we
+only run into the issue of the missing ``choice'' principle if we try to mix
+quotients and infinite branching. Without quotients, infinite branching is not
+an issue.
 
 Second, we do not include an identity type in ToS. This blocks the other way for
 quotients to enter the picture. With identity types, the generic term model
@@ -4758,7 +4762,9 @@ ToS.  The generic term algebra construction in Section
 \ref{sec:iqii-term-algebra-construction} for infinitary signatures relies on
 there being both $\lam$ and $\app$ for ``infinitary'' function types, with
 $\beta\eta$-rules. This makes the equational theory of ToS non-trivial, so
-quotients must be introduced back to the construction of ToS.
+quotients are necessary in the construction of the syntax. However, this
+requires mixing quotients and infinite branching, and in this case we do not
+even know how to construct the syntax.
 
 We summarize the construction of the ToS syntax below. We refer the reader to
 \cite{ind-ind-reduction}.
@@ -4952,16 +4958,15 @@ In the signature for infinitary ToS, we have
   &\Piinf    &&: \{\Gamma : \mi{Con}\} \to (A : \U_0) \toe (A \toinf \mi{Tm}\,\Gamma\,\mi{Univ}) \to \mi{Tm}\,\Gamma\,\mi{Univ}
 \end{alignat*}
 \emph{Remark.}
-When we will take the semantics of the above signature, we won't
-exactly get back the theory of signatures that we're using right now. We have
-ToS in 2LTT now, but the semantics is in the inner theory. What we can do
-though, is to assume that the inner theory is also a 2LTT. Then we might assume
-that the inner theory of \emph{that} is again a 2LTT, and so on. This is a
-possible (and quite natural) generalization of 2LTT to n-level type theory. In
-this setting, one round of self-description requires a bumping of levels in the
-sense of 2LTT. In this thesis we don't explore this, instead in Section
-\ref{TODO} we use a more conventional universe hierarchy in an extensional TT,
-to investigate self-description.
+When we will take the semantics of the above signature, we won't exactly get
+back the theory of signatures that we're using right now. We have ToS in 2LTT
+now, but the semantics is in the inner theory. What we can do though, is to
+assume that the inner theory is also a 2LTT. Then we might assume that the inner
+theory of \emph{that} is again a 2LTT, and so on. This is a possible (and quite
+natural) generalization of 2LTT to n-level type theory. In this setting, one
+round of self-description requires a bumping of levels in the sense of n-level TT. In
+this thesis we don't explore this, instead we use a more conventional universe
+hierarchy in an extensional TT, to investigate self-description.
 \end{myexample}
 
 \begin{myexample}
@@ -5034,7 +5039,7 @@ But now we have
 Hence, $(\bs{\Piinf\,A\,b})\,\emptycon_{\bGamma} \not\equiv \top_0$, although
 $(\bs{\Piinf\,A\,b})\,\emptycon_{\bGamma} \simeq \top_0$.
 
-Intuitively, if $\bU$ has no type formers, the only terms in $\bU$ are neutral,
+Intuitively, if $\bU$ has no type formers, the terms in $\bU$ are neutral,
 i.e.\ variables applied to zero or more neutral terms. But variables in the
 semantics simply project out components from iterated $\Sigma$-types. For
 example, the action of $\bs{\q} : \bs{\Tm\,(\Gamma \ext A)\,(A[\p])}$ on
@@ -5772,8 +5777,7 @@ case. We again switch to the ETT setup with cumulative universes. We
 assume Section \ref{sec:cumulative-ett} without any change. Also, we adapt
 \ref{sec:ett-signatures} to infinitary signatures and semantics. All definitions
 are the same, the only change is that the $\bM_{i,j}$ model is now the
-isofibrant flcwf model, and we have the infinitary ToS. The differences are not
-actually relevant when setting up universe levels.
+isofibrant flcwf model, and we have the infinitary ToS.
 
 \subsection{Term Algebra Construction}
 \label{sec:iqii-term-algebra-construction}
@@ -5942,18 +5946,24 @@ External functions are interpreted the same way as in the finitary case.
 
 \subsection{Recursor and Eliminator Construction}
 
+\todo{todo}
+
+\section{Levitation and Bootstrapping}
+\label{sec:iqii-levitation}
 
 \section{Lambda-Encodings}
 \label{sec:lambda-encodings}
 
-In a \emph{lambda-encodings} of a signatures, inductive data is represented as
+In \emph{lambda-encodings} of a signature, inductive data is represented as
 functions. The core trade-off is that we get inductive types from few
 assumptions (basic type formers and universes), but the constructed types only
-support weakened elimination principles.
+support weakened elimination principles. In this section we generalize the
+following two lambda-encodings to infinitary QII signatures.
 \begin{itemize}
   \item The Böhm-Berarducci encodings \cite{boehm-berarducci}, or BB-encodings
-    henceforth, require an impredicative base universe, and they support
-    non-dependent elimination from encoded types to that universe.
+    henceforth, require an impredicative base universe. We have non-dependent
+    elimination (recursion) from BB-encoded types to the base universe, but not
+    to any other universe.
   \item Impredicative encodings as given by Awodey, Frey and Speight
     \cite{afs-encoding}, or AFS-encodings in short, additionally assume that the
     base universe is closed under an intensional identity type which supports
@@ -5961,8 +5971,55 @@ support weakened elimination principles.
     also only targeting the impredicative universe.
 \end{itemize}
 It turns out that lambda-encodings are obtained as modest variations of the term
-algebra construction in Section \ref{sec:inf-term-algebras}. Additionally, we shall see that lambda-encodings also rely
-on isofibrancy, so it makes sense to present them for the infinitary ToS.
+algebra construction in Section \ref{sec:inf-term-algebras}. Additionally, we
+shall see that lambda-encodings also rely on isofibrancy, so it makes sense to
+present them for the infinitary ToS.
+
+\subsubsection{Metatheory}
+
+The main benefit of lambda-encodings is that we do not have to assume that ToS
+syntaxes exist. However, we do need to make use of most basic type formers in
+the construction, so there is not much benefit to working in 2LTT. Hence, we use
+the ETT setting with cumulative $\Set_i$ universes. We use the bootstrapping
+definition of signatures from Section \ref{sec:iqii-levitation}, i.e.\ a
+signature is a context in an arbitrary model of ToS.
+
+\subsection{Böhm-Berarducci Encoding}
+
+\textbf{Assumption.} We assume that $\Set_0$ is impredicative. This means that
+for $A : \Set_i$ and $B : A \to Set_0$, we have that $(a : A) \to B\,a :
+\Set_0$. In short, $\Set_0$ is closed under arbitrarily indexed dependent
+products. This assumption is necessary to generalize the classic impredicative
+encodings of Böhm and Berarducci. Impredicativity should be handled with care,
+if we are to retain consistency:
+\begin{itemize}
+\item Only the base universe can be impredicative; if $\Set_1$ or any larger universe
+      is impredicative too, the system is inconsistent \cite{TODO}.
+\item Only function types are special in a impredicative universe. Impredicative
+      $\Sigma$-types are inconsistent in our setting. They are consistent only in
+      rather restricted settings, for instance System F is consistent with
+      impredicative \emph{existential} types, which are like $\Sigma$-types but with
+      a positive recursion principle instead of negative projections \cite{TODO}.
+\item Impredicative $\Set_0$ is inconsistent with the law of excluded middle
+      (LEM). This is not really a concern for us, as we will not use LEM in the following,
+      and actually we don't use LEM anywhere in this thesis.
+\end{itemize}
+
+\begin{mydefinition} We define the \textbf{impredicative $\Set_0$ models} of ToS in the following.
+These are the same as the standard models which can be used to compute $\blank^A$, i.e.\ the notion
+of algebras for each signature. However, the inductive sorts are fixed to be in $\Set_0$.
+
+For an assumed $j$ level, we define a model in $\ToS_{j+1,j}$, where we have
+
+\end{mydefinition}
+
+
+
+
+
+
+
+\subsection{Awodey-Frey-Speight Encoding}
 
 
 
