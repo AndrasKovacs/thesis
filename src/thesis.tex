@@ -3970,9 +3970,10 @@ can be bumped to $\Set_{i + 1}$.  Th $j$ level doesn't change, which is as
 expected, since $\Set_j$ appears in a negative position in the type of $\Pie$,
 and has to be invariant.
 
-\textbf{Assumption.} We assume that for all $j$, there exists an inhabitant of
-$\syn_j : \ToS_{j+1,j}$ which supports induction. Note the level bump in the first index;
-this is to avoid inconsistency from type-in-type:
+\textbf{Assumption.}
+We assume that for all $j$, there exists $\syn_j : \ToS_{j+1,j}$ which supports
+induction. Note the level bump in the first index; this is to avoid
+inconsistency from type-in-type:
 \begin{alignat*}{3}
   &\Ty &&: \Con \to \Set_{j+1}\\ &\Pie &&: (A : \Set_j) \to (A \to \Ty\,\Gamma)
   \to \Ty\,\Gamma
@@ -4015,7 +4016,7 @@ that for $\Gamma : \Sig_j$ and $i \leq i'$, we have $\Gamma^A_i \leq
 \Gamma^A_{i'}$. For any concrete signature $\Gamma$, this is clearly the case,
 but $\blank\!\leq\!\blank$ is not subject to propositional reasoning, so we
 cannot prove this by internal induction on signatures. We could prove that there
-exists a \emph{lifting}, a $\ms{Lift}\,\Gamma^A_i : \Set_{i'+1 \lub j}$
+exists a \emph{lifting}, a $\ms{Lift}\,\Gamma^A_i : \Set_{i+1 \lub j}$
 which is isomorphic to $\Gamma^A_{i}$. Instead, we take liberties, and work as
 if we had actual cumulative subtyping. This seems acceptable, since by using
 implicit cumulativity, we are already taking the same liberty everywhere, by
@@ -4400,7 +4401,7 @@ the eliminator.
 \label{sec:closed-levitation}
 
 When we previously introduced the ToS, we only specified the notion of model,
-and simply assumed that there is an evident notion of model morphism, and also a
+and simply assumed that there is an evident notion of model morphism and also a
 notion of induction. For the theory of \emph{closed} signatures, we can do
 better, because that ToS is itself a closed FQII theory. This is
 \emph{levitation} \cite{TODO}, i.e.\ the situation where a ToS contains a
@@ -4414,14 +4415,14 @@ bootstrapping process eliminates the need for either
         for QII theories.
   \item Bootstrapping the ToS syntax as ``raw'' syntax, using simple
         inductive types, typing/conversion relations and quotients. This
-        would be very tedious and none too enlightening.
+        would be very tedious and not too enlightening.
 \end{itemize}
 
 In this section we describe levitation for closed signatures. The theory of
 closed signatures does not have $\Pie$, but is otherwise the same as before.  As
 we have seen, the inclusion of $\Pie$ yields a ToS which is itself infinitary,
 which breaks levitation. Moving to a theory of infinitary signatures will
-restore levitation; we revisit this is Section \ref{TODO}.
+restore levitation; we revisit this is Section \ref{sec:iqii-levitation}.
 
 \subsection{Models \& Signatures}
 
@@ -4446,21 +4447,25 @@ ToS model morphism.
 Actually, if we only want to be able to write down signatures and interpret them
 in the semantics, we don't need a ToS syntax. A functional encoding suffices.
 
-\begin{mydefinition} A \textbf{signature} is a function which for every ToS model
-yields a signature in that model. The type of signatures is:
+\begin{mydefinition} A \textbf{bootstrap signature} is a function which for every ToS model
+yields a context in that model. The type of bootstrap signatures is:
 \[
-  \ms{Sig} \defn (i : \ms{Level}) \to (M : \ToS_i) \to \Con_{M}
+  \ms{BootSig} \defn (i : \ms{Level}) \to (M : \ToS_i) \to \Con_{M}
 \]
 Note that this is a universe-polymorphic type. This is not an issue; universe
 polymorphism is a sensible feature in type theories, or alternatively we may
 assume that quantification over levels takes place in some outer theory.
+
+We do not get induction on bootstrap signatures, nor do we automatically
+get any naturality or parametricity property.
+
 \end{mydefinition}
 
 \begin{myexample}
 For $\ms{NatSig}$, we define the expected signature, but we specify it in an arbitrary
 $M$ model instead of the syntax.
 \begin{alignat*}{3}
-  & \NatSig : \Sig\\
+  & \NatSig : \ms{BootSig}\\
   & \NatSig \defn \lambda (i :\ms{Level})(M : \ToS_i).\\
   & \hspace{5.2em}(\emptycon_M\,\ext_M\, (N : \U_M) \,\ext_M\,(\mi{zero} : \El_M\,N)
       \ext_M (\mi{suc} : N\arri_M\El_M\,N))
@@ -4468,10 +4473,10 @@ $M$ model instead of the syntax.
 \end{myexample}
 We might as well use the same notations for signatures as in Section
 \ref{sec:fqiit-tos}, as every signature from before can be unambiguously
-rewritten as an encoded signature.
+rewritten as a bootstrap signature.
 
 With this, we can interpret each signature in an arbitrary ToS model, by
-applying a signature to a model. $\Sig_j$ can be viewed as a precursor to a
+applying a signature to a model. $\ms{BootSig}_j$ can be viewed as a precursor to a
 Böhm-Berarducci-encoding for the theory of signatures, but we only need contexts
 encoded in this way, and not other ToS components. In functional programming,
 this style of encoding is sometimes called ``finally tagless''
@@ -4488,7 +4493,7 @@ On the other hand, if we want to consider term models, we do need a notion of
 induction on ToS.
 
 \begin{mydefinition}[\textbf{Signature for ToS}]
-We define $\ToSSig : \Sig$ as the signature for the theory of signatures.  We
+We define $\ToSSig : \ms{BootSig}$ as the signature for the theory of signatures. We
 present an excerpt from $\ToSSig$ below using internal notation; it should be
 clear that every component can be reproduced. We use $\ms{SigU}$ and
 $\ms{SigEl}$ to disambiguate components inside the signature from ToS
@@ -4506,10 +4511,25 @@ components.
   & ...        &&
 \end{alignat*}
 \end{mydefinition}
-For each $i$, the interpretation of $\ToSSig$ in $\bM_{i}$ yields an flcwf where
+For each $i$, the interpretation of $\ToSSig$ in $\bM_{i}$ yields an flcwf
 $\bGamma$ such that $\Con_{\bGamma} \equiv \ToS_{i}$, that is, objects are
-models of ToS at level $i$. This yields a model theory for ToS, including the notion
-of induction.
+models of ToS at level $i$. This yields a model theory for ToS, which includes
+the notion of induction at level $i$.
+
+We also know by the definition of $\ToS_{i}$ that we have cumulativity,
+i.e.\ $\ToS_{i} \leq \ToS_{i+1}$\footnote{For concrete bootstrap signatures we
+may conclude cumulativity of algebras, but we cannot conclude this universally
+for all bootstrap signatures, since we cannot do induction on them, and we don't
+even assume that they are parametric in levels.}. Hence, we can make the
+following definition:
+
+\begin{mydefinition} $M : \ToS_0$ supports elimination into any universe if
+it supports elimination when lifted by cumulativity to any $\ToS_i$.
+\end{mydefinition}
+
+This notion of (large) elimination is sufficient for the term algebra and
+eliminator constructions in Section \ref{sec:fqiit-term-algebras}. Thus, we were
+able to derive all required concepts just from the notion of model of ToS.
 
 \section{Reductions to Basic Type Formers}
 
@@ -4688,20 +4708,19 @@ Second, there is a different motivation for the initiality construction:
 type formers. Elaboration merely assumes that a categorical core syntax already
 exists, as the target of elaboration, but it is orthogonal to the construction of
 the core syntax. If we have elaboration, we may still want to show a reduction
-of the core syntax, but now are free do perform this construction in whatever
+of the core syntax, but now we are free to perform this construction in whatever
 way is the easiest. We don't have to construct the QIIT out of a raw syntax
 which is intentionally close to the raw syntax that we use in practice! In the
 author's opinion, a great deal of confusion arises from the conflation of the
 two different motivations for the initiality construction. And of these, the second
 motivation is actually valid.
 
-As to which way of construction is easiest: there does not seem to be any truly
-easy way to construct QIITs, but this thesis show that we only have to do it
-once, for a theory of signatures, and then we can construct all other QIITs from
-that in a generic way. In particular, almost all type theories in the wild are
-closed QII theories (with the notable exceptions of our ToS-es), so if we can
-construct closed signatures, we can construct initial models of almost all type
-theories.
+As to which way of construction is easiest: the author does not know of any
+truly easy way, but this thesis shows that we only have to do it once, for a
+theory of signatures, and then we can construct all other QIITs from that in a
+generic way. In particular, almost all type theories in the wild are closed QII
+theories (with the notable exceptions of our ToS-es), so if we can construct
+closed signatures, we can construct initial models of almost all type theories.
 
 What about generic ways to formalize elaboration algorithms? This seems to be a
 lot more difficult. To the author's knowledge there have not been notable
@@ -6005,11 +6024,25 @@ if we are to retain consistency:
       and actually we don't use LEM anywhere in this thesis.
 \end{itemize}
 
-\begin{mydefinition} We define the \textbf{impredicative $\Set_0$ models} of ToS in the following.
-These are the same as the standard models which can be used to compute $\blank^A$, i.e.\ the notion
-of algebras for each signature. However, the inductive sorts are fixed to be in $\Set_0$.
-
-For an assumed $j$ level, we define a model in $\ToS_{j+1,j}$, where we have
+\todo{impredicative models are just $\bM_{0, j}$ models!}
+\begin{mydefinition}
+We define the \textbf{impredicative $\Set_0$ models} of ToS in the following.
+These are the same as the standard models which can be used to compute
+$\blank^A$, i.e.\ the notion of algebras for each signature. However, the
+inductive sorts are fixed to be in $\Set_0$. For some $j$ level, we define an
+element of $\ToS_{j+1,j}$, where we have the following:
+\begin{alignat*}{3}
+  &\Con &&\defn \Set_j \\
+  &\Sub\,\Gamma\,\Delta &&\defn \Gamma \to \Delta \\
+  &\Ty\,\Gamma &&\defn \Gamma \to \Set_j \\
+  &\Tm\,\Gamma\,A &&\defn (\gamma : \Gamma) \to A\,\Gamma \\
+  &...&&\\
+  &\U\,\{\Gamma\} &&\defn \Set_0\\
+  &\El\,a\,\gamma &&\defn a\,\gamma\\
+  &...&&
+\end{alignat*}
+Note that in the definition of $\El$ we implicitly lift $a\,\gamma : \Set_0$ to
+$\Set_j$ by cumulativity.
 
 \end{mydefinition}
 
