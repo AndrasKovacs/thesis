@@ -165,3 +165,239 @@ SGAB t⁻ := λ (α, β). (a t⁻ α, b (t⁻, refl) β)
 
   SGAB (Γ⁻ ▶ A⁻) =
     (α : a (Γ⁻ ▶ A)) × b (Γ⁻ ▶ A⁻, α)
+
+
+-- TERM ALGEBRA OVERHAUL
+--------------------------------------------------------------------------------
+
+- It seems that lambda-encodings work fine in finitary semantics.
+- We want to give a uniform definition for all term algebras, and a generalized
+  definition for recursors n eliminators
+
+SETUP:
+
+- work in 2ltt, but split Ty₀ to Uᵢ cumulative universes, with cumulative subtyping
+
+- Uᵢ closed under Π, Σ, ⊤ and extensional Id
+
+- We don't track universe levels in the outer theory
+
+- outer ToS models (ToSⱼ : Set) have sorts in Set and ext dep in Uⱼ
+- inner ToS models (ToSᵢⱼ : U_(i + 1 ⊔ j + 1)) where sorts are in Uᵢ and ext dep are in Uⱼ
+  ToS_ij ≤ ToS_(i+1)j
+
+  however, in particular M : ToS_i_j we can possibly refine sort sizing, e.g.
+  know that Tm is in U_i' for i' < i
+
+  we have 2 indices to make bootstrapping easy
+
+- assume outer ToS syntax synⱼ, where we have all sorts in Set, but external dependencies
+  are in Uⱼ
+
+- assume flcwf semantics Mᵢⱼ, where sorts are in Uᵢ, ext are in Uⱼ, and the whole model
+  is in the inner theory, i.e. Mᵢⱼ : U_(((i+1)⊔j)+1) j
+  + by having semantics wholly in inner theory, we can avoid preservation isomorphisms
+    for lowering
+
+- Prove alg cumulativity by outer induction: Γᴬᵢ ≤ Γᴬⱼ for i ≤ j
+
+- heterogeneous morphisms: lift sides to the maximum, and have homogeneous morphism
+
+- TODO: rename bold M_ij model everywhere to bold flcwf_ij
+
+
+TERM ALGEBRAS
+
+- 1. assume some model M : ToS_ij such that M.Tm Γ (El a) is in Uₖ
+- 2. for Ω : Sig_j, we construct Ωᵀ id : Ωᴬₖ (underlying sorts are in Uₖ)
+
+We use ↓_ to refer to interpretation of syn to M model, -ᴬ interp into Aₖ model
+
+(Γ : Con)ᵀ     : (ν : M.Sub ↓Ω ↓Γ) → Γᴬ
+(σ : Sub Γ Δ)ᵀ : (ν : M.Sub ↓Ω ↓Γ) → Δᵀ (↓σ ∘ ν) = σᴬ (Γᵀ ν)
+(A : Ty Γ)ᵀ    : (ν : M.Sub ↓Ω ↓Γ)(t : M.Tm ↓Ω (↓A[ν])) → Aᴬ (Γᵀ ν)
+(t : Tm Γ A)ᵀ  : (ν : M.Sub ↓Ω ↓Γ) → Aᵀ ν (↓t[ν]) = tᴬ (Γᵀ ν)
+
+
+Uᵀ (ν : Sub ↓Ω ↓Γ) (a : M.Tm ↓Ω U) : Uᵢ
+Uᵀ ν a := M.Tm ↓Ω (El a)                   OK
+
+(El a)ᵀ ν (t : Tm ↓Ω (El ↓a[ν])) : Tm ↓Ω (El ↓a[ν])
+(El a)ᵀ ν t := t  OK
+
+--------------------------------------------------------------------------------
+
+-- OK
+
+* syntactic term algebras
+  if we have synⱼ : ToS_(j + 1) j, we get term algs in Ωᴬ_(j + 1)
+
+* predicative BB-encodings
+
+  Take Aᵢ : ToS_((i+1 ⊔ j) + 1)_j
+
+    - we know Aᵢ.Tm Γ (El a) :
+       Γ : U(i+1 ⊔ j)
+       a : Γ → Uᵢ
+
+       (γ : Γ) → aᴬ γ : U (i + 1) ⊔ j
+    - hence small terms are in U ((i + 1)⊔j)
+    - We get Ωᵀ id : Ωᴬ_(i + 1 ⊔ j)
+
+* impredicative BB-encodings
+
+  assume U₀ impredicative
+
+  take A₀ : ToS_((1 ⊔ j)+1)_j
+
+               Γᴬ : U_((i ⊔ j)+1)
+	       aᴬ : Γᴬ → U₀
+     now, A₀.Tm Γ (El a) = (γ : Γᴬ) → aᴬ γ : U₀
+     hence Ωᵀ id : Ωᴬ₀
+
+* AFS endcoding
+  same as BB-encoding
+
+
+RECURSORS
+
+  - we have M: ToS_i_j s.t. M.Tm Γ (El a) is in U_k
+  - hence, Ωᵀ id : Ωᴬₖ
+
+  - THEOREM: if we have k ≤ l and a (heterogeneous) model morphism from M to Aₗ, then
+    for each ω : Ωᴬₗ, we have a morphism from (Ωᵀ id) to ω.
+
+  ASSUME ω :  Ωᴬₗ,  F : Sub M Aₗ, ↓ : Sub Syn M
+
+  σ : Sub Γ Δ
+  σᴹₗ : Γᴹ γ₀ γ₁ → Δᴹ (σᴬ γ₀) (σᴬ γ₁)
+
+  (Γ : Con)ᴿ     : (ν : Sub ↓Ω ↓Γ) → Γᴹ (F ν (Ωᵀ id)) (F ν ω)
+  (σ : Sub Γ Δ)ᴿ : (ν : Sub ↓Ω ↓Γ) → Δᴿ (↓σ ∘ ν) = σᴹ (Γᴿ ν)
+  (A : Ty Γ)ᴿ    : (ν : Sub ↓Ω ↓Γ)(t : Tm ↓Ω (↓A[ν])) → Aᴹ (F t (Ωᵀ id))(F t ω) (Γᴿ ν)
+  (t : Tm Γ A)ᴿ  : (ν : Sub ↓Ω ↓Γ) → Aᴿ ν (↓t[ν]) = tᴬ (Γᴿ ν)
+
+  Uᴿ : (ν : Sub ↓Ω ↓Γ)(a : M.Tm ↓Ω U) → Uᴹₗ (F a (Ωᵀ id) (F a ω)) (Γᴿ ν)
+     : (ν : Sub ↓Ω ↓Γ)(a : M.Tm ↓Ω U) → F a (Ωᵀ id) → F a ω
+
+     F a (Ωᵀ id) → F a ω
+
+     a : M.Tm ↓Ω U
+     F a : Ωᴬₗ → Uₗ
+
+     F a (Ωᵀ id) : Uₗ
+
+     a : Ωᴬₗ → Uₗ
+
+     a (Ωᵀ id) → a ω
+
+     aᴬ (Ωᵀ id) = M.Tm ↓Ω (El a)
+
+     t : F a (Ωᵀ id)
+       : M.Tm ↓Ω (El a)
+     F t : (ω : Ωᴬ)
+
+
+NOT EVEN BB ENCODINGS WORKS!
+
+  TODO: figure out BB encoding
+
+
+
+-- (t : Tm Γ A)ᵀ  : (ν : M.Sub ↓Ω ↓Γ) → Aᵀ ν (↓t[ν]) = tᴬ (Γᵀ ν)
+
+
+
+Uᴹₗ (F a (Ωᵀ id) (F t ω)) (Γᴿ ν)
+
+  Uᴿ : (ν : Sub ↓Ω ↓Γ)(a : M.Tm ↓Ω U) → Uᴹₗ (F a (Ωᵀ id) (F t ω)) (Γᴿ ν)
+  Uᴿ ν a =
+    goal :  F a (Ωᵀ id) → F t ω
+
+
+
+
+
+
+
+  El ...
+
+
+* syntax
+
+    assume synⱼ : ToS_j+1_j
+    assume ω : Ωᴬₗ for arbitrary ₗ
+
+    we need: morphism from synⱼ to Aₗ
+    - which we have by recursion  (OK)
+     (recursion: there is heterogeneous morphism from synⱼ to any M : ToS_i_j)
+
+* predicative BB-encoding
+
+  Aᵢ : ToS_((i+1 ⊔ j) + 1)_j, but we know that Tm Γ El is in (i+1 ⊔ j)
+
+  hence, we need morphism from Aᵢ to Aₗ for some l
+
+    Aᵢ :
+      Con = U_(i+1 ⊔ j)
+      Ty Γ = Γ → U_(i+1 ⊔ j)
+      Sub Γ Δ = Γ → Δ
+      Tm Γ A = Π Γ A
+      U γ = Uᵢ
+      El a γ = a γ
+
+    Aₗ :
+      Con = U_(l+1 ⊔ j)
+      Ty Γ = Γ → U_(l+1 ⊔ j)
+      Sub Γ Δ = Γ → Δ
+      Tm Γ A = Π Γ A
+      U γ = Uₗ
+
+    F : Sub Aᵢ Aₗ
+
+    Con : U_(i+1 ⊔ j) → U_(l+1 ⊔ j)
+
+       if i ≤ l, then we have function
+
+    a : M.Tm ↓Ω U
+
+    t : M.Tm ↓Ω (El a)     goal  (ω : Ωᴬₗ) → aᴬₗ ω
+
+     F t : Aₗ.Tm (F ↓Ω) (F (El a))
+     F t : Aₗ.Tm Ωᴬₗ (Aₗ.El (F a))
+         : (ω : Ωᴬₗ) → F a ω
+
+     F t ω : F a ω
+
+     goal : aᴬₗ ω
+
+------------------------------------------------------------
+
+RECURSOR
+    -
+
+    - outer: Set, ToS signature in Set, we have induction
+    - inner: Uᵢ cumulative
+
+    - i : univ of inductive sorts
+    - j : univ of external deps
+    - k : univ of Tm
+
+  - we have M: ToS_i_j  s.t.  M.Tm Γ (El a) is in U_k
+  - hence, Ωᵀ id : Ωᴬₖ
+
+  - THEOREM: if we have k ≤ l and a (heterogeneous) model morphism from M to Aₗ, then
+    for each ω : Ωᴬₗ, we have a morphism from (Ωᵀ id) to ω.
+
+  ASSUME ω :  Ωᴬₗ,  F : Sub M Aₗ, ↓ : Sub Syn M
+
+  σ : Sub Γ Δ
+  σᴹₗ : Γᴹ γ₀ γ₁ → Δᴹ (σᴬ γ₀) (σᴬ γ₁)
+
+  (Γ : Con)ᴿ     : (ν : Sub ↓Ω ↓Γ) → Γᴹ (F ν (Ωᵀ id)) (F ν ω)
+  (σ : Sub Γ Δ)ᴿ : (ν : Sub ↓Ω ↓Γ) → Δᴿ (↓σ ∘ ν) = σᴹ (Γᴿ ν)
+  (A : Ty Γ)ᴿ    : (ν : Sub ↓Ω ↓Γ)(t : Tm ↓Ω (↓A[ν])) → Aᴹ (F t (Ωᵀ id))(F t ω) (Γᴿ ν)
+  (t : Tm Γ A)ᴿ  : (ν : Sub ↓Ω ↓Γ) → Aᴿ ν (↓t[ν]) = tᴬ (Γᴿ ν)
+
+  Uᴿ : (ν : Sub ↓Ω ↓Γ)(a : M.Tm ↓Ω U) → Uᴹₗ (F a (Ωᵀ id) (F a ω)) (Γᴿ ν)
+     : (ν : Sub ↓Ω ↓Γ)(a : M.Tm ↓Ω U) → F a (Ωᵀ id) → F a ω
