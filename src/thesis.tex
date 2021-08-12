@@ -1817,12 +1817,12 @@ an intuitive staging interpretation for the operators in the $\Lift$ syntax:
 \begin{itemize}
 \item
   $\Lift\!A$ is the type of $A$-expressions. This corresponds to $a\,\ms{code}$
-  in MetaOcaml \cite{TODO} and $\ms{Exp}\,a$ in Template Haskell.
+  in MetaOcaml \cite{kiselyov14metaocaml} and $\ms{TExp}\,a$ in typed Template Haskell.
 \item
   $\up$ is \emph{quoting}, which creates an expression from any inner term. This is
-  $.\lab\blank\rab.$ in MetaOCaml and $[|\blank|]$ in Template Haskell.
+  $.\lab\blank\rab.$ in MetaOCaml and $[||\blank||]$ in typed Template Haskell.
 \item $\down$ is \emph{splicing}, which inserts the result of a meta-level computation into
-  an object-level expression. This is $\sim$ in MetaOCaml and $\$$ in Template Haskell.
+  an object-level expression. This is $\sim\!(\blank)$ in MetaOCaml and $\$\$(\blank)$ in typed Template Haskell.
 \end{itemize}
 For example, in the $\Lift$ syntax, we might write a polymorphic identity function
 which acts on inner types in two different ways:
@@ -1982,7 +1982,7 @@ the underlying category of $\hmbbC$, defined as follows.
 \end{alignat*}
 \end{mydefinition}
 
-\begin{mylemma}[\textbf{Yoneda lemma}] We have $\Sub\,(\yon\,i)\,\Gamma \simeq |\Gamma|\,i$ as an isomorphism of sets, natural in $i$ \cite{TODO}.
+\begin{mylemma}[\textbf{Yoneda lemma}] We have $\Sub\,(\yon\,i)\,\Gamma \simeq |\Gamma|\,i$ as an isomorphism of sets, natural in $i$ \cite[Section~III.2]{maclane98categories}.
 \end{mylemma}
 
 \noindent\emph{Corollary.} If we choose $\Gamma$ to be $\yon j$, it follows that
@@ -2067,7 +2067,9 @@ projections follow straightforwardly.
 
 \begin{mydefinition}
 We define \textbf{$\Pi$-types} in the following. This is a bit more complicated,
-so first we look at the simpler case of presheaf exponentials.
+so first we look at the simpler case of presheaf exponentials. We source this
+example from \cite[Section~I.]{maclane2012sheaves}. The reader may refer to
+ibid.\ for an overview of constructions in presheaf categories.
 
 The exponential $\Delta^\Gamma : \Con$ is characterized by the isomorphism
 $\Sub\,(\Gamma \otimes \Delta)\,\Xi\,\simeq\,\Sub\,\Gamma\,(\Xi^\Delta)$, where
@@ -2407,8 +2409,6 @@ strict preservation; below we have weak preservation.
 
 \subsection{Term Algebras}
 \label{sec:simple-2ltt-term-algebras}
-
-\todo{Try to skip the lowering isomorphisms altogether by only using inner AD and outer MS}
 
 For term algebras, we need to assume a bit more in the inner theory. For
 starters, it has to support the theory of signatures. In order to avoid name
@@ -3071,6 +3071,14 @@ same for induction.  We assume $\ms{ind},\,\ms{ind'} : \ms{Inductive}\,\Gamma$
 and $A : \Ty\,\Gamma$. We have
 $\reflect\,(\ms{ind}\,(\Id\,(\ms{ind}\,A)\,(\ms{ind'}\,A))) : \ms{ind}\,A \equiv
 \ms{ind'}\,A$. Since $A$ is arbitrary, by function extensionality we also have $\ms{ind} \equiv \ms{ind'}$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:flcwf-term-uniqueness}
+$\Tm\,\Gamma\,A$ in an flcwf is propositional when $\Gamma$ is initial.
+\end{theorem}
+\begin{proof} Assuming $t,\,u : \Tm\,\Gamma\,A$, we have
+$\reflect\,(\ms{ind}\,(\Id\,t\,u)) : t \equiv u$.
 \end{proof}
 
 Note that the above proof does not rely on $\Sigma$-types in the flcwf, so why
@@ -3848,7 +3856,6 @@ other columns as well. The interpretation functions can be defined in two ways:
 \end{itemize}
 However, the two versions coincide because of the initiality of ToS syntax.
 
-
 \begin{figure}
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|  }
@@ -3903,9 +3910,13 @@ between propositional and definitional inner equality.
 constructions. So far, we have been consistently ignoring universe levels. Now,
 size questions are less obvious, and quite relevant to a) ensuring the
 consistency of assumed induction principles b) laying groundwork for
-bootstrapped semantics and self-describing signatures in Chapter \ref{TODO}. In
-the following, we describe the new universe setup, and adapt the previously
-described signatures and semantics to it.
+bootstrapped semantics and self-describing signatures in Section \ref{sec:closed-levitation}.
+
+Universe levels are a fairly bureaucratic detail in type theories. In the
+following we try to be as informal as is permitted by the necessity to address
+and represent all the essential size problems in our subjects. In the following,
+we describe the new universe setup, and adapt the previously described
+signatures and semantics to it.
 
 \subsection{Universes \& Metatheory}
 \label{sec:cumulative-ett}
@@ -4173,17 +4184,19 @@ $\Set_0$.
 We continue with the construction of recursors. This is not necessary, strictly
 speaking, since recursion is derivable from elimination, so it would suffice to
 only construct eliminators. We still present recursors, for the sake of matching
-the presentation in Chapter \ref{chap:simple-inductive-signatures}. Also, the
-Böhm-Beraducci encodings in Section \ref{sec:bb-encoding} will support recursion
-but not elimination, so it makes sense to try to ``warm up'' to that case as
-well.
+the presentation in Chapter \ref{chap:simple-inductive-signatures}.
 
-The goal is to construct a morphism from a term algebra to any other $\omega
-: \Omega^A$ algebra. However, we have to handle universe levels as well. We want
+%% Also, the
+%% Böhm-Beraducci encodings in Section \ref{sec:bb-encoding} will support recursion
+%% but not elimination, so it makes sense to try to ``warm up'' to that case as
+%% well.
+
+The goal is to construct a morphism from a term algebra to any other $\omega :
+\Omega^A$ algebra. However, we have to handle universe levels as well. We want
 to be able to eliminate from the term algebra, which was constructed at the
-lowest possible level, to any other universe. Right now we don't have a notion
-of ``heterogeneous'' morphism, between algebras at different levels.  We prefer
-to skip this, and keep matters as simple as possible. We do the following:
+lowest possible level, to any other universe. So far we haven't introduced a
+``heterogeneous'' notion of morphism, between algebras at different levels. We
+get this from cumulativity.
 \begin{itemize}
   \item We assume $\Omega : \Sig_j$, for which we already have the term algebra $\Omega^T\,\id : \Omega^A_{j+1}$.
   \item We assume some $k \geq j + 1$, and an $\omega : \Omega^A_{k}$, the target of recursion.
@@ -4196,7 +4209,22 @@ recursor. On the other hand, if we want to eliminate to $k < j + 1$, we can
 instead lift the target $\omega : \Omega^A_{k}$ algebra to $j + 1$, and again
 use a constructed recursor.
 
-\todo{maybe give example}
+In general, for any $\omega : \Omega^A_{i}$ and $\omega' : \Omega^A_{j}$, the
+notion of heterogeneous morphism between them arises by lifting both algebras to
+$i \lub j$, and taking homogeneous morphisms between these.
+
+\begin{myexample}
+The $\ms{NatSig} : \Sig_0$ signature gives rise to $\ms{NatSig}^T\,\id :
+\ms{NatSig}^A_1$. This consist of $\ms{Nat} : \Set_1$ together with $\zero$ and
+$\suc$. Assuming a recursion principle as described above, and $\Bool : \Set_0$,
+we may define an $\ms{isZero} : \Nat \to \Bool$ function by ``downwards''
+elimination.  We have that $(\Bool,\,\true,\,\lambda\,\_.\,\false) :
+\ms{NatSig}^A_0$, so by cumulativity we also have
+$(\Bool,\,\true,\,\lambda\,\_.\,\false) : \ms{NatSig}^A_1$, hence by recursion
+we get the desired morphism from $\ms{NatSig}^T\,\id$ to this model, which
+contains the $\Nat \to \Bool$ function. We can also eliminate ``upwards'' by
+lifting $\ms{NatSig}^T\,\id$ to any $\ms{NatSig}^A_i$ for $i > 1$.
+\end{myexample}
 
 We define $\blank^R$ by induction on $\syn_j$. From this, we will obtain the
 recursor as $\Omega^R\,\id$.
@@ -4392,222 +4420,221 @@ the eliminator.
   and elimination is equivalent to initiality by Theorem \ref{thm:initiality-induction}.
 \end{proof}
 
-\section{Lambda-Encodings}
-\label{sec:lambda-encodings}
+%% \section{Lambda-Encodings}
+%% \label{sec:lambda-encodings}
 
-In \emph{lambda-encodings} of a signature, inductive data is represented as
-functions. The motivation is the following: we construct inductive types from
-few assumptions, but we also get weaker induction principles. There is a
-spectrum; at the end of it we have the construction of full-strength QIITs from
-ToS syntax. In this section, we consider the following two lambda-encodings.
-\begin{itemize}
-  \item The Böhm-Berarducci encodings \cite{boehm-berarducci}, or BB-encodings
-    henceforth, require an impredicative base universe. We have non-dependent
-    elimination (recursion) from BB-encoded types to the base universe, but not
-    to any other universe.
-  \item Impredicative encodings as given by Awodey, Frey and Speight
-    \cite{afs-encoding}, or AFS-encodings in short, additionally assume that the
-    base universe is closed under an intensional identity type which supports
-    function extensionality. These encodings allow dependent elimination, but
-    also only targeting the impredicative universe.
-\end{itemize}
-It turns out that the above lambda-encodings are \emph{also term algebra
-constructions}: they repeat Section \ref{sec:fqii-term-algebra-construction}
-with minor variations. The main difference is that in the syntactic term algebra
-construction, we build algebras from terms of a ToS syntax, while in
-lambda-encodings we build algebras from terms of other ToS models.
+%% In \emph{lambda-encodings} of a signature, inductive data is represented as
+%% functions. The motivation is the following: we construct inductive types from
+%% few assumptions, but we also get weaker induction principles. There is a
+%% spectrum; at the end of it we have the construction of full-strength QIITs from
+%% ToS syntax. In this section, we consider the following two lambda-encodings.
+%% \begin{itemize}
+%%   \item The Böhm-Berarducci encodings \cite{boehm-berarducci}, or BB-encodings
+%%     henceforth, require an impredicative base universe. We have non-dependent
+%%     elimination (recursion) from BB-encoded types to the base universe, but not
+%%     to any other universe.
+%%   \item Impredicative encodings as given by Awodey, Frey and Speight
+%%     \cite{afs-encoding}, or AFS-encodings in short, additionally assume that the
+%%     base universe is closed under an intensional identity type which supports
+%%     function extensionality. These encodings allow dependent elimination, but
+%%     also only targeting the impredicative universe.
+%% \end{itemize}
+%% It turns out that the above lambda-encodings are \emph{also term algebra
+%% constructions}: they repeat Section \ref{sec:fqii-term-algebra-construction}
+%% with minor variations. The main difference is that in the syntactic term algebra
+%% construction, we build algebras from terms of a ToS syntax, while in
+%% lambda-encodings we build algebras from terms of other ToS models.
 
-\subsection{Metatheory}
+%% \subsection{Metatheory}
 
-We don't have to assume ToS syntax in lambda-encodings, but we still need to
-define the actual constructions by induction on signatures. So we need yet
-another variation of the universe setup, which we describe in the following.
+%% We don't have to assume ToS syntax in lambda-encodings, but we still need to
+%% define the actual constructions by induction on signatures. So we need yet
+%% another variation of the universe setup, which we describe in the following.
 
-We work in 2LTT, but we assume countable cumulative universes $\U_i$ in the
-inner theory, with $\U_i \leq \U_{i+1}$ and all $\U_i$ are sub-universes of
-$\Ty_0$. All inner universes have $\Pi$, $\Sigma$, $\top$, and extensional
-identity.
+%% We work in 2LTT, but we assume countable cumulative universes $\U_i$ in the
+%% inner theory, with $\U_i \leq \U_{i+1}$ and all $\U_i$ are sub-universes of
+%% $\Ty_0$. All inner universes have $\Pi$, $\Sigma$, $\top$, and extensional
+%% identity.
 
-We write $\ToS_j : \Set_1$ for a ToS model where $\Pie$ abstracts over $\U_j$
-and underlying sets are in $\Set_0$. We assume that $\ms{syn}_j : \ToS_j$
-syntaxes exist, and write $\Sig_j$ for $\Con_{\ms{syn}_j}$.
+%% We write $\ToS_j : \Set_1$ for a ToS model where $\Pie$ abstracts over $\U_j$
+%% and underlying sets are in $\Set_0$. We assume that $\ms{syn}_j : \ToS_j$
+%% syntaxes exist, and write $\Sig_j$ for $\Con_{\ms{syn}_j}$.
 
-We have $\bM_{i,j}$ for the isofibrant flcwf models of ToS, where underlying
-sorts of algebras are in $\U_i$, and $\Piinf$ and $\Pie$ abstract over
-$\U_j$. Additionally, in $\bM_{i,j}$ we use inner type formers everywhere, so
-that for each syntactic signature we get an inner flcwf from the semantics.
+%% We have $\bM_{i,j}$ for the isofibrant flcwf models of ToS, where underlying
+%% sorts of algebras are in $\U_i$, and $\Piinf$ and $\Pie$ abstract over
+%% $\U_j$. Additionally, in $\bM_{i,j}$ we use inner type formers everywhere, so
+%% that for each syntactic signature we get an inner flcwf from the semantics.
 
-In summary, signatures are meta-theoretic, but they may depend on external types
-in $\U_j$, and their semantics lies entirely in the inner theory. This way we
-will be able to completely avoid the lowering maps and their preservation
-isomorphisms that we have in Section \ref{sec:simple-2ltt-term-algebras}. We
-just eliminate from outer signatures to the inner theory, and there is nothing
-to lower. Remark: in Section \ref{sec:simple-2ltt-term-algebras} we could not
-similarly get rid of all lowerings, since we wanted to formally distinguish weak
-and definitional equations, and the latter was only available as an outer type.
+%% In summary, signatures are meta-theoretic, but they may depend on external types
+%% in $\U_j$, and their semantics lies entirely in the inner theory. This way we
+%% will be able to completely avoid the lowering maps and their preservation
+%% isomorphisms that we have in Section \ref{sec:simple-2ltt-term-algebras}. We
+%% just eliminate from outer signatures to the inner theory, and there is nothing
+%% to lower. Remark: in Section \ref{sec:simple-2ltt-term-algebras} we could not
+%% similarly get rid of all lowerings, since we wanted to formally distinguish weak
+%% and definitional equations, and the latter was only available as an outer type.
 
-Furthermore, we assume that $\U_0$ is impredicative. This means that for $A :
-\U_i$ and $B : A \to \U_0$, we have that $(a : A) \to B\,a : \U_0$. In short,
-$\U_0$ is closed under arbitrarily indexed dependent products. Impredicativity
-should be handled with care, if we are to retain consistency:
-\begin{itemize}
-\item Only the base universe can be impredicative; if $\U_1$ or any larger universe
-      is impredicative in addition, the system is inconsistent \cite{TODO}.
-\item Only function types are special in an impredicative universe. Impredicative
-      $\Sigma$-types are inconsistent in our setting. They are consistent only in
-      rather restricted settings, for instance System F is consistent with
-      impredicative \emph{existential} types, which are like $\Sigma$-types but with
-      a positive recursion principle instead of negative projections \cite{TODO}.
-\item Impredicative $\U_0$ is inconsistent with the law of excluded middle
-      (LEM). This is not really a concern for us, as we will not use LEM in the following,
-      and actually we don't use LEM anywhere in this thesis.
-\end{itemize}
+%% Furthermore, we assume that $\U_0$ is impredicative. This means that for $A :
+%% \U_i$ and $B : A \to \U_0$, we have that $(a : A) \to B\,a : \U_0$. In short,
+%% $\U_0$ is closed under arbitrarily indexed dependent products. Impredicativity
+%% should be handled with care, if we are to retain consistency:
+%% \begin{itemize}
+%% \item Only the base universe can be impredicative; if $\U_1$ or any larger universe
+%%       is impredicative in addition, the system is inconsistent \cite{TODO}.
+%% \item Only function types are special in an impredicative universe. Impredicative
+%%       $\Sigma$-types are inconsistent in our setting. They are consistent only in
+%%       rather restricted settings, for instance System F is consistent with
+%%       impredicative \emph{existential} types, which are like $\Sigma$-types but with
+%%       a positive recursion principle instead of negative projections \cite{TODO}.
+%% \item Impredicative $\U_0$ is inconsistent with the law of excluded middle
+%%       (LEM). This is not really a concern for us, as we will not use LEM in the following,
+%%       and actually we don't use LEM anywhere in this thesis.
+%% \end{itemize}
 
-\subsection{Böhm-Berarducci Encoding}
-\label{sec:bb-encoding}
+%% \subsection{Böhm-Berarducci Encoding}
+%% \label{sec:bb-encoding}
 
-BB-encodings are term algebras, where we use terms from the \emph{standard
-impredicative model} of ToS.
+%% BB-encodings are term algebras, where we use terms from the \emph{standard
+%% impredicative model} of ToS.
 
-\begin{mydefinition}[\textbf{Standard impredicative model}]
-For some $j$ level, we get the standard impredicative ToS model $\bmsA_j$ by
-taking $\bM_{0,j}$ and projecting out first components from all of its
-components. This yields the $\blank^A_0$ interpretation when used as a target
-model of recursion. In the resulting types of algebras, the underlying sorts
-are in the impredicative base universe $\U_0$. We list some of the components of
-$\bmsA_j$:
-\begin{alignat*}{3}
-  &\Con &&\defn \U_{j\lub 1} \\
-  &\Sub\,\Gamma\,\Delta &&\defn \Gamma \to \Delta \\
-  &\Ty\,\Gamma &&\defn \Gamma \to \U_{j \lub 1} \\
-  &\Tm\,\Gamma\,A &&\defn (\gamma : \Gamma) \to A\,\gamma \\
-  &...&&\\
-  &\U\,\gamma &&\defn \U_0\\
-  &\El\,a\,\gamma &&\defn a\,\gamma\\
-  &...&&
-\end{alignat*}
-Note that in the definition of $\U$ and $\El$ we implicitly lift $\U_0 : \U_1$
-to $\U_{j\lub 1}$ and $a\,\gamma : \U_0$ to $\U_{j + 1}$ by
-cumulativity. Likewise, we lift the right hand sides of $\Sub$ and $\Tm$ from
-$\U_{j\lub 1}$ to $\U_{(j\lub 1) + 1}$, to match the level of $\Con$ and $\Ty$ in the model.
-\end{mydefinition}
+%% \begin{mydefinition}[\textbf{Standard impredicative model}]
+%% For some $j$ level, we get the standard impredicative ToS model $\bmsA_j$ by
+%% taking $\bM_{0,j}$ and projecting out first components from all of its
+%% components. This yields the $\blank^A_0$ interpretation when used as a target
+%% model of recursion. In the resulting types of algebras, the underlying sorts
+%% are in the impredicative base universe $\U_0$. We list some of the components of
+%% $\bmsA_j$:
+%% \begin{alignat*}{3}
+%%   &\Con &&\defn \U_{j\lub 1} \\
+%%   &\Sub\,\Gamma\,\Delta &&\defn \Gamma \to \Delta \\
+%%   &\Ty\,\Gamma &&\defn \Gamma \to \U_{j \lub 1} \\
+%%   &\Tm\,\Gamma\,A &&\defn (\gamma : \Gamma) \to A\,\gamma \\
+%%   &...&&\\
+%%   &\U\,\gamma &&\defn \U_0\\
+%%   &\El\,a\,\gamma &&\defn a\,\gamma\\
+%%   &...&&
+%% \end{alignat*}
+%% Note that in the definition of $\U$ and $\El$ we implicitly lift $\U_0 : \U_1$
+%% to $\U_{j\lub 1}$ and $a\,\gamma : \U_0$ to $\U_{j + 1}$ by
+%% cumulativity. Likewise, we lift the right hand sides of $\Sub$ and $\Tm$ from
+%% $\U_{j\lub 1}$ to $\U_{(j\lub 1) + 1}$, to match the level of $\Con$ and $\Ty$ in the model.
+%% \end{mydefinition}
 
-\subsubsection{Construction of BB-encodings}
+%% \subsubsection{Construction of BB-encodings}
 
-We assume a $j$ level and $\Omega : \Sig_j$. In the following, we write $\bmsA$
-for $\bmsA_j$ and $\blank^A$ for the interpretation into $\bmsA$. We write
-$\Con$, $\Sub$, $\Ty$ and $\Tm$ for components of $\ms{syn}_j$, and write
-$\Tm_{\bmsA}$, $\Sub_{\bmsA}$ etc.\ for components in $\bmsA$. We define
-$\blank^{BB}$ by induction on $\syn_j$. The underlying functions of the
-eliminator are the following:
-\begin{alignat*}{3}
-  &\blank^{BB} &&: (\Gamma : \Con)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Gamma^A\\
-  &\blank^{BB} &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Delta^{BB}\,(\sigma^A \circ \nu) \equiv \sigma^A\,(\Gamma^{BB}\,\nu)\\
-  &\blank^{BB} &&: (A : \Ty\,\Gamma)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Tm_{\bmsA}\,\Omega^A\,(A^A[\nu])
-  \to A^A\,(\Gamma^{BB}\,\nu)\\
-  &\blank^{BB} &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to A^{BB}\,\nu\,(t^A[\nu]) \equiv t^A\,(\Gamma^{BB}\,\nu)
-\end{alignat*}
-As we mentioned, we use components of $\bmsA$ instead of $\syn_j$ in the
-construction. This means that we have to insert a couple of extra $\blank^A$
-interpretations. Previously, $\syn_j$ was what we did induction on, and at
-the same time what we built term algebras from. Now we still define
-$\blank^{BB}$ by induction on syntactic signatures, but term algebras are built
-from terms of a $\bmsA$. Thus we need to use the $\blank^A$ morphism
-between the two models to make them line up.
+%% We assume a $j$ level and $\Omega : \Sig_j$. In the following, we write $\bmsA$
+%% for $\bmsA_j$ and $\blank^A$ for the interpretation into $\bmsA$. We write
+%% $\Con$, $\Sub$, $\Ty$ and $\Tm$ for components of $\ms{syn}_j$, and write
+%% $\Tm_{\bmsA}$, $\Sub_{\bmsA}$ etc.\ for components in $\bmsA$. We define
+%% $\blank^{BB}$ by induction on $\syn_j$. The underlying functions of the
+%% eliminator are the following:
+%% \begin{alignat*}{3}
+%%   &\blank^{BB} &&: (\Gamma : \Con)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Gamma^A\\
+%%   &\blank^{BB} &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Delta^{BB}\,(\sigma^A \circ \nu) \equiv \sigma^A\,(\Gamma^{BB}\,\nu)\\
+%%   &\blank^{BB} &&: (A : \Ty\,\Gamma)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Tm_{\bmsA}\,\Omega^A\,(A^A[\nu])
+%%   \to A^A\,(\Gamma^{BB}\,\nu)\\
+%%   &\blank^{BB} &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to A^{BB}\,\nu\,(t^A[\nu]) \equiv t^A\,(\Gamma^{BB}\,\nu)
+%% \end{alignat*}
+%% As we mentioned, we use components of $\bmsA$ instead of $\syn_j$ in the
+%% construction. This means that we have to insert a couple of extra $\blank^A$
+%% interpretations. Previously, $\syn_j$ was what we did induction on, and at
+%% the same time what we built term algebras from. Now we still define
+%% $\blank^{BB}$ by induction on syntactic signatures, but term algebras are built
+%% from terms of a $\bmsA$. Thus we need to use the $\blank^A$ morphism
+%% between the two models to make them line up.
 
-The $\blank^{BB}$ interpretation is defined in the same way as $\blank^T$
-before. The extra $\blank^A$ interpretations make no essential difference,
-because $\blank^A$, being a model morphism, strictly preserves all structure, so
-it always computes ``out of the way''. We need to check tough if $\U$ and $\El$
-still work. We need that
-\[
-\U^{BB} : (\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Tm_{\bmsA}\,\Omega^A\,\U^A \to \U^A\,(\Gamma^{BB}\,\nu)
-\]
-Computing the types, we have
-\[
-\U^{BB} : (\nu : \Omega^A \to \Gamma^A) \to (\Omega^A \to \U_0) \to \U_0
-\]
-In $\blank^T$, we had that $\U^T\,\nu\,a \defn \Tm\,\Omega\,(\El\,a)$. Now, if
-we are in an arbitrary model of ToS, we only know that $\Tm$ returns in the same
-universe as $\Con$, $\Sub$ and $\Ty$. In our case, that's $\U_{(j \lub 1) + 1}$,
-which is clearly too large. However, in the $\bmsA$ model, we have that
-$\Tm_{\bmsA}\,\Omega^A\,(\El\,a) \equiv (\gamma : \Omega^A) \to a^A\,\gamma$,
-where $a^A\,\gamma : \U_0$, and by impredicativity we have $(\gamma : \Omega^A)
-\to a^A\,\gamma : \U_0$. Hence, we can still use the previous definition:
-\[
-  \U^{BB}\,\nu\,a \defn \Tm_{\bmsA}\,\Omega^A\,(\El\,a)
-\]
-Likewise for $\El$:
-\begin{alignat*}{3}
-  &(\El\,a)^{BB} : (\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A)
-          \to \Tm_{\bmsA}\,\Omega^A\,(\El\,(a^A[\nu])) \to \Tm_{\bmsA}\,\Omega^A\,(\El\,(a^A[\nu]))\\
-  &(\El\,a)^{BB}\,\nu\,t \defn t
-\end{alignat*}
-As we noted, the interpretation of other ToS components is the same as in
-$\blank^T$, modulo extra $\blank^A$ applications.
+%% The $\blank^{BB}$ interpretation is defined in the same way as $\blank^T$
+%% before. The extra $\blank^A$ interpretations make no essential difference,
+%% because $\blank^A$, being a model morphism, strictly preserves all structure, so
+%% it always computes ``out of the way''. We need to check tough if $\U$ and $\El$
+%% still work. We need that
+%% \[
+%% \U^{BB} : (\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Tm_{\bmsA}\,\Omega^A\,\U^A \to \U^A\,(\Gamma^{BB}\,\nu)
+%% \]
+%% Computing the types, we have
+%% \[
+%% \U^{BB} : (\nu : \Omega^A \to \Gamma^A) \to (\Omega^A \to \U_0) \to \U_0
+%% \]
+%% In $\blank^T$, we had that $\U^T\,\nu\,a \defn \Tm\,\Omega\,(\El\,a)$. Now, if
+%% we are in an arbitrary model of ToS, we only know that $\Tm$ returns in the same
+%% universe as $\Con$, $\Sub$ and $\Ty$. In our case, that's $\U_{(j \lub 1) + 1}$,
+%% which is clearly too large. However, in the $\bmsA$ model, we have that
+%% $\Tm_{\bmsA}\,\Omega^A\,(\El\,a) \equiv (\gamma : \Omega^A) \to a^A\,\gamma$,
+%% where $a^A\,\gamma : \U_0$, and by impredicativity we have $(\gamma : \Omega^A)
+%% \to a^A\,\gamma : \U_0$. Hence, we can still use the previous definition:
+%% \[
+%%   \U^{BB}\,\nu\,a \defn \Tm_{\bmsA}\,\Omega^A\,(\El\,a)
+%% \]
+%% Likewise for $\El$:
+%% \begin{alignat*}{3}
+%%   &(\El\,a)^{BB} : (\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A)
+%%           \to \Tm_{\bmsA}\,\Omega^A\,(\El\,(a^A[\nu])) \to \Tm_{\bmsA}\,\Omega^A\,(\El\,(a^A[\nu]))\\
+%%   &(\El\,a)^{BB}\,\nu\,t \defn t
+%% \end{alignat*}
+%% As we noted, the interpretation of other ToS components is the same as in
+%% $\blank^T$, modulo extra $\blank^A$ applications.
 
-\begin{mydefinition} For $\Omega : \Sig_j$, the corresponding \textbf{Böhm-Berarducci encoding}
-is given by $\Omega^{BB}\,\id : \Omega^A$, where $\id : \Sub_{\bmsA}\,\Omega^A\,\Omega^A$, and
-$\id \equiv \lambda \omega.\,\omega$.
-\end{mydefinition}
+%% \begin{mydefinition} For $\Omega : \Sig_j$, the corresponding \textbf{Böhm-Berarducci encoding}
+%% is given by $\Omega^{BB}\,\id : \Omega^A$, where $\id : \Sub_{\bmsA}\,\Omega^A\,\Omega^A$, and
+%% $\id \equiv \lambda \omega.\,\omega$.
+%% \end{mydefinition}
 
-\begin{myexample}
-Consider $\ms{NatSig} \equiv \emptycon \ext (\ms{N} : \U) \ext (\zero :
-\El\,\ms{N}) \ext (\suc : \ms{N} \funi \El\,\ms{N})$. We have
-\[
-  \ms{NatSig}^A \equiv (\ms{N} : \U_0) \times (\zero : \ms{N}) \times (\suc : \ms{N} \to \ms{N})
-\]
-Recall that the $\blank^{BB}$ interpretation computes on $\ms{NatSig}$ entry-wise:
-\[
-  (\Gamma \ext A)^{BB}\,(\nu,\,t) \defn (\Gamma^{BB}\,\nu,\,A^{BB}\,\nu\,t)
-\]
-Hence, when we compute $\ms{NatSig}^{BB}\,\id$, every entry in the term algebra
-is given by applying $A^{BB}$ to the variable which projects the entry.
-We compute the following components in $\ms{NatSig}^{BB}\,\id$:
-\begin{alignat*}{3}
-  &\ms{N} : \U_0\\
-  &\ms{N} \defn \Tm_{\bmsA}\,\NatSig^A\,(\El\,\ms{N}) \equiv ((\mi{alg} : \ms{NatSig}^A) \to \mi{alg}_{\ms{N}})
-\end{alignat*}
-\begin{alignat*}{3}
-  & \zero : \ms{N}                                             &&\suc : \ms{N} \to \ms{N} \\
-  & \zero \defn \lambda\,\mi{alg}.\,\mi{alg}_{\zero}\hspace{2em}&&\suc \defn \lambda\,n\,\mi{alg}.\,\mi{alg}_{\suc}\,(n\,\mi{alg})
-\end{alignat*}
-This is precisely the Böhm-Berarducci encoding of natural numbers in the prior
-literature.
+%% \begin{myexample}
+%% Consider $\ms{NatSig} \equiv \emptycon \ext (\ms{N} : \U) \ext (\zero :
+%% \El\,\ms{N}) \ext (\suc : \ms{N} \funi \El\,\ms{N})$. We have
+%% \[
+%%   \ms{NatSig}^A \equiv (\ms{N} : \U_0) \times (\zero : \ms{N}) \times (\suc : \ms{N} \to \ms{N})
+%% \]
+%% Recall that the $\blank^{BB}$ interpretation computes on $\ms{NatSig}$ entry-wise:
+%% \[
+%%   (\Gamma \ext A)^{BB}\,(\nu,\,t) \defn (\Gamma^{BB}\,\nu,\,A^{BB}\,\nu\,t)
+%% \]
+%% Hence, when we compute $\ms{NatSig}^{BB}\,\id$, every entry in the term algebra
+%% is given by applying $A^{BB}$ to the variable which projects the entry.
+%% We compute the following components in $\ms{NatSig}^{BB}\,\id$:
+%% \begin{alignat*}{3}
+%%   &\ms{N} : \U_0\\
+%%   &\ms{N} \defn \Tm_{\bmsA}\,\NatSig^A\,(\El\,\ms{N}) \equiv ((\mi{alg} : \ms{NatSig}^A) \to \mi{alg}_{\ms{N}})
+%% \end{alignat*}
+%% \begin{alignat*}{3}
+%%   & \zero : \ms{N}                                             &&\suc : \ms{N} \to \ms{N} \\
+%%   & \zero \defn \lambda\,\mi{alg}.\,\mi{alg}_{\zero}\hspace{2em}&&\suc \defn \lambda\,n\,\mi{alg}.\,\mi{alg}_{\suc}\,(n\,\mi{alg})
+%% \end{alignat*}
+%% This is precisely the Böhm-Berarducci encoding of natural numbers in the prior
+%% literature.
 
-Some notes on the computation. In $\zero$, the definition is
-computed as $(\El\,\ms{N})^{BB}\,\id\,\zero$, where $\zero :
-\Tm_{\bmsA}\,\ms{NatSig}^A\,(\El,\ms{N})$, and $\zero \equiv
-\lambda\,\mi{alg}.\,\mi{alg}_{\zero}$, i.e\ it is the $\zero$ variable in the
-$\bA$ model. Hence, we simply return it by the definition $(\El\,a)^{BB}\,\nu\,t
-\equiv t$.
+%% Some notes on the computation. In $\zero$, the definition is
+%% computed as $(\El\,\ms{N})^{BB}\,\id\,\zero$, where $\zero :
+%% \Tm_{\bmsA}\,\ms{NatSig}^A\,(\El,\ms{N})$, and $\zero \equiv
+%% \lambda\,\mi{alg}.\,\mi{alg}_{\zero}$, i.e\ it is the $\zero$ variable in the
+%% $\bA$ model. Hence, we simply return it by the definition $(\El\,a)^{BB}\,\nu\,t
+%% \equiv t$.
 
-In $\suc$, we compute $(\ms{N} \funi \El\,\ms{N})^{BB}\,\id\,\suc$, where again
-$\suc \equiv \lambda\,\mi{alg}.\,\mi{alg}_{\suc}$. According to the definition
-in Section \ref{sec:fqii-term-algebra-construction}, this computes to
-\[
-  \lambda\,(n : \ms{N}).\,(\El\,\ms{N})^{BB}\,(\id,_{\bmsA}\,n)\,(\suc\,n)
-\]
-where $\suc\,n$ is an inductive function application in the $\bA$ model, i.e.\
-$n : \Tm_{\bmsA}\,\ms{NatSig}\,(\El\,\ms{N})$ and $\suc : \Tm_{\bmsA}\,\ms{NatSig}\,(\ms{N} \funi \El\,\ms{N})$,
-and so $\suc\,n \equiv \lambda\,\mi{alg}.\,\mi{alg}_{\suc}\,(n\,\mi{alg})$. We get the expected result
-by the definition of $(\El\,\ms{N})^{BB}$.
-\end{myexample}
+%% In $\suc$, we compute $(\ms{N} \funi \El\,\ms{N})^{BB}\,\id\,\suc$, where again
+%% $\suc \equiv \lambda\,\mi{alg}.\,\mi{alg}_{\suc}$. According to the definition
+%% in Section \ref{sec:fqii-term-algebra-construction}, this computes to
+%% \[
+%%   \lambda\,(n : \ms{N}).\,(\El\,\ms{N})^{BB}\,(\id,_{\bmsA}\,n)\,(\suc\,n)
+%% \]
+%% where $\suc\,n$ is an inductive function application in the $\bA$ model, i.e.\
+%% $n : \Tm_{\bmsA}\,\ms{NatSig}\,(\El\,\ms{N})$ and $\suc : \Tm_{\bmsA}\,\ms{NatSig}\,(\ms{N} \funi \El\,\ms{N})$,
+%% and so $\suc\,n \equiv \lambda\,\mi{alg}.\,\mi{alg}_{\suc}\,(n\,\mi{alg})$. We get the expected result
+%% by the definition of $(\El\,\ms{N})^{BB}$.
+%% \end{myexample}
 
-\subsubsection{Recursor construction}
+%% \subsubsection{Recursor construction}
 
-We analogously rephrase the recursor construction. We assume $\Omega : \Sig_j$
-and $\omega : \Omega^A_0$.  Notice that the target $\omega$ algebra has all
-underlying sets in $\U_0$. This implies we shall be able to eliminate only into
-$\U_0$.
-\begin{alignat*}{3}
-  &\blank^R &&: (\Gamma : \Con)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Gamma^M\,(\nu\,(\Omega^{BB}\,\id))\,(\nu\,\omega)\\
-  &\blank^R &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Delta^R\,(\sigma^A \circ \nu) \equiv \sigma^M\,(\Gamma^R\,\nu)\\
-  &\blank^R &&: (A : \Ty\,\Gamma)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A)(t : \Tm_{\bmsA}\,\Omega^A\,(A^A[\nu]))
-     \to A^M\,(t\,(\Omega^{BB}\,\id))\,(t\,\omega)\,(\Gamma^R\,\nu)\\
-  &\blank^R &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub_{\bmsA}\,\Omega\,\Gamma) \to A^R\,\nu\,(t^A[\nu]) \equiv t^A\,(\Gamma^R\,\nu)
-\end{alignat*}
-
+%% We analogously rephrase the recursor construction. We assume $\Omega : \Sig_j$
+%% and $\omega : \Omega^A_0$.  Notice that the target $\omega$ algebra has all
+%% underlying sets in $\U_0$. This implies we shall be able to eliminate only into
+%% $\U_0$.
+%% \begin{alignat*}{3}
+%%   &\blank^R &&: (\Gamma : \Con)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Gamma^M\,(\nu\,(\Omega^{BB}\,\id))\,(\nu\,\omega)\\
+%%   &\blank^R &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A) \to \Delta^R\,(\sigma^A \circ \nu) \equiv \sigma^M\,(\Gamma^R\,\nu)\\
+%%   &\blank^R &&: (A : \Ty\,\Gamma)&&(\nu : \Sub_{\bmsA}\,\Omega^A\,\Gamma^A)(t : \Tm_{\bmsA}\,\Omega^A\,(A^A[\nu]))
+%%      \to A^M\,(t\,(\Omega^{BB}\,\id))\,(t\,\omega)\,(\Gamma^R\,\nu)\\
+%%   &\blank^R &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub_{\bmsA}\,\Omega\,\Gamma) \to A^R\,\nu\,(t^A[\nu]) \equiv t^A\,(\Gamma^R\,\nu)
+%% \end{alignat*}
 
 %% $\U^{BB}\,\nu\,a \defn \Tm_{\bmsA}\,\Omega^A\,(\El\,a)$ would be ill-typed. The
 %% problem is that $\Tm_{\bmsA}\,\Omega^A\,(\El\,a) \equiv (\omega : \Omega^A) \to
@@ -4622,7 +4649,7 @@ $\U_0$.
 
 %% We have to show that $\Tm_{\bmsA}\,\Omega^A\,(\El\,a)$ i
 
-\subsection{Awodey-Frey-Speight Encoding}
+%% \subsection{Awodey-Frey-Speight Encoding}
 
 \section{Levitation and Bootstrapping for Closed Signatures}
 \label{sec:closed-levitation}
@@ -4631,7 +4658,7 @@ When we previously introduced the ToS, we only specified the notion of model,
 and simply assumed that there is an evident notion of model morphism and also a
 notion of induction. For the theory of \emph{closed} signatures, we can do
 better, because that ToS is itself a closed FQII theory. This is
-\emph{levitation} \cite{TODO}, i.e.\ the situation where a ToS contains a
+\emph{levitation} \cite{chapman2010gentle}, i.e.\ the situation where a ToS contains a
 signature for itself. Levitation is useful for bootstrapping: it shall be
 sufficient to specify \emph{only the notion of model} for ToS, and notions of
 ToS-morphisms, initiality and induction can be computed from that. This
@@ -4640,9 +4667,11 @@ bootstrapping process eliminates the need for either
   \item Assuming that the syntax of ToS already exists as a QIIT. This is
         not too elegant, since we are in the process of building metatheory
         for QII theories.
-  \item Bootstrapping the ToS syntax as ``raw'' syntax, using simple
-        inductive types, typing/conversion relations and quotients. This
-        would be very tedious and not too enlightening.
+  \item Bootstrapping the ToS syntax as ``raw'' syntax, using simple inductive
+        types, typing/conversion relations and quotients. This is very tedious and
+        should be avoided if possible. See Section \ref{sec:finitary-reductions} for
+        a discussion of this approach, although used for slightly different
+        purposes.
 \end{itemize}
 
 In this section we describe levitation for closed signatures. The theory of
@@ -4703,11 +4732,12 @@ We might as well use the same notations for signatures as in Section
 rewritten as a bootstrap signature.
 
 With this, we can interpret each signature in an arbitrary ToS model, by
-applying a signature to a model. $\ms{BootSig}_j$ can be viewed as a precursor to a
-Böhm-Berarducci-encoding for the theory of signatures, but we only need contexts
-encoded in this way, and not other ToS components. In functional programming,
-this style of encoding is sometimes called ``finally tagless''
-\cite{carette2007finally}.
+applying a signature to a model. $\ms{BootSig}_j$ can be viewed as a precursor
+to a Böhm-Berarducci encoding \cite{boehm-berarducci} for the theory of
+signatures, but we only need contexts encoded in this way, and not other ToS
+components. In functional programming, this style of encoding is sometimes
+called ``finally tagless'' \cite{carette2007finally}.
+
 
 If we only want to build the 2LTT-based semantics of signatures, we are done
 with bootstrapping right now. In the 2LTT semantics, we never needed induction
@@ -4720,11 +4750,13 @@ On the other hand, if we want to consider term models, we do need a notion of
 induction on ToS.
 
 \begin{mydefinition}[\textbf{Signature for ToS}]
-We define $\ToSSig : \ms{BootSig}$ as the signature for the theory of signatures. We
-present an excerpt from $\ToSSig$ below using internal notation; it should be
-clear that every component can be reproduced. We use $\ms{SigU}$ and
-$\ms{SigEl}$ to disambiguate components inside the signature from ToS
+We define $\ToSSig : \ms{BootSig}$ as the bootstrap signature for the theory of
+signatures. We present an excerpt from $\ToSSig$ below using internal notation;
+it should be clear that every component can be reproduced. We use $\ms{SigU}$
+and $\ms{SigEl}$ to disambiguate components inside the signature from ToS
 components.
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \Con       &&: \U\\
   & \Sub       &&: \Con \to \Con \to \U\\
@@ -4738,6 +4770,7 @@ components.
   & ...        &&
 \end{alignat*}
 \end{mydefinition}
+\endgroup
 For each $i$, the interpretation of $\ToSSig$ in $\bM_{i}$ yields an flcwf
 $\bGamma$ such that $\Con_{\bGamma} \equiv \ToS_{i}$, that is, objects are
 models of ToS at level $i$. This yields a model theory for ToS, which includes
@@ -4759,6 +4792,7 @@ eliminator constructions in Section \ref{sec:fqiit-term-algebras}. Thus, we were
 able to derive all required concepts just from the notion of model of ToS.
 
 \section{Reductions to Basic Type Formers}
+\label{sec:finitary-reductions}
 
 From the construction of term algebras and eliminators, we get a reduction of
 all QIITs to a single infinitary QIIT, namely the syntax of ToS. We spell this out:
@@ -4832,7 +4866,7 @@ and Brunerie et al.\ \cite{brunerie}.
     propositionally truncated, or defined in a universe of irrelevant
     propositions to begin with), and quotient them by conversion.
   \item
-    We show that these underlying sets support all constructor of the target
+    We show that these underlying sets support all constructors of the target
     QIIT: value constructors are defined using raw constructors, while
     equality constructors follow from conversion rules and quotienting.
   \item
@@ -4939,13 +4973,12 @@ of the core syntax, but now we are free to perform this construction in whatever
 way is the easiest. We don't have to construct the QIIT out of a raw syntax
 which is intentionally close to the raw syntax that we use in practice! In the
 author's opinion, a great deal of confusion arises from the conflation of the
-two different motivations for the initiality construction. And of these, the second
-motivation is actually valid.
+two different motivations for the initiality construction.
 
 As to which way of construction is easiest: the author does not know of any
 truly easy way, but this thesis shows that we only have to do it once, for a
 theory of signatures, and then we can construct all other QIITs from that in a
-generic way. In particular, almost all type theories in the wild are closed QII
+generic way. In particular, almost all type theories in the wild are finitary closed QII
 theories (with the notable exceptions of our ToS-es), so if we can construct
 closed signatures, we can construct initial models of almost all type theories.
 
@@ -5013,7 +5046,7 @@ requires mixing quotients and infinite branching, and in this case we do not
 even know how to construct the syntax.
 
 We summarize the construction of the ToS syntax below. We refer the reader to
-\cite{ind-ind-reduction}.
+\cite{ind-ind-reduction} for details.
 
 \begin{enumerate}
 \item We define raw syntax by mutual induction. Substitution are in normal form:
@@ -5060,14 +5093,14 @@ features:
   \item $\mathbb{N}$, $\Sigma$, $\Pi$, $\top$, $\bot$, $\blank\!+\!\blank$ and
         intensional $\Id$.
 \end{itemize}
-The construction follows the 1-5 steps that we described previously. It makes the following assumptions:
+The construction follows the 1-5 steps that we described previously in Section \ref{sec:fqiit-constructions}. It makes the following assumptions:
 \begin{itemize}
 \item A universe of strict propositions $\ms{Prop}$. Every type in this universe
       enjoys definitional proof-irrelevance. This $\ms{Prop}$ is used to define
       partial functions and well-formedness relations.
 \item Function extensionality.
 \item Propositional extensionality for $\ms{Prop}$.
-\item Quotients of relations valued in $\ms{Prop}$.
+\item Quotients by relations valued in $\ms{Prop}$.
 \item Indexed inductive families returning in $\Set$ or in $\ms{Prop}$.
 \end{itemize}
 Notably, UIP is not assumed. It appears that the irrelevance of equalities in
@@ -5983,36 +6016,34 @@ on isofibrancy.
 
 \todo{Add section on signature semantics of signatures!!}
 
-In this chapter we gain significant expressive power in defining model
-constructions. Generally speaking, almost all constructions in the literature
-which have been dubbed ``syntactic translations'' or ``syntactic models'' can be
-now defined as ToS substitutions. Intuitively, this works because
-\begin{itemize}
-\item
-  Syntactic translations usually do not rely on models being actually syntactic.
-  They don't use induction on syntax in the \emph{target} theory. A rare and
-  notable counterexample is our construction of recursors and eliminators for
-  term models. These are perhaps ``syntactic'' in the sense that they
-  prominently involve the syntax of some type theory. And they actually rely on
-  syntax being syntax, because they construct recursor/eliminator functions by
-  induction on terms.
-\item
-  Syntactic translations rarely if ever involve higher-order constructions.
-  Such would be interpreting $\Con$ with $(\Con \to \Con) \to \Con$, for a
-  contrived example.
-\end{itemize}
+%% In this chapter we gain significant expressive power in defining model
+%% constructions. Generally speaking, almost all constructions in the literature
+%% which have been dubbed ``syntactic translations'' or ``syntactic models'' can be
+%% now defined as ToS substitutions. Intuitively, this works because
+%% \begin{itemize}
+%% \item
+%%   Syntactic translations usually do not rely on models being actually syntactic.
+%%   They don't use induction on syntax in the \emph{target} theory. A rare and
+%%   notable counterexample is our construction of recursors and eliminators for
+%%   term models. These are perhaps ``syntactic'' in the sense that they
+%%   prominently involve the syntax of some type theory. And they actually rely on
+%%   syntax being syntax, because they construct recursor/eliminator functions by
+%%   induction on terms.
+%% \item
+%%   Syntactic translations rarely if ever involve higher-order constructions.
+%%   Such would be interpreting $\Con$ with $(\Con \to \Con) \to \Con$, for a
+%%   contrived example.
+%% \end{itemize}
 
-\begin{myexample}
-For a warmup example, now we can construct categories from monoids. Let us have
-$\ms{MonoidSig}$ as the signature for monoids, with $\ms{M} : \U$ as the carrier
-set, $\blank\!\cdot\!\blank : \ms{M} \to \ms{M} \to \El\,\ms{M}$ as
-multiplication and $\epsilon : \El\,\ms{M}$ as identity the element. We define
-$\sigma : \Sub\,\ms{MonoidSig}\,\ms{CatSig}$ to contain $\ms{Obj} \defn \top$,
-$\ms{Hom} \defn \lambda\,\_\,\_.\,\ms{M}$, $\id \defn \epsilon$ and
-$\blank\!\circ\!\blank \defn \blank\!\cdot\!\blank$.
-\end{myexample}
-
-\todo{Add section on signature semantics of signatures!!}
+%% \begin{myexample}
+%% For a warmup example, now we can construct categories from monoids. Let us have
+%% $\ms{MonoidSig}$ as the signature for monoids, with $\ms{M} : \U$ as the carrier
+%% set, $\blank\!\cdot\!\blank : \ms{M} \to \ms{M} \to \El\,\ms{M}$ as
+%% multiplication and $\epsilon : \El\,\ms{M}$ as identity the element. We define
+%% $\sigma : \Sub\,\ms{MonoidSig}\,\ms{CatSig}$ to contain $\ms{Obj} \defn \top$,
+%% $\ms{Hom} \defn \lambda\,\_\,\_.\,\ms{M}$, $\id \defn \epsilon$ and
+%% $\blank\!\circ\!\blank \defn \blank\!\cdot\!\blank$.
+%% \end{myexample}
 
 
 \section{Term Algebras}
@@ -6135,6 +6166,7 @@ identities and compositions, which ensures that conversion equations in the synt
 are respected. For example, functoriality of the type substitution defined above
 relies on $\coe$ computation on identity and composition.
 
+\subsubsection{Universe}
 The universe is interpreted as follows.
 \begin{alignat*}{3}
   &\U^T : (\nu : \Sub\,\Omega\,\Gamma) \to \Tm\,\Omega\,\U \to \Set_{j + 1} \\
@@ -6152,7 +6184,10 @@ in $\Set_{j + 1}$. So coercion along $a^T\,\nu$ is simply function application,
 and we are justified in writing $(a^T\,\nu)\,t$.
 
 For each type former in $\U$, we have to exhibit an isomorphism of sets in the
-interpretation. For $\top$, we need
+interpretation.
+
+\subsubsection{$\bs{\top}$, $\bs{\Sigma}$}
+We need
 \[
   \top^T : (\nu : \Sub\,\Omega\,\Gamma) \to \U^T\,\nu\,(\top[\nu]) \simeq_{\id} \top^A\,(\Gamma^T\,\nu)
 \]
@@ -6164,6 +6199,7 @@ have to show
 This follows from the induction hypotheses $a^T$ and $b^T$, which establish the
 first and second components of the desired isomorphism.
 
+\subsubsection{Identity}
 For the identity type, we need
 \[
   \Tm\,\Omega\,(\El\,(\Id\,(t[\nu])\,(u[\nu])) \simeq (t^A\,(\Gamma^T\,\nu) \equiv u^A\,(\Gamma^T\,\nu))
@@ -6171,62 +6207,407 @@ For the identity type, we need
 This follows from $t^T\,\nu$, $u^T\,\nu$ and the specifying isomorphism of
 $\Id$.
 
-The infinitary function type follows the same pattern. We define the isomorphism
-below using induction hypotheses and the specifying isomorphism of $\Piinf$.
+\subsubsection{Infinitary function}
+This function type follows the same pattern. We define the isomorphism below
+using induction hypotheses and the specifying isomorphism of $\Piinf$.
 \[
 \Tm\,\Omega\,(\El\,(\Piinf\,\mi{Ix}\,(\lambda\,i.\,(b\,i)[\nu])))
 \simeq
 ((i : \mi{Ix}) \to (b\,i)^A\,(\Gamma\,\nu))
 \]
 
-Inductive functions are interpreted by transport along the $a^T\,\nu$
-isomorphism from the domain type:
+\subsubsection{Inductive function}
+Inductive functions are interpreted using transport along $a^T\,\nu :
+\Tm\,\Omega\,(\El\,(a[\nu])) \simeq a^A\,(\Gamma^T\,\nu)$:
 \begin{alignat*}{3}
   &(\Pii\,a\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pii\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
   & \hspace{3.5em}\to (\alpha : a^A\,(\Gamma^T\,\nu)) \to B^A\,(\Gamma^T\,\nu,\,\alpha)\\
   &(\Pii\,a\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,
          B\,(\nu,\,(a^T\,\nu)^{-1}\,\alpha)\,(t\,((a^T\,\nu)^{-1}\,\alpha))
 \end{alignat*}
-External functions are interpreted the same way as in the finitary case.
+\textbf{External functions} are interpreted the same way as in the finitary case.
 
+\subsection{Eliminator Construction}
 
-\subsection{Recursor and Eliminator Construction}
+We only present the eliminator construction in the following, since (unique)
+recursors are derivable from this.
 
-\todo{todo}
+Compared to the finitary case, the eliminator construction does not change as
+much as the term algebra construction. The reason is that although we have
+weakened strict algebra equality to isomorphism, in the current construction we
+only have to show equalities of substitutions and terms, which we do not need to
+weaken (and they cannot be sensibly weakened anyway).
+
+We assume $j$ and $k$ such that $ j + 1 \leq k$, and also $\Omega : \Sig_j$ and
+$\omega^D : \Omega^D_k\,(\Omega^T\,\id)$. Hence, $\omega^D$ is a displayed
+$\Omega$-algebra over the term algebra, and we aim to construct its section.
+Note that we lift $\Omega^T\,\id : \Omega^A_{j+1}$ to level $k$ by cumulativity.
+We define $\blank^E$ by induction on $\syn_j$.
+\begin{alignat*}{3}
+  &\blank^E &&: (\Gamma : \Con)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Gamma^S\,(\nu^A\,(\Omega^T\,\id))\,(\nu^D\,\omega^D)\\
+  &\blank^E &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Delta^E\,(\sigma \circ \nu) \equiv \sigma^S\,(\Gamma^E\,\nu)\\
+  &\blank^E &&: (A : \Ty\,\Gamma)&&(\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(A[\nu]))
+     \to A^S\,(t^A\,(\Omega^T\,\id))\,(t^D\,\omega^D)\,(\Gamma^E\,\nu)\\
+  &\blank^E &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^E\,\nu\,(t[\nu]) \equiv t^S\,(\Gamma^E\,\nu)
+\end{alignat*}
+This is so far exactly the same as in Section
+\ref{sec:fqii-eliminator-construction}. The subsequent changes arise from
+the need to transport along $\blank^T$ in definitions.
+
+\subsubsection{Universe}
+For the universe, we need
+\begin{alignat*}{3}
+  &\U^E : (\nu : \Sub\,\Omega\,\Gamma)(a : \Tm\,\Omega\,\U) \to (\alpha : a^A\,(\Omega^T\,\id)) \to a^D\,\omega^D\,\alpha
+\end{alignat*}
+Since we only have $a^T\,\id : a^A\,(\Omega^T\,\id) \simeq \Tm\,\Omega\,(\El\,a)$, the definition
+becomes
+\[
+  \U^E\,\nu\,a\,t \defn (a^T\,\id\,t)^D\,\omega^D
+\]
+That this is well-typed, follows from
+\begin{alignat*}{3}
+  & ((a^T\,\id)\,t)^T\,\id &&: t \equiv ((a^T\,\id)\,t)^A\,(\Omega^T\,\id) \\
+  & ((a^T\,\id)\,t)^D\,\omega^D &&: a^D\,\omega^D\,(((a^T\,\id)\,t)^A\,(\Omega^T\,\id))
+\end{alignat*}
+For $\El$, we need to show
+\[
+(\El\,a)^E : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\El\,(a[\nu]))) \to a^S\,(\Gamma^E\,\nu)\,(t^A\,(\Omega^T\,\id)) \equiv t^D\,\omega^D
+\]
+We have
+\[
+  t^T\,\id : (a[\nu])^T\,\id\,t \equiv t^A\,(\Omega^T\,\id)
+\]
+Moreover
+\[
+  a^E\,\nu : \U^E\,\nu\,(a[\nu]) \equiv a^S\,(\Gamma^E\,\nu)
+\]
+Hence
+\[
+  a^E\,\nu : (\lambda\,t.\,((a[\nu])^T\,\id\,t)^D\,\omega^D) \equiv a^S\,(\Gamma^E\,\nu)
+\]
+Applying both sides to $((a[\nu])^T\,\id)^{-1}\,t$, we have
+\[
+  ((a[\nu])^T\,\id\,(((a[\nu])^T\,\id)^{-1}\,t))^D\,\omega^D \equiv a^S\,(\Gamma^E\,\nu)\,(((a[\nu])^T\,\id)^{-1}\,t)
+\]
+This simplifies to
+\[
+  t^D\,\omega^D \equiv a^S\,(\Gamma^E\,\nu)\,(((a[\nu])^T\,\id)^{-1}\,t)
+\]
+By $(a^T\,\id\,t)^T\,\id : t \equiv (a^T\,\id\,t)^A\,(\Omega^T\,\id)$ this becomes:
+\[
+  t^D\,\omega^D \equiv a^S\,(\Gamma^E\,\nu)\,(((a[\nu])^T\,\id)^{-1}\,((a^T\,\id\,t)^A\,(\Omega^T\,\id)))
+\]
+Thus we have the required
+\[
+  t^D\,\omega^D \equiv a^S\,(\Gamma^E\,\nu)\,(\Omega^T\,\id)
+  \]
+
+\subsubsection{$\bs{\top}$, $\bs{\Sigma}$}
+
+For $\top$, we need
+\[
+  \top^E : (\nu : \Sub\,\Omega\,\Gamma) \to \U^E\,\nu\,\top \equiv \top^S\,(\Gamma^E\,\nu)
+\]
+But this is clearly trivial, since $\top^S\,(\Gamma^E\,\nu) : \top \to \top$. Considering $\Sigma$:
+\[
+(\Sigma\,a\,b)^E : (\nu : \Sub\,\Omega\,\Gamma) \to
+  \U^E\,\nu\,(\Sigma\,(a[\nu])\,(b[\nu\circ\p,\,\q])) \equiv (\Sigma\,a\,b)^S\,(\Gamma^E\,\nu)
+\]
+This case is a bit tedious. The sides above are functions, so appealing to function extensionality
+we apply both sides to $(\alpha,\,\beta)$, where $\alpha : a^A\,(\nu^A\,(\Omega^T\,\id))$ and
+$\beta : b^A\,(\nu^A\,(\Omega^T\,\id),\,\alpha)$. We also unfold some definitions:
+\[
+(((\Sigma\,(a[\nu])\,(b[\nu\circ\p,\,\q]))^T\,\id)^{-1}\,(\alpha,\,\beta))^D\,\omega^D \equiv
+(a^S\,(\Gamma^E\,\nu)\,\alpha,\,b^S\,(\Gamma^E\,\nu,\,\refl)\,\beta)
+\]
+Unfolding the left side of this equation, we have
+\[
+  ((((a[\nu])^T\,\id)^{-1}\,\alpha)^D\,\omega^D,\,(((b[\nu\circ\p,\,\q])^T\,(\id,\,((a[\nu])^T\,\id)^{-1}\,\alpha))^{-1}\,\beta)^D\,\omega^D)
+\]
+Let us abbreviate $((a[\nu])^T\,\id)^{-1}\,\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))$ as $\alpha'$:
+\[
+  (\alpha'^D\,\omega^D,\,(((b[\nu\circ\p,\,\q])^T\,(\id,\,\alpha'))^{-1}\,\beta)^D\,\omega^D)
+\]
+Hence, we need to show component-wise equality of pairs. The equality of first components follow
+from the following:
+\[
+  a^E\,\nu : \U^E\,\nu\,(a[\nu]) \equiv a^S\,(\Gamma^E\,\nu)
+\]
+Unfolding definitions and applying both sides to $\alpha$, we the equality of first components:
+\[
+  \alpha'^D\,\omega^D \equiv a^S\,(\Gamma^E\,\nu)\,\alpha
+\]
+Analogously, the equality of second components follows from
+\[
+b^E\,(\nu,\,\alpha') :
+ (((b[\nu,\,\alpha'])^T\,\id)^{-1}\,\beta)^D\,\omega^D \equiv b^S\,(\Gamma^E\,\nu,\,\refl)\,\beta
+\]
+The right hand side is what we need, the left hand side though does not immediately match up.
+Hence, it remains to show that
+\[
+(((b[\nu,\,\alpha'])^T\,\id)^{-1}\,\beta)^D\,\omega^D
+\equiv
+(((b[\nu\circ\p,\,\q])^T\,(\id,\,\alpha'))^{-1}\,\beta)^D\,\omega^D
+\]
+Thus, it suffices to show
+\[
+(b[\nu,\,\alpha'])^T\,\id \equiv (b[\nu\circ\p,\,\q])^T\,(\id,\,\alpha')
+\]
+This equation follows from a somewhat laborious unfolding of all involved definitions.
+In particular, we use that for some $a : \Tm\,\Gamma\,\U$, we have
+\[
+  (a[\sigma])^T\,\nu \equiv a^M\,(\sigma^T\,\nu) \circ a^T\,(\sigma \circ \nu)
+\]
+which follows from the definition of $\blank^T$.
+
+\subsubsection{Inductive functions}
+In $\Pi$ we likewise transport along the domain isomorphism.
+\begin{alignat*}{3}
+ &(\Pi\,a\,B)^E : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
+ & \hspace{2em}\to (\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))) \to B^S\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^D\,\omega^D\,(\alpha^D\,\omega^D))\,(\Gamma^E\,\nu,\,\refl)\\
+ &\rlap{$(\Pi\,a\,B)^E\,\nu\,t \defn \lambda\,\alpha.\,B^E\,(\nu,\,(a[\nu])^T\,\id\,\alpha)\,(t\,((a[\nu])^T\,\id\,\alpha))$}
+\end{alignat*}
+This is well-typed by the following:
+\begin{alignat*}{3}
+  & a^E\,\nu &&: ((a[\nu])^T\,\id\,\alpha)^D\,\omega^D \equiv a^S\,(\Gamma^E\,\nu)\,\alpha\\
+  & ((a[\nu])^T\,\id\,\alpha)^T\,\id &&: \alpha \equiv ((a[\nu])^T\,\id\,\alpha)^A\,(\Omega^T\,\id)
+\end{alignat*}
+
+\subsubsection{$\bs{\Id}$, $\bs{\Piinf}$, $\bs{\Pie}$}
+
+$\Id$ is trivial by UIP, and for $\Piinf$ and $\Pie$ we again do a straightforward recursion
+under the indexing function.
+\\\\
+This concludes the definition of $\blank^E$. We again show the initiality of term algebras.
+
+\begin{mydefinition}[\textbf{Eliminators}]
+\label{def:iqiit-eliminator}
+Assuming $\Omega : \Sig_j$, a $k$ level such that $k \geq j + 1$ and $\omega^D :
+\Omega^D_{k}\,(\Omega^T\,\id)$, we have $\Omega^E\,\id : \Omega^S\,(\Omega^T\,\id)\,\omega^D$ as
+the eliminator.
+\end{mydefinition}
+
+\begin{theorem}
+  $\Omega^T\,\id : \Omega^A_{j+1}$ is initial when lifted to any $k \geq j + 1$ level.
+\end{theorem}
+\begin{proof}
+  $\Omega^T\,\id$ supports elimination by Definition
+  \ref{def:iqiit-eliminator}, and elimination is equivalent to initiality by
+  Theorem \ref{thm:initiality-induction}.
+\end{proof}
 
 \section{Levitation and Bootstrapping}
 \label{sec:iqii-levitation}
 
+In this section we adapt the bootstrapping procedure from Section
+\ref{sec:closed-levitation} to infinitary signatures.
 
+\subsubsection{Bootstrapping for 2LTT semantics}
 
+If we only want to write down signatures and get their 2LTT-based semantics, a
+simplified bootstrapping suffices, which is essentially the same as in Section
+\ref{sec:closed-levitation}. We write $\ToS_i : \Set_{i+1}$ for the type of
+models where underlying sets are in $\Set_i$ and external indexing is over
+$\Ty_0$.  We also have $\bM_{i} : \ToS_{i + 2}$ for the flcwf models where
+underlying sets in algebras are in $\Set_i$ and external indexing is over types
+in $\Ty_0$.
 
+\begin{mydefinition} The type of \textbf{bootstrap signatures} is defined as follows:
+\[
+  \ms{BootSig} \defn (i : \ms{Level}) \to (M : \ToS_{i}) \to \Con_{M}
+\]
+These bootstrap signatures only allow external indexing by types in $\Ty_0$.  We
+can write bootstrap signatures and interpret them in $\bM_i$, by applying them
+to $\bM_i$.
+\end{mydefinition}
 
+\subsubsection{Bootstrapping for term algebras}
 
+Now we reuse the ETT setting from Section \ref{sec:ett-signatures}. We have
+$\ToS_{i,j} : \Set_{i+1\lub j+1}$ for the type of models where underlying sets
+are in $\Set_i$ and $\Piinf$ and $\Pie$ abstract over $\Set_j$. We also have
+$\bM_{i,j} : \ToS_{(i+1\lub j)+1,j}$ as the flcwf models, again with underlying
+sets of algebras in $\Set_i$ and external indexing types in $\Set_j$.
 
+\begin{mydefinition} The type of \textbf{bootstrap signatures} at level $j$ is defined as follows.
+These may contain external indexing by types in $\Set_j$.
+\[
+  \ms{BootSig}_j \defn (i\,j : \ms{Level}) \to (M : \ToS_{i,j}) \to \Con_{M}
+\]
+\end{mydefinition}
 
-
-
-
-
-
-
-
-
+\begin{mydefinition}[\textbf{Signature for ToS}]
+We define $\ToSSig_j : \ms{BootSig_{j+1}}$ as the bootstrap signature for ToS, where the
+described signatures may be indexed by types in $\Set_j$. Like in Section
+\ref{sec:closed-levitation}, we use an internal notation. We present an excerpt.
+\begingroup
+\allowdisplaybreaks
+\begin{alignat*}{3}
+  & \Con       &&: \U\\
+  & \Sub       &&: \Con \to \Con \to \U\\
+  & \Ty        &&: \Con \to \U\\
+  & \Tm        &&: (\Gamma : \Con) \to \Ty\,\Gamma \to \U\\
+  & ...        &&\\
+  & \ms{SigU}  &&: \{\Gamma : \Con\} \to \El\,(\Ty\,\Gamma)\\
+  & \ms{SigEl} &&: \{\Gamma : \Con\} \to \Tm\,\Gamma\,\ms{SigU} \to \El\,(\Ty\,\Gamma)\\
+  & \Piinf     &&: \{\Gamma : \Con\}(A : \Set_j) \toe (A \toinf \Tm\,\Gamma\,\ms{SigU}) \to \El\,(\Tm\,\Gamma\,\ms{SigU})\\
+  & ...        &&
+\end{alignat*}
+Now the interpretation of $\ToSSig_j$ in $\bM_{i,j+1}$ yields the flcwf where
+objects are elements of $\ToS_{i,j}$. Note the level bump: $\ToSSig_j$ is in
+$\ms{BootSig_{j+1}}$, so we expend one level at each round of self-description.
+We get the notion of ToS-induction from $\bM_{i,j+1}$, and we have $\ToS_{i,j}
+\leq \ToS_{i+1,j}$ (by definition of $\ToS$ and the rules of subtyping), which
+allows us to specify what it means for a model to support elimination into any
+universe. Thus we recover all concepts that are used in the term algebra and
+eliminator constructions.
+\end{mydefinition}
+\endgroup
 
 \section{Left Adjoints of Substitutions}
+\todo{TODO}
 
-
-
-%% \chapter{Levitation, Bootstrapping and Universe Levels}
-%% \label{chap:levitation}
-
-%% \section{Levitation for Closed QIITs}
-%% \section{Levitation for Infinitary QIITs}
 
 \chapter{Higher Inductive-Inductive Signatures}
 \label{chap:hiit}
 
+So far we only considered semantics of signatures where equality constructors
+are interpreted as proof-irrelevant equalities, i.e.\ those satisfying UIP. This
+inspires the naming of \emph{quotient} inductive-inductive signatures. In
+contrast, \emph{higher inductive-inductive} signatures are characterized by
+having possibly proof-relevant and iterated equalities in algebras. The natural
+setting of HIITs is homotopy type theory (HoTT) \cite{hottbook}, where higher
+equalities are available, and unlike in basic intensional type theory, they can
+be also used in interesting ways, thanks to univalence.
+
+In short, we might think of HIITs as QIITs in homotopy type theory, or
+alternatively, QIITs are specific HIITs that are set-truncated. Thus HIITs are
+more general than QIITs, modulo some minor details.
+
+We shall see that 2LTT is firmly necessary in the specification of HIITs,
+and the ToS must live in the outer layer. The reason is that there is no known
+way to sensibly internalize the metatheory of type theories purely inside
+HoTT. This is the problem of ``HoTT eating itself'' \cite{hott-eat-itself}. It
+is also closely related to the problem of representing semisimplicial types
+purely inside HoTT. If we can construct semisimplicial types in an embedded type
+theory, and interpret that into non-truncated HoTT types, that would indeed
+solve the problem. But so far it has not been solved, or proven impossible. A
+main point of 2LTT is precisely to allow construction of semisimplicial types
+\cite{twolevel}.
+
+\subsubsection{Overview}
+
+This chapter is based on the author's joint work with Kaposi \cite{hiits}. In
+the following, we specify the ToS and give a semantics of signatures which is
+more limited than what we had before. Concretely, we restrict ourselves to the
+AMDS fragment of semantics. This is sufficient to compute what we mean by
+induction and initiality (which has been called ``homotopy initiality'' in the
+context of HoTT \cite{homotopy-initial}).
+
+Why don't we go further? The main reason is that the natural semantics is
+actually in $(\omega,1)$-categories: we want $(\omega,1)$-categories of
+algebras. This requires a different approach and toolset. In particular, in
+\cite{hiits} we gave an example that a naive attempt to extend the AMDS
+semantics of signatures with the notion of identity morphisms already fails.
+The author of this thesis is not versed enough in higher category theory, so we
+leave the exposition of the full semantics to future work.
+
+We do note that the higher semantics has been done by Capriotti and Sattler. See
+\cite{capriotti2020higher} for an abstract; the bulk of the work remains
+unpublished as of now. In short, Capriotti and Sattler define ToS in 2LTT, and
+also use 2LTT to give a model where signatures are higher categories specified
+as complete Segal types. They show that categories of algebras have finite
+limits and that initiality is equivalent to induction. Additionally, the setup
+yields a structure identity principle for each signature. However, reductions to
+simpler type formers are not discussed, nor possible term algebra
+constructions. Both of these appear to be far more difficult than in the
+quotient setting, and to the author's knowledge there are no concrete proposals
+how to approach them.
+
+\subsubsection{Metatheory}
+
+We work in 2LTT. We assume that $\Ty_0$ is closed under $\Pi$, $\Sigma$, $\top$
+and \emph{intensional} identity $\blank\!=\!\blank$. Thus, unlike before, the
+inner theory is intensional and compatible with univalence. We use the ``based''
+induction principle for $\blank\!=\!\blank$ \cite[Section~1.12.1]{hottbook}:
+\begin{alignat*}{3}
+  & \ms{J} :\,&&\{A : \Ty_0\}\{x : A\}(B : (y : A) \to x = y \to \Ty_0) \to B\,x\,\refl\\
+  &           &&\to (y : A)(p : x = y) \to B\,y\,p\\
+  & \rlap{$\ms{J\beta} : \ms{J}\,B\,\mi{br}\,x\,\refl \equiv \mi{br}$}
+\end{alignat*}
+
 \section{Theory of Signatures}
+
+The theory of HII signatures is fairly similar to the theory of infinitary QII
+signatures. The primary difference is that $\Id$ is intensional in the ToS too: it
+has $\refl$ and $\ms{J}$, and does not have equality reflection.
+
+However, the choice of $\beta$-rules is now a bit more delicate. We have two
+options in the specification of the ToS.
+\begin{enumerate}
+\item
+  One choice is to have definitional $\beta$-rules for $\Id$ and $\Pi$,
+  expressed using $\blank\!\equiv\!\blank$. However, this forces us to have
+  strict equalities in the $\blank^M$ and $\blank^S$ interpretations of $\El$,
+  in other words, to have algebra morphisms and sections which preserve
+  structure definitionally. As we will see, if we instead use inner
+  (``fibrant'') equality for structure-preservation, the $\blank^M$ and
+  $\blank^S$ interpretations fail to respect the mentioned $\beta$-rules in the
+  ToS.
+
+  Now, such strict morphisms and sections of algebras are sensible and useful
+  when we want to specify HIITs, because $\beta$-rules of recursors and
+  eliminators are generally expected to be definitional in HoTT. But they are
+  not appropriate when we want to internally talk about algebra morphisms in
+  HoTT, as strict equations are only available in 2LTT. For example, it only
+  makes sense to specify a structure identity principle with ``weak'' algebra
+  morphisms, which preserve structure up to inner equality.
+
+\item
+  The other option is to drop strict $\beta$ for $\Pi$ and $\Id$. In this case,
+  we can still specify $\beta$ for $\Id$ using $\Id$ itself, but we cannot
+  specify $\beta$ and $\eta$ for $\Pi$ at all, because $\Id$ can only express
+  equality of small terms in some $\Tm\,\Gamma\,(\El\,a)$. We \emph{could} add a
+  ``big'' version of $\Id$ for this purpose, but this feels like an unnecessary
+  complication. Instead, for the sake of simplicity, we just drop $\lam$ for
+  $\Pi$ together with the $\beta\eta$ rules. This has a negligible impact on the
+  practical expressiveness of signatures, although the ToS expressiveness for
+  specifying model constructions does take a hit.
+
+  In summary, we only have $\app$ for $\Pi$, and a weak $\beta$-rule for
+  $\ms{J}$.  This works fine in the semantics, as $\blank^M$ and $\blank^S$ do
+  preserve weak $\ms{J}\beta$ up to inner equality.
+\end{enumerate}
+We shall refer to option 1 as \textbf{strict ToS}, and option 2 as \textbf{weak
+  ToS}. In the following we present the two options simultaneously.
+
+\begin{mydefinition}
+A \textbf{model of ToS} (weak or strict) consists of a base cwf, with underlying
+sets returning in $\Set$, supporting the following type formers.
+  \begin{itemize}
+    \item A \textbf{cwf} with underlying sets $\Con$, $\Sub$, $\Ty$ and $\Tm$, all returning in
+      the outer $\Set$ universe of 2LTT.
+    \item A \textbf{Tarski-style universe} $\U$ with decoding $\El$. $\U$ is closed under the following type formers:
+      \begin{itemize}
+        \item The \textbf{unit type} $\top$.
+        \item \textbf{$\Sigma$-types} $\Sigma : (a : \Tm\,\Gamma\,\U) \to \Tm\,(\Gamma\,\ext\,\El\,a)\,\U \to \Tm\,\Gamma\,\U$, with specifying isomorphism
+          \[(\proj,\,\blank\!,\!\blank) : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\simeq (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))\]
+        \item \textbf{Extensional identity} $\Id : \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U$,
+          specified by $(\reflect,\,\refl) : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)) \simeq (t \equiv u)$.
+        \item \textbf{Infinitary functions} $\Piinf : (A : \Ty_0) \to (A \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U$, specified by $(\appinf,\,\laminf) : \Tm\,\Gamma\,(\Piinf\,A\,b) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(\El\,(b\,\alpha)))$.
+      \end{itemize}
+    \item An \textbf{inductive function type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
+      \Ty\,(\Gamma\ext\El\,a) \to \Ty\,\Gamma$, specified by
+      $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
+    \item An \textbf{external function type} $\Pie : (A : \Ty_0) \to (A \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
+      $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,A\,B) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(B\,\alpha))$.
+  \end{itemize}
+
+\end{mydefinition}
+
+
+
+
 \section{Semantics}
 
 \chapter{Conclusion}

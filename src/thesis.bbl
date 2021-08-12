@@ -1,5 +1,5 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{MAA{\etalchar{+}}19}
+\begin{thebibliography}{CDMM10}
 
 \bibitem[AAC{\etalchar{+}}20]{allais20type}
 Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
@@ -23,13 +23,6 @@ Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, Nicolai Kraus, and
 Danil Annenkov, Paolo Capriotti, Nicolai Kraus, and Christian Sattler.
 \newblock Two-level type theory and applications.
 \newblock {\em ArXiv e-prints}, may 2019.
-
-\bibitem[AFS18]{afs-encoding}
-Steve Awodey, Jonas Frey, and Sam Speight.
-\newblock Impredicative encodings of (higher) inductive types.
-\newblock In {\em Proceedings of the 33rd Annual ACM/IEEE Symposium on Logic in
-  Computer Science}, LICS ’18, page 76–85, New York, NY, USA, 2018.
-  Association for Computing Machinery.
 
 \bibitem[AHH18]{angiuli2018cartesian}
 Carlo Angiuli, Kuen-Bang~Favonia Hou, and Robert Harper.
@@ -155,6 +148,11 @@ Pierre Clairambault and Peter Dybjer.
   martin-l{\"o}f type theories.
 \newblock {\em Mathematical Structures in Computer Science}, 24(6), 2014.
 
+\bibitem[CDMM10]{chapman2010gentle}
+James Chapman, Pierre-{\'E}variste Dagand, Conor McBride, and Peter Morris.
+\newblock The gentle art of levitation.
+\newblock {\em ACM Sigplan Notices}, 45(9):3--14, 2010.
+
 \bibitem[CKS07]{carette2007finally}
 Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
 \newblock Finally tagless, partially evaluated.
@@ -164,6 +162,11 @@ Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
 \bibitem[Con19]{initiality-project}
 Initiality~Project Contributors.
 \newblock Initiality project, 2019.
+
+\bibitem[CS]{capriotti2020higher}
+Paolo Capriotti and Christian Sattler.
+\newblock Higher categories of algebras for higher inductive definitions.
+\newblock {\em EUTYPES-TYPES 2020-Abstracts}.
 
 \bibitem[dB20]{deboer-initiality}
 Menno de~Boer.
@@ -214,6 +217,21 @@ Jasper Hugunin.
 Peter~T Johnstone.
 \newblock {\em Sketches of an elephant: A topos theory compendium}, volume~2.
 \newblock Oxford University Press, 2002.
+
+\bibitem[Kis14]{kiselyov14metaocaml}
+Oleg Kiselyov.
+\newblock The design and implementation of {BER} metaocaml - system
+  description.
+\newblock In Michael Codish and Eijiro Sumii, editors, {\em Functional and
+  Logic Programming - 12th International Symposium, {FLOPS} 2014, Kanazawa,
+  Japan, June 4-6, 2014. Proceedings}, volume 8475 of {\em Lecture Notes in
+  Computer Science}, pages 86--102. Springer, 2014.
+
+\bibitem[KK20]{hiits}
+Ambrus Kaposi and Andr{\'{a}}s Kov{\'{a}}cs.
+\newblock Signatures and induction principles for higher inductive-inductive
+  types.
+\newblock {\em Log. Methods Comput. Sci.}, 16(1), 2020.
 
 \bibitem[KKA19]{kaposi2019constructing}
 Ambrus Kaposi, Andr{\'a}s Kov{\'a}cs, and Thorsten Altenkirch.
@@ -270,6 +288,17 @@ Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.
   26-30, 1991, Proceedings}, volume 523 of {\em Lecture Notes in Computer
   Science}, pages 124--144. Springer, 1991.
 
+\bibitem[ML98]{maclane98categories}
+Saunders Mac~Lane.
+\newblock {\em {Categories for the Working Mathematician}}.
+\newblock Graduate Texts in Mathematics. Springer, 2nd edition, September 1998.
+
+\bibitem[MM12]{maclane2012sheaves}
+Saunders MacLane and Ieke Moerdijk.
+\newblock {\em Sheaves in geometry and logic: A first introduction to topos
+  theory}.
+\newblock Springer Science \& Business Media, 2012.
+
 \bibitem[nc21]{internallogic}
 nLab contributors.
 \newblock Internal logic, 2021.
@@ -293,6 +322,19 @@ Gabriel Scherer.
   of the 44th {ACM} {SIGPLAN} Symposium on Principles of Programming Languages,
   {POPL} 2017, Paris, France, January 18-20, 2017}, pages 374--386. {ACM},
   2017.
+
+\bibitem[Shu14]{hott-eat-itself}
+Michael Shulman.
+\newblock Homotopy type theory should eat itself (but so far, it’s too big to
+  swallow), 2014.
+
+\bibitem[Soj15]{homotopy-initial}
+Kristina Sojakova.
+\newblock Higher inductive types as homotopy-initial algebras.
+\newblock In Sriram~K. Rajamani and David Walker, editors, {\em Proceedings of
+  the 42nd Annual {ACM} {SIGPLAN-SIGACT} Symposium on Principles of Programming
+  Languages, {POPL} 2015, Mumbai, India, January 15-17, 2015}, pages 31--42.
+  {ACM}, 2015.
 
 \bibitem[Ste19]{sterling2019algebraic}
 Jonathan Sterling.
