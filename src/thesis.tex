@@ -32,7 +32,18 @@
                 calligraphy,% had to be after decorations.pathreplacing
                 matrix,
                 positioning
-                }
+}
+
+%% HoTT style composition
+\makeatletter
+\DeclareRobustCommand{\sqcdot}{\mathbin{\mathpalette\morphic@sqcdot\relax}}
+\newcommand{\morphic@sqcdot}[2]{%
+  \sbox\z@{$\m@th#1\centerdot$}%
+  \ht\z@=.33333\ht\z@
+  \vcenter{\box\z@}%
+}
+\makeatother
+
 
 %% \bibliographystyle{IEEEtran}
 \bibliographystyle{alpha}
@@ -89,12 +100,16 @@
 \newcommand{\mbb}[1]{\mathbb{#1}}
 \newcommand{\mbf}[1]{\mathbf{#1}}
 \newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\ap}{\ms{ap}}
+\newcommand{\apd}{\ms{apd}}
+\newcommand{\tr}{\ms{tr}}
 
 
 \newcommand{\Ix}{\mi{Ix}}
 
 \newcommand{\zero}{\ms{zero}}
 \newcommand{\suc}{\ms{suc}}
+\newcommand{\J}{\ms{J}}
 
 \newcommand{\refl}{\mathsf{refl}}
 \newcommand{\reflect}{\mathsf{reflect}}
@@ -107,6 +122,7 @@
 \newcommand{\U}{\mathsf{U}}
 \newcommand{\El}{\mathsf{El}}
 \newcommand{\Id}{\mathsf{Id}}
+\newcommand{\ID}{\mathsf{ID}}
 \newcommand{\proj}{\mathsf{proj}}
 \renewcommand{\tt}{\mathsf{tt}}
 \newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
@@ -6477,140 +6493,538 @@ inspires the naming of \emph{quotient} inductive-inductive signatures. In
 contrast, \emph{higher inductive-inductive} signatures are characterized by
 having possibly proof-relevant and iterated equalities in algebras. The natural
 setting of HIITs is homotopy type theory (HoTT) \cite{hottbook}, where higher
-equalities are available, and unlike in basic intensional type theory, they can
-be also used in interesting ways, thanks to univalence.
+equalities can be manipulated and constructed in non-trivial ways. We might
+think of HIITs as generalizations of QIITs, or alternatively, view QIITs as
+set-truncated HIITs.
 
-In short, we might think of HIITs as QIITs in homotopy type theory, or
-alternatively, QIITs are specific HIITs that are set-truncated. Thus HIITs are
-more general than QIITs, modulo some minor details.
+The theory of HII signatures is fairly similar to the theory of infinitary QII
+signatures. The main difference is that the internal $\Id$ type does not support
+equality reflection, nor UIP. In fact, infinitary QII signatures already allow
+iterated $\Id$, and most HIITs that occur in the literature can be already
+expressed using QII signatures. In contrast, the semantics of signatures changes
+markedly: the semantic inner theory is now intensional, and $\Id$ is interpreted
+as intensional inner equality. This may not seem that dramatic, but note that so
+far we have made very heavy use of UIP and inner equality reflection in the
+semantics, and now these are not available.
 
-We shall see that 2LTT is firmly necessary in the specification of HIITs,
-and the ToS must live in the outer layer. The reason is that there is no known
-way to sensibly internalize the metatheory of type theories purely inside
-HoTT. This is the problem of ``HoTT eating itself'' \cite{hott-eat-itself}. It
-is also closely related to the problem of representing semisimplicial types
-purely inside HoTT. If we can construct semisimplicial types in an embedded type
-theory, and interpret that into non-truncated HoTT types, that would indeed
-solve the problem. But so far it has not been solved, or proven impossible. A
-main point of 2LTT is precisely to allow construction of semisimplicial types
-\cite{twolevel}.
-
-\subsubsection{Overview}
-
-This chapter is based on the author's joint work with Kaposi \cite{hiits}. In
-the following, we specify the ToS and give a semantics of signatures which is
-more limited than what we had before. Concretely, we restrict ourselves to the
-AMDS fragment of semantics. This is sufficient to compute what we mean by
-induction and initiality (which has been called ``homotopy initiality'' in the
-context of HoTT \cite{homotopy-initial}).
+The more general semantics introduces significant complications. As a result, in
+the following we shall restrict ourselves to the AMDS fragment of the semantics.
+This is sufficient to compute what we mean by induction and initiality (which
+has been called ``homotopy initiality'' in the context of HoTT
+\cite{homotopy-initial}).
 
 Why don't we go further? The main reason is that the natural semantics is
 actually in $(\omega,1)$-categories: we want $(\omega,1)$-categories of
 algebras. This requires a different approach and toolset. In particular, in
-\cite{hiits} we gave an example that a naive attempt to extend the AMDS
+\cite[Section~9]{hiits} we gave an example that a naive attempt to extend the AMDS
 semantics of signatures with the notion of identity morphisms already fails.
 The author of this thesis is not versed enough in higher category theory, so we
 leave the exposition of the full semantics to future work.
 
-We do note that the higher semantics has been done by Capriotti and Sattler. See
-\cite{capriotti2020higher} for an abstract; the bulk of the work remains
-unpublished as of now. In short, Capriotti and Sattler define ToS in 2LTT, and
-also use 2LTT to give a model where signatures are higher categories specified
-as complete Segal types. They show that categories of algebras have finite
-limits and that initiality is equivalent to induction. Additionally, the setup
-yields a structure identity principle for each signature. However, reductions to
-simpler type formers are not discussed, nor possible term algebra
+We do note that a higher semantics has been developed by Capriotti and
+Sattler. See \cite{capriotti2020higher} for an abstract; the bulk of the work
+remains unpublished as of now. In short, Capriotti and Sattler define the ToS in
+2LTT, and also use 2LTT to give a model where signatures are higher categories,
+specified as complete Segal types. They show that categories of algebras have
+finite limits and that initiality is equivalent to induction. Additionally, the
+setup yields a structure identity principle for each signature. However,
+reductions to simpler type formers are not discussed, nor possible term algebra
 constructions. Both of these appear to be far more difficult than in the
 quotient setting, and to the author's knowledge there are no concrete proposals
 how to approach them.
 
+\subsubsection{The necessity of 2LTT}
+
+2LTT is firmly necessary in the specification of HIITs, and the ToS must live in
+the outer layer. The reason is that there is no known way to sensibly
+internalize the metatheory of type theories purely inside HoTT. This is the
+problem of ``HoTT eating itself'' \cite{hott-eat-itself}. It is also closely
+related to the problem of representing semisimplicial types in HoTT. If we can
+construct semisimplicial types in an embedded type theory, and interpret that
+into non-truncated HoTT types, that would indeed solve the problem. But so far
+it has not been solved, or proven impossible. A key original motivation for 2LTT
+was precisely to allow construction of semisimplicial types \cite{twolevel}.
+
+We give a short summary of the problem; see \cite[Section~4]{hiits} for more
+discussion. The goal is to have a notion of model of a dependent type theory in
+HoTT, such that we have a standard model where contexts are HoTT types.
+
+We may define the notion of model naively using types and equalities, by having
+$\Con : \U$, $\Ty : \Con \to \U$, etc.\ and $\ms{idl} : \sigma \circ \id =
+\sigma$. However, this does not yield a well-behaved notion of \emph{syntax}. If
+we define the syntax as HIIT for the above notion (i.e.\ the initial model),
+nothing forces the underlying types to be sets; the HIIT definition freely adds
+a large number of non-trivial higher paths. Since the underlying types are not
+sets, this syntax does not have decidable equality, by Hedberg's theorem
+\cite{hedberg}. This is regardless of what type formers we include.
+
+Alternatively, we may define the notion of model as having homotopy sets for
+underlying types. The corresponding HIIT will be in fact a QIIT, where every
+inductive sort is set-truncated. While this is better-behaved as syntax, we do
+not get a standard model. Contexts in a model cannot be arbitrary types, because
+in HoTT, types (of a universe) do not form a h-set. In fact, not even h-sets form
+a h-set; they form a groupoid. So we do not get any reasonable notion of standard
+interpretation.
+
+2LTT solves this issue in the following way: the embedded syntax is an outer
+QIIT, and equations in the syntax are given as strict (outer) equalities. The
+standard inner type model is now possible, because in that model all equations
+hold strictly, up to inner definitional equality. However, this implies that we
+can \emph{only} define strict models; this leads to the following consideration.
+
+\subsubsection{Strict vs.\ weak signatures}
+
+We have an important choice in the semantics: homomorphisms (and sections) can
+preserve structure strictly, i.e.\ up to outer equality, or weakly, up to inner
+equality. This choice has an impact on the supported ToS features.
+\begin{itemize}
+\item
+  With strict preservation, the semantics does not support an elimination
+  rule for $\Id$. The problem is that $\Id$ is necessarily modeled as inner
+  equality, but we cannot eliminate from that to outer types, and strict
+  equality is an outer type.
+\item
+  With weak preservation, we do have elimination for $\Id$. However, the
+  semantics does not support strict $\beta\eta$ rules in $\Id$, $\Sigma$,
+  $\Piinf$ and $\Pi$.  In short, the problem is that $(\El\,a)^M$ and
+  $(\El\,s)^S$ are defined as inner equality types, so we need to use inner path
+  induction in the semantics of eliminators. This implies that $\beta\eta$-rules
+  also hold only up to inner paths, but not definitionally. Thus, in the
+  ``weak'' case, we may have $\beta\eta$ only up to internal $\Id$.
+\end{itemize}
+It makes sense to develop both semantics. Weak morphisms and sections are
+useful, because can be defined purely in the inner theory (or in HoTT). Strict
+morphisms and sections are useful if we want to specify type formers, since type
+theories usually assume strict $\beta$-rules for recursors and eliminators. In
+this chapter, we specify theories of signatures and semantics for both cases.
+
 \subsubsection{Metatheory}
 
 We work in 2LTT. We assume that $\Ty_0$ is closed under $\Pi$, $\Sigma$, $\top$
-and \emph{intensional} identity $\blank\!=\!\blank$. Thus, unlike before, the
-inner theory is intensional and compatible with univalence. We use the ``based''
-induction principle for $\blank\!=\!\blank$ \cite[Section~1.12.1]{hottbook}:
+and intensional identity $\blank\!=\!\blank$. We assume the ``based'' path induction principle
+\cite[Section~1.12.1]{hottbook}:
 \begin{alignat*}{3}
-  & \ms{J} :\,&&\{A : \Ty_0\}\{x : A\}(B : (y : A) \to x = y \to \Ty_0) \to B\,x\,\refl\\
-  &           &&\to (y : A)(p : x = y) \to B\,y\,p\\
-  & \rlap{$\ms{J\beta} : \ms{J}\,B\,\mi{br}\,x\,\refl \equiv \mi{br}$}
+  & \ms{J} :\,&&\{A : \Ty_0\}\{x : A\}(B : (y : A) \to x = y \to \Ty_0) \to
+  B\,x\,\refl\\ & &&\to (y : A)(p : x = y) \to B\,y\,p\\ & \rlap{$\ms{J\beta} :
+    \ms{J}\,B\,\mi{br}\,x\,\refl \equiv \mi{br}$}
 \end{alignat*}
+The following operations are defined in the standard way \cite[Section~2]{hottbook}.
+\begin{itemize}
+  \item Path composition $\blank\!\sqcdot\!\blank : x = y \to y = z \to x = z$.
+  \item Transport $\tr : (P : A \to \Ty_0) \to (p : x = y) \to P\,x \to P\,y$.
+  \item Path lifting $\ap : (f : A \to B) \to x = y \to f\,x = f\,y$.
+  \item Dependent path lifting $\apd : (f : (x : A) \to B\,x) \to (p : x = y) \to \tr\,B\,p\,(f\,x) = f\,y$.
+\end{itemize}
 
-\section{Theory of Signatures}
+\section{Strict Signatures}
 
-The theory of HII signatures is fairly similar to the theory of infinitary QII
-signatures. The primary difference is that $\Id$ is intensional in the ToS too: it
-has $\refl$ and $\ms{J}$, and does not have equality reflection.
-
-However, the choice of $\beta$-rules is now a bit more delicate. We have two
-options in the specification of the ToS.
-\begin{enumerate}
-\item
-  One choice is to have definitional $\beta$-rules for $\Id$ and $\Pi$,
-  expressed using $\blank\!\equiv\!\blank$. However, this forces us to have
-  strict equalities in the $\blank^M$ and $\blank^S$ interpretations of $\El$,
-  in other words, to have algebra morphisms and sections which preserve
-  structure definitionally. As we will see, if we instead use inner
-  (``fibrant'') equality for structure-preservation, the $\blank^M$ and
-  $\blank^S$ interpretations fail to respect the mentioned $\beta$-rules in the
-  ToS.
-
-  Now, such strict morphisms and sections of algebras are sensible and useful
-  when we want to specify HIITs, because $\beta$-rules of recursors and
-  eliminators are generally expected to be definitional in HoTT. But they are
-  not appropriate when we want to internally talk about algebra morphisms in
-  HoTT, as strict equations are only available in 2LTT. For example, it only
-  makes sense to specify a structure identity principle with ``weak'' algebra
-  morphisms, which preserve structure up to inner equality.
-
-\item
-  The other option is to drop strict $\beta$ for $\Pi$ and $\Id$. In this case,
-  we can still specify $\beta$ for $\Id$ using $\Id$ itself, but we cannot
-  specify $\beta$ and $\eta$ for $\Pi$ at all, because $\Id$ can only express
-  equality of small terms in some $\Tm\,\Gamma\,(\El\,a)$. We \emph{could} add a
-  ``big'' version of $\Id$ for this purpose, but this feels like an unnecessary
-  complication. Instead, for the sake of simplicity, we just drop $\lam$ for
-  $\Pi$ together with the $\beta\eta$ rules. This has a negligible impact on the
-  practical expressiveness of signatures, although the ToS expressiveness for
-  specifying model constructions does take a hit.
-
-  In summary, we only have $\app$ for $\Pi$, and a weak $\beta$-rule for
-  $\ms{J}$.  This works fine in the semantics, as $\blank^M$ and $\blank^S$ do
-  preserve weak $\ms{J}\beta$ up to inner equality.
-\end{enumerate}
-We shall refer to option 1 as \textbf{strict ToS}, and option 2 as \textbf{weak
-  ToS}. In the following we present the two options simultaneously.
+%% We also assume \emph{strong function extensionality} for $\blank\!=\!\blank$
+%% \cite[Section~2.8]{hottbook}. This means that the function $\ms{happly} : (f =
+%% g) \to ((x : A) \to f\,x = g\,x)$ is an equivalence, and the inverse of
+%% $\ms{happly}$ is taken to be the extensionality principle $\ms{funext}$.
 
 \begin{mydefinition}
-A \textbf{model of ToS} (weak or strict) consists of a base cwf, with underlying
-sets returning in $\Set$, supporting the following type formers.
-  \begin{itemize}
-    \item A \textbf{cwf} with underlying sets $\Con$, $\Sub$, $\Ty$ and $\Tm$, all returning in
-      the outer $\Set$ universe of 2LTT.
-    \item A \textbf{Tarski-style universe} $\U$ with decoding $\El$. $\U$ is closed under the following type formers:
-      \begin{itemize}
-        \item The \textbf{unit type} $\top$.
-        \item \textbf{$\Sigma$-types} $\Sigma : (a : \Tm\,\Gamma\,\U) \to \Tm\,(\Gamma\,\ext\,\El\,a)\,\U \to \Tm\,\Gamma\,\U$, with specifying isomorphism
-          \[(\proj,\,\blank\!,\!\blank) : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\simeq (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))\]
-        \item \textbf{Extensional identity} $\Id : \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U$,
-          specified by $(\reflect,\,\refl) : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)) \simeq (t \equiv u)$.
-        \item \textbf{Infinitary functions} $\Piinf : (A : \Ty_0) \to (A \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U$, specified by $(\appinf,\,\laminf) : \Tm\,\Gamma\,(\Piinf\,A\,b) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(\El\,(b\,\alpha)))$.
-      \end{itemize}
-    \item An \textbf{inductive function type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
-      \Ty\,(\Gamma\ext\El\,a) \to \Ty\,\Gamma$, specified by
-      $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
-    \item An \textbf{external function type} $\Pie : (A : \Ty_0) \to (A \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
-      $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,A\,B) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(B\,\alpha))$.
-  \end{itemize}
-
+A \textbf{model of strict ToS} is the same as a model of the theory of
+infinitary QII signatures, with the following change: the $\Id$ type former in
+$\U$ only supports $\refl$, but no elimination rule or reflection rule.
 \end{mydefinition}
 
+%% $\U$ is intensional, with the following rules:
+%% \begin{alignat*}{3}
+%%   & \J &&: \{t : \Tm\,\Gamma\,(\El\,a)\}
+%%          (b : \Tm\,(\Gamma\ext(u : \El\,a)\ext(p : \El\,(\Id\,t\,u)))\,\U)\\
+%%   & &&\to \Tm\,\Gamma\,(\El\,(b[u \mapsto t,\,p \mapsto \refl]))\\
+%%   & &&\to \{u : \Tm\,\gamma\,(\El\,a)\}
+%%        (p : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)))
+%%   \to \Tm\,\Gamma\,(\El\,(b[u \mapsto u,\,p \mapsto p]))\\
+%%   & \refl &&: \Tm\,\Gamma\,(\El\,(\Id\,t\,t))\\
+%%   & \J\beta &&: \J\,b\,\mi{pr}\,\refl \equiv \mi{pr}
+%% \end{alignat*}
+%% Note that we can only eliminate from $\Id$ to types in $\U$. Eliminating to
+%% arbitrary types won't be supported in the semantics. The reason is that strict
+%% preservation equations in the semantics force types to return in $\Set$.
 
+We assume that the syntax of ToS exists, and a signature is a context in the
+syntax. We could use bootstrap signatures as well, without loss of generality,
+as we will not use actual induction on signatures in the following, and we will
+also not discuss fine-grained sizing or cumulativity of algebras.
 
+  %% \item
+  %%   We additionally have an intensional large identity type $\ID : \Tm\,\Gamma\,A \to
+  %%   \Tm\,\Gamma\,A \to \Ty\,\Gamma$, with the following rules:
+  %%   \begin{alignat*}{3}
+  %%     & \J &&: \{t : \Tm\,\Gamma\,A\}
+  %%            (P : \Ty\,(\Gamma\ext(u : A)\ext(p : \ID\,t\,u)))\\
+  %%     & &&\to \Tm\,\Gamma\,(P[u \mapsto t,\,p \mapsto \refl])\\
+  %%     & &&\to \{u : \Tm\,\gamma\,A\}
+  %%          (p : \Tm\,\Gamma\,(\ID\,t\,u))
+  %%     \to \Tm\,\Gamma\,(P[u \mapsto u,\,p \mapsto p])\\
+  %%     & \refl &&: \Tm\,\Gamma\,(\ID\,t\,t)\\
+  %%     & \J\beta &&: \J\,P\,\mi{pr}\,\refl \equiv \mi{pr}
+  %%   \end{alignat*}
 
-\section{Semantics}
+\begin{myexample} The circle is one of the simplest higher inductive types \cite[Section~6.4]{hottbook}. The signature is the following.
+\begin{alignat*}{3}
+  &\ms{S}^1  &&: \U\\
+  &\ms{base} &&: \El\,\ms{S}^1\\
+  &\ms{loop} &&: \El\,(\Id\,\ms{base}\,\ms{base})
+\end{alignat*}
+Note that the circle signature is expressible as a QII signature, but in the QII
+semantics the $\ms{loop}$ entry is made trivial by UIP.
+\end{myexample}
 
-\chapter{Conclusion}
+\subsubsection{Non-examples}
+From the HoTT book, all higher-inductive types are supported, except
+\begin{itemize}
+\item
+  The torus \cite[Section~6.6]{hottbook}, since the specification contains $\Id$
+  composition, which requires $\Id$ elimination.
+\item
+  The ``hubs-and-spokes'' HITs \cite[Section~6.7]{hottbook}.  This involves
+  abstracting over some external $x : \ms{S}^1$ (a point of the circle), then
+  referring to a ToS term which is computed by elimination on $x$. This is also
+  not permitted in our setup, because signature terms live in the outer theory
+  of 2LTT, and external parameters are in $\Ty_0$.
+
+  If instead signatures and external parameters lived in the same theory (like in
+  our ETT setup for term algebra constructions of QIITs), this elimination would
+  be possible. For HIITs, we can't do that, since the inner theory can't
+  reasonably internalize the ToS.
+\end{itemize}
+
+%% \begin{myexample}
+%% The torus signature \cite[Section~6.6]{hottbook} is a relatively simple example which involves
+%% $\J$.  For $p_1 : \Tm\,\Gamma\,(\El\,(\Id\,t\,u))$ and $p_2 :
+%% \Tm\,\Gamma\,(\El\,(\Id\,u\,v))$, we abbreviate their composition as $p_1 \sqcdot p_2 :
+%% \Tm\,\Gamma\,(\El\,(\Id\,t\,v))$, defined using $\J$ in the evident way.
+%% \begin{alignat*}{3}
+%%   &\ms{T}^2  &&: \U\\
+%%   &\ms{b}    &&: \El\,\ms{T}^2\\
+%%   &\ms{p}    &&: \El\,(\Id\,\ms{b}\,\ms{b})\\
+%%   &\ms{q}    &&: \El\,(\Id\,\ms{b}\,\ms{b})\\
+%%   &\ms{t}    &&: \El\,(\Id\,(\p \sqcdot \q)\,(\q \sqcdot \p))
+%% \end{alignat*}
+%% \end{myexample}
+
+%% \begin{myexample}
+%% The large $\ID$ type lets us express ``sort equivalences''. For example, a signature for
+%% integers can be compactly written as follows \cite{hit-integers}:
+%% \begin{alignat*}{3}
+%%   &\ms{Int}  &&: \U\\
+%%   &\zero     &&: \El\,\ms{Int}\\
+%%   &\p        &&: \ID\,\ms{Int}\,\ms{Int}
+%% \end{alignat*}
+%% We get the $\suc$ constructor by coercing along $\p$, and predecessors by
+%% coercing backwards.
+
+%% Recall that in Chapter \ref{chap:iqiit} we dropped sort equations because of
+%% their non-fibrancy in the semantics. In contrast, there is no issue with sort
+%% equations here. Sort equations simply become inner paths between types in the
+%% semantics; if we assume univalence in the inner theory, such paths are
+%% equivalent to type equivalences. Hence, sort equations in HITTs can be viewed as
+%% shorthands for sort equivalences. Without sort equations, it is still possible
+%% to write equivalences in signatures, using any of the standard definitions
+%% \cite[Chapter~4]{hottbook}.
+%% \end{myexample}
+
+%% \subsubsection{Limitation: nested induction}
+
+%% Nested induction means that external type functions may be applied to
+%% expressions internal to the theory of signatures. This is not possible in our
+%% signatures. The simplest example is rose trees:
+%% \begin{alignat*}{3}
+%%   &\ms{Tree} &&: \Set\\
+%%   &\ms{node} &&: \ms{List}\,\ms{Tree} \to \ms{Tree}
+%% \end{alignat*}
+%% We assume $\ms{List} : \Set \to \Set$. The above listing is not a signature,
+%% since $\ms{List}\,\ms{Tree}$ is not representable in a signature; the
+%% $\ms{List}$ function is external, while $\ms{Tree}$ would be an internal sort.
+%% This style of inductive definition requires reasoning about the polarity of all
+%% external type functions: only the strictly positive $\Set \to \Set$ functions
+%% should be allowed. With general type functions we would also need to track
+%% polarity of multiple parameters, or even higher-order polarity.
+
+%% Many use cases of nested induction can be removed by ``including'' the external
+%% type constructor into the signature. In the case of rose trees, this means
+%% defining lists and trees mutually:
+%% \begin{alignat*}{3}
+%%   &\ms{List} &&: \U\\
+%%   &\ms{Tree} &&: \U\\
+%%   &\ms{nil}  &&: \El\,\ms{List}\\
+%%   &\ms{cons} &&: \ms{Tree} \to \ms{List} \to \El\,\ms{List}\\
+%%   &\ms{node} &&: \ms{List}\,\ms{Tree} \to \ms{Tree}
+%% \end{alignat*}
+%% Of course, nested induction would be still desirable because of the code reuse
+%% that it enables.
+
+%% \subsubsection{Limitation: elimination from external parameters to signature terms}
+
+%% Our signatures support every higher inductive type from the homotopy type theory
+%% book, with the exception of the ``hubs-and-spokes'' HITs
+%% \cite[Section~6.7]{hottbook}.  This involves abstracting over some external $x :
+%% \ms{S}^1$ (a point of the circle), then referring to a ToS term which is
+%% computed by elimination on $x$. This is also not permitted in our setup, because
+%% signature terms live in the outer theory of 2LTT, and external parameters are in
+%% $\Ty_0$.
+
+%% If instead signatures and external parameters lived in the same theory (like in
+%% our ETT setup for term algebra constructions of QIITs), this elimination would
+%% be possible. For HIITs, we can't do that, since the inner theory can't
+%% reasonably internalize the ToS.
+
+\subsection{Semantics}
+
+For each signature $\Gamma$, we wish to compute
+\begin{alignat*}{3}
+  &\Gamma^A &&: \Set\\
+  &\Gamma^M &&: \Gamma^A \to \Gamma^A \to \Set\\
+  &\Gamma^D &&: \Gamma^A \to \Set\\
+  &\Gamma^S &&: (\gamma : \Gamma^A) \to \Gamma^D\,\gamma \to \Set
+\end{alignat*}
+corresponding respectively to algebras, morphisms, displayed algebras and
+sections. Note that all of these return in $\Set$. Morphisms and sections in
+particular are forced to return in $\Set$, because they may contain strict
+equalities.
+
+In the following, we present the AMDS interpretations in order, in a compact and
+tabular manner. For each interpretation, we omit equations and substitution for
+type formers. We discuss some of the more interesting cases.
+
+In \textbf{algebras} and \textbf{displayed algebras} there isn't any
+complication; all equations holds in these (displayed) models strictly, and we
+do not use equations from induction hypotheses anywhere.
+
+In \textbf{morphisms}, note that all term formers returning in $\El$ specify a
+strict equation. We write $\refl$ in their definition for brevity, which is
+technically correct (by equality reflection), but the definitions may involve
+using the strict equalities from induction hypotheses.  $\top^M\,\gamma^M :
+\tt_0 \equiv \tt_0$ is trivial, but
+\[  (\proj_1\,t)^M\,\gamma^M : a^M\,\gamma^M\,((\proj_1\,t)^A\,\gamma_0) \equiv (\proj_1\,t)^A\,\gamma_1\]
+requires us to use
+\[t^M\,\gamma^M : (a^M\,\gamma^M\,((\proj_1\,t)^A\,\gamma_0),\,b^M\,(\gamma^M,\,\refl)\,((\proj_2\,t)^A\,\gamma_1))
+\equiv t^A\,\gamma_1 \]
+Likewise we use $t^M\,\gamma^M$ in the equation for $(\proj_2\,t)^M$.
+
+Also note that the definition for $(\Id\,t\,u)^M\,\gamma^M$ relies on $t^M$ and
+$u^M$ for well-typing. The goal is
+\begin{alignat*}{3}
+  &(\Id\,t\,u)^M\,\gamma^M : (\Id\,t\,u)^A\,\gamma_0 \to (\Id\,t\,u)^A\,\gamma_1\\
+  &(\Id\,t\,u)^M\,\gamma^M : t^A\,\gamma_0 = u^A\,\gamma_0 \to t^A\,\gamma_0 = u^A\,\gamma_1
+\end{alignat*}
+Assuming $p : t^A\,\gamma_0 = u^A\,\gamma_0$, we have $\ap\,(a^M\,\gamma^M)\,p :
+a^M\,\gamma^M\,(t^A\,\gamma_0) = a^M\,\gamma^M\,(u^A\,\gamma_0)$, so we rewrite
+the sides along $t^M\,\gamma^M : a^M\,\gamma^M\,(t^A\,\gamma_0) \equiv
+t^A\,\gamma_1$ and $u^M\,\gamma^M$. The $\ap$ application must stay explicit in
+the definition, since inner equalities can be proof-relevant.
+
+\textbf{Sections} are a mostly mechanical generalization of morphisms, where the
+codomain depends on the domain. Note that the $(\Id\,t\,u)^D$ definition is a
+path-over-path, and accordingly we have $\apd$ instead of $\ap$ in $(\Id\,t\,u)^S$.
+
+\begin{mydefinition} For some $\Gamma$ signature, notions of \textbf{initiality} and \textbf{induction} are
+as follows.
+\begin{alignat*}{3}
+  &\ms{Initial}\,&&(\gamma : \Gamma^A) &&\defn (\gamma' : \Gamma^A) \to \ms{isContr}\,(\Gamma^M\,\gamma\,\gamma')\\
+  &\ms{Inductive}\,&&(\gamma : \Gamma^A) &&\defn (\gamma^D : \Gamma^D\,\gamma) \to \Gamma^S\,\gamma\,\gamma^D
+\end{alignat*}
+This is the same as before in Definition \ref{TODO}, except we do not have an
+flcwf of algebras. Hence, we do not have equivalence of initiality and
+induction, nor other properties that are evident in an flcwf, like Lemma \ref{TODO}.
+\end{mydefinition}
+
+\subsubsection{Components of ToS (without equations)}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\Con &&: \Set\\
+  &\Sub &&: \Con \to \Con \to \Set\\
+  &\Ty  &&: \Con \to \Set\\
+  &\Tm  &&: (\Gamma : \Con) \to \Ty\,\Gamma \to \Set \\
+  &\emptycon &&: \Con\\
+  &\epsilon &&: \Sub\,\Gamma\,\emptycon\\
+  &\id &&: \Sub\,\Gamma\,\Gamma\\
+  &\blank\!\circ\!\blank &&: \Sub\,\Delta\,\Xi \to \Sub\,\Gamma\,\Delta \to \Sub\,\Gamma\,\Xi\\
+  &\blank\![\blank] &&: \Ty\,\Delta \to \Sub\,\Gamma\,\Delta \to \Ty\,\Gamma\\
+  &\blank\![\blank] &&: \Tm\,\Delta\,A \to (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma])\\
+  &\p &&: \Sub\,(\Gamma\ext A)\,\Gamma\\
+  &\q &&: \Tm\,(\Gamma\ext A)\,(A[\p])\\
+  &(\blank\!,\!\blank) &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma]) \to \Sub\,\Gamma\,(\Delta\ext A)\\
+  &\U &&: \Ty\,\Gamma\\
+  &\El &&: \Tm\,\Gamma\,\U \to \Ty\,\Gamma\\
+  &\top &&: \Tm\,\Gamma\,\U\\
+  &\tt  &&: \Tm\,\Gamma\,(\El\,\top)\\
+  &\Sigma &&: (a : \Tm\,\Gamma\,\U) \to \Tm\,(\Gamma \ext \El\,a)\,\U \to \Tm\,\Gamma\,\U\\
+  &\proj_1 &&: \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b)) \to \Tm\,\Gamma\,(\El\,a)\\
+  &\proj_2 &&: (t : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))) \to \Tm\,\Gamma\,(\El\,(b[\id,\,\proj_1\,t]))\\
+  &(\blank\!,\!\blank) &&: (t : \Tm\,\Gamma\,(\El\,a)) \to \Tm\,\Gamma\,(\El\,(b[\id,\,t])) \to \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\\
+  &\Id &&: \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U\\
+  &\refl &&: \Tm\,\Gamma\,(\El\,(\Id\,t\,t))\\
+  &\Piinf &&: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U\\
+  &\appinf &&: \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b)) \to (i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))\\
+  &\laminf &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
+  &\Pi &&: (a : \Tm\,\Gamma\,\U) \to \Ty\,(\Gamma\ext \El\,a) \to \Ty\,\Gamma\\
+  &\app &&: \Tm\,\Gamma\,(\Pi\,a\,B) \to \Tm\,(\Gamma \ext \El\,a)\,B\\
+  &\lam &&: \Tm\,(\Gamma \ext \El\,a)\,B \to \Tm\,\Gamma\,(\Pi\,a\,B)\\
+  &\Pie &&: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma\\
+  &\appe &&: \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \to (i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)\\
+  &\lame &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)) \to \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B)
+\end{alignat*}
+
+\subsubsection{Algebras}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^A &&: \Con \to \Set\\
+  &\blank^A &&: \Sub\,\Gamma\,\Delta \to \Gamma^A \to \Delta^A\\
+  &\blank^A &&: \Ty\,\Gamma \to \Gamma^A \to \Set\\
+  &\blank^A &&: \Tm\,\Gamma\,A \to (\gamma : \Gamma^A) \to A^A\,\gamma\\
+  &\emptycon^A &&\defn \top\\
+  &\epsilon^A\,\gamma &&\defn \tt\\
+  &\id^A\,\gamma &&\defn \gamma\\
+  &(\sigma \circ \delta)^A\,\gamma &&\defn \sigma^A\,(\delta^A\,\gamma)\\
+  &(\Gamma \ext A)^A &&\defn (\gamma : \Gamma^A) \times A^A\,\gamma\\
+  &(A[\sigma])^A\,\gamma &&\defn A^A\,(\sigma^A\,\gamma)\\
+  &(t[\sigma])^A\,\gamma &&\defn t^A\,(\sigma^A\,\gamma)\\
+  &\p^A\,(\gamma,\,\alpha) &&\defn \gamma\\
+  &\q^A\,(\gamma,\,\alpha) &&\defn \alpha\\
+  &(\sigma,\,t)^A\,\gamma &&\defn (\sigma^A\,\gamma,\,t^A\,\gamma)\\
+  &\U^A\,\gamma &&\defn \Ty_0\\
+  &(\El\,a)^A\,\gamma &&\defn a^A\,\gamma\\
+  &\top^A\,\gamma &&\defn \top_0\\
+  &\tt^A\,\gamma &&\defn \tt_0\\
+  &(\Sigma\,a\,b)^A\,\gamma &&\defn (\alpha : a^A\,\gamma) \times_0 b^A\,(\gamma,\,\alpha)\\
+  &(\proj_1\,t)^A\,\gamma &&\defn \proj_1\,(t^A\,\gamma)\\
+  &(\proj_2\,t)^A\,\gamma &&\defn \proj_2\,(t^A\,\gamma)\\
+  &(t,\,u)^A\,\gamma &&\defn (t^A\,\gamma,\,u^A\,\gamma)\\
+  &(\Id\,t\,u)^A\,\gamma &&\defn t\,\gamma = u\,\gamma\\
+  &\refl^A\,\gamma &&\defn \refl : t^A\,\gamma = t^A\,\gamma\\
+  &(\Piinf\,\mi{Ix}\,b)^A\,\gamma &&\defn (i : \mi{Ix}) \to (b\,i)^A\,\gamma\\
+  &(\appinf\,t\,i)^A\,\gamma &&\defn t^A\,\gamma\,i\\
+  &(\laminf\,t)^A\,\gamma &&\defn \lambda\,i.\,(t\,i)^A\,\gamma\\
+  &(\Pi\,a\,B)^A\,\gamma &&\defn (\alpha : a^A\,\gamma) \to B^A\,(\gamma,\,\alpha)\\
+  &(\app\,t)^A\,(\gamma,\,\alpha) &&\defn t^A\,\gamma\,\alpha\\
+  &(\lam\,t)^A\,\gamma &&\defn \lambda\,\alpha.\,t^A\,(\gamma,\,\alpha)\\
+  &(\Pie\,\mi{Ix}\,B)^A\,\gamma &&\defn (i : \mi{Ix}) \to (B\,i)^A\,\gamma\\
+  &(\appe\,t\,i)^A\,\gamma &&\defn t^A\,\gamma\,i\\
+  &(\lame\,t)^A\,\gamma &&\defn \lambda\,i.\,(t\,i)^A\,\gamma
+\end{alignat*}
+
+\subsubsection{Morphisms}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^M &&: (\Gamma : \Con) \to \Gamma^A \to \Gamma^A \to \Set\\
+  &\blank^M &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Delta^M\,(\sigma^A\,\gamma_0)\,(\sigma^A\,\gamma_1)\\
+  &\blank^M &&: (A : \Ty\,\Gamma) \to A^A\,\gamma_0 \to A^A\,\gamma_1 \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Set\\
+  &\blank^M &&: (t : \Tm\,\Gamma\,A) \to (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \to A^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)\,\gamma^M\\
+  &\emptycon^M\,\gamma_0\,\gamma_1 &&\defn \top \\
+  &\epsilon^M\,\gamma^M &&\defn \tt\\
+  &\id^M\,\gamma^M &&\defn \gamma^M\\
+  &(\sigma \circ \delta)^M\,\gamma^M &&\defn \sigma^M\,(\delta^M\,\gamma^M)\\
+  &(\Gamma \ext A)^M\,(\gamma_0,\,\alpha_0)\,(\gamma_1,\,\alpha_1) &&\defn
+    (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \times A^M\,\alpha_0\,\alpha_1\,\gamma^M\\
+  &(A[\sigma])^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn A^M\,\alpha_0\,\alpha_1\,(\sigma^M\,\gamma^M)\\
+  &(t[\sigma])^M\,\gamma^M &&\defn t^M\,(\sigma^M\,\gamma^M)\\
+  &\p^M\,(\gamma^M,\,\alpha^M) &&\defn \gamma^M\\
+  &\q^M\,(\gamma^M,\,\alpha^M) &&\defn \alpha^M\\
+  &(\sigma,\,t)^M\,\gamma^M &&\defn (\sigma^M\,\gamma^M,\,t^M\,\gamma^M)\\
+  &\U^M\,a_0\,a_1\,\gamma^M &&\defn a_0 \to a_1\\
+  &(\El\,a)^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1 \\
+  &\top^M\,\gamma^M &&\defn \lambda\,\_.\,\tt_0\\
+  &\tt^M\,\gamma^M &&\defn \refl\\
+  &(\Sigma\,a\,b)^M\,\gamma^M &&\defn \lambda\,(\alpha,\,\beta).\,(a^M\,\gamma^M\,\alpha,\,b^M\,(\gamma^M,\,\refl)\,\beta)\\
+  &(\proj_1\,t)^M\,\gamma^M &&\defn \refl\\
+  &(\proj_2\,t)^M\,\gamma^M &&\defn \refl\\
+  &(t,\,u)^M\,\gamma^M &&\defn \refl \\
+  &(\Id\,t\,u)^M\,\gamma^M &&\defn \lambda\,(p : t^A\,\gamma_0 = u^A\,\gamma_0).\,\ap\,(a^M\,\gamma^M)\,p\\
+  &\refl^M\,\gamma^M &&\defn \refl\\
+  &(\Piinf\,\mi{Ix}\,b)^M\,\gamma^M\,t &&\defn \lambda\,i.\,(b\,i)^M\,\gamma^M\,(t\,i)\\
+  &(\appinf\,t\,i)^M\,\gamma^M &&\defn \refl \\
+  &(\laminf\,t)^M\,\gamma^M &&\defn \refl \\
+  &(\Pi\,a\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (\alpha : a^A\,\gamma_0) \to B^M\,(t_0\,\alpha)\,(t_1\,(a^M\,\gamma^M\,\alpha))\,(\gamma^M,\,\refl)\\
+  &(\app\,t)^M\,(\gamma^M,\,\alpha^M) &&\defn t^M\,\gamma^M\,\alpha_0\hspace{1em}\text{where}\hspace{1em} \alpha^M : a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1\\
+  &(\lam\,t)^M\,\gamma^M &&\defn \lambda\,\alpha.\,t^M\,(\gamma^M,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^M\,\gamma^M\,\alpha \equiv a^M\,\gamma^M\,\alpha\\
+  &(\Pie\,\mi{Ix}\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (i : \mi{Ix}) \to (B\,i)^M\,(t_0\,i)\,(t_1\,i)\,\gamma^M\\
+  &(\appe\,t\,i)^M\,\gamma^M &&\defn t^M\,\gamma^M\,i\\
+  &(\lame\,t)^M\,\gamma^M &&\defn (t\,i)^M\,\gamma^M
+\end{alignat*}
+
+\subsubsection{Displayed algebras}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^D &&: (\Gamma : \Con) \to \Gamma^A \to \Set\\
+  &\blank^D &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^D\,\gamma \to \Delta^D\,(\sigma^A\,\gamma) \\
+  &\blank^D &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to \Gamma^D\,\gamma \to \Set\\
+  &\blank^D &&: (t : \Tm\,\Gamma\,A) \to (\gamma^D : \Gamma^D\,\gamma) \to A^D\,(t^A\,\gamma)\,\gamma^D\\
+  &\emptycon^D\,\gamma &&\defn \top\\
+  &\epsilon^D\,\gamma^D &&\defn \tt\\
+  &\id^D\,\gamma^D &&\defn \gamma^D\\
+  &(\sigma \circ \delta)^D\,\gamma^D &&\defn \sigma^D\,(\delta^D\,\gamma^D)\\
+  &(\Gamma \ext A)^D\,(\gamma,\,\alpha) &&\defn (\gamma^D : \Gamma^D\,\gamma) \times A^D\,\alpha\,\gamma^D\\
+  &(A[\sigma])^D\,\alpha\,\gamma^D &&\defn A^D\,\alpha\,(\sigma^D\,\gamma^D)\\
+  &(t[\sigma])^D\,\gamma^D &&\defn t^D\,(\sigma^D\,\gamma^D)\\
+  &\p^D\,(\gamma^D,\,\alpha^D) &&\defn \gamma^D\\
+  &\q^D\,(\gamma^D,\,\alpha^D) &&\defn \alpha^D\\
+  &(\sigma,\,t)^D\,\gamma^D &&\defn (\sigma^D\,\gamma^D,\,t^D\,\gamma^D)\\
+  &\U^D\,a\,\gamma^D &&\defn a \to \Ty_0\\
+  &(\El\,a)^D\,t\,\gamma^D &&\defn a^D\,\gamma^D\,t\\
+  &\top^D\,\gamma^D &&\defn \lambda\,\_.\,\top_0\\
+  &\tt^D\,\gamma^D &&\defn \tt_0\\
+  &(\Sigma\,a\,b)^D\,\gamma^D &&\defn \lambda\,(\alpha,\,\beta).\,(\alpha^D : a^D\,\gamma^D\,\alpha)\times_0 b^D\,(\gamma^D,\,\alpha^D)\,\beta\\
+  &(\proj_1\,t)^D\,\gamma^D &&\defn \proj_1\,(t^D\,\gamma^D)\\
+  &(\proj_2\,t)^D\,\gamma^D &&\defn \proj_2\,(t^D\,\gamma^D)\\
+  &(t,\,u)^D\,\gamma^D &&\defn (t^D\,\gamma^D,\,u^D\,\gamma^D)\\
+  &(\Id\,t\,u)^D\,\gamma^D &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\tr\,(a^D\,\gamma^D)\,p\,(t^D\,\gamma^D) = u^D\,\gamma^D\\
+  &\refl^D\,\gamma^D &&\defn \refl : t^D\,\gamma^D = t^D\,\gamma^D\\
+  &(\Piinf\,\mi{Ix}\,b)^D\,\gamma^D &&\defn \lambda\,t.\,(i : \mi{Ix}) \to (b\,i)^D\,\gamma^D\,(t\,i)\\
+  &(\appinf\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
+  &(\laminf\,t)^D\,\gamma^D &&\defn \lambda\,i.\,(t\,i)^D\,\gamma^D\\
+  &(\Pi\,a\,B)^D\,t\,\gamma^D &&\defn \{\alpha : a^A\,\gamma\}(\alpha^D : a^D\,\gamma^D\,\alpha)
+    \to B^D\,(t\,\alpha)\,(\gamma^D,\,\alpha^D)\\
+  &(\app\,t)^D\,(\gamma^D,\,\alpha^D) &&\defn t^D\,\gamma^D\,\alpha^D\\
+  &(\lam\,t)^D\,\gamma^D &&\defn \lambda\,\{\alpha\}\,\alpha^D.\,t^D\,(\gamma^D,\,\alpha^D)\\
+  &(\Pie\,\mi{Ix}\,B)^D\,t\,\gamma^D &&\defn (i : \mi{Ix}) \to (B\,i)^D\,(t\,i)\,\gamma^D\\
+  &(\appe\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
+  &(\lame\,t)^D\,\gamma &&\defn \lambda\,i.\,(t\,i)^D\,\gamma^D
+\end{alignat*}
+
+\subsubsection{Sections}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^S &&: (\Gamma : \Con) \to (\gamma : \Gamma^A) \to \Gamma^A\,\gamma \to \Set\\
+  &\blank^S &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,\gamma\,\gamma^D \to \Delta^S\,(\sigma^A\,\gamma)\,(\sigma^D\,\gamma^D)\\
+  &\blank^S &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to A^D\,\gamma^D \to \Gamma^S\,\gamma\,\gamma^D \to \Set\\
+  &\blank^S &&: (t : \Tm\,\Gamma\,A) \to (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \to A^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)\,\gamma^S\\
+  &\emptycon^S\,\gamma\,\gamma^D &&\defn \top \\
+  &\epsilon^S\,\gamma^S &&\defn \tt\\
+  &\id^S\,\gamma^S &&\defn \gamma^S\\
+  &(\sigma \circ \delta)^S\,\gamma^S &&\defn \sigma^S\,(\delta^S\,\gamma^S)\\
+  &(\Gamma \ext A)^S\,(\gamma,\,\alpha)\,(\gamma^D,\,\alpha^D) &&\defn
+    (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \times A^S\,\alpha\,\alpha^D\,\gamma^S\\
+  &(A[\sigma])^S\,\alpha\,\alpha^D\,\gamma^S &&\defn A^S\,\alpha\,\alpha^D\,(\sigma^S\,\gamma^S)\\
+  &(t[\sigma])^S\,\gamma^S &&\defn t^S\,(\sigma^S\,\gamma^S)\\
+  &\p^S\,(\gamma^S,\,\alpha^S) &&\defn \gamma^S\\
+  &\q^S\,(\gamma^S,\,\alpha^S) &&\defn \alpha^S\\
+  &(\sigma,\,t)^S\,\gamma^S &&\defn (\sigma^S\,\gamma^S,\,t^S\,\gamma^S)\\
+  &\U^S\,a\,a^D\,\gamma^S &&\defn (\alpha : a) \to a^D\,\alpha\\
+  &(\El\,a)^S\,\alpha\,\alpha^D\,\gamma^S &&\defn a^S\,\gamma^S\,\alpha \equiv \alpha^D \\
+  &\top^S\,\gamma^S &&\defn \lambda\,\_.\,\tt_0\\
+  &\tt^S\,\gamma^S &&\defn \refl\\
+  &(\Sigma\,a\,b)^S\,\gamma^S &&\defn \lambda\,(\alpha,\,\beta).\,(a^S\,\gamma^S\,\alpha,\,b^S\,(\gamma^S,\,\refl)\,\beta)\\
+  &(\proj_1\,t)^S\,\gamma^S &&\defn \refl\\
+  &(\proj_2\,t)^S\,\gamma^S &&\defn \refl\\
+  &(t,\,u)^S\,\gamma^S &&\defn \refl \\
+  &(\Id\,t\,u)^S\,\gamma^S &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\apd\,(a^S\,\gamma^S)\,p\\
+  &\refl^S\,\gamma^S &&\defn \refl\\
+  &(\Piinf\,\mi{Ix}\,b)^S\,\gamma^S\,t &&\defn \lambda\,i.\,(b\,i)^S\,\gamma^S\,(t\,i)\\
+  &(\appinf\,t\,i)^S\,\gamma^S &&\defn \refl \\
+  &(\laminf\,t)^S\,\gamma^S &&\defn \refl \\
+  &(\Pi\,a\,B)^S\,t\,t^D\,\gamma^S &&\defn (\alpha : a^A\,\gamma) \to B^S\,(t\,\alpha)\,(t^D\,(a^S\,\gamma^S\,\alpha))\,(\gamma^S,\,\refl)\\
+  &(\app\,t)^S\,(\gamma^S,\,\alpha^S) &&\defn t^S\,\gamma^S\,\alpha\hspace{1em}\text{where}\hspace{1em} \alpha^S : a^S\,\gamma^S\,\alpha \equiv \alpha^D\\
+  &(\lam\,t)^S\,\gamma^S &&\defn \lambda\,\alpha.\,t^S\,(\gamma^S,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^S\,\gamma^S\,\alpha \equiv a^S\,\gamma^S\,\alpha\\
+  &(\Pie\,\mi{Ix}\,B)^S\,t\,t^D\,\gamma^S &&\defn (i : \mi{Ix}) \to (B\,i)^S\,(t\,i)\,(t^D\,i)\,\gamma^S\\
+  &(\appe\,t\,i)^S\,\gamma^S &&\defn t^S\,\gamma^S\,i\\
+  &(\lame\,t)^S\,\gamma^S &&\defn (t\,i)^S\,\gamma^S
+\end{alignat*}
+
+\chapter{Conclusion \& Further Work}
 
 \bibliography{references}
 \backmatter

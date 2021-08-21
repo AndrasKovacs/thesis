@@ -197,6 +197,11 @@ Daniel Gratzer, G.~A. Kavvos, Andreas Nuyts, and Lars Birkedal.
   Computer Science, Saarbr{\"{u}}cken, Germany, July 8-11, 2020}, pages
   492--506. {ACM}, 2020.
 
+\bibitem[Hed98]{hedberg}
+Michael Hedberg.
+\newblock A coherence theorem for {M}artin-{L}{\"o}f's type theory.
+\newblock {\em Journal of Functional Programming}, 8(04):413--436, 1998.
+
 \bibitem[HRR14]{udayReynolds}
 Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
 \newblock Logical relations and parametricity - {A} reynolds programme for

@@ -401,3 +401,85 @@ RECURSOR
 
   Uᴿ : (ν : Sub ↓Ω ↓Γ)(a : M.Tm ↓Ω U) → Uᴹₗ (F a (Ωᵀ id) (F a ω)) (Γᴿ ν)
      : (ν : Sub ↓Ω ↓Γ)(a : M.Tm ↓Ω U) → F a (Ωᵀ id) → F a ω
+
+
+-- HIIT AMDS notes
+--------------------------------------------------------------------------------
+
+- strict vs weak signatures
+- strict: same as IQII, but intensional Id in U, + intensional large Id
+
+- weak: Σ, Πⁱⁿᶠ, Π specced as equivalences up to Id
+  Id-s have weak β
+
+
+-- strict HIITs: no J!
+--------------------------------------------------------------------------------
+
+refl t : Tm Γ (El (Id a t t))
+
+(refl t)ᴹ γᴹ : (El (Id a t t))ᴹ ((refl t)ᴬ γ₀) ((refl t)ᴬ γ₁) γᴹ
+             : (Id a t t)ᴹ γᴹ refl ≡ refl
+	     : ap (aᴹ γᴹ) refl ≡ refl  OK
+
+------------------------------------------------------------
+
+p : Tm Γ (El (Id a t u))
+q : Tm Γ (El (Id a u v))
+
+(p ◾ q)ᴬ γ : t γ = v γ
+           = pᴬ γ ◾ qᴬ γ
+
+
+(p ◾ q) : Tm Γ (El (Id a t v))
+
+(p ◾ q)ᴹ γᴹ : (El (Id a t v))ᴹ ((p ◾ q)ᴬ γ₀) ((p ◾ q)ᴬ γ₁) γᴹ
+            : (Id a t v)ᴹ γ₀ ((p ◾ q)ᴬ γ₀) ≡ ((p ◾ q)ᴬ γ₁)
+	    : ap (aᴹ γᴹ) ((p ◾ q)ᴬ γ₀) ≡ ((p ◾ q)ᴬ γ₁)
+	    : ap (aᴹ γᴹ) (pᴬ γ₀ ◾ qᴬ γ₀) ≡ (pᴬ γ₁ ◾ qᴬ γ₁)
+	    : ap (aᴹ γᴹ) (pᴬ γ₀ ◾ qᴬ γ₀) ≡ (ap (aᴹ γᴹ) (pᴬ γ₀) ◾ ap (aᴹ γᴹ) (qᴬ γ₀))
+
+pᴹ γᴹ : ap (aᴹ γᴹ) (pᴬ γ₀) ≡ pᴬ γ₁
+qᴹ γᴹ : ap (aᴹ γᴹ) (qᴬ γ₀) ≡ qᴬ γ₁
+
+FAIL (but could work in some cubicaltts!)
+
+------------------------------------------------------------
+
+J b pr {u} p : Tm Γ (El (b[u ↦ u, p ↦ p])
+
+(J b pr p)ᴹ γᴹ : (El (b[u ↦ u, p ↦ p]))ᴹ ((J b pr p)ᴬ γ₀) ((J b pr p)ᴬ γ₁) γᴹ
+               : (b[u ↦ u, p ↦ p])ᴹ γᴹ ((J b pr p)ᴬ γ₀) ≡ ((J b pr p)ᴬ γ₁)
+	       : bᴹ (γᴹ, uᴹ, pᴹ) ((J b pr p)ᴬ γ₀) ≡ ((J b pr p)ᴬ γ₁)
+	       : bᴹ (γᴹ, uᴹ, pᴹ) (J (λ u p. bᴬ (γ₀, u, p)) (prᴬ γ₀) (pᴬ γ₀)) ≡
+	                         (J (λ u p. bᴬ (γ₁, u, p)) (prᴬ γ₁) (pᴬ γ₁))
+
+  t u : Tm Γ (El a)
+  p   : Tm Γ (El (Id t u))
+
+  pᴬ γ₀ : tᴬ γ₀ = uᴬ γ₀   -- eq0
+  pᴬ γ₁ : tᴬ γ₁ = uᴬ γ₁   -- eq1
+
+  tᴹ γᴹ : aᴹ γᴹ (tᴬ γ₀) ≡ tᴬ γ₁
+  uᴹ γᴹ : aᴹ γᴹ (tᴬ γ₀) ≡ tᴬ γ₁
+  pᴹ γᴹ : ap (aᴹ γᴹ) (pᴬ γ₀) ≡ pᴬ γ₁  -- eqᴹ
+
+  bᴹ (γᴹ, uᴹ, pᴹ) (J (λ u p. bᴬ (γ₀, u, p)) (prᴬ γ₀) (pᴬ γ₀)) ≡
+                  (J (λ u p. bᴬ (γ₁, u, p)) (prᴬ γ₁) (pᴬ γ₁))
+
+
+  FAIL
+
+  bᴹ (γᴹ, uᴹ, pᴹ) (J (λ u p. bᴬ (γ₀, u, p)) (prᴬ γ₀) (pᴬ γ₀)) ≡
+                  (J (λ u p. bᴬ (γ₁, u, p)) (prᴬ γ₁) (ap (aᴹ γᴹ) (pᴬ γ₀)))
+
+  bᴹ (γᴹ, uᴹ, pᴹ) (J (λ u p. bᴬ (γ₀, u, p)) (prᴬ γ₀) refl) ≡
+                  (J (λ u p. bᴬ (γ₁, u, p)) (prᴬ γ₁) (ap (aᴹ γᴹ) refl))
+
+  bᴹ (γᴹ, tᴹ, refl) (prᴬ γ₀) ≡ (prᴬ γ₁)
+
+
+  pr : Tm Γ (El (b[u → t, p ↦ refl]))
+
+  prᴹ γᴹ : bᴹ (γᴹ, tᴹ, refl) (prᴬ γ₀) ≡ (prᴬ γ₁) would be OK, but we fail because we can't eliminate
+           from pᴬ to strict equality!
