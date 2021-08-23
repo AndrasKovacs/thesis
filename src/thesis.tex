@@ -2854,13 +2854,13 @@ but we still write $\Id$ for the identity type and make $\U$ and $\El$
 explicit. In this notation, a signature is just a listing of binders. The category
 signature becomes the following:
 \begin{alignat*}{3}
-  & \mi{Obj} &&: \U\\
-  & \mi{Hom} &&: \mi{Obj} \to \mi{Obj} \to \U\\
-  & \mi{id}  &&: \El\,(\mi{Hom}\,i\,i)\\
-  & \mi{\blank\!\circ\!\blank} &&: \mi{Hom}\,j\,k \to \mi{Hom}\,i\,j \to \El\,(\mi{Hom}\,i\,k)\\
-  & \mi{idr} &&: \Id\,(f \circ \mi{id})\,f\\
-  & \mi{idl} &&: \Id\,(\mi{id} \circ f)\,f\\
-  & \mi{assoc} &&: \Id\,(f \circ (g \circ h))\,((f \circ g) \circ h)
+  & \ms{Obj} &&: \U\\
+  & \ms{Hom} &&: \ms{Obj} \to \ms{Obj} \to \U\\
+  & \ms{id}  &&: \El\,(\ms{Hom}\,i\,i)\\
+  & \ms{\blank\!\circ\!\blank} &&: \ms{Hom}\,j\,k \to \ms{Hom}\,i\,j \to \El\,(\ms{Hom}\,i\,k)\\
+  & \ms{idr} &&: \Id\,(f \circ \ms{id})\,f\\
+  & \ms{idl} &&: \Id\,(\ms{id} \circ f)\,f\\
+  & \ms{assoc} &&: \Id\,(f \circ (g \circ h))\,((f \circ g) \circ h)
 \end{alignat*}
 \end{notation}
 \end{myexample}
@@ -2872,18 +2872,18 @@ refers to types and inhabitants which are not introduced inside a signature.
 For example, we give a signature for lists by assuming $A : \Ty_0$ for the
 (external) type of list elements:
 \begin{alignat*}{3}
-  &\mi{List} &&: \U\\
-  &\mi{nil}  &&: \El\,\mi{List}\\
-  &\mi{cons} &&: A \toe \mi{List} \to \El\,\mi{List}
+  &\ms{List} &&: \U\\
+  &\ms{nil}  &&: \El\,\ms{List}\\
+  &\ms{cons} &&: A \toe \ms{List} \to \El\,\ms{List}
 \end{alignat*}
 Hence, ``parameters'' are always assumptions made in the metatheory. We can
 also \emph{index} sorts by external values. Let's specify length-indexed vectors
 now; we keep the $A : \Ty_0$ assumption, but also assume that $\Ty_0$ has
 natural numbers, with $\Nat_0 : \Ty_0$, $\zero_0$ and $\suc_0$.
 \begin{alignat*}{3}
-  &\mi{Vec}  &&: \Nat_0 \toe \U \\
-  &\mi{nil}  &&: \El\,(\mi{Vec}\,\zero_0)\\
-  &\mi{cons} &&: (n : \Nat_0) \toe A \toe \mi{Vec}\,n \to \El\,(\mi{Vec}\,(\suc_0\,n))
+  &\ms{Vec}  &&: \Nat_0 \toe \U \\
+  &\ms{nil}  &&: \El\,(\ms{Vec}\,\zero_0)\\
+  &\ms{cons} &&: (n : \Nat_0) \toe A \toe \ms{Vec}\,n \to \El\,(\ms{Vec}\,(\suc_0\,n))
 \end{alignat*}
 \end{myexample}
 
@@ -2893,18 +2893,18 @@ terms of $\U$, i.e.\ inductively specified sets. This is useful for specifying
 certain strict type formers. For example, a signature for cwfs can be extended with
 a specification for strict constant families.
 \begin{alignat*}{3}
-  & \mi{Con}     &&: \U\\
-  & \mi{Sub}     &&: \mi{Con} \to \mi{Con} \to \U \\
-  & \mi{Ty}      &&: \mi{Con} \to \U\\
-  & \mi{Tm}      &&: (\Gamma : \mi{Con}) \to \mi{Ty}\,\Gamma \to \U\\
+  & \ms{Con}     &&: \U\\
+  & \ms{Sub}     &&: \ms{Con} \to \ms{Con} \to \U \\
+  & \ms{Ty}      &&: \ms{Con} \to \U\\
+  & \ms{Tm}      &&: (\Gamma : \ms{Con}) \to \ms{Ty}\,\Gamma \to \U\\
   & ...          &&\\
-  & \mi{K}       &&: \mi{Con} \to \{\Gamma : \mi{Con}\} \to \El\,(\mi{Ty}\,\Gamma)\\
-  & \mi{K_{spec}} &&: \Id\,(\mi{Tm}\,\Gamma\,(\mi{K}\,\Delta))\,(\mi{Sub}\,\Gamma\,\Delta)
+  & \ms{K}       &&: \ms{Con} \to \{\Gamma : \ms{Con}\} \to \El\,(\ms{Ty}\,\Gamma)\\
+  & \ms{K_{spec}} &&: \Id\,(\ms{Tm}\,\Gamma\,(\ms{K}\,\Delta))\,(\ms{Sub}\,\Gamma\,\Delta)
 \end{alignat*}
 The equation for Russell-style universes is likewise a sort equation:
 \begin{alignat*}{3}
-  &\mi{Univ}    &&: \El\,(\mi{Ty}\,\Gamma)\\
-  &\mi{Russell} &&: \Id\,(\mi{Tm}\,\Gamma\,\mi{Univ})\,(\mi{Ty}\,\Gamma)
+  &\ms{Univ}    &&: \El\,(\ms{Ty}\,\Gamma)\\
+  &\ms{Russell} &&: \Id\,(\ms{Tm}\,\Gamma\,\ms{Univ})\,(\ms{Ty}\,\Gamma)
 \end{alignat*}
 \end{myexample}
 
@@ -2914,25 +2914,57 @@ As we mentioned in Definition \ref{def:presheaf-type}, there is a signature for
 presheaves, so let's look at that now. Assume a category $\mbbC$ in the inner
 theory; this means that objects and morphisms of $\mbbC$ are in $\Ty_0$.
 \begin{alignat*}{3}
-  & \mi{Obj}         &&: |\mbbC| \toe \U\\
-  & \mi{Hom}         &&: \mbbC(i,\,j) \toe \mi{Obj}\,j \to \El\,(\mi{Obj}\,i)\\
-  & \mi{Hom_{\ms{id}}} &&: \Id\,(\mi{Hom}\,\id\,x)\,x\\
-  & \mi{Hom_{\circ}}  &&: \Id\,(\mi{Hom}\,(f \circ g)\,x)\,(\mi{Hom}\,f\,(\mi{Hom}\,g\,x))
+  & \ms{Obj}         &&: |\mbbC| \toe \U\\
+  & \ms{Hom}         &&: \mbbC(i,\,j) \toe \ms{Obj}\,j \to \El\,(\ms{Obj}\,i)\\
+  & \ms{Hom_{\ms{id}}} &&: \Id\,(\ms{Hom}\,\id\,x)\,x\\
+  & \ms{Hom_{\circ}}  &&: \Id\,(\ms{Hom}\,(f \circ g)\,x)\,(\ms{Hom}\,f\,(\ms{Hom}\,g\,x))
 \end{alignat*}
 We depart from the sugary naming scheme in Definition \ref{def:presheaf-type},
-and name the action on objects $\mi{Obj}$ and the action on morphisms
-$\mi{Hom}$. When we give semantics to this signature in Section \ref{sec:fqiit-semantics}, we
+and name the action on objects $\ms{Obj}$ and the action on morphisms
+$\ms{Hom}$. When we give semantics to this signature in Section \ref{sec:fqiit-semantics}, we
 will get as algebras functors from $\mbbC^{\ms{op}}$ to the category of inner
 types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A \to
 \Tm_0\,B$ functions as morphisms.
 \end{myexample}
 
-\textbf{Strict positivity.} Only strictly positive signatures are expressible.
+\subsubsection{Strict positivity}
+
+Only strictly positive signatures are expressible.
 Similarly to the case with simple signatures, there is no way to abstract over a
 inductive functions, since inductive function domains are in $\U$, and $\U$ has
 no type formers at all. With $\Pie$, we can abstract over functions, but only on
 ones which are external to a signature and don't depend on internally specified
 constructors.
+
+\subsubsection{Limitation: nested induction}
+
+Nested induction means that external type functions may be applied to
+expressions internal to the theory of signatures. This is not possible in any of
+the signatures in this thesis. The simplest example is rose trees, assuming
+external $\ms{List} : \Set \to \Set$:
+\begin{alignat*}{3}
+  &\ms{Tree} &&: \Set\\
+  &\ms{node} &&: \ms{List}\,\ms{Tree} \to \ms{Tree}
+\end{alignat*}
+The $\ms{List}\,\ms{Tree}$ expression is not representable in a signature; the
+$\ms{List}$ function is external, while $\ms{Tree}$ would be an internal sort.
+This style of inductive definition requires reasoning about the polarity of all
+external type functions: only the strictly positive $\Set \to \Set$ functions
+should be allowed. With general type functions we would also need to track
+polarity of multiple parameters, or even higher-order polarity.
+
+Many use cases of nested induction can be removed by ``including'' the external
+type constructor into the signature. In the case of rose trees, this means
+defining lists and trees mutually:
+\begin{alignat*}{3}
+  &\ms{List} &&: \U\\
+  &\ms{Tree} &&: \U\\
+  &\ms{nil}  &&: \El\,\ms{List}\\
+  &\ms{cons} &&: \ms{Tree} \to \ms{List} \to \El\,\ms{List}\\
+  &\ms{node} &&: \ms{List}\,\ms{Tree} \to \ms{Tree}
+\end{alignat*}
+Of course, nested induction would be still desirable because of the code reuse
+that it enables.
 
 \section{Semantics}
 \label{sec:fqiit-semantics}
@@ -3049,15 +3081,19 @@ flcwf by interpreting $\Gamma$ in $\bM$. In that flcwf we have
   \item $\Tm$ as the type of displayed algebra sections.
 \end{itemize}
 From this, notions of initiality and induction are apparent as well. Initiality
-is the usual categorical notion. For induction, assuming $\bGamma : \bCon$, we
-have the following predicate:
+is the usual categorical notion.
+
+\begin{mydefinition}
+\label{def:induction-predicate}
+Assuming $\bGamma : \bCon$, we define the \textbf{induction predicate} on
+objects:
 \begin{alignat*}{3}
   & \Inductive : \Con_{\bGamma} \to \Set\\
   & \Inductive\,\Gamma \defn (A : \Ty_{\bGamma}\,\Gamma)\ra \Tm_{\bGamma}\,\Gamma\,A
 \end{alignat*}
 In short, an algebra is inductive if every displayed algebra over it has a
-section. Fortunately, we also know that induction and initiality are
-equivalent.
+section. We also know that induction and initiality are equivalent.
+\end{mydefinition}
 
 \begin{theorem}\label{thm:initiality-induction}
 An object $\Gamma : \Con_{\bGamma}$ in an flcwf $\bGamma$ supports induction if
@@ -3736,24 +3772,24 @@ $A$-lists.
 The map goes from numbers to lists because of the ``contravariant''
 forgetfulness. We define $\sigma$ by listing its component definitions.
 \begin{alignat*}{3}
-  &\mi{List} &&\defn \mi{Nat}\\
-  &\mi{nil} &&\defn \mi{zero}\\
-  &\mi{cons} &&\defn \lambda^{ext}\,\_.\,\lambda\,n.\,\mi{suc}\,n
+  &\ms{List} &&\defn \ms{Nat}\\
+  &\ms{nil} &&\defn \ms{zero}\\
+  &\ms{cons} &&\defn \lambda^{ext}\,\_.\,\lambda\,n.\,\ms{suc}\,n
 \end{alignat*}
 \end{myexample}
 
 \begin{myexample}
   We assume $\Nat_0 : \Ty_0$ with $\zero_0$ and $\suc_0$, and define $\sigma : \Sub\,\ms{NatSig}\,\ms{FinSig}$, where $\ms{FinSig}$ is as follows:
 \begin{alignat*}{3}
-  &\mi{Fin}  &&: \Nat_0 \toe \U\\
-  &\mi{zero} &&: (n : \Nat_0) \toe \El\,(\mi{Fin}\,(\suc_0\,n))\\
-  &\mi{suc}  &&: (n : \Nat_0) \toe \mi{Fin}\,n \to \El\,(\mi{Fin}\,(\suc_0\,n))
+  &\ms{Fin}  &&: \Nat_0 \toe \U\\
+  &\ms{zero} &&: (n : \Nat_0) \toe \El\,(\ms{Fin}\,(\suc_0\,n))\\
+  &\ms{suc}  &&: (n : \Nat_0) \toe \ms{Fin}\,n \to \El\,(\ms{Fin}\,(\suc_0\,n))
 \end{alignat*}
 $\sigma$ is defined as
 \begin{alignat*}{3}
-  &\mi{Fin}  &&\defn \mi{Nat}\\
-  &\mi{zero} &&\defn \lambda^{ext}\,\_.\,\mi{zero}\\
-  &\mi{suc}  &&\defn \lambda^{ext}\,\_.\,\lambda\,n.\,\mi{suc}\,n
+  &\ms{Fin}  &&\defn \ms{Nat}\\
+  &\ms{zero} &&\defn \lambda^{ext}\,\_.\,\ms{zero}\\
+  &\ms{suc}  &&\defn \lambda^{ext}\,\_.\,\lambda\,n.\,\ms{suc}\,n
 \end{alignat*}
 \end{myexample}
 For a specific programming use case, if we have any recursive function defined
@@ -5209,8 +5245,8 @@ already possible with finitary signatures, by iterating $\to$ finite times.
 example would be set truncation for some $A : \Ty_0$:
 \begin{alignat*}{3}
   &|A|_0      &&: \U\\
-  &\mi{embed} &&: A \toe \El\,|A|_0 \\
-  &\mi{trunc} &&: (x\,y : |A|_0)(p\,q : \Id\,x\,y) \to \El\,(\Id\,p\,q)
+  &\ms{embed} &&: A \toe \El\,|A|_0 \\
+  &\ms{trunc} &&: (x\,y : |A|_0)(p\,q : \Id\,x\,y) \to \El\,(\Id\,p\,q)
 \end{alignat*}
 However, this ends up being redundant in our semantics, since we assume UIP,
 and every semantic underlying type will be a set. Does this mean that recursive
@@ -5225,12 +5261,12 @@ can be rewritten to the equivalent
 \[\emptycon \ext (A : \U) \ext (c_1 : \El\,A) \ext (c_2 : \El\,A)\]
 signature. However, we can't mechanically eliminate the $\Id$ from the following signature.
 \begin{alignat*}{3}
-  &A   &&: \U\\
-  &B   &&: A \to \U\\
-  &b_1 &&: A \to \El\,B\\
-  &b_2 &&: A \to \El\,B\\
+  &\ms{A  } &&: \U\\
+  &\ms{B  } &&: \ms{A} \to \U\\
+  &\ms{b_1} &&: \ms{A} \to \El\,\ms{B}\\
+  &\ms{b_2} &&: \ms{A} \to \El\,\ms{B}\\
   &...&&\\
-  &a   &&: (x\,y : A) \to \Id\,(b_1\,x)\,(b_2\,y) \to \El\,A
+  &\ms{a}   &&: (x\,y : \ms{A}) \to \Id\,(\ms{b_1}\,x)\,(\ms{b_2}\,y) \to \El\,\ms{A}
 \end{alignat*}
 Whether we can reformulate $a$ without the $\Id$ condition depends on what kind
 of equational theory we specify for $B$ in the omitted parts of the signature.
@@ -5243,14 +5279,14 @@ signatures.
 For finitary signatures, the ToS is itself infinitary because of $\Pie$. We
 assume an universe $\U_0$ in $\Ty_0$. In the signature, we have
 \begin{alignat*}{3}
-  &\mi{Con} &&: \U \\
-  &\mi{Ty} &&: \mi{Con} \to \U\\
-  &\Pie &&: \{\Gamma : \mi{Con}\} \to (A : \U_0) \toe (A \toinf \mi{Ty}\,\Gamma) \to \El\,(\mi{Ty}\,\Gamma)\\
+  &\ms{Con} &&: \U \\
+  &\ms{Ty} &&: \ms{Con} \to \U\\
+  &\Pie &&: \{\Gamma : \ms{Con}\} \to (A : \U_0) \toe (A \toinf \ms{Ty}\,\Gamma) \to \El\,(\ms{Ty}\,\Gamma)\\
 \end{alignat*}
 In the signature for infinitary ToS, we have
 \begin{alignat*}{3}
-  &\mi{Univ} &&: \{\Gamma : \mi{Con}\} \to \mi{Ty}\,\Gamma\\
-  &\Piinf    &&: \{\Gamma : \mi{Con}\} \to (A : \U_0) \toe (A \toinf \mi{Tm}\,\Gamma\,\mi{Univ}) \to \mi{Tm}\,\Gamma\,\mi{Univ}
+  &\ms{Univ} &&: \{\Gamma : \ms{Con}\} \to \ms{Ty}\,\Gamma\\
+  &\Piinf    &&: \{\Gamma : \ms{Con}\} \to (A : \U_0) \toe (A \toinf \ms{Tm}\,\Gamma\,\ms{Univ}) \to \ms{Tm}\,\Gamma\,\ms{Univ}
 \end{alignat*}
 \emph{Remark.}
 When we will take the semantics of the above signature, we won't exactly get
@@ -5269,21 +5305,21 @@ We have seen in Example \ref{ex:presheaf-sig} that $\Ty_0$-valued presheaves hav
 With infinitary signatures, we can also cover monads on $\Ty_0$. We assume a
 universe $\U_0 : \Ty_0$.
 \begin{alignat*}{3}
-  &M              &&: \U_0 \to \U\\
-  &\mi{map}       &&: (A \to B) \toe M\,A \to \El\,(M\,B)\\
-  &\mi{map_{id}}   &&: \El\,(\Id\,(\mi{map}\,\id\,x)\,x)\\
-  &\mi{map_{\circ}} &&: \El\,(\Id\,(\mi{map}\,(f \circ g)\,x)\,(\mi{map}\,f\,(\mi{map}\,g\,x)))\\
-  &\mi{return}    &&: A \toe \El\,(M\,A)\\
-  &\mi{bind}      &&: M\,A \to (A \toinf M\,B) \to \El\,(M\,B)
+  &\ms{M}              &&: \U_0 \to \U\\
+  &\ms{map}       &&: (A \to B) \toe \ms{M}\,A \to \El\,(\ms{M}\,B)\\
+  &\ms{map_{id}}   &&: \El\,(\Id\,(\ms{map}\,\id\,x)\,x)\\
+  &\ms{map_{\circ}} &&: \El\,(\Id\,(\ms{map}\,(f \circ g)\,x)\,(\ms{map}\,f\,(\ms{map}\,g\,x)))\\
+  &\ms{return}    &&: A \toe \El\,(\ms{M}\,A)\\
+  &\ms{bind}      &&: M\,A \to (A \toinf \ms{M}\,B) \to \El\,(\ms{M}\,B)
 \end{alignat*}
 We rely on $\toinf$ to specify binding. The $\mi{join}$-based specification
-would not work, since $M\,(M\,A)$ is not valid in signatures. The above
+would not work, since $\ms{M}\,(\ms{M}\,A)$ is not valid in signatures. The above
 signature can be helpful for deriving some of the metatheory of Dijkstra monads
 \cite[Section~5]{dijkstramonad}.
 
-In the 2LTT-based semantics, we will get $M : \U_0 \to \Ty_0$, which is not
+In the 2LTT-based semantics, we will get $\ms{M} : \U_0 \to \Ty_0$, which is not
 quite an endofunctor, but it would be straightforward to refine the semantics so
-that we can pick universes for underlying types of algebras, and have $M : \U_0
+that we can pick universes for underlying types of algebras, and have $\ms{M} : \U_0
 \to \U_0$. Alternatively, we will also have the ETT-based semantics, where
 universe levels are explicitly handled.
 \end{myexample}
@@ -6610,6 +6646,7 @@ and intensional identity $\blank\!=\!\blank$. We assume the ``based'' path induc
 \end{alignat*}
 The following operations are defined in the standard way \cite[Section~2]{hottbook}.
 \begin{itemize}
+  \item Path inversion $\blank^{-1} : x = y \to y = x$.
   \item Path composition $\blank\!\sqcdot\!\blank : x = y \to y = z \to x = z$.
   \item Transport $\tr : (P : A \to \Ty_0) \to (p : x = y) \to P\,x \to P\,y$.
   \item Path lifting $\ap : (f : A \to B) \to x = y \to f\,x = f\,y$.
@@ -6629,7 +6666,7 @@ infinitary QII signatures, with the following change: the $\Id$ type former in
 $\U$ only supports $\refl$, but no elimination rule or reflection rule.
 \end{mydefinition}
 
-%% $\U$ is intensional, with the following rules:
+%% $\Id$ is intensional, with the following rules:
 %% \begin{alignat*}{3}
 %%   & \J &&: \{t : \Tm\,\Gamma\,(\El\,a)\}
 %%          (b : \Tm\,(\Gamma\ext(u : \El\,a)\ext(p : \El\,(\Id\,t\,u)))\,\U)\\
@@ -6727,35 +6764,6 @@ From the HoTT book, all higher-inductive types are supported, except
 %% \cite[Chapter~4]{hottbook}.
 %% \end{myexample}
 
-%% \subsubsection{Limitation: nested induction}
-
-%% Nested induction means that external type functions may be applied to
-%% expressions internal to the theory of signatures. This is not possible in our
-%% signatures. The simplest example is rose trees:
-%% \begin{alignat*}{3}
-%%   &\ms{Tree} &&: \Set\\
-%%   &\ms{node} &&: \ms{List}\,\ms{Tree} \to \ms{Tree}
-%% \end{alignat*}
-%% We assume $\ms{List} : \Set \to \Set$. The above listing is not a signature,
-%% since $\ms{List}\,\ms{Tree}$ is not representable in a signature; the
-%% $\ms{List}$ function is external, while $\ms{Tree}$ would be an internal sort.
-%% This style of inductive definition requires reasoning about the polarity of all
-%% external type functions: only the strictly positive $\Set \to \Set$ functions
-%% should be allowed. With general type functions we would also need to track
-%% polarity of multiple parameters, or even higher-order polarity.
-
-%% Many use cases of nested induction can be removed by ``including'' the external
-%% type constructor into the signature. In the case of rose trees, this means
-%% defining lists and trees mutually:
-%% \begin{alignat*}{3}
-%%   &\ms{List} &&: \U\\
-%%   &\ms{Tree} &&: \U\\
-%%   &\ms{nil}  &&: \El\,\ms{List}\\
-%%   &\ms{cons} &&: \ms{Tree} \to \ms{List} \to \El\,\ms{List}\\
-%%   &\ms{node} &&: \ms{List}\,\ms{Tree} \to \ms{Tree}
-%% \end{alignat*}
-%% Of course, nested induction would be still desirable because of the code reuse
-%% that it enables.
 
 %% \subsubsection{Limitation: elimination from external parameters to signature terms}
 
@@ -6787,50 +6795,8 @@ particular are forced to return in $\Set$, because they may contain strict
 equalities.
 
 In the following, we present the AMDS interpretations in order, in a compact and
-tabular manner. For each interpretation, we omit equations and substitution for
-type formers. We discuss some of the more interesting cases.
-
-In \textbf{algebras} and \textbf{displayed algebras} there isn't any
-complication; all equations holds in these (displayed) models strictly, and we
-do not use equations from induction hypotheses anywhere.
-
-In \textbf{morphisms}, note that all term formers returning in $\El$ specify a
-strict equation. We write $\refl$ in their definition for brevity, which is
-technically correct (by equality reflection), but the definitions may involve
-using the strict equalities from induction hypotheses.  $\top^M\,\gamma^M :
-\tt_0 \equiv \tt_0$ is trivial, but
-\[  (\proj_1\,t)^M\,\gamma^M : a^M\,\gamma^M\,((\proj_1\,t)^A\,\gamma_0) \equiv (\proj_1\,t)^A\,\gamma_1\]
-requires us to use
-\[t^M\,\gamma^M : (a^M\,\gamma^M\,((\proj_1\,t)^A\,\gamma_0),\,b^M\,(\gamma^M,\,\refl)\,((\proj_2\,t)^A\,\gamma_1))
-\equiv t^A\,\gamma_1 \]
-Likewise we use $t^M\,\gamma^M$ in the equation for $(\proj_2\,t)^M$.
-
-Also note that the definition for $(\Id\,t\,u)^M\,\gamma^M$ relies on $t^M$ and
-$u^M$ for well-typing. The goal is
-\begin{alignat*}{3}
-  &(\Id\,t\,u)^M\,\gamma^M : (\Id\,t\,u)^A\,\gamma_0 \to (\Id\,t\,u)^A\,\gamma_1\\
-  &(\Id\,t\,u)^M\,\gamma^M : t^A\,\gamma_0 = u^A\,\gamma_0 \to t^A\,\gamma_0 = u^A\,\gamma_1
-\end{alignat*}
-Assuming $p : t^A\,\gamma_0 = u^A\,\gamma_0$, we have $\ap\,(a^M\,\gamma^M)\,p :
-a^M\,\gamma^M\,(t^A\,\gamma_0) = a^M\,\gamma^M\,(u^A\,\gamma_0)$, so we rewrite
-the sides along $t^M\,\gamma^M : a^M\,\gamma^M\,(t^A\,\gamma_0) \equiv
-t^A\,\gamma_1$ and $u^M\,\gamma^M$. The $\ap$ application must stay explicit in
-the definition, since inner equalities can be proof-relevant.
-
-\textbf{Sections} are a mostly mechanical generalization of morphisms, where the
-codomain depends on the domain. Note that the $(\Id\,t\,u)^D$ definition is a
-path-over-path, and accordingly we have $\apd$ instead of $\ap$ in $(\Id\,t\,u)^S$.
-
-\begin{mydefinition} For some $\Gamma$ signature, notions of \textbf{initiality} and \textbf{induction} are
-as follows.
-\begin{alignat*}{3}
-  &\ms{Initial}\,&&(\gamma : \Gamma^A) &&\defn (\gamma' : \Gamma^A) \to \ms{isContr}\,(\Gamma^M\,\gamma\,\gamma')\\
-  &\ms{Inductive}\,&&(\gamma : \Gamma^A) &&\defn (\gamma^D : \Gamma^D\,\gamma) \to \Gamma^S\,\gamma\,\gamma^D
-\end{alignat*}
-This is the same as before in Definition \ref{TODO}, except we do not have an
-flcwf of algebras. Hence, we do not have equivalence of initiality and
-induction, nor other properties that are evident in an flcwf, like Lemma \ref{TODO}.
-\end{mydefinition}
+tabular manner. First we list the components of the ToS, as a reference for the
+interpretations. We discuss the semantics afterwards.
 
 \subsubsection{Components of ToS (without equations)}
 \vspace{-0.5em}
@@ -7023,6 +6989,166 @@ induction, nor other properties that are evident in an flcwf, like Lemma \ref{TO
   &(\appe\,t\,i)^S\,\gamma^S &&\defn t^S\,\gamma^S\,i\\
   &(\lame\,t)^S\,\gamma^S &&\defn (t\,i)^S\,\gamma^S
 \end{alignat*}
+
+In \textbf{algebras} and \textbf{displayed algebras} there isn't any
+complication; all equations holds in these (displayed) models strictly, and we
+do not use equations from induction hypotheses anywhere.
+
+In \textbf{morphisms}, note that all term formers returning in $\El$ specify a
+strict equation. We write $\refl$ in their definition for brevity, which is
+technically correct (by equality reflection), but the definitions may involve
+using the strict equalities from induction hypotheses.  $\top^M\,\gamma^M :
+\tt_0 \equiv \tt_0$ is trivial, but
+\[  (\proj_1\,t)^M\,\gamma^M : a^M\,\gamma^M\,((\proj_1\,t)^A\,\gamma_0) \equiv (\proj_1\,t)^A\,\gamma_1\]
+requires us to use
+\[t^M\,\gamma^M : (a^M\,\gamma^M\,((\proj_1\,t)^A\,\gamma_0),\,b^M\,(\gamma^M,\,\refl)\,((\proj_2\,t)^A\,\gamma_1))
+\equiv t^A\,\gamma_1 \]
+Likewise we use $t^M\,\gamma^M$ in the equation for $(\proj_2\,t)^M$.
+
+Also note that the definition for $(\Id\,t\,u)^M\,\gamma^M$ relies on $t^M$ and
+$u^M$ for well-typing. The goal is
+\begin{alignat*}{3}
+  &(\Id\,t\,u)^M\,\gamma^M : (\Id\,t\,u)^A\,\gamma_0 \to (\Id\,t\,u)^A\,\gamma_1\\
+  &(\Id\,t\,u)^M\,\gamma^M : t^A\,\gamma_0 = u^A\,\gamma_0 \to t^A\,\gamma_0 = u^A\,\gamma_1
+\end{alignat*}
+Assuming $p : t^A\,\gamma_0 = u^A\,\gamma_0$, we have $\ap\,(a^M\,\gamma^M)\,p :
+a^M\,\gamma^M\,(t^A\,\gamma_0) = a^M\,\gamma^M\,(u^A\,\gamma_0)$, so we rewrite
+the sides along $t^M\,\gamma^M : a^M\,\gamma^M\,(t^A\,\gamma_0) \equiv
+t^A\,\gamma_1$ and $u^M\,\gamma^M$. The $\ap$ application must stay explicit in
+the definition, since inner equalities can be proof-relevant.
+
+We also demonstrate the failure of $\Id$ elimination. It is enough to show that
+$\Id$ inversion fails. This would entail the following in the ToS:
+\[
+  \blank^{-1} : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)) \to \Tm\,\Gamma\,(\El\,(\Id\,u\,t))
+\]
+In the $\blank^M$ interpretation, we would need to show
+\begin{alignat*}{3}
+  &(p^{-1})^M\,\gamma^M : \ap\,(a^M\,\gamma^M)\,((p^{-1})^A\,\gamma_0) \equiv ((p^{-1})^A\,\gamma_1)\\
+  &(p^{-1})^M\,\gamma^M : \ap\,(a^M\,\gamma^M)\, (p^A\,\gamma_0)^{-1} \equiv (p^A\,\gamma_1)^{-1}
+\end{alignat*}
+We have $p^M : \ap\,(a^M\,\gamma^M)\,(p^A\,\gamma_0) \equiv p^A\,\gamma_1$,
+so we would need to show
+\[
+  \ap\,(a^M\,\gamma^M)\, (p^A\,\gamma_0)^{-1} \equiv (\ap\,(a^M\,\gamma^M)\,(p^A\,\gamma_0))^{-1}
+\]
+This is not provable in 2LTT; it is false as a universal statement in the
+initial model (syntax) of the inner theory. It holds in the empty context, where
+both sides are necessarily equal to $\refl$ by canonicity, but not in arbitrary
+contexts. It does hold as an inner equality, by induction on $p^A\,\gamma_0$.
+
+\textbf{Sections} are a mostly mechanical generalization of morphisms, where the
+codomain depends on the domain. Note that the $(\Id\,t\,u)^D$ definition is a
+path-over-path, and accordingly we have $\apd$ instead of $\ap$ in $(\Id\,t\,u)^S$.
+
+
+
+\begin{mydefinition} For some $\Gamma$ signature, notions of \textbf{initiality} and \textbf{induction} are
+as follows.
+\begin{alignat*}{3}
+  &\ms{Initial}\,&&(\gamma : \Gamma^A) &&\defn (\gamma' : \Gamma^A) \to \ms{isContr}\,(\Gamma^M\,\gamma\,\gamma')\\
+  &\ms{Inductive}\,&&(\gamma : \Gamma^A) &&\defn (\gamma^D : \Gamma^D\,\gamma) \to \Gamma^S\,\gamma\,\gamma^D
+\end{alignat*}
+This is the same as Definition \ref{def:induction-predicate}, except we do not have an
+flcwf of algebras, so do not have properties that are evident in an flcwf, such
+as Theorems \ref{thm:initiality-induction} and \ref{thm:flcwf-term-uniqueness}.
+\end{mydefinition}
+
+\begin{myexample}
+For the circle signature $\ms{S^1Sig}$, we have the following (disregarding
+the leading $\top$ components):
+\begin{alignat*}{3}
+  &\ms{S^1Sig^A} \equiv (S^1 : \Ty_0)
+  \times (\mi{base} : S^1) \times (\mi{loop} : \mi{base} = \mi{base})
+\end{alignat*}
+\begin{alignat*}{3}
+  &\rlap{$\ms{S^1Sig^D}\,(S^1,\,\mi{loop},\,\mi{base}) \equiv$}\\
+  &        &&(S^{1D}        &&: S^1 \to \Ty_0)\\
+  & \times\,&&(\mi{base^D} &&: S^{1D}\,\mi{base})\\
+  & \times\,&&(\mi{loop^D} &&: \tr\,S^{1D}\,\mi{loop}\,\mi{base^D} = \mi{base^D})\\
+  & &&\\
+  &\rlap{$\ms{S^1Sig^S}\,(S^1,\,\mi{loop},\,\mi{base})\,(S^{1D},\,\mi{loop^D},\,\mi{base^D}) \equiv$}\\
+  &         &&(\mi{S^{1S}}  &&: (s : S^1) \to S^{1D}\,s)\\
+  & \times\,&&(\mi{base^S} &&: \mi{S^{1S}}\,\mi{base} \equiv \mi{base^D})\\
+  & \times\,&&(\mi{loop^S} &&: \apd\,\mi{S^{1S}}\,\mi{loop} \equiv \mi{loop^D})
+\end{alignat*}
+\end{myexample}
+The computed induction principles are close to what we find in
+\cite{hottbook}. The difference is that $\beta$-rules for path constructors are
+strict, while in ibid.\ they are up to propositional equality. One reason for
+choosing weak $\beta$-rules for paths is that we have $\ap$ and $\apd$ applications on the
+left sides of such rules, and it is unconventional to definitionally specify the
+behavior of operations which are derived from $\J$. In cubical type theories,
+path $\beta$-rules are specified in a more primitive way, so strict computation is
+more organic.
+
+Currently, we have semantics in intensional inner theories, but it would be
+possible to do the same in cubical inner theories. Intensional TT is clearly
+much simpler, and has a wider variety of known models. On the other hand,
+cubical type theories support strictly computing transports, so it is possible
+that they would support stricter ToS $\beta$-rules in the case of the ``weak''
+semantics. We don't explore this in the current chapter.
+
+\section{Weak Signatures}
+
+\subsubsection{Metatheory}
+
+On top of what we had so far in this chapter, we assume \emph{strong function
+extensionality} in the inner theory: this means that for each $f,\,g : (a : A)
+\to B\,a$, the following function is an equivalence.
+\begin{alignat*}{3}
+  &\ms{happly} : (f = g) \to ((a : A) \to f\,a = g\,a)\\
+  &\ms{happly}\,p\,a \defn \ap\,(\lambda\,f.\,f\,a)\,p
+\end{alignat*}
+$\ms{funext}$ is obtained as the inverse of $\ms{happly}$. This definition,
+unlike the simple assumption of $\ms{funext}$, is well-behaved in intensional
+settings \cite[Section~2.9]{hottbook}.
+
+Moreover, we assume two universes $\U_0$ and $\U_1$, such that $\U_0 \leq \U_1
+\leq \Ty_0$. We use this to develop semantics which is entirely in the inner
+theory: if algebra sorts are in $\U_0$, we need an $\U_1$ on top of that to
+accommodate types of algebras.
+
+%% \subsubsection{Theory of Signatures}
+
+\begin{mydefinition}
+A \textbf{model of weak ToS} consists of a base cwf (with $\Con$, $\Sub$, $\Ty$
+and $\Tm$ returning in $\Set$) together with the following type formers.
+\begin{itemize}
+\item An universe $\U$ with decoding $\El$.
+\item $\U$ is closed under $\Id$, with elimination principle $\J$ targeting
+  $\U$. The $\beta$-rule is given up to $\Id$:
+  \begin{alignat*}{3}
+  & \J &&: \{t : \Tm\,\Gamma\,(\El\,a)\}
+         (b : \Tm\,(\Gamma\ext(u : \El\,a)\ext(p : \El\,(\Id\,t\,u)))\,\U)\\
+  & &&\to \Tm\,\Gamma\,(\El\,(b[u \mapsto t,\,p \mapsto \refl]))\\
+  & &&\to \{u : \Tm\,\gamma\,(\El\,a)\}
+       (p : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)))
+  \to \Tm\,\Gamma\,(\El\,(b[u \mapsto u,\,p \mapsto p]))\\
+  & \refl &&: \Tm\,\Gamma\,(\El\,(\Id\,t\,t))\\
+  &\J\beta &&: \Tm\,\Gamma\,(\El\,(\Id\,(\J\,b\,\mi{pr}\,\refl))\,(\El\,\mi{pr}))
+  \end{alignat*}
+\item
+  $\U$ is also closed under $\top$, $\Sigma$, and $\Piinf$. Of these, $\top$ is
+  specified with a strict isomorphism $\Tm\,\Gamma\,(\El\,\top) \simeq \top$,
+  while $\Sigma$ and $\Piinf$ are specified with equivalences up to $\Id$. These
+  are equivalences in the sense of HoTT \cite[Chapter~4]{hottbook}. There are
+  several equivalent formulations of equivalence; we pick bi-invertible
+  equivalences here for presentation.
+
+  \begin{mydefinition}
+    An \textbf{equivalence} of $a,\,b : \Tm\,\Gamma\,\U$ consists of the
+    following
+
+  \end{mydefinition}
+
+\end{itemize}
+
+
+
+
+\end{mydefinition}
+
 
 \chapter{Conclusion \& Further Work}
 
