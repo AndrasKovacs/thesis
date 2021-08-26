@@ -1,5 +1,5 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{CDMM10}
+\begin{thebibliography}{JVWW06}
 
 \bibitem[AAC{\etalchar{+}}20]{allais20type}
 Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
@@ -7,6 +7,21 @@ Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
 \newblock A type and scope safe universe of syntaxes with binding: Their
   semantics and proofs.
 \newblock {\em CoRR}, abs/2001.11001, 2020.
+
+\bibitem[Abe13]{abel2013normalization}
+Andreas Abel.
+\newblock {\em Normalization by Evaluation: Dependent Types and
+  Impredicativity}.
+\newblock PhD thesis, Ludwig-Maximilians-Universit{\"a}t M{\"u}nchen, 2013.
+\newblock Habilitation thesis.
+
+\bibitem[ABKT19]{setoidtt}
+Thorsten Altenkirch, Simon Boulier, Ambrus Kaposi, and Nicolas Tabareau.
+\newblock Setoid type theory - {A} syntactic translation.
+\newblock In Graham Hutton, editor, {\em Mathematics of Program Construction -
+  13th International Conference, {MPC} 2019, Porto, Portugal, October 7-9,
+  2019, Proceedings}, volume 11825 of {\em Lecture Notes in Computer Science},
+  pages 155--196. Springer, 2019.
 
 \bibitem[ACD{\etalchar{+}}18]{altenkirch18qiit}
 Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, Nicolai Kraus, and
@@ -63,6 +78,11 @@ Benedikt Ahrens and Peter~LeFanu Lumsdaine.
 Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
 \newblock From signatures to monads in unimath.
 \newblock {\em J. Autom. Reason.}, 63(2):285--318, 2019.
+
+\bibitem[A{\"{O}}V18]{decidableconv}
+Andreas Abel, Joakim {\"{O}}hman, and Andrea Vezzosi.
+\newblock Decidability of conversion for type theory in type theory.
+\newblock {\em Proc. {ACM} Program. Lang.}, 2({POPL}):23:1--23:29, 2018.
 
 \bibitem[AS20]{hit-integers}
 Thorsten Altenkirch and Luis Scoccola.
@@ -171,16 +191,30 @@ Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
 Initiality~Project Contributors.
 \newblock Initiality project, 2019.
 
+\bibitem[Coq18]{coquand2018canonicity}
+Thierry Coquand.
+\newblock Canonicity and normalisation for dependent type theory.
+\newblock {\em arXiv preprint arXiv:1810.09367}, 2018.
+
 \bibitem[CS]{capriotti2020higher}
 Paolo Capriotti and Christian Sattler.
 \newblock Higher categories of algebras for higher inductive definitions.
 \newblock {\em EUTYPES-TYPES 2020-Abstracts}.
+
+\bibitem[Dag17]{ornaments}
+Pierre{-}{\'{E}}variste Dagand.
+\newblock The essence of ornaments.
+\newblock {\em J. Funct. Program.}, 27:e9, 2017.
 
 \bibitem[dB20]{deboer-initiality}
 Menno de~Boer.
 \newblock {\em A Proof and Formalization of the Initiality Conjecture of
   Dependent Type Theory}.
 \newblock PhD thesis, Department of Mathematics, Stockholm University, 2020.
+
+\bibitem[dev17]{agda-sized-issue}
+Agda developers.
+\newblock Agda issue 2820, 2017.
 
 \bibitem[dVL14]{sop}
 Edsko de~Vries and Andres L{\"{o}}h.
@@ -210,6 +244,17 @@ Michael Hedberg.
 \newblock A coherence theorem for {M}artin-{L}{\"o}f's type theory.
 \newblock {\em Journal of Functional Programming}, 8(04):413--436, 1998.
 
+\bibitem[Hof95]{hofmann1995extensional}
+Martin Hofmann.
+\newblock Extensional concepts in intensional type theory.
+\newblock 1995.
+
+\bibitem[Hof97]{Hofmann97syntaxand}
+Martin Hofmann.
+\newblock Syntax and semantics of dependent types.
+\newblock In {\em Semantics and Logics of Computation}, pages 79--130.
+  Cambridge University Press, 1997.
+
 \bibitem[HRR14]{udayReynolds}
 Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
 \newblock Logical relations and parametricity - {A} reynolds programme for
@@ -222,6 +267,11 @@ Martin Hofmann and Thomas Streicher.
 \newblock In {\em In Venice Festschrift}, pages 83--111. Oxford University
   Press, 1996.
 
+\bibitem[Hub16]{huber-thesis}
+Simon Huber.
+\newblock {\em Cubical Interpretations of Type Theory}.
+\newblock PhD thesis, University of Gothenburg, 2016.
+
 \bibitem[Hug21]{whynotw}
 Jasper Hugunin.
 \newblock Why not w?, 2021.
@@ -230,6 +280,15 @@ Jasper Hugunin.
 Peter~T Johnstone.
 \newblock {\em Sketches of an elephant: A topos theory compendium}, volume~2.
 \newblock Oxford University Press, 2002.
+
+\bibitem[JVWW06]{gadts}
+Simon L.~Peyton Jones, Dimitrios Vytiniotis, Stephanie Weirich, and Geoffrey
+  Washburn.
+\newblock Simple unification-based type inference for gadts.
+\newblock In John~H. Reppy and Julia~L. Lawall, editors, {\em Proceedings of
+  the 11th {ACM} {SIGPLAN} International Conference on Functional Programming,
+  {ICFP} 2006, Portland, Oregon, USA, September 16-21, 2006}, pages 50--61.
+  {ACM}, 2006.
 
 \bibitem[Kis14]{kiselyov14metaocaml}
 Oleg Kiselyov.
@@ -260,6 +319,11 @@ Ambrus Kaposi, Andr{\'{a}}s Kov{\'{a}}cs, and Ambroise Lafont.
   Oslo, Norway}, volume 175 of {\em LIPIcs}, pages 6:1--6:30. Schloss Dagstuhl
   - Leibniz-Zentrum f{\"{u}}r Informatik, 2019.
 
+\bibitem[KLV12]{kapulkin12simplicial}
+Chris Kapulkin, Peter~LeFanu Lumsdaine, and Vladimir Voevodsky.
+\newblock The simplicial model of univalent foundations, 2012.
+\newblock \url{http://arxiv.org/abs/1211.2851/}{arXiv:1211.2851}.
+
 \bibitem[Kov21]{kovacs2021generalized}
 András Kovács.
 \newblock Generalized universe hierarchies and first-class universe levels,
@@ -285,6 +349,12 @@ Peter~LeFanu Lumsdaine and Michael Shulman.
 \newblock Semantics of higher inductive types.
 \newblock {\em Mathematical Proceedings of the Cambridge Philosophical
   Society}, page 1–50.
+
+\bibitem[LW15]{local-univ}
+Peter~LeFanu Lumsdaine and Michael~A. Warren.
+\newblock The local universes model: An overlooked coherence construction for
+  dependent type theories.
+\newblock {\em {ACM} Trans. Comput. Log.}, 16(3):23:1--23:31, 2015.
 
 \bibitem[MAA{\etalchar{+}}19]{dijkstramonad}
 Kenji Maillard, Danel Ahman, Robert Atkey, Guido Mart{\'{\i}}nez, Catalin
@@ -327,6 +397,13 @@ Matthew Pickering, Nicolas Wu, and Csongor Kiss.
 \newblock In Richard~A. Eisenberg, editor, {\em Proceedings of the 12th {ACM}
   {SIGPLAN} International Symposium on Haskell, Haskell@ICFP 2019, Berlin,
   Germany, August 18-23, 2019}, pages 71--84. {ACM}, 2019.
+
+\bibitem[SA21]{ctt-normalization}
+Jonathan Sterling and Carlo Angiuli.
+\newblock Normalization for cubical type theory.
+\newblock In {\em 36th Annual {ACM/IEEE} Symposium on Logic in Computer
+  Science, {LICS} 2021, Rome, Italy, June 29 - July 2, 2021}, pages 1--15.
+  {IEEE}, 2021.
 
 \bibitem[Sch17]{scherer17deciding}
 Gabriel Scherer.
@@ -374,11 +451,21 @@ Amin Timany and Matthieu Sozeau.
   July 9-12, 2018, Oxford, {UK}}, volume 108 of {\em LIPIcs}, pages
   29:1--29:16. Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, 2018.
 
+\bibitem[Uem19]{uemura}
+Taichi Uemura.
+\newblock A general framework for the semantics of type theory.
+\newblock {\em CoRR}, abs/1904.04097, 2019.
+
 \bibitem[{Uni}13]{hottbook}
 The {Univalent Foundations Program}.
 \newblock {\em Homotopy Type Theory: Univalent Foundations of Mathematics}.
 \newblock \url{https://homotopytypetheory.org/book}, Institute for Advanced
   Study, 2013.
+
+\bibitem[VG15]{von2015polynomials}
+Tamara Von~Glehn.
+\newblock {\em Polynomials and models of type theory}.
+\newblock PhD thesis, University of Cambridge, 2015.
 
 \bibitem[Voe17]{voevodsky-initiality}
 Vladimir Voevodsky.
@@ -387,6 +474,15 @@ Vladimir Voevodsky.
 \newblock A talk the Special session on category theory and type theory in
   honor of Per Martin-Löf on his 75th birthday, August 17–19, 2017, during
   the Logic Colloquium 2017, August 14-20, in Stockholm.
+
+\bibitem[WB18]{coqnbe}
+Pawel Wieczorek and Dariusz Biernacki.
+\newblock A coq formalization of normalization by evaluation for
+  martin-l{\"{o}}f type theory.
+\newblock In June Andronick and Amy~P. Felty, editors, {\em Proceedings of the
+  7th {ACM} {SIGPLAN} International Conference on Certified Programs and
+  Proofs, {CPP} 2018, Los Angeles, CA, USA, January 8-9, 2018}, pages 266--279.
+  {ACM}, 2018.
 
 \bibitem[Win20]{winterhalter-thesis}
 Théo Winterhalter.

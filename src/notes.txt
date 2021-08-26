@@ -483,3 +483,19 @@ J b pr {u} p : Tm Γ (El (b[u ↦ u, p ↦ p])
 
   prᴹ γᴹ : bᴹ (γᴹ, tᴹ, refl) (prᴬ γ₀) ≡ (prᴬ γ₁) would be OK, but we fail because we can't eliminate
            from pᴬ to strict equality!
+
+-- FINAL todos
+--------------------------------------------------------------------------------
+
+- Intro
+- Fixup cites, refs
+- Harmonize, link
+- Add related work to chaps + discuss differences to my source papers
+- Artifacts:
+  - agda for simple sigs
+  - agda for HIIT AMDS
+  - hiit-signature computation
+  - add refs
+
+- Sig semantics of sigs
+  - Add IQII model constructions using this
