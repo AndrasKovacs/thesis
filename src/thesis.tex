@@ -103,7 +103,8 @@
 \newcommand{\ap}{\ms{ap}}
 \newcommand{\apd}{\ms{apd}}
 \newcommand{\tr}{\ms{tr}}
-
+\newcommand{\happly}{\ms{happly}}
+\newcommand{\funext}{\ms{funext}}
 
 \newcommand{\Ix}{\mi{Ix}}
 
@@ -6638,19 +6639,20 @@ this chapter, we specify theories of signatures and semantics for both cases.
 
 We work in 2LTT. We assume that $\Ty_0$ is closed under $\Pi$, $\Sigma$, $\top$
 and intensional identity $\blank\!=\!\blank$. We assume the ``based'' path induction principle
-\cite[Section~1.12.1]{hottbook}:
+\cite[Section~1.12.1]{hottbook}. Assuming $A : \Ty_0$, $x : A$ and $B : (y : A) \to x = y \to \Ty_0$,
+we have
 \begin{alignat*}{3}
-  & \ms{J} :\,&&\{A : \Ty_0\}\{x : A\}(B : (y : A) \to x = y \to \Ty_0) \to
-  B\,x\,\refl\\ & &&\to (y : A)(p : x = y) \to B\,y\,p\\ & \rlap{$\ms{J\beta} :
-    \ms{J}\,B\,\mi{br}\,x\,\refl \equiv \mi{br}$}
+  & \J_P      &&: P\,x\,\refl \to \{y : A\}(p : x = y) \to P\,y\,p\\
+  & \J_P\beta &&: \J_P\,\mi{pr}\,\refl \equiv \mi{pr}
 \end{alignat*}
-The following operations are defined in the standard way \cite[Section~2]{hottbook}.
+The following operations are defined in the standard way
+\cite[Section~2]{hottbook}.
 \begin{itemize}
   \item Path inversion $\blank^{-1} : x = y \to y = x$.
   \item Path composition $\blank\!\sqcdot\!\blank : x = y \to y = z \to x = z$.
-  \item Transport $\tr : (P : A \to \Ty_0) \to (p : x = y) \to P\,x \to P\,y$.
+  \item Assuming $P : A \to \Ty_0$, we have transport $\tr_P : x = y \to P\,x \to P\,y$.
   \item Path lifting $\ap : (f : A \to B) \to x = y \to f\,x = f\,y$.
-  \item Dependent path lifting $\apd : (f : (x : A) \to B\,x) \to (p : x = y) \to \tr\,B\,p\,(f\,x) = f\,y$.
+  \item Dependent path lifting $\apd : (f : (x : A) \to B\,x) \to (p : x = y) \to \tr_B\,p\,(f\,x) = f\,y$.
 \end{itemize}
 
 \section{Strict Signatures}
@@ -6728,42 +6730,6 @@ From the HoTT book, all higher-inductive types are supported, except
   be possible. For HIITs, we can't do that, since the inner theory can't
   reasonably internalize the ToS.
 \end{itemize}
-
-%% \begin{myexample}
-%% The torus signature \cite[Section~6.6]{hottbook} is a relatively simple example which involves
-%% $\J$.  For $p_1 : \Tm\,\Gamma\,(\El\,(\Id\,t\,u))$ and $p_2 :
-%% \Tm\,\Gamma\,(\El\,(\Id\,u\,v))$, we abbreviate their composition as $p_1 \sqcdot p_2 :
-%% \Tm\,\Gamma\,(\El\,(\Id\,t\,v))$, defined using $\J$ in the evident way.
-%% \begin{alignat*}{3}
-%%   &\ms{T}^2  &&: \U\\
-%%   &\ms{b}    &&: \El\,\ms{T}^2\\
-%%   &\ms{p}    &&: \El\,(\Id\,\ms{b}\,\ms{b})\\
-%%   &\ms{q}    &&: \El\,(\Id\,\ms{b}\,\ms{b})\\
-%%   &\ms{t}    &&: \El\,(\Id\,(\p \sqcdot \q)\,(\q \sqcdot \p))
-%% \end{alignat*}
-%% \end{myexample}
-
-%% \begin{myexample}
-%% The large $\ID$ type lets us express ``sort equivalences''. For example, a signature for
-%% integers can be compactly written as follows \cite{hit-integers}:
-%% \begin{alignat*}{3}
-%%   &\ms{Int}  &&: \U\\
-%%   &\zero     &&: \El\,\ms{Int}\\
-%%   &\p        &&: \ID\,\ms{Int}\,\ms{Int}
-%% \end{alignat*}
-%% We get the $\suc$ constructor by coercing along $\p$, and predecessors by
-%% coercing backwards.
-
-%% Recall that in Chapter \ref{chap:iqiit} we dropped sort equations because of
-%% their non-fibrancy in the semantics. In contrast, there is no issue with sort
-%% equations here. Sort equations simply become inner paths between types in the
-%% semantics; if we assume univalence in the inner theory, such paths are
-%% equivalent to type equivalences. Hence, sort equations in HITTs can be viewed as
-%% shorthands for sort equivalences. Without sort equations, it is still possible
-%% to write equivalences in signatures, using any of the standard definitions
-%% \cite[Chapter~4]{hottbook}.
-%% \end{myexample}
-
 
 %% \subsubsection{Limitation: elimination from external parameters to signature terms}
 
@@ -6937,7 +6903,7 @@ interpretations. We discuss the semantics afterwards.
   &(\proj_1\,t)^D\,\gamma^D &&\defn \proj_1\,(t^D\,\gamma^D)\\
   &(\proj_2\,t)^D\,\gamma^D &&\defn \proj_2\,(t^D\,\gamma^D)\\
   &(t,\,u)^D\,\gamma^D &&\defn (t^D\,\gamma^D,\,u^D\,\gamma^D)\\
-  &(\Id\,t\,u)^D\,\gamma^D &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\tr\,(a^D\,\gamma^D)\,p\,(t^D\,\gamma^D) = u^D\,\gamma^D\\
+  &(\Id\,t\,u)^D\,\gamma^D &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\tr_{(a^D\,\gamma^D)}\,p\,(t^D\,\gamma^D) = u^D\,\gamma^D\\
   &\refl^D\,\gamma^D &&\defn \refl : t^D\,\gamma^D = t^D\,\gamma^D\\
   &(\Piinf\,\mi{Ix}\,b)^D\,\gamma^D &&\defn \lambda\,t.\,(i : \mi{Ix}) \to (b\,i)^D\,\gamma^D\,(t\,i)\\
   &(\appinf\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
@@ -7065,7 +7031,7 @@ the leading $\top$ components):
   &\rlap{$\ms{S^1Sig^D}\,(S^1,\,\mi{loop},\,\mi{base}) \equiv$}\\
   &        &&(S^{1D}        &&: S^1 \to \Ty_0)\\
   & \times\,&&(\mi{base^D} &&: S^{1D}\,\mi{base})\\
-  & \times\,&&(\mi{loop^D} &&: \tr\,S^{1D}\,\mi{loop}\,\mi{base^D} = \mi{base^D})\\
+  & \times\,&&(\mi{loop^D} &&: \tr_{S^{1D}}\,\mi{loop}\,\mi{base^D} = \mi{base^D})\\
   & &&\\
   &\rlap{$\ms{S^1Sig^S}\,(S^1,\,\mi{loop},\,\mi{base})\,(S^{1D},\,\mi{loop^D},\,\mi{base^D}) \equiv$}\\
   &         &&(\mi{S^{1S}}  &&: (s : S^1) \to S^{1D}\,s)\\
@@ -7087,7 +7053,7 @@ possible to do the same in cubical inner theories. Intensional TT is clearly
 much simpler, and has a wider variety of known models. On the other hand,
 cubical type theories support strictly computing transports, so it is possible
 that they would support stricter ToS $\beta$-rules in the case of the ``weak''
-semantics. We don't explore this in the current chapter.
+semantics. We leave this to possible future work.
 
 \section{Weak Signatures}
 
@@ -7113,42 +7079,345 @@ accommodate types of algebras.
 
 \begin{mydefinition}
 A \textbf{model of weak ToS} consists of a base cwf (with $\Con$, $\Sub$, $\Ty$
-and $\Tm$ returning in $\Set$) together with the following type formers.
+and $\Tm$ returning in $\Set$) extended with certain type formers. We omit all
+substitution rules in the following. As before, substitution rules are given
+with strict equality. We list type formers below.
 \begin{itemize}
-\item An universe $\U$ with decoding $\El$.
-\item $\U$ is closed under $\Id$, with elimination principle $\J$ targeting
-  $\U$. The $\beta$-rule is given up to $\Id$:
+\item
+  A ``large'' identity type $\ID : \Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to
+  \Ty\,\Gamma$, with the following rules:
   \begin{alignat*}{3}
-  & \J &&: \{t : \Tm\,\Gamma\,(\El\,a)\}
-         (b : \Tm\,(\Gamma\ext(u : \El\,a)\ext(p : \El\,(\Id\,t\,u)))\,\U)\\
-  & &&\to \Tm\,\Gamma\,(\El\,(b[u \mapsto t,\,p \mapsto \refl]))\\
-  & &&\to \{u : \Tm\,\gamma\,(\El\,a)\}
-       (p : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)))
-  \to \Tm\,\Gamma\,(\El\,(b[u \mapsto u,\,p \mapsto p]))\\
+  & \refl &&: \Tm\,\Gamma\,(\ID\,t\,t)\\
+  & \J &&: \{t : \Tm\,\Gamma\,A\}
+         (P : \Ty\,(\Gamma\ext(u : A)\ext(p : \ID\,t\,u)))\\
+  & &&\to \Tm\,\Gamma\,(P[u \mapsto t,\,p \mapsto \refl])\\
+  & &&\to \{u : \Tm\,\Gamma\,A\}
+           (p : \Tm\,\Gamma\,(\ID\,t\,u))
+  \to \Tm\,\Gamma\,(P[u \mapsto u,\,p \mapsto p])\\
+  &\J\beta &&: \J\,b\,\mi{pr}\,\refl \equiv \mi{pr}
+  \end{alignat*}
+
+  \begin{notation}
+    We may use a name binding notation in the induction motive for $\J$. For
+    example, assuming $A : \Ty\,\Gamma$, $B : \Ty\,(\Gamma \ext A)$, $p :
+    \Tm\,\Gamma\,(\ID\,t\,u)$ and $\mi{pt} : \Tm\,\Gamma\,(B[\id,\,t])$, we may
+    define transport along $p$ as
+    \[
+      \J\,(x\,p.\,B[\id,\,x])\,\mi{pt}\,p : \Tm\,\Gamma\,(B[\id,\,u])
+    \]
+    where $x\,p.$ binds the term and path dependencies of the induction motive.
+  \end{notation}
+
+\item A universe $\U$ with decoding $\El$.
+\item
+  $\U$ is closed under a ``small'' identity type $\Id : \Tm\,\Gamma\,(\El\,a)
+  \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U$, with elimination principle
+  $\J$ targeting any type (not just types in $\U$!). The $\beta$-rule is
+  specified with $\ID$.
+  \begin{alignat*}{3}
   & \refl &&: \Tm\,\Gamma\,(\El\,(\Id\,t\,t))\\
-  &\J\beta &&: \Tm\,\Gamma\,(\El\,(\Id\,(\J\,b\,\mi{pr}\,\refl))\,(\El\,\mi{pr}))
+  & \J &&: \{t : \Tm\,\Gamma\,(\El\,a)\}
+         (P : \Ty\,(\Gamma\ext(u : \El\,a)\ext(p : \El\,(\Id\,t\,u))))\\
+  & &&\to \Tm\,\Gamma\,(P[u \mapsto t,\,p \mapsto \refl])\\
+  & &&\to \{u : \Tm\,\Gamma\,(\El\,a)\}
+       (p : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)))
+  \to \Tm\,\Gamma\,(P[u \mapsto u,\,p \mapsto p])\\
+  &\J\beta &&: \Tm\,\Gamma\,(\ID\,(\J\,b\,\mi{pr}\,\refl)\,\mi{pr})
   \end{alignat*}
 \item
   $\U$ is also closed under $\top$, $\Sigma$, and $\Piinf$. Of these, $\top$ is
-  specified with a strict isomorphism $\Tm\,\Gamma\,(\El\,\top) \simeq \top$,
-  while $\Sigma$ and $\Piinf$ are specified with equivalences up to $\Id$. These
+  specified with a strict $\Set$ isomorphism $\Tm\,\Gamma\,(\El\,\top) \simeq \top$,
+  while $\Sigma$ and $\Piinf$ are specified with equivalences up to $\ID$. These
   are equivalences in the sense of HoTT \cite[Chapter~4]{hottbook}. There are
-  several equivalent formulations of equivalence; we pick bi-invertible
-  equivalences here for presentation.
+  several equivalent formulations of equivalence; we pick the bi-invertible
+  definitions here.
 
-  \begin{mydefinition}
-    An \textbf{equivalence} of $a,\,b : \Tm\,\Gamma\,\U$ consists of the
-    following
+  Thus, $\Sigma$ is specified as follows.
+  \begin{alignat*}{3}
+   &\ms{\blank\!,\!\blank} &&:
+      (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))
+    \to \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\\
+   &\ms{proj}         &&: \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))
+    \to (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))\\
+   &\ms{proj'}        &&: \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))
+     \to (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))\\
+   &\beta_1 &&: \Tm\,\Gamma\,(\ID\,(\proj_1\,(t,\,u))\,t)\\
+   &\beta_2 &&: \Tm\,\Gamma\,(\ID\,((\J\,(x\,\_.\,(\El\,b)[\id,\,x])\,(\proj_2\,(t,\,u))\,\beta_1)\,u))\\
+   &\eta    &&: \Tm\,\Gamma\,(\ID\,(\proj_1'\,t,\,\proj_2'\,t)\,t)
+  \end{alignat*}
+  We write $\proj_i$ and $\proj'_i$ for composing metatheoretic projections with
+  ToS projections. The additional $\proj'$ component is required to get a
+  bi-invertible equivalence. Also note that $\beta_2$ is only well-typed up to
+  $\beta_1$, so we need to use a transport in the specification.
 
-  \end{mydefinition}
+  $\Piinf : (\mi{Ix} : \U_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to
+  \Tm\,\Gamma\,\U$ is specified below.
+  \begin{alignat*}{3}
+    &\appinf &&: \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b)) \to ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i)))\\
+    &\laminf &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
+    &\ms{lam^{inf'}} &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
+    &\ms{\beta} &&: \Tm\,\Gamma\,(\ID\,(\appinf\,(\laminf\,t)\,i)\,(t\,i))\\
+    &\ms{\eta}  &&: \Tm\,\Gamma\,(\ID\,(\ms{lam^{inf'}}\,(\appinf\,t))\,t)
+  \end{alignat*}
 
+  Why have equivalences in the specification of models, would it be enough to
+  have isomorphisms? We choose equivalences because they yield better-behaved
+  models, and they do not make it any harder to construct models, since we can
+  always construct the required equivalences from isomorphisms
+  \cite[Chapter~4]{hottbook}.
+
+  \item
+  Inductive function type $\Pi : (a : \Tm\,\Gamma\,\U) \to \Ty\,(\Gamma\ext
+  \El\,a) \to \Ty\,\Gamma$, with the specifying equivalence given up to $\ID$,
+  analogously as for $\Sigma$ and $\Piinf$:
+  \[
+    (\app,\,\lam,\,\lam') : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma\ext \El\,a)\,B
+  \]
+
+  \item External function type $\Pie : (\mi{Ix} : \U_0) \to (\mi{Ix} \to
+  \Ty\,\Gamma) \to \Ty\,\Gamma$, specified as a strict $\Set$ isomorphism:
+  \[(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i))\]
 \end{itemize}
-
-
-
-
 \end{mydefinition}
 
+\noindent To give a short summary of changes compared to strict signatures:
+\begin{enumerate}
+  \item Types are closed under an extra $\ID$ type former which has a strict $\beta$-rule.
+  \item We can eliminate from $\Id$ to proper types, but with a weak $\beta$-rule.
+  \item $\Sigma$ and $\Piinf$ support eliminators, but with weak $\beta$-rules.
+\end{enumerate}
+
+\begin{myexample}
+The torus is now expressible thanks to path elimination in signatures. We define
+$\blank\!\sqcdot\!\blank$ as path composition for $\Id$ in the evident way.
+\begin{alignat*}{3}
+  &\ms{T}^2  &&: \U\\
+  &\ms{b}    &&: \El\,\ms{T}^2\\
+  &\ms{p}    &&: \El\,(\Id\,\ms{b}\,\ms{b})\\
+  &\ms{q}    &&: \El\,(\Id\,\ms{b}\,\ms{b})\\
+  &\ms{t}    &&: \El\,(\Id\,(\p \sqcdot \q)\,(\q \sqcdot \p))
+\end{alignat*}
+We could also use $\ID$ instead of $\Id$ and get equivalent semantics.
+\end{myexample}
+
+\begin{myexample}
+The $\ID$ type lets us express ``sort equivalences''. For example, a signature
+for integers can be compactly written as follows \cite{hit-integers}:
+\begin{alignat*}{3}
+  &\ms{Int}  &&: \U\\
+  &\zero     &&: \El\,\ms{Int}\\
+  &\p        &&: \ID\,\ms{Int}\,\ms{Int}
+\end{alignat*}
+We get the $\suc$ constructor by coercing along $\p$, and predecessors by
+coercing backwards.
+
+
+Recall that in Chapter \ref{chap:iqiit} we dropped sort equations because of
+their non-fibrancy in the semantics. In contrast, there is no issue with sort
+equations here. Sort equations simply become inner paths between types in the
+semantics; if we assume univalence in the inner theory, such paths are
+equivalent to type equivalences. Hence, sort equations in HITTs can be viewed as
+shorthands for sort equivalences. Without sort equations, it is still possible
+to write equivalences in signatures, using any of the standard definitions
+\cite[Chapter~4]{hottbook}.
+\end{myexample}
+
+\subsection{Semantics}
+
+We do not repeat the tables that we gave for the semantics of the strict ToS, as
+much of it remains essentially the same. We consider the components of the model
+in order, highlighting relevant changes and points of interest.
+
+\begin{notation}
+We may omit induction motives in $\tr$ and $\J$ in the following, as they will
+often get excessively verbose. So we may write $\tr\,p\,\mi{px} : P\,y$ for $p :
+x = y$ and $\mi{px} : P\,x$, and use $\J\,\mi{pr}\,p$ similarly.
+\end{notation}
+
+\subsubsection{Cwf}
+
+A notable change here is that the entirety of the semantics is now in the inner
+theory. This means that the interpretation functions of contexts and types all
+return in $\U_1$, e.g.\ $\Gamma^A : \U_1$ and $\Gamma^M : \Gamma^A \to \Gamma^A
+\to \U_1$. Accordingly, we use type formers in $\U_1$ to interpret structure in
+the base cwf, e.g.\ $\top^A \defn \top$, where the $\top$ on the right is in
+$\U_1$. The only change though is the move from $\Set$ to $\U_1$, all
+definitions are essentially the same.
+
+\subsubsection{$\bs{\ID}$}
+
+The new $\ID$ type former is interpreted as pointwise equality of semantic
+terms. We assume $t,\,u : \Tm\,\Gamma\,A$.
+\begin{alignat*}{3}
+  &(\ID\,t\,u)^A\,\gamma            &&\defn t^A\,\gamma = u^A\,\gamma \\
+  &(\ID\,t\,u)^M\,p_0\,p_1\,\gamma^M &&\defn \tr\,p_1\,(\tr\,p_0\,(t^M\,\gamma^M)) = u^M\,\gamma^M\\
+  &(\ID\,t\,u)^D\,p\,\gamma^D       &&\defn \tr_{(\lambda\,x.\,A^D\,x\,\gamma^D)}\,p\,(t^D\,\gamma^D) = u^D\,\gamma^D\\
+  &(\ID\,t\,u)^S\,p\,p^D\,\gamma^S  &&\defn \tr\,p^D\,(\J\,(t^S\,\gamma^S)\,p) = u^S\,\gamma^S
+\end{alignat*}
+Above, we dropped induction motives in $\tr$ and $\J$ in $\blank^M$ and
+$\blank^S$. For illustration, the more explicit definitions are:
+\begin{alignat*}{3}
+  &(\ID\,t\,u)^M\,p_0\,p_1\,\gamma^M \defn\\
+  &\hspace{1em}\tr_{(\lambda\,x.\,A^M\,x\,(t^A\,\gamma_1)\,\gamma^M)}\,p_1\, (\tr_{(\lambda\,x.\,A^M\,(t^A\,\gamma_1)\,x\,\gamma^M)}\,p_0\,(t^M\,\gamma^M)) = u^M\,\gamma^M\\
+  &(\ID\,t\,u)^S\,p\,p^D\,\gamma^S \defn\\
+  &\hspace{1em}\tr_{(\lambda\,x.\,A^S\,x\,(u^A\,\gamma)\,\gamma^S)}\,p^D\\
+  &\hspace{2em}(\J_{(\lambda\,y\,p.\,A^S\,y\,(\tr_{(\lambda\,x.\,A^D\,x\,\gamma^D)}\,p\,(t^D\,\gamma^D)))}\,(t^S\,\gamma^S)\,p) = u^S\,\gamma^S
+\end{alignat*}
+From now on, we shall generally avoid this amount of detail in motives.
+
+$\refl$ is interpreted as pointwise $\refl$-s:
+\begin{alignat*}{3}
+  &\refl^A\,&&\_ \defn \refl\\
+  &\refl^M\,&&\_ \defn \refl\\
+  &\refl^D\,&&\_ \defn \refl\\
+  &\refl^S\,&&\_ \defn \refl
+\end{alignat*}
+Let's look at $\J$ for $\ID$ now. It's helpful to temporarily consider a bundled
+AMDS model instead of the four interpretation maps. Then, we have the following
+equivalence up to $\blank\!=\!\blank$:
+\[\Tm_{\ms{AMDS}}\,\Gamma\,(\ID_{\ms{AMDS}}\,t\,u) \simeq (t = u)\]
+This follows from function extensionality and the characterization of
+equivalence for inner $\Sigma$ \cite[Section~2.7]{hottbook}. Thus, semantic
+$\ID$ is the same as equality of semantic terms. It follows that everything in
+the inner theory respects $\ID$, so we can certainly define the semantic $\J$
+for $\ID$.
+
+The actual definition of $\J$ involves doing induction on all paths that
+are available as induction hypotheses.
+\begin{alignat*}{3}
+  &(\J\,P\,\mi{pr}\,p)^A\,\gamma   &&\defn \J\,(\mi{pr}^A\,\gamma)\,(p^A\,\gamma)\\
+  &(\J\,P\,\mi{pr}\,p)^M\,\gamma^M &&\defn
+    \J\,(\J\,(\J\,(\mi{pr}^M\,\gamma^M)\,(p^A\,\gamma_1))\,(p^A\,\gamma_0))\,(p^M\,\gamma^M)\\
+  &(\J\,P\,\mi{pr}\,p)^D\,\gamma^D &&\defn \J\,(\J\,(\mi{pr}^D\,\gamma^D)\,(p^A\,\gamma))\,(p^D\,\gamma^D)\\
+  &(\J\,P\,\mi{pr}\,p)^S\,\gamma^S &&\defn
+    \J\,(\J\,(\J\,(\mi{pr}^S\,\gamma^S)\,(p^A\,\gamma))\,(p^D\,\gamma^D))\,(p^S\,\gamma^S)
+\end{alignat*}
+The strict $\beta$-rule for $\J$ is supported, as the above definition computes
+everywhere when $p$ is $\refl$.
+
+
+\subsubsection{Universe}
+We have the following changes. First, the interpretations of $\U$ now return in
+$\U_0$:
+\begin{alignat*}{3}
+  & \U^A\,\gamma &&\defn \U_0\\
+  & \U^D\,a\,\gamma^D &&\defn a \to \U_0
+\end{alignat*}
+Second, in $\El$, morphisms and sections are given by inner equality:
+\begin{alignat*}{3}
+  & (\El\,a)^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn a^M\,\gamma^M\,\alpha_0 = \alpha_1\\
+  & (\El\,a)^M\,\alpha\,\alpha^D\,\gamma^D &&\defn a^S\,\gamma^S\,\alpha = \alpha^D
+\end{alignat*}
+
+\subsubsection{$\bs{\Id}$}
+
+In this identity type, $\blank^A$ and $\blank^D$ are pointwise equality as
+usual, and $\blank^M$ and $\blank^S$ complete squares of equalities. We assume
+$t,\,u : \Tm\,\Gamma\,(\El\,a)$.
+\begin{alignat*}{3}
+  & (\Id\,t\,u)^A\,\gamma   &&\defn t^A\,\gamma = u^A\,\gamma\\
+  & (\Id\,t\,u)^M\,\gamma^M &&\defn \lambda\,(p : t^A\,\gamma_0 = u^A\,\gamma_0).\,(t^M\,\gamma^M)^{-1} \sqcdot \ap\,(a^M\,\gamma^M)\,p \sqcdot u^M\,\gamma^M\\
+  & (\Id\,t\,u)^D\,\gamma^D &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\tr_{(a^D\,\gamma^D)}\,(t^D\,\gamma^D) = u^D\,\gamma^D\\
+  & (\Id\,t\,u)^S\,\gamma^S &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\ap\,(\tr_{(a^D\,\gamma^D)}\,p)\,(t^S\,\gamma^S)^{-1} \sqcdot \apd\,(a^S\,\gamma^S)\,p \sqcdot u^S\,\gamma^S
+\end{alignat*}
+We have $\refl^A\,\_ \defn \refl$ and $\refl^D\,\_ \defn \refl$. For $\refl^M\,\gamma^M$, the goal type is
+\[
+  (t^M\,\gamma^M)^{-1} \sqcdot t^M\,\gamma^M = \refl
+\]
+which is one of the groupoid laws for paths \cite[Section~2.1]{hottbook}. We
+have a more dependent variant as goal type for $\refl^S\,\gamma^S$:
+\[
+  \ap\,(\lambda\,x.\,x)\,(t^S\,\gamma^S)^{-1} \sqcdot t^S\,\gamma^S = \refl
+  \]
+This again follows from groupoid laws and the functoriality of $\ap$.
+
+It is still the case that
+$\Tm_{\ms{AMDS}}\,\Gamma\,(\El_{\ms{AMDS}}\,(\Id_{\ms{AMDS}}\,t\,u)) \simeq (t =
+u)$ up to $\blank\!=\!\blank$. Although $(\Id\,t\,u)^M$ and $(\Id\,t\,u)^S$ do
+not express equality of $t$ and $u$, we do get the component-wise equalities if
+we apply $\El$. We have that
+\[
+(\El\,(\Id\,t\,u))^M\,p_0\,p_1\,\gamma^M
+\equiv ((t^M\,\gamma^M)^{-1} \sqcdot \ap\,(a^M\,\gamma^M)\,p_0 \sqcdot u^M\,\gamma^M = p_1)
+\]
+We can rearrange the definition to make it more apparent that this is an equality
+of $t^M\,\gamma^M$ and $u^M\,\gamma^M$, which is well-typed up to $p_0$ and $p_1$.
+\[
+  \ap\,(a^M\,\gamma^M)\,p_0 \sqcdot u^M\,\gamma^M = t^M\,\gamma^M \sqcdot p_1
+\]
+Thus, we can again expect that $\J$ is definable for $\Id$. The definition gets
+a bit more complicated than in $\ID$, as in $\blank^M$ and $\blank^S$ we need to generalize
+over values in the inner most $\J$, by returning a function from the $\J$ and
+applying it to the appropriate values.
+\begin{alignat*}{3}
+  &(\J\,P\,\mi{pr}\,p)^A\,\gamma   \defn \J\,(\mi{pr}^A\,\gamma)\,(p^A\,\gamma)\\
+  &(\J\,P\,\mi{pr}\,p)^M\,\gamma^M \defn\\
+  &\hspace{2em}\J\,(\J\,(\J\,(\J\,(\lambda\,x\,y.\,y)\,(t^M\,\gamma^M)\,(\mi{pr}^A\,\gamma_1)\,(\mi{pr}^M\,\gamma^M))\,(p^A\,\gamma_0))\,(u^M\,\gamma^M))\,(p^M\,\gamma^M)\\
+  &(\J\,P\,\mi{pr}\,p)^D\,\gamma^D \defn \J\,(\J\,(\mi{pr}^D\,\gamma^D)\,(p^A\,\gamma))\,(p^D\,\gamma^D)\\
+  &(\J\,P\,\mi{pr}\,p)^S\,\gamma^S \defn\\
+  &\hspace{2em}\J\,(\J\,(\J\,(\J\,(\lambda\,x\,y.\,y)\,(t^S\,\gamma^S)\,(\mi{pr}^D\,\gamma^D)\,(\mi{pr}^S\,\gamma^S))\,(p^A\,\gamma))\,(u^S\,\gamma^S))\,(p^S\,\gamma^S)
+\end{alignat*}
+\emph{Remark.} Definitions like this probably look far from enlightening, but
+they should be actually helpful for formalization in a proof assistant. The
+essential information, which is somewhat tedious to work out independently, is
+which things to generalize, and in what order to use path induction, and these
+are conveyed above.
+
+Regarding the $\beta$-rule, note that $\refl^M$ and $\refl^S$ are not defined as
+$\refl$, but rather by induction on $t^M\,\gamma^M$ and
+$t^S\,\gamma^S$. Therefore, if we apply $\J$ to $\refl$, the $\blank^M$ and
+$\blank^S$ components do not strictly compute.
+
+
+
+\subsubsection{$\bs{\top}$}
+
+$\top$ is unchanged. $\tt^M$ and $\tt^S$ could possibly change (since $\El$ has
+changed, and $\tt : \Tm\,\Gamma\,(\El\,\top)$), but they are still definable
+with $\refl$-s.
+
+\subsubsection{$\bs{\Sigma}$}
+
+Pairing and the projections change in $\Sigma$; now their $\blank^M$ and
+$\blank^S$ cases return proof-relevant inner equalities. In pairing, we do path
+induction on hypotheses:
+\begin{alignat*}{3}
+  &(t,\,u)^M\,\gamma^M &&\defn \J\,(\J\,\refl\,(t^M\,\gamma^M))\,(u^M\,\gamma^M)\\
+  &(t,\,u)^S\,\gamma^S &&\defn \J\,(\J\,\refl\,(t^S\,\gamma^S))\,(u^S\,\gamma^S)
+\end{alignat*}
+In $\proj_1$, we use $\ap\,\proj_1$ on path hypotheses:
+\begin{alignat*}{3}
+  &(\proj_1\,t)^M\,\gamma^M &&\defn \ap\,\proj_1\,(t^M\,\gamma^M)\\
+  &(\proj_1\,t)^S\,\gamma^S &&\defn \ap\,\proj_1\,(t^S\,\gamma^S)
+\end{alignat*}
+In $\proj_2$, the definitions could be given using $\apd\,\proj_2$, but the
+result type does not immediately line up, so we can just do direct path induction.
+\begin{alignat*}{3}
+  &(\proj_2\,t)^M\,\gamma^M &&\defn \J\,\refl\,(t^M\,\gamma^M)\\
+  &(\proj_2\,t)^S\,\gamma^S &&\defn \J\,\refl\,(t^S\,\gamma^S)
+\end{alignat*}
+$\proj_1'$ and $\proj_2'$ (required by the bi-invertible specification) are defined
+the same way. We do not have strict $\beta\eta$-rules. For example:
+\[ (\proj_1\,(t,\,u))^M\,\gamma^M \equiv \ap\,\proj_1\,(\J\,(\J\,\refl\,(t^M\,\gamma^M))\,(u^M\,\gamma^M)) \not\equiv t^M\,\gamma^M \]
+We still get $(\proj_1\,(t,\,u))^M\,\gamma^M = t^M\,\gamma^M$ by path induction on
+$t^M\,\gamma^M$ and $u^M\,\gamma^M$, and similarly in other cases, so $\Sigma$ in the ToS
+does support the specifying equivalence.
+
+\subsubsection{$\ms{\Piinf}$}
+Again, the $\blank^M$ and $\blank^S$ cases change in term formers. Application
+is given by $\happly$:
+\begin{alignat*}{3}
+  &(\appinf\,t\,i)^M\,\gamma^M &&\defn \happly\,(t^M\,\gamma^M)\\
+  &(\appinf\,t\,i)^S\,\gamma^S &&\defn \happly\,(t^S\,\gamma^S)
+\end{alignat*}
+Abstraction is by $\funext$:
+\begin{alignat*}{3}
+  &(\laminf\,t)^M\,\gamma^M &&\defn \funext\,(\lambda\,i.\,(t\,i)^M\,\gamma^M)\\
+  &(\laminf\,t)^S\,\gamma^S &&\defn \funext\,(\lambda\,i.\,(t\,i)^S\,\gamma^S)
+\end{alignat*}
+Thus, weak $\beta\eta$-rules for $\Piinf$ follow from strong function extensionality.
+
+\subsubsection{$\ms{\Pi}$}
 
 \chapter{Conclusion \& Further Work}
 

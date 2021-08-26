@@ -64,6 +64,14 @@ Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
 \newblock From signatures to monads in unimath.
 \newblock {\em J. Autom. Reason.}, 63(2):285--318, 2019.
 
+\bibitem[AS20]{hit-integers}
+Thorsten Altenkirch and Luis Scoccola.
+\newblock The integers as a higher inductive type.
+\newblock In Holger Hermanns, Lijun Zhang, Naoki Kobayashi, and Dale Miller,
+  editors, {\em {LICS} '20: 35th Annual {ACM/IEEE} Symposium on Logic in
+  Computer Science, Saarbr{\"{u}}cken, Germany, July 8-11, 2020}, pages 67--73.
+  {ACM}, 2020.
+
 \bibitem[AVW17]{abel17normalization}
 Andreas Abel, Andrea Vezzosi, and Th{\'{e}}o Winterhalter.
 \newblock Normalization by evaluation for sized dependent types.
