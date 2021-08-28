@@ -7,6 +7,8 @@ Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
 \newblock A type and scope safe universe of syntaxes with binding: Their
   semantics and proofs.
 \newblock {\em CoRR}, abs/2001.11001, 2020.
+\newblock URL: \url{https://arxiv.org/abs/2001.11001}, \href
+  {http://arxiv.org/abs/2001.11001} {\path{arXiv:2001.11001}}.
 
 \bibitem[Abe13]{abel2013normalization}
 Andreas Abel.
@@ -22,6 +24,8 @@ Thorsten Altenkirch, Simon Boulier, Ambrus Kaposi, and Nicolas Tabareau.
   13th International Conference, {MPC} 2019, Porto, Portugal, October 7-9,
   2019, Proceedings}, volume 11825 of {\em Lecture Notes in Computer Science},
   pages 155--196. Springer, 2019.
+\newblock \href {https://doi.org/10.1007/978-3-030-33636-3\_7}
+  {\path{doi:10.1007/978-3-030-33636-3\_7}}.
 
 \bibitem[ACD{\etalchar{+}}18]{altenkirch18qiit}
 Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, Nicolai Kraus, and
@@ -33,11 +37,21 @@ Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, Nicolai Kraus, and
   Practice of Software, {ETAPS} 2018, Thessaloniki, Greece, April 14-20, 2018,
   Proceedings}, volume 10803 of {\em Lecture Notes in Computer Science}, pages
   293--310. Springer, 2018.
+\newblock \href {https://doi.org/10.1007/978-3-319-89366-2\_16}
+  {\path{doi:10.1007/978-3-319-89366-2\_16}}.
 
 \bibitem[ACKS19]{twolevel}
 Danil Annenkov, Paolo Capriotti, Nicolai Kraus, and Christian Sattler.
 \newblock Two-level type theory and applications.
 \newblock {\em ArXiv e-prints}, may 2019.
+\newblock URL: \url{http://arxiv.org/abs/1705.03307}.
+
+\bibitem[Acz11]{aczel2011voevodsky}
+Peter Aczel.
+\newblock On voevodsky’s univalence axiom.
+\newblock {\em Mathematical Logic: Proof Theory, Constructive Mathematics,
+  Samuel R. Buss, Ulrich Kohlenbach, and Michael Rathjen (Eds.). Mathematisches
+  Forschungsinstitut Oberwolfach, Oberwolfach}, page 2967, 2011.
 
 \bibitem[AHH18]{angiuli2018cartesian}
 Carlo Angiuli, Kuen-Bang~Favonia Hou, and Robert Harper.
@@ -54,6 +68,8 @@ Carlo Angiuli, Robert Harper, and Todd Wilson.
 Jir{\'{\i}} Ad{\'{a}}mek and V{\'{a}}clav Koubek.
 \newblock Least fixed point of a functor.
 \newblock {\em J. Comput. Syst. Sci.}, 19(2):163--178, 1979.
+\newblock \href {https://doi.org/10.1016/0022-0000(79)90026-6}
+  {\path{doi:10.1016/0022-0000(79)90026-6}}.
 
 \bibitem[AK16]{ttintt}
 Thorsten Altenkirch and Ambrus Kaposi.
@@ -62,27 +78,37 @@ Thorsten Altenkirch and Ambrus Kaposi.
   the 43rd Annual {ACM} {SIGPLAN-SIGACT} Symposium on Principles of Programming
   Languages, {POPL} 2016, St. Petersburg, FL, USA, January 20 - 22, 2016},
   pages 18--29. {ACM}, 2016.
+\newblock \href {https://doi.org/10.1145/2837614.2837638}
+  {\path{doi:10.1145/2837614.2837638}}.
 
 \bibitem[AKS15]{univalent-categories}
 Benedikt Ahrens, Krzysztof Kapulkin, and Michael Shulman.
 \newblock Univalent categories and the rezk completion.
 \newblock {\em Math. Struct. Comput. Sci.}, 25(5):1010--1039, 2015.
+\newblock \href {https://doi.org/10.1017/S0960129514000486}
+  {\path{doi:10.1017/S0960129514000486}}.
 
 \bibitem[AL19]{displayedcats}
 Benedikt Ahrens and Peter~LeFanu Lumsdaine.
 \newblock {Displayed Categories}.
 \newblock {\em {Logical Methods in Computer Science}}, {Volume 15, Issue 1},
   March 2019.
+\newblock URL: \url{https://lmcs.episciences.org/5252}, \href
+  {https://doi.org/10.23638/LMCS-15(1:20)2019}
+  {\path{doi:10.23638/LMCS-15(1:20)2019}}.
 
 \bibitem[AMM19]{ahrens19from}
 Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
 \newblock From signatures to monads in unimath.
 \newblock {\em J. Autom. Reason.}, 63(2):285--318, 2019.
+\newblock \href {https://doi.org/10.1007/s10817-018-9474-4}
+  {\path{doi:10.1007/s10817-018-9474-4}}.
 
 \bibitem[A{\"{O}}V18]{decidableconv}
 Andreas Abel, Joakim {\"{O}}hman, and Andrea Vezzosi.
 \newblock Decidability of conversion for type theory in type theory.
 \newblock {\em Proc. {ACM} Program. Lang.}, 2({POPL}):23:1--23:29, 2018.
+\newblock \href {https://doi.org/10.1145/3158111} {\path{doi:10.1145/3158111}}.
 
 \bibitem[AS20]{hit-integers}
 Thorsten Altenkirch and Luis Scoccola.
@@ -91,21 +117,28 @@ Thorsten Altenkirch and Luis Scoccola.
   editors, {\em {LICS} '20: 35th Annual {ACM/IEEE} Symposium on Logic in
   Computer Science, Saarbr{\"{u}}cken, Germany, July 8-11, 2020}, pages 67--73.
   {ACM}, 2020.
+\newblock \href {https://doi.org/10.1145/3373718.3394760}
+  {\path{doi:10.1145/3373718.3394760}}.
 
 \bibitem[AVW17]{abel17normalization}
 Andreas Abel, Andrea Vezzosi, and Th{\'{e}}o Winterhalter.
 \newblock Normalization by evaluation for sized dependent types.
 \newblock {\em Proc. {ACM} Program. Lang.}, 1({ICFP}):33:1--33:30, 2017.
+\newblock \href {https://doi.org/10.1145/3110277} {\path{doi:10.1145/3110277}}.
 
 \bibitem[Awo18]{awodey18natural}
 Steve Awodey.
 \newblock Natural models of homotopy type theory.
 \newblock {\em Math. Struct. Comput. Sci.}, 28(2):241--286, 2018.
+\newblock \href {https://doi.org/10.1017/S0960129516000268}
+  {\path{doi:10.1017/S0960129516000268}}.
 
 \bibitem[BB85]{boehm-berarducci}
 Corrado B{\"{o}}hm and Alessandro Berarducci.
 \newblock Automatic synthesis of typed lambda-programs on term algebras.
 \newblock {\em Theor. Comput. Sci.}, 39:135--154, 1985.
+\newblock \href {https://doi.org/10.1016/0304-3975(85)90135-5}
+  {\path{doi:10.1016/0304-3975(85)90135-5}}.
 
 \bibitem[BCH14]{cubical}
 Marc Bezem, Thierry Coquand, and Simon Huber.
@@ -118,10 +151,13 @@ Lars Birkedal, Ranald Clouston, Bassel Mannaa, Rasmus~Ejlers M{\o}gelberg,
   Andrew~M. Pitts, and Bas Spitters.
 \newblock Modal dependent type theory and dependent right adjoints.
 \newblock {\em Math. Struct. Comput. Sci.}, 30(2):118--138, 2020.
+\newblock \href {https://doi.org/10.1017/S0960129519000197}
+  {\path{doi:10.1017/S0960129519000197}}.
 
 \bibitem[BdB20]{initiality-agda}
 Guillaume Brunerie and Menno de~Boer.
 \newblock Formalization of the initiality conjecture, 2020.
+\newblock URL: \url{https://github.com/guillaumebrunerie/initiality}.
 
 \bibitem[BH11]{compdata}
 Patrick Bahr and Tom Hvitved.
@@ -129,6 +165,8 @@ Patrick Bahr and Tom Hvitved.
 \newblock In Jaakko J{\"{a}}rvi and Shin{-}Cheng Mu, editors, {\em Proceedings
   of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
   2011, Tokyo, Japan, September 19-21, 2011}, pages 83--94. {ACM}, 2011.
+\newblock \href {https://doi.org/10.1145/2036918.2036930}
+  {\path{doi:10.1145/2036918.2036930}}.
 
 \bibitem[BKS21]{bocquet2021induction}
 Rafa{\"e}l Bocquet, Ambrus Kaposi, and Christian Sattler.
@@ -141,12 +179,15 @@ Simon Boulier, Pierre-Marie P{\'e}drot, and Nicolas Tabareau.
 \newblock The next 700 syntactical models of type theory.
 \newblock In {\em Proceedings of the 6th ACM SIGPLAN Conference on Certified
   Programs and Proofs}, CPP 2017, pages 182--194, New York, NY, USA, 2017. ACM.
+\newblock \href {https://doi.org/10.1145/3018610.3018620}
+  {\path{doi:10.1145/3018610.3018620}}.
 
 \bibitem[Bru19]{brunerie}
 Guillaume Brunerie.
 \newblock A formalization of the initiality conjecture in agda.
 \newblock Slides of a talk at the Homotopy Type Theory 2019 Conference,
   Carnegie Mellon University, Pittsburgh, Pennsylvania, August 2019.
+\newblock URL: \url{https://guillaumebrunerie.github.io/pdf/initiality.pdf}.
 
 \bibitem[Cap17]{capriotti2017models}
 Paolo Capriotti.
@@ -163,12 +204,15 @@ Simon Castellan, Pierre Clairambault, and Peter Dybjer.
 \newblock Undecidability of equality in the free locally cartesian closed
   category (extended version).
 \newblock {\em Log. Methods Comput. Sci.}, 13(4), 2017.
+\newblock \href {https://doi.org/10.23638/LMCS-13(4:22)2017}
+  {\path{doi:10.23638/LMCS-13(4:22)2017}}.
 
 \bibitem[CCHM17]{cchm}
 Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
 \newblock Cubical type theory: {A} constructive interpretation of the
   univalence axiom.
 \newblock {\em {FLAP}}, 4(10):3127--3170, 2017.
+\newblock URL: \url{http://collegepublications.co.uk/ifcolog/?00019}.
 
 \bibitem[CD14]{clairambault2014biequivalence}
 Pierre Clairambault and Peter Dybjer.
@@ -190,6 +234,7 @@ Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
 \bibitem[Con19]{initiality-project}
 Initiality~Project Contributors.
 \newblock Initiality project, 2019.
+\newblock URL: \url{https://ncatlab.org/nlab/show/Initiality+Project}.
 
 \bibitem[Coq18]{coquand2018canonicity}
 Thierry Coquand.
@@ -205,6 +250,8 @@ Paolo Capriotti and Christian Sattler.
 Pierre{-}{\'{E}}variste Dagand.
 \newblock The essence of ornaments.
 \newblock {\em J. Funct. Program.}, 27:e9, 2017.
+\newblock \href {https://doi.org/10.1017/S0956796816000356}
+  {\path{doi:10.1017/S0956796816000356}}.
 
 \bibitem[dB20]{deboer-initiality}
 Menno de~Boer.
@@ -215,6 +262,7 @@ Menno de~Boer.
 \bibitem[dev17]{agda-sized-issue}
 Agda developers.
 \newblock Agda issue 2820, 2017.
+\newblock URL: \url{https://github.com/agda/agda/issues/2820}.
 
 \bibitem[dVL14]{sop}
 Edsko de~Vries and Andres L{\"{o}}h.
@@ -222,6 +270,8 @@ Edsko de~Vries and Andres L{\"{o}}h.
 \newblock In Jos{\'{e}}~Pedro Magalh{\~{a}}es and Tiark Rompf, editors, {\em
   Proceedings of the 10th {ACM} {SIGPLAN} workshop on Generic programming,
   {WGP} 2014, Gothenburg, Sweden, August 31, 2014}, pages 83--94. {ACM}, 2014.
+\newblock \href {https://doi.org/10.1145/2633628.2633634}
+  {\path{doi:10.1145/2633628.2633634}}.
 
 \bibitem[Dyb95]{Dybjer96internaltype}
 Peter Dybjer.
@@ -230,6 +280,8 @@ Peter Dybjer.
   and Programs, International Workshop TYPES'95, Torino, Italy, June 5-8, 1995,
   Selected Papers}, volume 1158 of {\em Lecture Notes in Computer Science},
   pages 120--134. Springer, 1995.
+\newblock \href {https://doi.org/10.1007/3-540-61780-9\_66}
+  {\path{doi:10.1007/3-540-61780-9\_66}}.
 
 \bibitem[GKNB20]{gratzer20multimodal}
 Daniel Gratzer, G.~A. Kavvos, Andreas Nuyts, and Lars Birkedal.
@@ -238,6 +290,8 @@ Daniel Gratzer, G.~A. Kavvos, Andreas Nuyts, and Lars Birkedal.
   editors, {\em {LICS} '20: 35th Annual {ACM/IEEE} Symposium on Logic in
   Computer Science, Saarbr{\"{u}}cken, Germany, July 8-11, 2020}, pages
   492--506. {ACM}, 2020.
+\newblock \href {https://doi.org/10.1145/3373718.3394736}
+  {\path{doi:10.1145/3373718.3394736}}.
 
 \bibitem[Hed98]{hedberg}
 Michael Hedberg.
@@ -260,6 +314,8 @@ Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
 \newblock Logical relations and parametricity - {A} reynolds programme for
   category theory and programming languages.
 \newblock {\em Electron. Notes Theor. Comput. Sci.}, 303:149--180, 2014.
+\newblock \href {https://doi.org/10.1016/j.entcs.2014.02.008}
+  {\path{doi:10.1016/j.entcs.2014.02.008}}.
 
 \bibitem[HS96]{hofmann96groupoidmodel}
 Martin Hofmann and Thomas Streicher.
@@ -274,7 +330,8 @@ Simon Huber.
 
 \bibitem[Hug21]{whynotw}
 Jasper Hugunin.
-\newblock Why not w?, 2021.
+\newblock Why not {W}?, 2021.
+\newblock URL: \url{https://jashug.github.io/papers/whynotw.pdf}.
 
 \bibitem[Joh02]{johnstone2002sketches}
 Peter~T Johnstone.
@@ -289,6 +346,8 @@ Simon L.~Peyton Jones, Dimitrios Vytiniotis, Stephanie Weirich, and Geoffrey
   the 11th {ACM} {SIGPLAN} International Conference on Functional Programming,
   {ICFP} 2006, Portland, Oregon, USA, September 16-21, 2006}, pages 50--61.
   {ACM}, 2006.
+\newblock \href {https://doi.org/10.1145/1159803.1159811}
+  {\path{doi:10.1145/1159803.1159811}}.
 
 \bibitem[Kis14]{kiselyov14metaocaml}
 Oleg Kiselyov.
@@ -298,12 +357,28 @@ Oleg Kiselyov.
   Logic Programming - 12th International Symposium, {FLOPS} 2014, Kanazawa,
   Japan, June 4-6, 2014. Proceedings}, volume 8475 of {\em Lecture Notes in
   Computer Science}, pages 86--102. Springer, 2014.
+\newblock \href {https://doi.org/10.1007/978-3-319-07151-0\_6}
+  {\path{doi:10.1007/978-3-319-07151-0\_6}}.
+
+\bibitem[KK18]{hiit}
+Ambrus Kaposi and Andr{\'a}s Kov{\'a}cs.
+\newblock {A Syntax for Higher Inductive-Inductive Types}.
+\newblock In H{\'e}l{\`e}ne Kirchner, editor, {\em 3rd International Conference
+  on Formal Structures for Computation and Deduction (FSCD 2018)}, volume 108
+  of {\em Leibniz International Proceedings in Informatics (LIPIcs)}, pages
+  20:1--20:18, Dagstuhl, Germany, 2018. Schloss Dagstuhl--Leibniz-Zentrum fuer
+  Informatik.
+\newblock URL: \url{http://drops.dagstuhl.de/opus/volltexte/2018/9190}, \href
+  {https://doi.org/10.4230/LIPIcs.FSCD.2018.20}
+  {\path{doi:10.4230/LIPIcs.FSCD.2018.20}}.
 
 \bibitem[KK20]{hiits}
 Ambrus Kaposi and Andr{\'{a}}s Kov{\'{a}}cs.
 \newblock Signatures and induction principles for higher inductive-inductive
   types.
 \newblock {\em Log. Methods Comput. Sci.}, 16(1), 2020.
+\newblock \href {https://doi.org/10.23638/LMCS-16(1:10)2020}
+  {\path{doi:10.23638/LMCS-16(1:10)2020}}.
 
 \bibitem[KKA19]{kaposi2019constructing}
 Ambrus Kaposi, Andr{\'a}s Kov{\'a}cs, and Thorsten Altenkirch.
@@ -318,16 +393,25 @@ Ambrus Kaposi, Andr{\'{a}}s Kov{\'{a}}cs, and Ambroise Lafont.
   Conference on Types for Proofs and Programs, {TYPES} 2019, June 11-14, 2019,
   Oslo, Norway}, volume 175 of {\em LIPIcs}, pages 6:1--6:30. Schloss Dagstuhl
   - Leibniz-Zentrum f{\"{u}}r Informatik, 2019.
+\newblock \href {https://doi.org/10.4230/LIPIcs.TYPES.2019.6}
+  {\path{doi:10.4230/LIPIcs.TYPES.2019.6}}.
 
 \bibitem[KLV12]{kapulkin12simplicial}
 Chris Kapulkin, Peter~LeFanu Lumsdaine, and Vladimir Voevodsky.
 \newblock The simplicial model of univalent foundations, 2012.
 \newblock \url{http://arxiv.org/abs/1211.2851/}{arXiv:1211.2851}.
 
+\bibitem[Kov20]{hiit-sig-program}
+András Kovács.
+\newblock Program for checking higher inductive-inductive signatures, 2020.
+\newblock URL:
+  \url{https://github.com/akaposi/hiit-signatures/tree/master/elims-demo}.
+
 \bibitem[Kov21]{kovacs2021generalized}
 András Kovács.
 \newblock Generalized universe hierarchies and first-class universe levels,
   2021.
+\newblock \href {http://arxiv.org/abs/2103.00223} {\path{arXiv:2103.00223}}.
 
 \bibitem[KvR20]{mutualinductive}
 Ambrus Kaposi and Jakob von Raumer.
@@ -336,6 +420,8 @@ Ambrus Kaposi and Jakob von Raumer.
   Formal Structures for Computation and Deduction, {FSCD} 2020, June 29-July 6,
   2020, Paris, France (Virtual Conference)}, volume 167 of {\em LIPIcs}, pages
   23:1--23:21. Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, 2020.
+\newblock \href {https://doi.org/10.4230/LIPIcs.FSCD.2020.23}
+  {\path{doi:10.4230/LIPIcs.FSCD.2020.23}}.
 
 \bibitem[LM11]{loh11generic}
 Andres L{\"{o}}h and Jos{\'{e}}~Pedro Magalh{\~{a}}es.
@@ -343,24 +429,30 @@ Andres L{\"{o}}h and Jos{\'{e}}~Pedro Magalh{\~{a}}es.
 \newblock In Jaakko J{\"{a}}rvi and Shin{-}Cheng Mu, editors, {\em Proceedings
   of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
   2011, Tokyo, Japan, September 19-21, 2011}, pages 1--12. {ACM}, 2011.
+\newblock \href {https://doi.org/10.1145/2036918.2036920}
+  {\path{doi:10.1145/2036918.2036920}}.
 
 \bibitem[LS]{lumsdaineShulman}
 Peter~LeFanu Lumsdaine and Michael Shulman.
 \newblock Semantics of higher inductive types.
 \newblock {\em Mathematical Proceedings of the Cambridge Philosophical
   Society}, page 1–50.
+\newblock \href {https://doi.org/10.1017/S030500411900015X}
+  {\path{doi:10.1017/S030500411900015X}}.
 
 \bibitem[LW15]{local-univ}
 Peter~LeFanu Lumsdaine and Michael~A. Warren.
 \newblock The local universes model: An overlooked coherence construction for
   dependent type theories.
 \newblock {\em {ACM} Trans. Comput. Log.}, 16(3):23:1--23:31, 2015.
+\newblock \href {https://doi.org/10.1145/2754931} {\path{doi:10.1145/2754931}}.
 
 \bibitem[MAA{\etalchar{+}}19]{dijkstramonad}
 Kenji Maillard, Danel Ahman, Robert Atkey, Guido Mart{\'{\i}}nez, Catalin
   Hritcu, Exequiel Rivas, and {\'{E}}ric Tanter.
 \newblock Dijkstra monads for all.
 \newblock {\em Proc. {ACM} Program. Lang.}, 3({ICFP}):104:1--104:29, 2019.
+\newblock \href {https://doi.org/10.1145/3341708} {\path{doi:10.1145/3341708}}.
 
 \bibitem[MFP91]{bananas}
 Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.
@@ -370,11 +462,15 @@ Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.
   Computer Architecture, 5th {ACM} Conference, Cambridge, MA, USA, August
   26-30, 1991, Proceedings}, volume 523 of {\em Lecture Notes in Computer
   Science}, pages 124--144. Springer, 1991.
+\newblock \href {https://doi.org/10.1007/3540543961\_7}
+  {\path{doi:10.1007/3540543961\_7}}.
 
 \bibitem[ML98]{maclane98categories}
 Saunders Mac~Lane.
 \newblock {\em {Categories for the Working Mathematician}}.
 \newblock Graduate Texts in Mathematics. Springer, 2nd edition, September 1998.
+\newblock URL:
+  \url{http://www.amazon.com/exec/obidos/redirect?tag=citeulike07-20\&path=ASIN/0387984038}.
 
 \bibitem[MM12]{maclane2012sheaves}
 Saunders MacLane and Ieke Moerdijk.
@@ -385,6 +481,7 @@ Saunders MacLane and Ieke Moerdijk.
 \bibitem[nc21]{internallogic}
 nLab contributors.
 \newblock Internal logic, 2021.
+\newblock URL: \url{https://ncatlab.org/nlab/show/internal+logic}.
 
 \bibitem[NF13]{forsberg-phd}
 Fredrik Nordvall~Forsberg.
@@ -397,6 +494,8 @@ Matthew Pickering, Nicolas Wu, and Csongor Kiss.
 \newblock In Richard~A. Eisenberg, editor, {\em Proceedings of the 12th {ACM}
   {SIGPLAN} International Symposium on Haskell, Haskell@ICFP 2019, Berlin,
   Germany, August 18-23, 2019}, pages 71--84. {ACM}, 2019.
+\newblock \href {https://doi.org/10.1145/3331545.3342597}
+  {\path{doi:10.1145/3331545.3342597}}.
 
 \bibitem[SA21]{ctt-normalization}
 Jonathan Sterling and Carlo Angiuli.
@@ -404,6 +503,8 @@ Jonathan Sterling and Carlo Angiuli.
 \newblock In {\em 36th Annual {ACM/IEEE} Symposium on Logic in Computer
   Science, {LICS} 2021, Rome, Italy, June 29 - July 2, 2021}, pages 1--15.
   {IEEE}, 2021.
+\newblock \href {https://doi.org/10.1109/LICS52264.2021.9470719}
+  {\path{doi:10.1109/LICS52264.2021.9470719}}.
 
 \bibitem[Sch17]{scherer17deciding}
 Gabriel Scherer.
@@ -412,11 +513,14 @@ Gabriel Scherer.
   of the 44th {ACM} {SIGPLAN} Symposium on Principles of Programming Languages,
   {POPL} 2017, Paris, France, January 18-20, 2017}, pages 374--386. {ACM},
   2017.
+\newblock URL: \url{http://dl.acm.org/citation.cfm?id=3009901}.
 
 \bibitem[Shu14]{hott-eat-itself}
 Michael Shulman.
 \newblock Homotopy type theory should eat itself (but so far, it’s too big to
   swallow), 2014.
+\newblock URL:
+  \url{https://homotopytypetheory.org/2014/03/03/hott-should-eat-itself/}.
 
 \bibitem[Soj15]{homotopy-initial}
 Kristina Sojakova.
@@ -425,11 +529,15 @@ Kristina Sojakova.
   the 42nd Annual {ACM} {SIGPLAN-SIGACT} Symposium on Principles of Programming
   Languages, {POPL} 2015, Mumbai, India, January 15-17, 2015}, pages 31--42.
   {ACM}, 2015.
+\newblock \href {https://doi.org/10.1145/2676726.2676983}
+  {\path{doi:10.1145/2676726.2676983}}.
 
 \bibitem[Ste19]{sterling2019algebraic}
 Jonathan Sterling.
 \newblock Algebraic type theory and universe hierarchies.
 \newblock {\em CoRR}, abs/1902.08848, 2019.
+\newblock URL: \url{http://arxiv.org/abs/1902.08848}, \href
+  {http://arxiv.org/abs/1902.08848} {\path{arXiv:1902.08848}}.
 
 \bibitem[Str93]{streicher93habil}
 Thomas Streicher.
@@ -442,6 +550,8 @@ Thomas Streicher.
 Wouter Swierstra.
 \newblock Data types {\`{a}} la carte.
 \newblock {\em J. Funct. Program.}, 18(4):423--436, 2008.
+\newblock \href {https://doi.org/10.1017/S0956796808006758}
+  {\path{doi:10.1017/S0956796808006758}}.
 
 \bibitem[TS18]{timany18cumulative}
 Amin Timany and Matthieu Sozeau.
@@ -450,11 +560,15 @@ Amin Timany and Matthieu Sozeau.
   Conference on Formal Structures for Computation and Deduction, {FSCD} 2018,
   July 9-12, 2018, Oxford, {UK}}, volume 108 of {\em LIPIcs}, pages
   29:1--29:16. Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, 2018.
+\newblock \href {https://doi.org/10.4230/LIPIcs.FSCD.2018.29}
+  {\path{doi:10.4230/LIPIcs.FSCD.2018.29}}.
 
 \bibitem[Uem19]{uemura}
 Taichi Uemura.
 \newblock A general framework for the semantics of type theory.
 \newblock {\em CoRR}, abs/1904.04097, 2019.
+\newblock URL: \url{http://arxiv.org/abs/1904.04097}, \href
+  {http://arxiv.org/abs/1904.04097} {\path{arXiv:1904.04097}}.
 
 \bibitem[{Uni}13]{hottbook}
 The {Univalent Foundations Program}.
@@ -474,6 +588,8 @@ Vladimir Voevodsky.
 \newblock A talk the Special session on category theory and type theory in
   honor of Per Martin-Löf on his 75th birthday, August 17–19, 2017, during
   the Logic Colloquium 2017, August 14-20, in Stockholm.
+\newblock URL:
+  \url{https://www.math-stockholm.se/konferenser-och-akti/logic-in-stockholm-2/logic-colloquium-201/logic-colloquium-2017-august-14-20-1.717648}.
 
 \bibitem[WB18]{coqnbe}
 Pawel Wieczorek and Dariusz Biernacki.
@@ -483,6 +599,7 @@ Pawel Wieczorek and Dariusz Biernacki.
   7th {ACM} {SIGPLAN} International Conference on Certified Programs and
   Proofs, {CPP} 2018, Los Angeles, CA, USA, January 8-9, 2018}, pages 266--279.
   {ACM}, 2018.
+\newblock \href {https://doi.org/10.1145/3167091} {\path{doi:10.1145/3167091}}.
 
 \bibitem[Win20]{winterhalter-thesis}
 Théo Winterhalter.
@@ -498,5 +615,7 @@ Alexey~Rodriguez Yakushev, Stefan Holdermans, Andres L{\"{o}}h, and Johan
   the 14th {ACM} {SIGPLAN} international conference on Functional programming,
   {ICFP} 2009, Edinburgh, Scotland, UK, August 31 - September 2, 2009}, pages
   233--244. {ACM}, 2009.
+\newblock \href {https://doi.org/10.1145/1596550.1596585}
+  {\path{doi:10.1145/1596550.1596585}}.
 
 \end{thebibliography}

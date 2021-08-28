@@ -45,8 +45,8 @@
 \makeatother
 
 
-%% \bibliographystyle{IEEEtran}
-\bibliographystyle{alpha}
+\bibliographystyle{alphaurl}
+%% \bibliographystyle{alpha}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -111,6 +111,7 @@
 \newcommand{\zero}{\ms{zero}}
 \newcommand{\suc}{\ms{suc}}
 \newcommand{\J}{\ms{J}}
+\newcommand{\UIP}{\ms{UIP}}
 
 \newcommand{\refl}{\mathsf{refl}}
 \newcommand{\reflect}{\mathsf{reflect}}
@@ -1136,7 +1137,7 @@ need all the extra baggage that comes with a model of a type theory.
 Second, we were not able to reason about definitional equalities, only
 propositional ones. We have a formalization of signatures and semantics in
 intensional Agda, where the two notions differ\footnote{As opposed to in
-extensional type theory, where they're the same.}, but only propositional
+extensional type theory, where they are the same.}, but only propositional
 equality is subject to internal reasoning. For instance, we would like to show
 that term algebras support recursion with strict $\beta$-rules, and for this we
 need to reason about strict equality.
@@ -1413,7 +1414,7 @@ example, we have the following derivation of pointful application:
 
 \end{mydefinition}
 
-\textbf{Remark on naturality.} The above specification for $\Pi$ can be written
+\emph{Remark on naturality.} The above specification for $\Pi$ can be written
 more compactly if we assume that everything is natural with respect to
 substitution.
 \begin{alignat*}{3}
@@ -2721,7 +2722,7 @@ signatures.
 We use two different setups for semantics in this chapter.
 \begin{itemize}
   \item In Sections \ref{sec:fqiit-tos}-\ref{sec:fqiit-semantics} we work in 2LTT, thereby
-        getting a generalized semantics for signatures. However, we keep details about universe
+        getting a generalized semantics for signatures. Here we keep details about universe
         levels to the minimum.
   \item In Section \ref{sec:fqiit-term-algebras}, we work in an
         extensional type theory with cumulative universes. This is more suited for the term
@@ -2949,12 +2950,11 @@ types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A \to
 
 \subsubsection{Strict positivity}
 
-Only strictly positive signatures are expressible.
-Similarly to the case with simple signatures, there is no way to abstract over a
-inductive functions, since inductive function domains are in $\U$, and $\U$ has
-no type formers at all. With $\Pie$, we can abstract over functions, but only on
-ones which are external to a signature and do not depend on internally specified
-constructors.
+Only strictly positive signatures are expressible. Similarly to the case with
+simple signatures, there is no way to abstract over a inductive functions, since
+inductive function domains are in $\U$, and $\U$ has no type formers at
+all. With $\Pie$, we can abstract over functions, but only those which are
+external to a signature and do not depend on internally specified constructors.
 
 \subsubsection{Limitation: nested induction}
 
@@ -3386,7 +3386,7 @@ extension $\bs{\blank,\blank}$ is pairing.
 With this, we have a cwf of flcws. \emph{Remark:} flcwf itself is algebraic, and
 has a finitary QII signature. Hence, if we succeed building semantics for
 finitary QII signatures, we get ``for free'' an flcwf of flcwfs. Of course, we
-cannot rely on this when we're in the process of defining the $\bM$ model in the
+cannot rely on this when we are in the process of defining the $\bM$ model in the
 first place. Checking that the $\bM$ model indeed works, is the somewhat tedious
 task that we have to perform \emph{once}, in order to get semantics for any
 other finitary QII theory.
@@ -3630,8 +3630,8 @@ $\Tm_{\bs{\El\,a}}\,\gamma\,\alpha\,\ult \equiv (\ba\,\ult\,\gamma \equiv
     (\gamma : \ba\,\ulGamma) \to \Tm_{\bB}\,(\Gamma\,\gamma)\,(\A\,(\ba\,\ult\,\gamma))\,(\ult,\,\refl)
 \end{alignat*}
 With the contracted definition, $\Sub$ and $\Tm$ are only indexed over displayed
-objects, but not over displayed morphisms or terms anymore. So it is apparent
-that we cannot have issues with indexing variance. All structure in
+objects and types, but not over displayed morphisms or terms anymore. So it is
+apparent that we cannot have issues with indexing variance. All structure in
 $\bs{\Pi\,a\,B}$ is pointwise inherited from $\bB$. We list some examples below
 for definitions.
 \begin{alignat*}{3}
@@ -3671,10 +3671,77 @@ a family of displayed flcwfs.
   &  \Ty_{\bs{\Pie}\,\Ix\,\bB}\,\Gamma\,\ulA &&\defn (i : \Tm_0\,\Ix) \to \Ty_{\bB\,i}\,(\Gamma\,i)\,\ulA\\
   &  \Tm_{\bs{\Pie}\,\Ix\,\bB}\,\Gamma\,A\,\ult &&\defn (i : \Tm_0\,\Ix) \to \Tm_{\bB\,i}\,(\Gamma\,i)\,(A\,i)\,\ult
 \end{alignat*}
-All structure is defined in the evident pointwise way. $\bs{\appe}$ and $\bs{\lame}$ are
-defined by component-wise flipping of function arguments.
+All structure is defined in the evident pointwise way. $\bs{\appe}$ and
+$\bs{\lame}$ are defined by component-wise flipping of function arguments. This
+concludes the definition of the $\bM$ model.
 
-\todo{Examples for computed semantics here maybe}
+\begin{myexample}
+We look at the computation of a semantic flcwf, in the simple case of the flcwf
+of $\Nat$-algebras. Recall that the signature is
+\[
+  \ms{NatSig} \defn \emptycon \ext (N : \U) \ext (\zero : \El\,N) \ext (\suc : N \funi \El\,N)
+\]
+We evaluate $\ms{NatSig}$ in $\bM$ entry-wise. We start from $\bemptycon$, the
+terminal flcwf where algebras are elements of $\top$. Then, moving left to
+right, we take the total flcwf of each type in the signature. From $\U$, we get
+the product of $\top$ and the flcwf of sets, which is equivalent to simply the
+flcwf of sets. Second, we extend this with the semantic $\El\,N$, which is the
+\emph{displayed flcwf of points of sets}, to get the flcwf of pointed
+sets. Finally, by extension with $N \funi \El\,N$, we get the flcwf of
+$\Nat$-algebras.
+
+Let us also look at some components of the resulting flcwf. Algebras, displayed
+algebras, morphisms and sections have been already discussed before, so we look
+at other components. We omit the leading $\top$ components everywhere in the following.
+
+$\emptycon$ is the terminal $\Nat$-algebra, i.e.\ $\emptycon \equiv
+(\top,\,\tt,\,\lambda\,\_.\,\tt)$. Context extension $\blank\ext\blank : (\Gamma
+: \Con) \to \Ty\,\Gamma \to \Con$ constructs the total algebra of a displayed
+algebra.
+\begin{alignat*}{3}
+&(N,\,z,\,s) \ext (N^D,\,z^D,\,s^D) \equiv\\
+&\hspace{1em}(((n : N) \times N^D\,n),\,(z,\,z^D),\,(\lambda\,(n,\,n^D).\,(s\,n,\,s^D\,n\,n^D)))
+\end{alignat*}
+$\p$ and $\q$ respectively project first and second components from a total
+algebra. For $t,\,u : \Tm\,(N,\,z,\,s)\,(N^D,\,z^D,\,s^D)$, $\Id\,t\,u$ is the
+displayed $\Nat$-algebra which expresses equality of $\Nat$-algebra sections.
+Let us review the definition of sections:
+\begin{alignat*}{3}
+&\rlap{$\Tm\,(N,\,z,\,s)\,(N^D,\,z^D,\,s^D) \equiv$}\\
+  &\hspace{1em}        \,&&(N^S &&: (n : N) \to N^D\,n)\\
+  &\hspace{1em} \times \,&&(z^S &&: N^S\,z \equiv z^D)\\
+  &\hspace{1em} \times \,&&(s^S &&: (n : N) \to N^S\,(s\,n) \equiv s^D\,n\,(N^S\,n))
+\end{alignat*}
+We have that
+\begin{alignat*}{3}
+  & \Id\,(N^S_0,\,z^S_0,\,s^S_0)\,(N^S_1,\,z^S_1,\,s^S_1) \equiv\\
+  & \hspace{1em}((\lambda\,n.\,N^S_0\,n \equiv N^S_1\,n),\,(\_ : N^S_0\,z \equiv N^S_1\,z),\,
+  (\lambda\,n.\,(\_ : N^S_0\,(s\,n) \equiv N^S_1\,(s\,n))))
+\end{alignat*}
+The underscores denote omitted equality proofs; they follow from the $z^S$ and
+$s^S$ components. It should be apparent that $\Id\,t\,u$ is isomorphic to $t
+\equiv u$; this follows from function extensionality and decomposition of
+equalities of pairs. Thus, equality reflection holds in the flcwf of
+$\Nat$-algebras. Note that we do not need to use equality reflection for
+$\blank\equiv\blank$ to show this; it is simply a reshuffling of data along $\funext$.
+
+$\K : \Con \to \{\Delta : \Con\} \to \Ty\,\Delta$ yields a non-dependent displayed algebra:
+\[
+\K\,(N,\,z,\,s)\,\{N',\,z',\,s'\} \equiv (\lambda\,\_.\,N,\,z,\,\lambda\,n\,\_.\,s\,n)
+\]
+With this definition, we indeed have that $\Tm\,\Gamma\,(\K\,\Delta) \equiv
+\Sub\,\Gamma\,\Delta$.
+
+$\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty\,\Gamma$ is the
+evident parameterized variant of $\blank\ext\blank$:
+\begin{alignat*}{3}
+  &\Sigma\,(N^D,\,z^D,\,s^D)\,(N^{D'},\,z^{D'},\,s^{D'}) \defn\\
+  & \hspace{1em}((\lambda\,n.\,(n^D : N^D\,n) \times N^{D'}\,(n,\,n^D)),\,\\
+  & \hspace{1em}(z^D,\,z^{D'}),\,\\
+  & \hspace{1em}(\lambda\,n\,(n^D,\,n^{D'}).\,(s^D\,n\,n^D,\,s^{D'}\,(n,\,s^D\,n\,n^D)\,n^{D'})))
+\end{alignat*}
+\end{myexample}
+
 
 \section{Discussion of Semantics}
 
@@ -3913,25 +3980,6 @@ $\Id$ and $\K$ columns can be unfolded. We get the whole model by filling every
 cell of the unfolded table with a definition. Of course, many of these cells are
 equations between equations, hence trivial by UIP.
 
-This setup is very regular and convenient, because we can extract a displayed
-ToS model from any column, which may depend on columns to the left. The whole
-model is the total model of all columns. For example, the $\Con$ column doesn't
-depend on anything, so it is a plain model. The $\Ty$ column is displayed over
-$\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
-
-From each displayed model, we get an eliminator, i.e.\ a family of
-interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
-$\blank^S$ in the table, but in principle we could refer to the eliminators of
-other columns as well. The interpretation functions can be defined in two ways:
-\begin{itemize}
-\item By separately taking the eliminators of each column, and referring to previous
-      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
-      the definition of the $\Ty$ column.
-\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
-      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
-\end{itemize}
-However, the two versions coincide because of the initiality of ToS syntax.
-
 \begin{figure}
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|  }
@@ -3951,6 +3999,28 @@ However, the two versions coincide because of the initiality of ToS syntax.
 \caption{The flcwf model of the theory of signatures}
 \label{fig:fqiit-model}
 \end{figure}
+
+This setup is very regular and convenient, because we can extract a displayed
+ToS model from any column, which may depend on columns to the left. The whole
+model is the total model of all columns. For example, the $\Con$ column does not
+depend on anything, so it is a plain model. The $\Ty$ column is displayed over
+$\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
+
+See also Appendix \ref{app:fqii-amds} for a tabular specification of the AMDS
+interpretations.
+
+From each displayed model, we get an eliminator, i.e.\ a family of
+interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
+$\blank^S$ in the table, but in principle we could refer to the eliminators of
+other columns as well. The interpretation functions can be defined in two ways:
+\begin{itemize}
+\item By separately taking the eliminators of each column, and referring to previous
+      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
+      the definition of the $\Ty$ column.
+\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
+      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
+\end{itemize}
+However, the two versions coincide because of the initiality of ToS syntax.
 
 
 \section{Term Algebras}
@@ -3976,9 +4046,9 @@ of an extensional TT.
 
 What about the term model construction for simple signatures in Section
 \ref{sec:simple-2ltt-term-algebras}, why did we use 2LTT there? In that case,
-the inner theory was \emph{intensional}, i.e.\ lacked equality reflection. So
+the inner theory was intensional, i.e.\ lacked equality reflection. So
 there remained an interesting distinction between the inner and outer layer,
-which allowed us to prove \emph{definitional} $\beta$-rules for recursors. In
+which allowed us to prove definitional $\beta$-rules for recursors. In
 contrast, here we assume inner equality reflection, so we have no distinction
 between propositional and definitional inner equality.
 \\\\
@@ -4000,11 +4070,11 @@ We have countable Russell-style $\Set_i$ universes, which are \emph{cumulative},
 meaning that any type in $\Set_i$ is also an element of $\Set_{i+1}$. We use a
 surface syntax which is similar to Coq, where cumulativity is implicit. This
 contrasts the formal (``algebraic'') specification of cumulativity
-\cite{sterling2019algebraic,kovacs2021generalized}, which involves a substantial
-amount of explicit annotations.
+\cite{sterling2019algebraic,kovacs2021generalized}, which involves rather heavy
+explicit annotation.
 
 Also following Coq, we have implicit \emph{cumulative subtyping}
-\cite{timany18cumulative}. In our case, this means that cumulativity commutes
+\cite{timany18cumulative}. In our case, this means that cumulativity distributes
 through basic type formers. We have a $\blank\!\leq\!\blank$ subtyping relation
 on types, specified on Figure \ref{fig:cumulativity}.
 \begin{figure}
@@ -4034,7 +4104,7 @@ This is subtyping for \emph{surface syntax}; it is expected that
 surface syntax can be elaborated to \emph{coercions} in a formal syntax with
 algebraic cumulativity.
 
-Note that we have an \emph{invariant} rule for function domain types. This is to
+Note that we have an invariant rule for function domain types. This is to
 match Coq and \cite{timany18cumulative}, and also because we will not need a
 contravariant rule in any case.
 
@@ -4054,7 +4124,7 @@ in $\Set_i$, and $\Pie$ abstracts over $\Set_j$.
 
 We have that $\ToS_{i,j} \leq \ToS_{i+1,j}$. This follows from the rules
 in Figure \ref{fig:cumulativity}. All underlying sets return in $\Set_i$, which
-can be bumped to $\Set_{i + 1}$.  Th $j$ level doesn't change, which is as
+can be bumped to $\Set_{i + 1}$.  Th $j$ level does not change, which is as
 expected, since $\Set_j$ appears in a negative position in the type of $\Pie$,
 and has to be invariant.
 
@@ -4103,12 +4173,12 @@ for $\blank^M$, $\blank^D$ and $\blank^S$.
 that for $\Gamma : \Sig_j$ and $i \leq i'$, we have $\Gamma^A_i \leq
 \Gamma^A_{i'}$. For any concrete signature $\Gamma$, this is clearly the case,
 but $\blank\!\leq\!\blank$ is not subject to propositional reasoning, so we
-cannot prove this by internal induction on signatures. We could prove that there
-exists a \emph{lifting}, a $\ms{Lift}\,\Gamma^A_i : \Set_{i+1 \lub j}$
-which is isomorphic to $\Gamma^A_{i}$. Instead, we take liberties, and work as
-if we had actual cumulative subtyping. This seems acceptable, since by using
-implicit cumulativity, we are already taking the same liberty everywhere, by
-omitting formal lifts and isomorphisms.
+cannot prove this by internal induction on signatures. We can prove by induction
+on signatures that there exists a \emph{lifting}, a $\ms{Lift}\,\Gamma^A_i :
+\Set_{i+1 \lub j}$ which is isomorphic to $\Gamma^A_{i}$. Instead, we take
+liberties, and work as if we had actual cumulative subtyping. This seems
+acceptable, since by using implicit cumulativity, we are already taking the same
+liberty everywhere, by omitting formal lifts and isomorphisms.
 
 \subsection{Term Algebra Construction}
 \label{sec:fqii-term-algebra-construction}
@@ -4153,19 +4223,20 @@ context, but this entails a fair amount of bureaucratic detail.
 We explain the $\blank^T$ specification in the following. Term and substitution
 equations are given by UIP. We omit cases for substitutions and terms.
 
-For \textbf{contexts}, we simply recurse on the entries. We use a pattern
-matching notation for
-$\Sub\,\Omega\,(\Gamma\ext A)$, since any $\nu$ with
-this type is uniquely determined by its first and second projections
-$\p\circ\nu$ and $\q[\nu]$.
+For contexts, we simply recurse on the entries. We use a pattern matching
+notation for $\Sub\,\Omega\,(\Gamma\ext A)$, since any $\nu$ with this type is
+uniquely determined by its first and second projections $\p\circ\nu$ and
+$\q[\nu]$.
 \begin{alignat*}{3}
   &\emptycon^T\,\nu           &&\defn \tt\\
   &(\Gamma \ext A)^T(\nu,\,t) &&\defn (\Gamma^T\,\nu,\,A^T\,\nu\,t)
 \end{alignat*}
-\textbf{Type substitution} with $\sigma : \Sub\,\Gamma\,\Delta$ is as follows. This is well-typed by
+Type substitution with $\sigma : \Sub\,\Gamma\,\Delta$ is as follows. This is well-typed by
 $\sigma^T\,\nu : \Delta^T\,(\sigma \circ \nu) \equiv \sigma^A\,(\Gamma^T\,\nu)$.
 \[ (A[\sigma])^T\,\nu\,t \defn A^T\,(\sigma\circ\nu)\,t \]
-For the \textbf{universe}, note that $\U^A_{j+1}\,\gamma \equiv \Set_{j+1}$.  As we
+
+\subsubsection{Universe}
+For the universe, note that $\U^A_{j+1}\,\gamma \equiv \Set_{j+1}$.  As we
 mentioned before, this is the key part when we map from internal sorts to
 external sets. The levels line up, since in $\syn_j$ we have $\Tm$ returning in $\Set_{j+1}$.
 \begin{alignat*}{3}
@@ -4190,8 +4261,9 @@ equation is $a^T\,\id : \Tm\,\Omega\,(\El\,a) \equiv
 a^A\,(\Omega^T\,\id)$, that is, if we evaluate a signature sort in the term
 model $\Omega^T\,\id$, we get a type of inner terms.
 
-For the \textbf{identity type}, we have to show that provably equal terms are evaluated
-to the same value in the term model.
+\subsubsection{Identity}
+We have to show that provably equal terms are evaluated to the same value in the
+term model.
 \begin{alignat*}{3}
   &(\Id\,t\,u)^T : (\nu : \Sub\,\Omega\,\Gamma)
     \to \Tm\,\Omega\,(\Id\,(t[\nu])\,(u[\nu])) \to t^A\,(\Gamma^T\,\nu) \equiv u^A\,(\Gamma^T\,\nu)
@@ -4213,8 +4285,8 @@ identifies provably equal terms. For a simple example, terms with type
 \]
 are quotiented by $\mi{seg}$, which is a provable equation in the context.
 
-For the \textbf{inductive function type}, we have to convert an inner term with
-$\Pi$ type to an outer function.
+\subsubsection{Inductive function type}
+Here we have to convert an inner term with $\Pi$ type to an outer function.
 \begin{alignat*}{3}
   &(\Pi\,a\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)
                  &&\to \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q]))\\
@@ -4226,8 +4298,8 @@ This is well-typed by $a^T\,\nu :
 a^A\,(\Gamma^T\,\nu)$, which allows us to consider $\alpha$ to be an inner term
 in $\lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$.
 
-For the \textbf{external function type} we just recurse through the specifying
-isomorphism:
+\subsubsection{External function type}
+In this case we just recurse through the specifying isomorphism:
 \begin{alignat*}{3}
   &(\Pie\,A\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)
                  &&\to \Tm\,\Omega\,(\Pie\,A\,(\lambda\,\alpha.\,(B\,\alpha)[\nu]))\\
@@ -4261,15 +4333,10 @@ speaking, since recursion is derivable from elimination, so it would suffice to
 only construct eliminators. We still present recursors, for the sake of matching
 the presentation in Chapter \ref{chap:simple-inductive-signatures}.
 
-%% Also, the
-%% Böhm-Beraducci encodings in Section \ref{sec:bb-encoding} will support recursion
-%% but not elimination, so it makes sense to try to ``warm up'' to that case as
-%% well.
-
 The goal is to construct a morphism from a term algebra to any other $\omega :
 \Omega^A$ algebra. However, we have to handle universe levels as well. We want
 to be able to eliminate from the term algebra, which was constructed at the
-lowest possible level, to any other universe. So far we haven't introduced a
+lowest possible level, to any other universe. So far we have not introduced a
 ``heterogeneous'' notion of morphism, between algebras at different levels. We
 get this from cumulativity.
 \begin{itemize}
@@ -4310,8 +4377,9 @@ recursor as $\Omega^R\,\id$.
      \to A^M\,(t^A\,(\Omega^T\,\id))\,(t^A\,\omega)\,(\Gamma^R\,\nu)\\
   &\blank^R &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^R\,\nu\,(t[\nu]) \equiv t^A\,(\Gamma^R\,\nu)
 \end{alignat*}
-\todo{Maybe do an appendix with full AMDS}
-Let us refresh some details about the involved operations.
+Let us refresh some details about the involved operations. The reader may also
+refer to Appendix \ref{app:fqii-amds} for definitions of the AMDS
+interpretations.
 \begin{itemize}
 \item For $\nu : \Sub\,\Gamma\,\Delta$, we get $\nu^A : \Gamma^A \to \Delta^A$. In the semantics, $\nu$
   is a functor, and $\nu^A$ is its action on objects. Analogously, for a term $t : \Tm\,\Gamma\,A$, we
@@ -4341,15 +4409,18 @@ smaller'', but it is more general.
 
 We look at the interpretation of type formers. Again, term and substitution
 equations are given by UIP, and we omit term and substitution formers.  For
-\textbf{contexts}, we again simply recurse:
+contexts, we again simply recurse:
 \begin{alignat*}{3}
   &\emptycon^R\,\nu           &&\defn \tt\\
   &(\Gamma \ext A)^R(\nu,\,t) &&\defn (\Gamma^R\,\nu,\,A^R\,\nu\,t)
 \end{alignat*}
-\textbf{Type substitution} with $\sigma : \Sub\,\Gamma\,\Delta$ also follows
-the same pattern. The following is well-typed by $\sigma^R\,\nu : \Delta^R\,(\sigma\circ\nu) \equiv \sigma^M\,(\Gamma^R\,\nu)$.
+Type substitutions with $\sigma : \Sub\,\Gamma\,\Delta$ also follows the same
+pattern. The following is well-typed by $\sigma^R\,\nu :
+\Delta^R\,(\sigma\circ\nu) \equiv \sigma^M\,(\Gamma^R\,\nu)$.
 \[ (A[\sigma])^R\,\nu\,t \defn A^R\,(\sigma\circ\nu)\,t \]
-For the \textbf{universe}, we have the following.
+
+\subsubsection{Universe}
+We need to define
 \begin{alignat*}{3}
   &\U^R : (\nu : \Sub\,\Omega\,\Gamma)(a : \Tm\,\Omega\,\U) \to \U^M\,(a^A\,(\Omega^T\,\id))\,(a^A\,\omega)\,(\Gamma^R\,\nu)
 \end{alignat*}
@@ -4362,7 +4433,7 @@ $a^T\,\id : \Tm\,\Omega\,(\El\,a) \equiv a^A\,(\Omega^T\,\id)$.
 Thus, we evaluate $t$ in the $\omega$ algebra, the same way as we did in Chapter
 \ref{chap:simple-inductive-signatures}.
 \\\\
-\noindent For \textbf{$\El$}, we need to show
+\noindent For $\El$, we need to show
 \[
   (\El\,a)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Gamma\,(\El\,(a[\nu]))) \to a^M\,(\Gamma^R\,\nu)\,(t^A\,(\Omega^T\,\id)) \equiv t^A\,\omega
 \]
@@ -4370,8 +4441,10 @@ We have $a^R\,\nu : U^R\,\nu\,(a[\nu]) \equiv a^M\,(\Gamma^R\,\nu)$. Hence,
 $U^R\,\nu\,(a[\nu])\,t \equiv a^M\,(\Gamma^R\,\nu)\,t$, and by computing $\U^R$
 we have $t^A\,\omega \equiv a^M\,(\Gamma^R\,\nu)\,t$. The target equation then
 follows by $t^T\,\id : t^A\,(\Omega^T\,\id) \equiv t$.
-\\\\
-\noindent For \textbf{the identity type}, we need to show:
+
+\subsubsection{Identity}
+
+We need to show:
 \[
 (\Id\,t\,u)^R : (\nu : \Sub\,\Omega\,\Gamma)(e : \Tm\,\Gamma\,(\Id\,(t[\nu])\,(u[\nu])))
   \to t^M\,(\Gamma^R\,\nu) \equiv u^M\,(\Gamma^R\,\nu)
@@ -4381,7 +4454,9 @@ This follows from equality reflection on $e$, together with
   & t^R\,\nu &&: A^R\,\nu\,(t[\nu]) \equiv t^M\,(\Gamma^R\,\nu)\\
   & u^R\,\nu &&: A^R\,\nu\,(u[\nu]) \equiv u^M\,(\Gamma^R\,\nu)
 \end{alignat*}
-For the \textbf{inductive function type}, we get the following target type after unfolding $(\Pi\,a\,B)^M$:
+
+\subsubsection{Inductive function type}
+We get the following target type after unfolding $(\Pi\,a\,B)^M$:
 \begin{alignat*}{3}
  &(\Pi\,a\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
  & \hspace{2em}\to (\alpha : a^A\,(\nu^A\,(\Omega^T\,\id))) \to B^M\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^A\,\omega\,(a^M\,(\Gamma^R\,\nu)\,\alpha))\,(\Gamma^R\,\nu,\,\refl)
@@ -4412,7 +4487,9 @@ exactly the target type. Therefore the definition is:
 \[
   (\Pi\,a\,B)^R\,\nu\,t \defn \lambda\,\alpha.\,B^R\,(\nu,\,\alpha)\,(t\,\alpha)
 \]
-For the \textbf{external function type}, we again simply recurse through the indexing:
+
+\subsubsection{External function type}
+We again simply recurse through the indexing:
 \begin{alignat*}{3}
   & (\Pie\,A\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pie\,A\,(\lambda\,\alpha.\,(B\,\alpha)[\nu])))\\
   & \hspace{2em}\to (\alpha : A) \to (B\,\alpha)^M\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^A\,\omega\,\alpha)\,(\Gamma^R\,\nu)\\
@@ -5225,13 +5302,13 @@ A \textbf{model of the theory of signatures} consists of the following.
           \[(\proj,\,\blank\!,\!\blank) : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\simeq (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))\]
         \item \textbf{Extensional identity} $\Id : \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U$,
           specified by $(\reflect,\,\refl) : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)) \simeq (t \equiv u)$.
-        \item \textbf{Infinitary functions} $\Piinf : (A : \Ty_0) \to (A \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U$, specified by $(\appinf,\,\laminf) : \Tm\,\Gamma\,(\Piinf\,A\,b) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(\El\,(b\,\alpha)))$.
+        \item \textbf{Infinitary functions} $\Piinf : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U$, specified by $(\appinf,\,\laminf) : \Tm\,\Gamma\,(\Piinf\,\mi{Ix}\,b) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i)))$.
       \end{itemize}
     \item An \textbf{inductive function type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
       \Ty\,(\Gamma\ext\El\,a) \to \Ty\,\Gamma$, specified by
       $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
-    \item An \textbf{external function type} $\Pie : (A : \Ty_0) \to (A \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
-      $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,A\,B) \simeq ((\alpha : A) \to \Tm\,\Gamma\,(B\,\alpha))$.
+    \item An \textbf{external function type} $\Pie : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
+      $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i))$.
   \end{itemize}
 \end{mydefinition}
 Once again we assume that an initial model for ToS exists, and a signature is a
@@ -5312,8 +5389,8 @@ In the signature for infinitary ToS, we have
   &\Piinf    &&: \{\Gamma : \ms{Con}\} \to (A : \U_0) \toe (A \toinf \ms{Tm}\,\Gamma\,\ms{Univ}) \to \ms{Tm}\,\Gamma\,\ms{Univ}
 \end{alignat*}
 \emph{Remark.}
-When we will take the semantics of the above signature, we won't exactly get
-back the theory of signatures that we're using right now. We have ToS in 2LTT
+When we will take the semantics of the above signature, we will not exactly get
+back the theory of signatures that we are using right now. We have ToS in 2LTT
 now, but the semantics is in the inner theory. What we can do though, is to
 assume that the inner theory is also a 2LTT. Then we might assume that the inner
 theory of \emph{that} is again a 2LTT, and so on. This is a possible (and quite
@@ -5429,9 +5506,9 @@ the strict semantics. Instead of working with isofibrations in an extensional
 setting, could we work with univalent structures in homotopy type theory? In
 other words, work with univalent categories of algebras, and univalent displayed
 categories over them \cite{displayedcats}. A major benefit of the univalent
-setting is that we would get a \emph{structure identity principle} \cite{TODO}
-out of the semantics, which says that for algebras, isomorphism is the same as
-equality.
+setting is that we would get a \emph{structure identity principle}
+\cite{aczel2011voevodsky} out of the semantics, which says that for algebras,
+isomorphism is the same as equality.
 
 However, it appears that univalent \emph{cwfs} are overall yet more technical to
 handle than isofibrations. In an univalent cwf, objects and types are generally
@@ -5452,8 +5529,6 @@ $(\omega,\,1)$-categories of algebras. This comprises a semantics of higher
 inductive-inductive signatures. We do not present a full higher-categorical
 semantics in this thesis; we only present a fragment of it in Chapter
 \ref{chap:hiit}.
-
-\todo{Refer to Sattler \& Capriotti in HIIT chapter, or here?}
 
 \subsection{Model of the Theory of Signatures}
 
@@ -5909,22 +5984,6 @@ type, and the preservation isomorphism follows.
 
 Projections and pairing for $\bs{\Sigma\,a\,b}$ are defined in the obvious way by
 component-wise projection and pairing.
-
-
-
-
-
-
-%% It makes sense to call an element
-%% of $\ba\,\ulGamma$ $\alpha$, but we also need to refer to displayed elements over $\alpha$
-
-
-
-
-%%   &(\bs{\Sigma\,a\,b})\,\ulA &&\defn \lambda\,(\alpha,\,\beta).\,(\alpha' : \ba\,\ulA\,\alpha) \times \bb\,(\ulA,\,\alpha')\,\beta\\
-%%   &(\bs{\Sigma\,a\,b})\,\ult &&\defn \lambda\,(\alpha,\,\beta).\,(\ba\,\ult\,\alpha,\,\bb\,(\ult,\,\refl)\,\beta)
-%% \end{alignat*}
-%% \todo{TODO}
 
 \subsubsection{Identity}
 
@@ -6539,10 +6598,6 @@ eliminator constructions.
 \end{mydefinition}
 \endgroup
 
-\section{Left Adjoints of Substitutions}
-\todo{TODO}
-
-
 \chapter{Higher Inductive-Inductive Signatures}
 \label{chap:hiit}
 
@@ -6733,201 +6788,9 @@ sections. Note that all of these return in $\Set$. Morphisms and sections in
 particular are forced to return in $\Set$, because they may contain strict
 equalities.
 
-In the following, we present the AMDS interpretations in order, in a compact and
-tabular manner. First we list the components of the ToS, as a reference for the
-interpretations. We discuss the semantics afterwards.
-
-\subsubsection{Components of ToS (without equations)}
-\vspace{-0.5em}
-\begin{alignat*}{3}
-  &\Con &&: \Set\\
-  &\Sub &&: \Con \to \Con \to \Set\\
-  &\Ty  &&: \Con \to \Set\\
-  &\Tm  &&: (\Gamma : \Con) \to \Ty\,\Gamma \to \Set \\
-  &\emptycon &&: \Con\\
-  &\epsilon &&: \Sub\,\Gamma\,\emptycon\\
-  &\id &&: \Sub\,\Gamma\,\Gamma\\
-  &\blank\!\circ\!\blank &&: \Sub\,\Delta\,\Xi \to \Sub\,\Gamma\,\Delta \to \Sub\,\Gamma\,\Xi\\
-  &\blank\![\blank] &&: \Ty\,\Delta \to \Sub\,\Gamma\,\Delta \to \Ty\,\Gamma\\
-  &\blank\![\blank] &&: \Tm\,\Delta\,A \to (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma])\\
-  &\p &&: \Sub\,(\Gamma\ext A)\,\Gamma\\
-  &\q &&: \Tm\,(\Gamma\ext A)\,(A[\p])\\
-  &(\blank\!,\!\blank) &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma]) \to \Sub\,\Gamma\,(\Delta\ext A)\\
-  &\U &&: \Ty\,\Gamma\\
-  &\El &&: \Tm\,\Gamma\,\U \to \Ty\,\Gamma\\
-  &\top &&: \Tm\,\Gamma\,\U\\
-  &\tt  &&: \Tm\,\Gamma\,(\El\,\top)\\
-  &\Sigma &&: (a : \Tm\,\Gamma\,\U) \to \Tm\,(\Gamma \ext \El\,a)\,\U \to \Tm\,\Gamma\,\U\\
-  &\proj_1 &&: \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b)) \to \Tm\,\Gamma\,(\El\,a)\\
-  &\proj_2 &&: (t : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))) \to \Tm\,\Gamma\,(\El\,(b[\id,\,\proj_1\,t]))\\
-  &(\blank\!,\!\blank) &&: (t : \Tm\,\Gamma\,(\El\,a)) \to \Tm\,\Gamma\,(\El\,(b[\id,\,t])) \to \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\\
-  &\Id &&: \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U\\
-  &\refl &&: \Tm\,\Gamma\,(\El\,(\Id\,t\,t))\\
-  &\Piinf &&: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U\\
-  &\appinf &&: \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b)) \to (i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))\\
-  &\laminf &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
-  &\Pi &&: (a : \Tm\,\Gamma\,\U) \to \Ty\,(\Gamma\ext \El\,a) \to \Ty\,\Gamma\\
-  &\app &&: \Tm\,\Gamma\,(\Pi\,a\,B) \to \Tm\,(\Gamma \ext \El\,a)\,B\\
-  &\lam &&: \Tm\,(\Gamma \ext \El\,a)\,B \to \Tm\,\Gamma\,(\Pi\,a\,B)\\
-  &\Pie &&: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma\\
-  &\appe &&: \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \to (i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)\\
-  &\lame &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)) \to \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B)
-\end{alignat*}
-
-\subsubsection{Algebras}
-\vspace{-0.5em}
-\begin{alignat*}{3}
-  &\blank^A &&: \Con \to \Set\\
-  &\blank^A &&: \Sub\,\Gamma\,\Delta \to \Gamma^A \to \Delta^A\\
-  &\blank^A &&: \Ty\,\Gamma \to \Gamma^A \to \Set\\
-  &\blank^A &&: \Tm\,\Gamma\,A \to (\gamma : \Gamma^A) \to A^A\,\gamma\\
-  &\emptycon^A &&\defn \top\\
-  &\epsilon^A\,\gamma &&\defn \tt\\
-  &\id^A\,\gamma &&\defn \gamma\\
-  &(\sigma \circ \delta)^A\,\gamma &&\defn \sigma^A\,(\delta^A\,\gamma)\\
-  &(\Gamma \ext A)^A &&\defn (\gamma : \Gamma^A) \times A^A\,\gamma\\
-  &(A[\sigma])^A\,\gamma &&\defn A^A\,(\sigma^A\,\gamma)\\
-  &(t[\sigma])^A\,\gamma &&\defn t^A\,(\sigma^A\,\gamma)\\
-  &\p^A\,(\gamma,\,\alpha) &&\defn \gamma\\
-  &\q^A\,(\gamma,\,\alpha) &&\defn \alpha\\
-  &(\sigma,\,t)^A\,\gamma &&\defn (\sigma^A\,\gamma,\,t^A\,\gamma)\\
-  &\U^A\,\gamma &&\defn \Ty_0\\
-  &(\El\,a)^A\,\gamma &&\defn a^A\,\gamma\\
-  &\top^A\,\gamma &&\defn \top_0\\
-  &\tt^A\,\gamma &&\defn \tt_0\\
-  &(\Sigma\,a\,b)^A\,\gamma &&\defn (\alpha : a^A\,\gamma) \times_0 b^A\,(\gamma,\,\alpha)\\
-  &(\proj_1\,t)^A\,\gamma &&\defn \proj_1\,(t^A\,\gamma)\\
-  &(\proj_2\,t)^A\,\gamma &&\defn \proj_2\,(t^A\,\gamma)\\
-  &(t,\,u)^A\,\gamma &&\defn (t^A\,\gamma,\,u^A\,\gamma)\\
-  &(\Id\,t\,u)^A\,\gamma &&\defn t\,\gamma = u\,\gamma\\
-  &\refl^A\,\gamma &&\defn \refl : t^A\,\gamma = t^A\,\gamma\\
-  &(\Piinf\,\mi{Ix}\,b)^A\,\gamma &&\defn (i : \mi{Ix}) \to (b\,i)^A\,\gamma\\
-  &(\appinf\,t\,i)^A\,\gamma &&\defn t^A\,\gamma\,i\\
-  &(\laminf\,t)^A\,\gamma &&\defn \lambda\,i.\,(t\,i)^A\,\gamma\\
-  &(\Pi\,a\,B)^A\,\gamma &&\defn (\alpha : a^A\,\gamma) \to B^A\,(\gamma,\,\alpha)\\
-  &(\app\,t)^A\,(\gamma,\,\alpha) &&\defn t^A\,\gamma\,\alpha\\
-  &(\lam\,t)^A\,\gamma &&\defn \lambda\,\alpha.\,t^A\,(\gamma,\,\alpha)\\
-  &(\Pie\,\mi{Ix}\,B)^A\,\gamma &&\defn (i : \mi{Ix}) \to (B\,i)^A\,\gamma\\
-  &(\appe\,t\,i)^A\,\gamma &&\defn t^A\,\gamma\,i\\
-  &(\lame\,t)^A\,\gamma &&\defn \lambda\,i.\,(t\,i)^A\,\gamma
-\end{alignat*}
-
-\subsubsection{Morphisms}
-\vspace{-0.5em}
-\begin{alignat*}{3}
-  &\blank^M &&: (\Gamma : \Con) \to \Gamma^A \to \Gamma^A \to \Set\\
-  &\blank^M &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Delta^M\,(\sigma^A\,\gamma_0)\,(\sigma^A\,\gamma_1)\\
-  &\blank^M &&: (A : \Ty\,\Gamma) \to A^A\,\gamma_0 \to A^A\,\gamma_1 \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Set\\
-  &\blank^M &&: (t : \Tm\,\Gamma\,A) \to (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \to A^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)\,\gamma^M\\
-  &\emptycon^M\,\gamma_0\,\gamma_1 &&\defn \top \\
-  &\epsilon^M\,\gamma^M &&\defn \tt\\
-  &\id^M\,\gamma^M &&\defn \gamma^M\\
-  &(\sigma \circ \delta)^M\,\gamma^M &&\defn \sigma^M\,(\delta^M\,\gamma^M)\\
-  &(\Gamma \ext A)^M\,(\gamma_0,\,\alpha_0)\,(\gamma_1,\,\alpha_1) &&\defn
-    (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \times A^M\,\alpha_0\,\alpha_1\,\gamma^M\\
-  &(A[\sigma])^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn A^M\,\alpha_0\,\alpha_1\,(\sigma^M\,\gamma^M)\\
-  &(t[\sigma])^M\,\gamma^M &&\defn t^M\,(\sigma^M\,\gamma^M)\\
-  &\p^M\,(\gamma^M,\,\alpha^M) &&\defn \gamma^M\\
-  &\q^M\,(\gamma^M,\,\alpha^M) &&\defn \alpha^M\\
-  &(\sigma,\,t)^M\,\gamma^M &&\defn (\sigma^M\,\gamma^M,\,t^M\,\gamma^M)\\
-  &\U^M\,a_0\,a_1\,\gamma^M &&\defn a_0 \to a_1\\
-  &(\El\,a)^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1 \\
-  &\top^M\,\gamma^M &&\defn \lambda\,\_.\,\tt_0\\
-  &\tt^M\,\gamma^M &&\defn \refl\\
-  &(\Sigma\,a\,b)^M\,\gamma^M &&\defn \lambda\,(\alpha,\,\beta).\,(a^M\,\gamma^M\,\alpha,\,b^M\,(\gamma^M,\,\refl)\,\beta)\\
-  &(\proj_1\,t)^M\,\gamma^M &&\defn \refl\\
-  &(\proj_2\,t)^M\,\gamma^M &&\defn \refl\\
-  &(t,\,u)^M\,\gamma^M &&\defn \refl \\
-  &(\Id\,t\,u)^M\,\gamma^M &&\defn \lambda\,(p : t^A\,\gamma_0 = u^A\,\gamma_0).\,\ap\,(a^M\,\gamma^M)\,p\\
-  &\refl^M\,\gamma^M &&\defn \refl\\
-  &(\Piinf\,\mi{Ix}\,b)^M\,\gamma^M\,t &&\defn \lambda\,i.\,(b\,i)^M\,\gamma^M\,(t\,i)\\
-  &(\appinf\,t\,i)^M\,\gamma^M &&\defn \refl \\
-  &(\laminf\,t)^M\,\gamma^M &&\defn \refl \\
-  &(\Pi\,a\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (\alpha : a^A\,\gamma_0) \to B^M\,(t_0\,\alpha)\,(t_1\,(a^M\,\gamma^M\,\alpha))\,(\gamma^M,\,\refl)\\
-  &(\app\,t)^M\,(\gamma^M,\,\alpha^M) &&\defn t^M\,\gamma^M\,\alpha_0\hspace{1em}\text{where}\hspace{1em} \alpha^M : a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1\\
-  &(\lam\,t)^M\,\gamma^M &&\defn \lambda\,\alpha.\,t^M\,(\gamma^M,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^M\,\gamma^M\,\alpha \equiv a^M\,\gamma^M\,\alpha\\
-  &(\Pie\,\mi{Ix}\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (i : \mi{Ix}) \to (B\,i)^M\,(t_0\,i)\,(t_1\,i)\,\gamma^M\\
-  &(\appe\,t\,i)^M\,\gamma^M &&\defn t^M\,\gamma^M\,i\\
-  &(\lame\,t)^M\,\gamma^M &&\defn (t\,i)^M\,\gamma^M
-\end{alignat*}
-
-\subsubsection{Displayed algebras}
-\vspace{-0.5em}
-\begin{alignat*}{3}
-  &\blank^D &&: (\Gamma : \Con) \to \Gamma^A \to \Set\\
-  &\blank^D &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^D\,\gamma \to \Delta^D\,(\sigma^A\,\gamma) \\
-  &\blank^D &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to \Gamma^D\,\gamma \to \Set\\
-  &\blank^D &&: (t : \Tm\,\Gamma\,A) \to (\gamma^D : \Gamma^D\,\gamma) \to A^D\,(t^A\,\gamma)\,\gamma^D\\
-  &\emptycon^D\,\gamma &&\defn \top\\
-  &\epsilon^D\,\gamma^D &&\defn \tt\\
-  &\id^D\,\gamma^D &&\defn \gamma^D\\
-  &(\sigma \circ \delta)^D\,\gamma^D &&\defn \sigma^D\,(\delta^D\,\gamma^D)\\
-  &(\Gamma \ext A)^D\,(\gamma,\,\alpha) &&\defn (\gamma^D : \Gamma^D\,\gamma) \times A^D\,\alpha\,\gamma^D\\
-  &(A[\sigma])^D\,\alpha\,\gamma^D &&\defn A^D\,\alpha\,(\sigma^D\,\gamma^D)\\
-  &(t[\sigma])^D\,\gamma^D &&\defn t^D\,(\sigma^D\,\gamma^D)\\
-  &\p^D\,(\gamma^D,\,\alpha^D) &&\defn \gamma^D\\
-  &\q^D\,(\gamma^D,\,\alpha^D) &&\defn \alpha^D\\
-  &(\sigma,\,t)^D\,\gamma^D &&\defn (\sigma^D\,\gamma^D,\,t^D\,\gamma^D)\\
-  &\U^D\,a\,\gamma^D &&\defn a \to \Ty_0\\
-  &(\El\,a)^D\,t\,\gamma^D &&\defn a^D\,\gamma^D\,t\\
-  &\top^D\,\gamma^D &&\defn \lambda\,\_.\,\top_0\\
-  &\tt^D\,\gamma^D &&\defn \tt_0\\
-  &(\Sigma\,a\,b)^D\,\gamma^D &&\defn \lambda\,(\alpha,\,\beta).\,(\alpha^D : a^D\,\gamma^D\,\alpha)\times_0 b^D\,(\gamma^D,\,\alpha^D)\,\beta\\
-  &(\proj_1\,t)^D\,\gamma^D &&\defn \proj_1\,(t^D\,\gamma^D)\\
-  &(\proj_2\,t)^D\,\gamma^D &&\defn \proj_2\,(t^D\,\gamma^D)\\
-  &(t,\,u)^D\,\gamma^D &&\defn (t^D\,\gamma^D,\,u^D\,\gamma^D)\\
-  &(\Id\,t\,u)^D\,\gamma^D &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\tr_{(a^D\,\gamma^D)}\,p\,(t^D\,\gamma^D) = u^D\,\gamma^D\\
-  &\refl^D\,\gamma^D &&\defn \refl : t^D\,\gamma^D = t^D\,\gamma^D\\
-  &(\Piinf\,\mi{Ix}\,b)^D\,\gamma^D &&\defn \lambda\,t.\,(i : \mi{Ix}) \to (b\,i)^D\,\gamma^D\,(t\,i)\\
-  &(\appinf\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
-  &(\laminf\,t)^D\,\gamma^D &&\defn \lambda\,i.\,(t\,i)^D\,\gamma^D\\
-  &(\Pi\,a\,B)^D\,t\,\gamma^D &&\defn \{\alpha : a^A\,\gamma\}(\alpha^D : a^D\,\gamma^D\,\alpha)
-    \to B^D\,(t\,\alpha)\,(\gamma^D,\,\alpha^D)\\
-  &(\app\,t)^D\,(\gamma^D,\,\alpha^D) &&\defn t^D\,\gamma^D\,\alpha^D\\
-  &(\lam\,t)^D\,\gamma^D &&\defn \lambda\,\{\alpha\}\,\alpha^D.\,t^D\,(\gamma^D,\,\alpha^D)\\
-  &(\Pie\,\mi{Ix}\,B)^D\,t\,\gamma^D &&\defn (i : \mi{Ix}) \to (B\,i)^D\,(t\,i)\,\gamma^D\\
-  &(\appe\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
-  &(\lame\,t)^D\,\gamma &&\defn \lambda\,i.\,(t\,i)^D\,\gamma^D
-\end{alignat*}
-
-\subsubsection{Sections}
-\vspace{-0.5em}
-\begin{alignat*}{3}
-  &\blank^S &&: (\Gamma : \Con) \to (\gamma : \Gamma^A) \to \Gamma^A\,\gamma \to \Set\\
-  &\blank^S &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,\gamma\,\gamma^D \to \Delta^S\,(\sigma^A\,\gamma)\,(\sigma^D\,\gamma^D)\\
-  &\blank^S &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to A^D\,\gamma^D \to \Gamma^S\,\gamma\,\gamma^D \to \Set\\
-  &\blank^S &&: (t : \Tm\,\Gamma\,A) \to (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \to A^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)\,\gamma^S\\
-  &\emptycon^S\,\gamma\,\gamma^D &&\defn \top \\
-  &\epsilon^S\,\gamma^S &&\defn \tt\\
-  &\id^S\,\gamma^S &&\defn \gamma^S\\
-  &(\sigma \circ \delta)^S\,\gamma^S &&\defn \sigma^S\,(\delta^S\,\gamma^S)\\
-  &(\Gamma \ext A)^S\,(\gamma,\,\alpha)\,(\gamma^D,\,\alpha^D) &&\defn
-    (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \times A^S\,\alpha\,\alpha^D\,\gamma^S\\
-  &(A[\sigma])^S\,\alpha\,\alpha^D\,\gamma^S &&\defn A^S\,\alpha\,\alpha^D\,(\sigma^S\,\gamma^S)\\
-  &(t[\sigma])^S\,\gamma^S &&\defn t^S\,(\sigma^S\,\gamma^S)\\
-  &\p^S\,(\gamma^S,\,\alpha^S) &&\defn \gamma^S\\
-  &\q^S\,(\gamma^S,\,\alpha^S) &&\defn \alpha^S\\
-  &(\sigma,\,t)^S\,\gamma^S &&\defn (\sigma^S\,\gamma^S,\,t^S\,\gamma^S)\\
-  &\U^S\,a\,a^D\,\gamma^S &&\defn (\alpha : a) \to a^D\,\alpha\\
-  &(\El\,a)^S\,\alpha\,\alpha^D\,\gamma^S &&\defn a^S\,\gamma^S\,\alpha \equiv \alpha^D \\
-  &\top^S\,\gamma^S &&\defn \lambda\,\_.\,\tt_0\\
-  &\tt^S\,\gamma^S &&\defn \refl\\
-  &(\Sigma\,a\,b)^S\,\gamma^S &&\defn \lambda\,(\alpha,\,\beta).\,(a^S\,\gamma^S\,\alpha,\,b^S\,(\gamma^S,\,\refl)\,\beta)\\
-  &(\proj_1\,t)^S\,\gamma^S &&\defn \refl\\
-  &(\proj_2\,t)^S\,\gamma^S &&\defn \refl\\
-  &(t,\,u)^S\,\gamma^S &&\defn \refl \\
-  &(\Id\,t\,u)^S\,\gamma^S &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\apd\,(a^S\,\gamma^S)\,p\\
-  &\refl^S\,\gamma^S &&\defn \refl\\
-  &(\Piinf\,\mi{Ix}\,b)^S\,\gamma^S\,t &&\defn \lambda\,i.\,(b\,i)^S\,\gamma^S\,(t\,i)\\
-  &(\appinf\,t\,i)^S\,\gamma^S &&\defn \refl \\
-  &(\laminf\,t)^S\,\gamma^S &&\defn \refl \\
-  &(\Pi\,a\,B)^S\,t\,t^D\,\gamma^S &&\defn (\alpha : a^A\,\gamma) \to B^S\,(t\,\alpha)\,(t^D\,(a^S\,\gamma^S\,\alpha))\,(\gamma^S,\,\refl)\\
-  &(\app\,t)^S\,(\gamma^S,\,\alpha^S) &&\defn t^S\,\gamma^S\,\alpha\hspace{1em}\text{where}\hspace{1em} \alpha^S : a^S\,\gamma^S\,\alpha \equiv \alpha^D\\
-  &(\lam\,t)^S\,\gamma^S &&\defn \lambda\,\alpha.\,t^S\,(\gamma^S,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^S\,\gamma^S\,\alpha \equiv a^S\,\gamma^S\,\alpha\\
-  &(\Pie\,\mi{Ix}\,B)^S\,t\,t^D\,\gamma^S &&\defn (i : \mi{Ix}) \to (B\,i)^S\,(t\,i)\,(t^D\,i)\,\gamma^S\\
-  &(\appe\,t\,i)^S\,\gamma^S &&\defn t^S\,\gamma^S\,i\\
-  &(\lame\,t)^S\,\gamma^S &&\defn (t\,i)^S\,\gamma^S
-\end{alignat*}
+The AMDS interpretations can be found in Appendix \ref{app:hii-amds} in a
+tabular manner, together with a listing of ToS components. We discuss these
+in the following.
 
 In \textbf{algebras} and \textbf{displayed algebras} there is no
 complication; all equations holds in these (displayed) models strictly, and we
@@ -7401,8 +7264,440 @@ the path inductions on $\app^M$ and $\app^S$.
 
 The interpretation of $\ms{\Pie}$ is unchanged. This concludes the AMDS semantics of weak signatures.
 
-%% \chapter{Conclusion \& Further Work}
+\section{Discussion \& Related Work}
 
-\bibliography{references}
+\subsection{Evaluation}
+
+The main advantage of the signatures in the current chapter is their generality.
+We cover almost every higher inductive definition in the literature in a direct
+manner, without relying on circuitous encodings.
+
+It is also possible to mechanically check validity of signatures and compute
+AMDS interpretations. The current author has written a Haskell program which
+takes as input a weak HII signature, and outputs ADS interpretations as
+well-formed Agda source code \cite{hiit-sig-program}. The syntax is a bit more
+restricted than what we have in this chapter, and the program does not compute
+morphisms; but it is clear that the deficiencies would be straightforward to
+patch up.
+
+On the other hand, we note that our semantics is in a minimal intensional
+theory, a fragment of the ``book'' version of homotopy type theory. This setting
+supports neither computational univalence nor computational higher inductive
+types. If our goal is to add computationally adequate HIITs to a theory (or
+implementation), the current chapter is not immediately applicable. In a cubical
+setting we would need to reformulate both signatures and semantics. However,
+the current work should be still helpful as a guideline, and a point of
+comparison and validation.
+
+
+\subsection{Related Work}
+
+This chapter is based on ``A Syntax for Higher Inductive-Inductive Types''
+\cite{hiit} and ``Signatures and Induction Principles for Higher
+Inductive-Inductive Types'' \cite{hiits}, both by Ambrus Kaposi and the current
+author. The latter is an extended journal version of the former. In this
+chapter, we extend and refine these source in the following ways.
+\begin{itemize}
+\item
+    We use 2LTT. In the papers, we instead used a custom syntactic translation:
+    the theory of signatures was an ad hoc mixture of the inner and outer
+    theory, and the AMDS interpretations were syntactic translations targeting
+    the inner theory. The setup turns out to be mostly the same as here; but
+    2LTT brings a lot of clarity and convenience.
+\item
+    We add the strict/weak signature distinction. The papers only considered
+    weak signatures and semantics.
+\item
+    We improve on the specification of signatures. The papers had a small $\Id$
+    type with elimination only to $\U$, not to arbitrary types. The journal
+    version also had a second identity type, but only for sort equations,
+    i.e.\ it expressed only equality of inhabitants of $\U$.
+
+    The small and large identity types in this chapter are strictly more
+    expressive. The weaker definitions in the paper were just simple oversights.
+
+    The papers also omitted eliminators of type formers in weak signatures, and
+    thus their $\beta\eta$ rules, and they did not have $\top$ or
+    $\Sigma$. However, this was done mostly for the sake of brevity, as these
+    extra features are not really used in any HIIT signature in the literature.
+    It makes more sense to include the extras here, to match infinitary QII
+    signatures as much as possible.
+\end{itemize}
+
+\todo{more related work}
+
+
+
+
+
+
+
+\appendix
+
+\chapter{AMDS interpretation of FQII signatures}
+\label{app:fqii-amds}
+
+This appendix supplements Chapter \ref{chap:fqiit}. It contains the AMDS
+interpretation for finitary QII signatures. We omit substitution and
+$\beta\eta$-rules. We also omit the $\Tm_0$ decoding operation of two-level type
+theory.
+
+\pagebreak
+
+\subsubsection{Components of ToS (without substitution and $\beta\eta$-rules)}
+
+\begin{alignat*}{3}
+  &\Con &&: \Set\\
+  &\Sub &&: \Con \to \Con \to \Set\\
+  &\Ty  &&: \Con \to \Set\\
+  &\Tm  &&: (\Gamma : \Con) \to \Ty\,\Gamma \to \Set \\
+  &\emptycon &&: \Con\\
+  &\epsilon &&: \Sub\,\Gamma\,\emptycon\\
+  &\id &&: \Sub\,\Gamma\,\Gamma\\
+  &\blank\!\circ\!\blank &&: \Sub\,\Delta\,\Xi \to \Sub\,\Gamma\,\Delta \to \Sub\,\Gamma\,\Xi\\
+  &\blank\![\blank] &&: \Ty\,\Delta \to \Sub\,\Gamma\,\Delta \to \Ty\,\Gamma\\
+  &\blank\![\blank] &&: \Tm\,\Delta\,A \to (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma])\\
+  &\p &&: \Sub\,(\Gamma\ext A)\,\Gamma\\
+  &\q &&: \Tm\,(\Gamma\ext A)\,(A[\p])\\
+  &(\blank\!,\!\blank) &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma]) \to \Sub\,\Gamma\,(\Delta\ext A)\\
+  &\U &&: \Ty\,\Gamma\\
+  &\El &&: \Tm\,\Gamma\,\U \to \Ty\,\Gamma\\
+  &\Id &&: \Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma\\
+  &\refl &&: \Tm\,\Gamma\,(\Id\,t\,t)\\
+  &\reflect &&: \Tm\,\Gamma\,(\Id\,t\,u) \to t \equiv u\\
+  &\Pi &&: (a : \Tm\,\Gamma\,\U) \to \Ty\,(\Gamma\ext \El\,a) \to \Ty\,\Gamma\\
+  &\app &&: \Tm\,\Gamma\,(\Pi\,a\,B) \to \Tm\,(\Gamma \ext \El\,a)\,B\\
+  &\lam &&: \Tm\,(\Gamma \ext \El\,a)\,B \to \Tm\,\Gamma\,(\Pi\,a\,B)\\
+  &\Pie &&: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma\\
+  &\appe &&: \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \to (i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)\\
+  &\lame &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)) \to \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B)
+\end{alignat*}
+
+\subsubsection{Algebras}
+
+\begin{alignat*}{3}
+  &\blank^A &&: \Con \to \Set\\
+  &\blank^A &&: \Sub\,\Gamma\,\Delta \to \Gamma^A \to \Delta^A\\
+  &\blank^A &&: \Ty\,\Gamma \to \Gamma^A \to \Set\\
+  &\blank^A &&: \Tm\,\Gamma\,A \to (\gamma : \Gamma^A) \to A^A\,\gamma\\
+  &\emptycon^A &&\defn \top\\
+  &\epsilon^A\,\gamma &&\defn \tt\\
+  &\id^A\,\gamma &&\defn \gamma\\
+  &(\sigma \circ \delta)^A\,\gamma &&\defn \sigma^A\,(\delta^A\,\gamma)\\
+  &(\Gamma \ext A)^A &&\defn (\gamma : \Gamma^A) \times A^A\,\gamma\\
+  &(A[\sigma])^A\,\gamma &&\defn A^A\,(\sigma^A\,\gamma)\\
+  &(t[\sigma])^A\,\gamma &&\defn t^A\,(\sigma^A\,\gamma)\\
+  &\p^A\,(\gamma,\,\alpha) &&\defn \gamma\\
+  &\q^A\,(\gamma,\,\alpha) &&\defn \alpha\\
+  &(\sigma,\,t)^A\,\gamma &&\defn (\sigma^A\,\gamma,\,t^A\,\gamma)\\
+  &\U^A\,\gamma &&\defn \Ty_0\\
+  &(\El\,a)^A\,\gamma &&\defn a^A\,\gamma\\
+  &(\Id\,t\,u)^A\,\gamma &&\defn t\,\gamma \equiv u\,\gamma\\
+  &\refl^A\,\gamma &&\defn \refl : t^A\,\gamma \equiv t^A\,\gamma\\
+  &(\reflect\,p)^A &&\defn \funext\,(\lambda\,\gamma.\,p^A\,\gamma)\\
+  &(\Pi\,a\,B)^A\,\gamma &&\defn (\alpha : a^A\,\gamma) \to B^A\,(\gamma,\,\alpha)\\
+  &(\app\,t)^A\,(\gamma,\,\alpha) &&\defn t^A\,\gamma\,\alpha\\
+  &(\lam\,t)^A\,\gamma &&\defn \lambda\,\alpha.\,t^A\,(\gamma,\,\alpha)\\
+  &(\Pie\,\mi{Ix}\,B)^A\,\gamma &&\defn (i : \mi{Ix}) \to (B\,i)^A\,\gamma\\
+  &(\appe\,t\,i)^A\,\gamma &&\defn t^A\,\gamma\,i\\
+  &(\lame\,t)^A\,\gamma &&\defn \lambda\,i.\,(t\,i)^A\,\gamma
+\end{alignat*}
+
+\subsubsection{Morphisms}
+
+\begin{alignat*}{3}
+  &\blank^M &&: (\Gamma : \Con) \to \Gamma^A \to \Gamma^A \to \Set\\
+  &\blank^M &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Delta^M\,(\sigma^A\,\gamma_0)\,(\sigma^A\,\gamma_1)\\
+  &\blank^M &&: (A : \Ty\,\Gamma) \to A^A\,\gamma_0 \to A^A\,\gamma_1 \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Set\\
+  &\blank^M &&: (t : \Tm\,\Gamma\,A) \to (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \to A^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)\,\gamma^M\\
+  &\emptycon^M\,\gamma_0\,\gamma_1 &&\defn \top \\
+  &\epsilon^M\,\gamma^M &&\defn \tt\\
+  &\id^M\,\gamma^M &&\defn \gamma^M\\
+  &(\sigma \circ \delta)^M\,\gamma^M &&\defn \sigma^M\,(\delta^M\,\gamma^M)\\
+  &(\Gamma \ext A)^M\,(\gamma_0,\,\alpha_0)\,(\gamma_1,\,\alpha_1) &&\defn
+    (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \times A^M\,\alpha_0\,\alpha_1\,\gamma^M\\
+  &(A[\sigma])^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn A^M\,\alpha_0\,\alpha_1\,(\sigma^M\,\gamma^M)\\
+  &(t[\sigma])^M\,\gamma^M &&\defn t^M\,(\sigma^M\,\gamma^M)\\
+  &\p^M\,(\gamma^M,\,\alpha^M) &&\defn \gamma^M\\
+  &\q^M\,(\gamma^M,\,\alpha^M) &&\defn \alpha^M\\
+  &(\sigma,\,t)^M\,\gamma^M &&\defn (\sigma^M\,\gamma^M,\,t^M\,\gamma^M)\\
+  &\U^M\,a_0\,a_1\,\gamma^M &&\defn a_0 \to a_1\\
+  &(\El\,a)^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1 \\
+  &(\Id\,t\,u)^M\,p_0\,p_1\,\gamma^M &&\defn t^M\,\gamma^M \equiv u^M\,\gamma^M\\
+  &\refl^M\,\gamma^M &&\defn \refl : t^M\,\gamma^M \equiv t^M\,\gamma^M\\
+  &(\reflect\,p)^M &&\defn \funext\,(\lambda\,\gamma^M.\,p^M\,\gamma^M)\\
+  &(\Pi\,a\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (\alpha : a^A\,\gamma_0) \to B^M\,(t_0\,\alpha)\,(t_1\,(a^M\,\gamma^M\,\alpha))\,(\gamma^M,\,\refl)\\
+  &(\app\,t)^M\,(\gamma^M,\,\alpha^M) &&\defn t^M\,\gamma^M\,\alpha_0\hspace{1em}\text{where}\hspace{1em} \alpha^M : a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1\\
+  &(\lam\,t)^M\,\gamma^M &&\defn \lambda\,\alpha.\,t^M\,(\gamma^M,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^M\,\gamma^M\,\alpha \equiv a^M\,\gamma^M\,\alpha\\
+  &(\Pie\,\mi{Ix}\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (i : \mi{Ix}) \to (B\,i)^M\,(t_0\,i)\,(t_1\,i)\,\gamma^M\\
+  &(\appe\,t\,i)^M\,\gamma^M &&\defn t^M\,\gamma^M\,i\\
+  &(\lame\,t)^M\,\gamma^M &&\defn (t\,i)^M\,\gamma^M
+\end{alignat*}
+
+\subsubsection{Displayed algebras}
+
+\begin{alignat*}{3}
+  &\blank^D &&: (\Gamma : \Con) \to \Gamma^A \to \Set\\
+  &\blank^D &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^D\,\gamma \to \Delta^D\,(\sigma^A\,\gamma) \\
+  &\blank^D &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to \Gamma^D\,\gamma \to \Set\\
+  &\blank^D &&: (t : \Tm\,\Gamma\,A) \to (\gamma^D : \Gamma^D\,\gamma) \to A^D\,(t^A\,\gamma)\,\gamma^D\\
+  &\emptycon^D\,\gamma &&\defn \top\\
+  &\epsilon^D\,\gamma^D &&\defn \tt\\
+  &\id^D\,\gamma^D &&\defn \gamma^D\\
+  &(\sigma \circ \delta)^D\,\gamma^D &&\defn \sigma^D\,(\delta^D\,\gamma^D)\\
+  &(\Gamma \ext A)^D\,(\gamma,\,\alpha) &&\defn (\gamma^D : \Gamma^D\,\gamma) \times A^D\,\alpha\,\gamma^D\\
+  &(A[\sigma])^D\,\alpha\,\gamma^D &&\defn A^D\,\alpha\,(\sigma^D\,\gamma^D)\\
+  &(t[\sigma])^D\,\gamma^D &&\defn t^D\,(\sigma^D\,\gamma^D)\\
+  &\p^D\,(\gamma^D,\,\alpha^D) &&\defn \gamma^D\\
+  &\q^D\,(\gamma^D,\,\alpha^D) &&\defn \alpha^D\\
+  &(\sigma,\,t)^D\,\gamma^D &&\defn (\sigma^D\,\gamma^D,\,t^D\,\gamma^D)\\
+  &\U^D\,a\,\gamma^D &&\defn a \to \Ty_0\\
+  &(\El\,a)^D\,t\,\gamma^D &&\defn a^D\,\gamma^D\,t\\
+  &(\Id\,t\,u)^D\,\gamma^D &&\defn t^D\,\gamma^D \equiv u^D\,\gamma^D\\
+  &\refl^D\,\gamma^D &&\defn \refl : t^D\,\gamma^D \equiv t^D\,\gamma^D\\
+  &(\reflect\,p)^D &&\defn \funext\,(\lambda\,\gamma^D.\,p^D\,\gamma^D)\\
+  &(\Pi\,a\,B)^D\,t\,\gamma^D &&\defn \{\alpha : a^A\,\gamma\}(\alpha^D : a^D\,\gamma^D\,\alpha)
+    \to B^D\,(t\,\alpha)\,(\gamma^D,\,\alpha^D)\\
+  &(\app\,t)^D\,(\gamma^D,\,\alpha^D) &&\defn t^D\,\gamma^D\,\alpha^D\\
+  &(\lam\,t)^D\,\gamma^D &&\defn \lambda\,\{\alpha\}\,\alpha^D.\,t^D\,(\gamma^D,\,\alpha^D)\\
+  &(\Pie\,\mi{Ix}\,B)^D\,t\,\gamma^D &&\defn (i : \mi{Ix}) \to (B\,i)^D\,(t\,i)\,\gamma^D\\
+  &(\appe\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
+  &(\lame\,t)^D\,\gamma &&\defn \lambda\,i.\,(t\,i)^D\,\gamma^D
+\end{alignat*}
+
+\subsubsection{Sections}
+
+\begin{alignat*}{3}
+  &\blank^S &&: (\Gamma : \Con) \to (\gamma : \Gamma^A) \to \Gamma^A\,\gamma \to \Set\\
+  &\blank^S &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,\gamma\,\gamma^D \to \Delta^S\,(\sigma^A\,\gamma)\,(\sigma^D\,\gamma^D)\\
+  &\blank^S &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to A^D\,\gamma^D \to \Gamma^S\,\gamma\,\gamma^D \to \Set\\
+  &\blank^S &&: (t : \Tm\,\Gamma\,A) \to (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \to A^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)\,\gamma^S\\
+  &\emptycon^S\,\gamma\,\gamma^D &&\defn \top \\
+  &\epsilon^S\,\gamma^S &&\defn \tt\\
+  &\id^S\,\gamma^S &&\defn \gamma^S\\
+  &(\sigma \circ \delta)^S\,\gamma^S &&\defn \sigma^S\,(\delta^S\,\gamma^S)\\
+  &(\Gamma \ext A)^S\,(\gamma,\,\alpha)\,(\gamma^D,\,\alpha^D) &&\defn
+    (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \times A^S\,\alpha\,\alpha^D\,\gamma^S\\
+  &(A[\sigma])^S\,\alpha\,\alpha^D\,\gamma^S &&\defn A^S\,\alpha\,\alpha^D\,(\sigma^S\,\gamma^S)\\
+  &(t[\sigma])^S\,\gamma^S &&\defn t^S\,(\sigma^S\,\gamma^S)\\
+  &\p^S\,(\gamma^S,\,\alpha^S) &&\defn \gamma^S\\
+  &\q^S\,(\gamma^S,\,\alpha^S) &&\defn \alpha^S\\
+  &(\sigma,\,t)^S\,\gamma^S &&\defn (\sigma^S\,\gamma^S,\,t^S\,\gamma^S)\\
+  &\U^S\,a\,a^D\,\gamma^S &&\defn (\alpha : a) \to a^D\,\alpha\\
+  &(\El\,a)^S\,\alpha\,\alpha^D\,\gamma^S &&\defn a^S\,\gamma^S\,\alpha \equiv \alpha^D \\
+  &(\Id\,t\,u)^S\,p\,p^D\,\gamma^S &&\defn t^S\,\gamma^S \equiv u^S\,\gamma^S\\
+  &\refl^S\,\gamma^S &&\defn \refl : t^S\,\gamma^S \equiv t^S\,\gamma^S\\
+  &(\reflect\,p)^S &&\defn \funext\,(\lambda\,\gamma^S.\,p^S\,\gamma^S)\\
+  &(\Pi\,a\,B)^S\,t\,t^D\,\gamma^S &&\defn (\alpha : a^A\,\gamma) \to B^S\,(t\,\alpha)\,(t^D\,(a^S\,\gamma^S\,\alpha))\,(\gamma^S,\,\refl)\\
+  &(\app\,t)^S\,(\gamma^S,\,\alpha^S) &&\defn t^S\,\gamma^S\,\alpha\hspace{1em}\text{where}\hspace{1em} \alpha^S : a^S\,\gamma^S\,\alpha \equiv \alpha^D\\
+  &(\lam\,t)^S\,\gamma^S &&\defn \lambda\,\alpha.\,t^S\,(\gamma^S,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^S\,\gamma^S\,\alpha \equiv a^S\,\gamma^S\,\alpha\\
+  &(\Pie\,\mi{Ix}\,B)^S\,t\,t^D\,\gamma^S &&\defn (i : \mi{Ix}) \to (B\,i)^S\,(t\,i)\,(t^D\,i)\,\gamma^S\\
+  &(\appe\,t\,i)^S\,\gamma^S &&\defn t^S\,\gamma^S\,i\\
+  &(\lame\,t)^S\,\gamma^S &&\defn (t\,i)^S\,\gamma^S
+\end{alignat*}
+
+\chapter{AMDS interpretation of strict HII signatures}
+\label{app:hii-amds}
+
+This appendix supplements Chapter \ref{chap:hiit}. It contains the AMDS
+interpretation for strict HII signatures. We omit substitution and
+$\beta\eta$-rules. We also omit the $\Tm_0$ decoding operation of two-level type
+theory.
+
+\pagebreak
+
+\subsubsection{Components of ToS (without equations)}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\Con &&: \Set\\
+  &\Sub &&: \Con \to \Con \to \Set\\
+  &\Ty  &&: \Con \to \Set\\
+  &\Tm  &&: (\Gamma : \Con) \to \Ty\,\Gamma \to \Set \\
+  &\emptycon &&: \Con\\
+  &\epsilon &&: \Sub\,\Gamma\,\emptycon\\
+  &\id &&: \Sub\,\Gamma\,\Gamma\\
+  &\blank\!\circ\!\blank &&: \Sub\,\Delta\,\Xi \to \Sub\,\Gamma\,\Delta \to \Sub\,\Gamma\,\Xi\\
+  &\blank\![\blank] &&: \Ty\,\Delta \to \Sub\,\Gamma\,\Delta \to \Ty\,\Gamma\\
+  &\blank\![\blank] &&: \Tm\,\Delta\,A \to (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma])\\
+  &\p &&: \Sub\,(\Gamma\ext A)\,\Gamma\\
+  &\q &&: \Tm\,(\Gamma\ext A)\,(A[\p])\\
+  &(\blank\!,\!\blank) &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Gamma\,(A[\sigma]) \to \Sub\,\Gamma\,(\Delta\ext A)\\
+  &\U &&: \Ty\,\Gamma\\
+  &\El &&: \Tm\,\Gamma\,\U \to \Ty\,\Gamma\\
+  &\top &&: \Tm\,\Gamma\,\U\\
+  &\tt  &&: \Tm\,\Gamma\,(\El\,\top)\\
+  &\Sigma &&: (a : \Tm\,\Gamma\,\U) \to \Tm\,(\Gamma \ext \El\,a)\,\U \to \Tm\,\Gamma\,\U\\
+  &\proj_1 &&: \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b)) \to \Tm\,\Gamma\,(\El\,a)\\
+  &\proj_2 &&: (t : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))) \to \Tm\,\Gamma\,(\El\,(b[\id,\,\proj_1\,t]))\\
+  &(\blank\!,\!\blank) &&: (t : \Tm\,\Gamma\,(\El\,a)) \to \Tm\,\Gamma\,(\El\,(b[\id,\,t])) \to \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\\
+  &\Id &&: \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U\\
+  &\refl &&: \Tm\,\Gamma\,(\El\,(\Id\,t\,t))\\
+  &\Piinf &&: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U\\
+  &\appinf &&: \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b)) \to (i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))\\
+  &\laminf &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
+  &\Pi &&: (a : \Tm\,\Gamma\,\U) \to \Ty\,(\Gamma\ext \El\,a) \to \Ty\,\Gamma\\
+  &\app &&: \Tm\,\Gamma\,(\Pi\,a\,B) \to \Tm\,(\Gamma \ext \El\,a)\,B\\
+  &\lam &&: \Tm\,(\Gamma \ext \El\,a)\,B \to \Tm\,\Gamma\,(\Pi\,a\,B)\\
+  &\Pie &&: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma\\
+  &\appe &&: \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \to (i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)\\
+  &\lame &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i)) \to \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B)
+\end{alignat*}
+
+\subsubsection{Algebras}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^A &&: \Con \to \Set\\
+  &\blank^A &&: \Sub\,\Gamma\,\Delta \to \Gamma^A \to \Delta^A\\
+  &\blank^A &&: \Ty\,\Gamma \to \Gamma^A \to \Set\\
+  &\blank^A &&: \Tm\,\Gamma\,A \to (\gamma : \Gamma^A) \to A^A\,\gamma\\
+  &\emptycon^A &&\defn \top\\
+  &\epsilon^A\,\gamma &&\defn \tt\\
+  &\id^A\,\gamma &&\defn \gamma\\
+  &(\sigma \circ \delta)^A\,\gamma &&\defn \sigma^A\,(\delta^A\,\gamma)\\
+  &(\Gamma \ext A)^A &&\defn (\gamma : \Gamma^A) \times A^A\,\gamma\\
+  &(A[\sigma])^A\,\gamma &&\defn A^A\,(\sigma^A\,\gamma)\\
+  &(t[\sigma])^A\,\gamma &&\defn t^A\,(\sigma^A\,\gamma)\\
+  &\p^A\,(\gamma,\,\alpha) &&\defn \gamma\\
+  &\q^A\,(\gamma,\,\alpha) &&\defn \alpha\\
+  &(\sigma,\,t)^A\,\gamma &&\defn (\sigma^A\,\gamma,\,t^A\,\gamma)\\
+  &\U^A\,\gamma &&\defn \Ty_0\\
+  &(\El\,a)^A\,\gamma &&\defn a^A\,\gamma\\
+  &\top^A\,\gamma &&\defn \top_0\\
+  &\tt^A\,\gamma &&\defn \tt_0\\
+  &(\Sigma\,a\,b)^A\,\gamma &&\defn (\alpha : a^A\,\gamma) \times_0 b^A\,(\gamma,\,\alpha)\\
+  &(\proj_1\,t)^A\,\gamma &&\defn \proj_1\,(t^A\,\gamma)\\
+  &(\proj_2\,t)^A\,\gamma &&\defn \proj_2\,(t^A\,\gamma)\\
+  &(t,\,u)^A\,\gamma &&\defn (t^A\,\gamma,\,u^A\,\gamma)\\
+  &(\Id\,t\,u)^A\,\gamma &&\defn t\,\gamma = u\,\gamma\\
+  &\refl^A\,\gamma &&\defn \refl : t^A\,\gamma = t^A\,\gamma\\
+  &(\Piinf\,\mi{Ix}\,b)^A\,\gamma &&\defn (i : \mi{Ix}) \to (b\,i)^A\,\gamma\\
+  &(\appinf\,t\,i)^A\,\gamma &&\defn t^A\,\gamma\,i\\
+  &(\laminf\,t)^A\,\gamma &&\defn \lambda\,i.\,(t\,i)^A\,\gamma\\
+  &(\Pi\,a\,B)^A\,\gamma &&\defn (\alpha : a^A\,\gamma) \to B^A\,(\gamma,\,\alpha)\\
+  &(\app\,t)^A\,(\gamma,\,\alpha) &&\defn t^A\,\gamma\,\alpha\\
+  &(\lam\,t)^A\,\gamma &&\defn \lambda\,\alpha.\,t^A\,(\gamma,\,\alpha)\\
+  &(\Pie\,\mi{Ix}\,B)^A\,\gamma &&\defn (i : \mi{Ix}) \to (B\,i)^A\,\gamma\\
+  &(\appe\,t\,i)^A\,\gamma &&\defn t^A\,\gamma\,i\\
+  &(\lame\,t)^A\,\gamma &&\defn \lambda\,i.\,(t\,i)^A\,\gamma
+\end{alignat*}
+
+\subsubsection{Morphisms}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^M &&: (\Gamma : \Con) \to \Gamma^A \to \Gamma^A \to \Set\\
+  &\blank^M &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Delta^M\,(\sigma^A\,\gamma_0)\,(\sigma^A\,\gamma_1)\\
+  &\blank^M &&: (A : \Ty\,\Gamma) \to A^A\,\gamma_0 \to A^A\,\gamma_1 \to \Gamma^M\,\gamma_0\,\gamma_1 \to \Set\\
+  &\blank^M &&: (t : \Tm\,\Gamma\,A) \to (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \to A^M\,(t^A\,\gamma_0)\,(t^A\,\gamma_1)\,\gamma^M\\
+  &\emptycon^M\,\gamma_0\,\gamma_1 &&\defn \top \\
+  &\epsilon^M\,\gamma^M &&\defn \tt\\
+  &\id^M\,\gamma^M &&\defn \gamma^M\\
+  &(\sigma \circ \delta)^M\,\gamma^M &&\defn \sigma^M\,(\delta^M\,\gamma^M)\\
+  &(\Gamma \ext A)^M\,(\gamma_0,\,\alpha_0)\,(\gamma_1,\,\alpha_1) &&\defn
+    (\gamma^M : \Gamma^M\,\gamma_0\,\gamma_1) \times A^M\,\alpha_0\,\alpha_1\,\gamma^M\\
+  &(A[\sigma])^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn A^M\,\alpha_0\,\alpha_1\,(\sigma^M\,\gamma^M)\\
+  &(t[\sigma])^M\,\gamma^M &&\defn t^M\,(\sigma^M\,\gamma^M)\\
+  &\p^M\,(\gamma^M,\,\alpha^M) &&\defn \gamma^M\\
+  &\q^M\,(\gamma^M,\,\alpha^M) &&\defn \alpha^M\\
+  &(\sigma,\,t)^M\,\gamma^M &&\defn (\sigma^M\,\gamma^M,\,t^M\,\gamma^M)\\
+  &\U^M\,a_0\,a_1\,\gamma^M &&\defn a_0 \to a_1\\
+  &(\El\,a)^M\,\alpha_0\,\alpha_1\,\gamma^M &&\defn a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1 \\
+  &\top^M\,\gamma^M &&\defn \lambda\,\_.\,\tt_0\\
+  &\tt^M\,\gamma^M &&\defn \refl\\
+  &(\Sigma\,a\,b)^M\,\gamma^M &&\defn \lambda\,(\alpha,\,\beta).\,(a^M\,\gamma^M\,\alpha,\,b^M\,(\gamma^M,\,\refl)\,\beta)\\
+  &(\proj_1\,t)^M\,\gamma^M &&\defn \refl\\
+  &(\proj_2\,t)^M\,\gamma^M &&\defn \refl\\
+  &(t,\,u)^M\,\gamma^M &&\defn \refl \\
+  &(\Id\,t\,u)^M\,\gamma^M &&\defn \lambda\,(p : t^A\,\gamma_0 = u^A\,\gamma_0).\,\ap\,(a^M\,\gamma^M)\,p\\
+  &\refl^M\,\gamma^M &&\defn \refl\\
+  &(\Piinf\,\mi{Ix}\,b)^M\,\gamma^M\,t &&\defn \lambda\,i.\,(b\,i)^M\,\gamma^M\,(t\,i)\\
+  &(\appinf\,t\,i)^M\,\gamma^M &&\defn \refl \\
+  &(\laminf\,t)^M\,\gamma^M &&\defn \refl \\
+  &(\Pi\,a\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (\alpha : a^A\,\gamma_0) \to B^M\,(t_0\,\alpha)\,(t_1\,(a^M\,\gamma^M\,\alpha))\,(\gamma^M,\,\refl)\\
+  &(\app\,t)^M\,(\gamma^M,\,\alpha^M) &&\defn t^M\,\gamma^M\,\alpha_0\hspace{1em}\text{where}\hspace{1em} \alpha^M : a^M\,\gamma^M\,\alpha_0 \equiv \alpha_1\\
+  &(\lam\,t)^M\,\gamma^M &&\defn \lambda\,\alpha.\,t^M\,(\gamma^M,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^M\,\gamma^M\,\alpha \equiv a^M\,\gamma^M\,\alpha\\
+  &(\Pie\,\mi{Ix}\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (i : \mi{Ix}) \to (B\,i)^M\,(t_0\,i)\,(t_1\,i)\,\gamma^M\\
+  &(\appe\,t\,i)^M\,\gamma^M &&\defn t^M\,\gamma^M\,i\\
+  &(\lame\,t)^M\,\gamma^M &&\defn (t\,i)^M\,\gamma^M
+\end{alignat*}
+
+\subsubsection{Displayed algebras}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^D &&: (\Gamma : \Con) \to \Gamma^A \to \Set\\
+  &\blank^D &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^D\,\gamma \to \Delta^D\,(\sigma^A\,\gamma) \\
+  &\blank^D &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to \Gamma^D\,\gamma \to \Set\\
+  &\blank^D &&: (t : \Tm\,\Gamma\,A) \to (\gamma^D : \Gamma^D\,\gamma) \to A^D\,(t^A\,\gamma)\,\gamma^D\\
+  &\emptycon^D\,\gamma &&\defn \top\\
+  &\epsilon^D\,\gamma^D &&\defn \tt\\
+  &\id^D\,\gamma^D &&\defn \gamma^D\\
+  &(\sigma \circ \delta)^D\,\gamma^D &&\defn \sigma^D\,(\delta^D\,\gamma^D)\\
+  &(\Gamma \ext A)^D\,(\gamma,\,\alpha) &&\defn (\gamma^D : \Gamma^D\,\gamma) \times A^D\,\alpha\,\gamma^D\\
+  &(A[\sigma])^D\,\alpha\,\gamma^D &&\defn A^D\,\alpha\,(\sigma^D\,\gamma^D)\\
+  &(t[\sigma])^D\,\gamma^D &&\defn t^D\,(\sigma^D\,\gamma^D)\\
+  &\p^D\,(\gamma^D,\,\alpha^D) &&\defn \gamma^D\\
+  &\q^D\,(\gamma^D,\,\alpha^D) &&\defn \alpha^D\\
+  &(\sigma,\,t)^D\,\gamma^D &&\defn (\sigma^D\,\gamma^D,\,t^D\,\gamma^D)\\
+  &\U^D\,a\,\gamma^D &&\defn a \to \Ty_0\\
+  &(\El\,a)^D\,t\,\gamma^D &&\defn a^D\,\gamma^D\,t\\
+  &\top^D\,\gamma^D &&\defn \lambda\,\_.\,\top_0\\
+  &\tt^D\,\gamma^D &&\defn \tt_0\\
+  &(\Sigma\,a\,b)^D\,\gamma^D &&\defn \lambda\,(\alpha,\,\beta).\,(\alpha^D : a^D\,\gamma^D\,\alpha)\times_0 b^D\,(\gamma^D,\,\alpha^D)\,\beta\\
+  &(\proj_1\,t)^D\,\gamma^D &&\defn \proj_1\,(t^D\,\gamma^D)\\
+  &(\proj_2\,t)^D\,\gamma^D &&\defn \proj_2\,(t^D\,\gamma^D)\\
+  &(t,\,u)^D\,\gamma^D &&\defn (t^D\,\gamma^D,\,u^D\,\gamma^D)\\
+  &(\Id\,t\,u)^D\,\gamma^D &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\tr_{(a^D\,\gamma^D)}\,p\,(t^D\,\gamma^D) = u^D\,\gamma^D\\
+  &\refl^D\,\gamma^D &&\defn \refl : t^D\,\gamma^D = t^D\,\gamma^D\\
+  &(\Piinf\,\mi{Ix}\,b)^D\,\gamma^D &&\defn \lambda\,t.\,(i : \mi{Ix}) \to (b\,i)^D\,\gamma^D\,(t\,i)\\
+  &(\appinf\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
+  &(\laminf\,t)^D\,\gamma^D &&\defn \lambda\,i.\,(t\,i)^D\,\gamma^D\\
+  &(\Pi\,a\,B)^D\,t\,\gamma^D &&\defn \{\alpha : a^A\,\gamma\}(\alpha^D : a^D\,\gamma^D\,\alpha)
+    \to B^D\,(t\,\alpha)\,(\gamma^D,\,\alpha^D)\\
+  &(\app\,t)^D\,(\gamma^D,\,\alpha^D) &&\defn t^D\,\gamma^D\,\alpha^D\\
+  &(\lam\,t)^D\,\gamma^D &&\defn \lambda\,\{\alpha\}\,\alpha^D.\,t^D\,(\gamma^D,\,\alpha^D)\\
+  &(\Pie\,\mi{Ix}\,B)^D\,t\,\gamma^D &&\defn (i : \mi{Ix}) \to (B\,i)^D\,(t\,i)\,\gamma^D\\
+  &(\appe\,t\,i)^D\,\gamma^D &&\defn t^D\,\gamma^D\,i\\
+  &(\lame\,t)^D\,\gamma &&\defn \lambda\,i.\,(t\,i)^D\,\gamma^D
+\end{alignat*}
+
+\subsubsection{Sections}
+\vspace{-0.5em}
+\begin{alignat*}{3}
+  &\blank^S &&: (\Gamma : \Con) \to (\gamma : \Gamma^A) \to \Gamma^A\,\gamma \to \Set\\
+  &\blank^S &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,\gamma\,\gamma^D \to \Delta^S\,(\sigma^A\,\gamma)\,(\sigma^D\,\gamma^D)\\
+  &\blank^S &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to A^D\,\gamma^D \to \Gamma^S\,\gamma\,\gamma^D \to \Set\\
+  &\blank^S &&: (t : \Tm\,\Gamma\,A) \to (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \to A^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)\,\gamma^S\\
+  &\emptycon^S\,\gamma\,\gamma^D &&\defn \top \\
+  &\epsilon^S\,\gamma^S &&\defn \tt\\
+  &\id^S\,\gamma^S &&\defn \gamma^S\\
+  &(\sigma \circ \delta)^S\,\gamma^S &&\defn \sigma^S\,(\delta^S\,\gamma^S)\\
+  &(\Gamma \ext A)^S\,(\gamma,\,\alpha)\,(\gamma^D,\,\alpha^D) &&\defn
+    (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \times A^S\,\alpha\,\alpha^D\,\gamma^S\\
+  &(A[\sigma])^S\,\alpha\,\alpha^D\,\gamma^S &&\defn A^S\,\alpha\,\alpha^D\,(\sigma^S\,\gamma^S)\\
+  &(t[\sigma])^S\,\gamma^S &&\defn t^S\,(\sigma^S\,\gamma^S)\\
+  &\p^S\,(\gamma^S,\,\alpha^S) &&\defn \gamma^S\\
+  &\q^S\,(\gamma^S,\,\alpha^S) &&\defn \alpha^S\\
+  &(\sigma,\,t)^S\,\gamma^S &&\defn (\sigma^S\,\gamma^S,\,t^S\,\gamma^S)\\
+  &\U^S\,a\,a^D\,\gamma^S &&\defn (\alpha : a) \to a^D\,\alpha\\
+  &(\El\,a)^S\,\alpha\,\alpha^D\,\gamma^S &&\defn a^S\,\gamma^S\,\alpha \equiv \alpha^D \\
+  &\top^S\,\gamma^S &&\defn \lambda\,\_.\,\tt_0\\
+  &\tt^S\,\gamma^S &&\defn \refl\\
+  &(\Sigma\,a\,b)^S\,\gamma^S &&\defn \lambda\,(\alpha,\,\beta).\,(a^S\,\gamma^S\,\alpha,\,b^S\,(\gamma^S,\,\refl)\,\beta)\\
+  &(\proj_1\,t)^S\,\gamma^S &&\defn \refl\\
+  &(\proj_2\,t)^S\,\gamma^S &&\defn \refl\\
+  &(t,\,u)^S\,\gamma^S &&\defn \refl \\
+  &(\Id\,t\,u)^S\,\gamma^S &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\apd\,(a^S\,\gamma^S)\,p\\
+  &\refl^S\,\gamma^S &&\defn \refl\\
+  &(\Piinf\,\mi{Ix}\,b)^S\,\gamma^S\,t &&\defn \lambda\,i.\,(b\,i)^S\,\gamma^S\,(t\,i)\\
+  &(\appinf\,t\,i)^S\,\gamma^S &&\defn \refl \\
+  &(\laminf\,t)^S\,\gamma^S &&\defn \refl \\
+  &(\Pi\,a\,B)^S\,t\,t^D\,\gamma^S &&\defn (\alpha : a^A\,\gamma) \to B^S\,(t\,\alpha)\,(t^D\,(a^S\,\gamma^S\,\alpha))\,(\gamma^S,\,\refl)\\
+  &(\app\,t)^S\,(\gamma^S,\,\alpha^S) &&\defn t^S\,\gamma^S\,\alpha\hspace{1em}\text{where}\hspace{1em} \alpha^S : a^S\,\gamma^S\,\alpha \equiv \alpha^D\\
+  &(\lam\,t)^S\,\gamma^S &&\defn \lambda\,\alpha.\,t^S\,(\gamma^S,\,\refl)\hspace{1em}\text{where}\hspace{1em} \refl : a^S\,\gamma^S\,\alpha \equiv a^S\,\gamma^S\,\alpha\\
+  &(\Pie\,\mi{Ix}\,B)^S\,t\,t^D\,\gamma^S &&\defn (i : \mi{Ix}) \to (B\,i)^S\,(t\,i)\,(t^D\,i)\,\gamma^S\\
+  &(\appe\,t\,i)^S\,\gamma^S &&\defn t^S\,\gamma^S\,i\\
+  &(\lame\,t)^S\,\gamma^S &&\defn (t\,i)^S\,\gamma^S
+\end{alignat*}
+
 \backmatter
+\bibliography{references}
 \end{document}
