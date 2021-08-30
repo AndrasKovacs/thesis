@@ -10,6 +10,11 @@ Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
 \newblock URL: \url{https://arxiv.org/abs/2001.11001}, \href
   {http://arxiv.org/abs/2001.11001} {\path{arXiv:2001.11001}}.
 
+\bibitem[AAR{\etalchar{+}}94]{adamek1994locally}
+Ji{\v{r}}{\'\i} Ad{\'a}mek, J~Adamek, J~Rosicky, et~al.
+\newblock {\em Locally presentable and accessible categories}, volume 189.
+\newblock Cambridge University Press, 1994.
+
 \bibitem[Abe13]{abel2013normalization}
 Andreas Abel.
 \newblock {\em Normalization by Evaluation: Dependent Types and
@@ -97,6 +102,17 @@ Benedikt Ahrens and Peter~LeFanu Lumsdaine.
   {https://doi.org/10.23638/LMCS-15(1:20)2019}
   {\path{doi:10.23638/LMCS-15(1:20)2019}}.
 
+\bibitem[AMFS11]{altenkirch11ii}
+Thorsten Altenkirch, Peter Morris, Fredrik~Nordvall Forsberg, and Anton Setzer.
+\newblock A categorical semantics for inductive-inductive definitions.
+\newblock In Andrea Corradini, Bartek Klin, and Corina C{\^{\i}}rstea, editors,
+  {\em Algebra and Coalgebra in Computer Science - 4th International
+  Conference, {CALCO} 2011, Winchester, UK, August 30 - September 2, 2011.
+  Proceedings}, volume 6859 of {\em Lecture Notes in Computer Science}, pages
+  70--84. Springer, 2011.
+\newblock \href {https://doi.org/10.1007/978-3-642-22944-2\_6}
+  {\path{doi:10.1007/978-3-642-22944-2\_6}}.
+
 \bibitem[AMM19]{ahrens19from}
 Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
 \newblock From signatures to monads in unimath.
@@ -132,6 +148,11 @@ Steve Awodey.
 \newblock {\em Math. Struct. Comput. Sci.}, 28(2):241--286, 2018.
 \newblock \href {https://doi.org/10.1017/S0960129516000268}
   {\path{doi:10.1017/S0960129516000268}}.
+
+\bibitem[Bar85]{barr1985toposes}
+Michael Barr.
+\newblock Toposes, triples and theories.
+\newblock {\em Grundlehren der mathematischen Wissenschaften}, 278, 1985.
 
 \bibitem[BB85]{boehm-berarducci}
 Corrado B{\"{o}}hm and Alessandro Berarducci.
@@ -199,6 +220,11 @@ John Cartmell.
 \newblock {\em Generalised algebraic theories and contextual categories}.
 \newblock PhD thesis, Oxford University, 1978.
 
+\bibitem[Car86]{gat}
+John Cartmell.
+\newblock Generalised algebraic theories and contextual categories.
+\newblock {\em Annals of Pure and Applied Logic}, 32:209--243, 1986.
+
 \bibitem[CCD17]{flccc-undecidability}
 Simon Castellan, Pierre Clairambault, and Peter Dybjer.
 \newblock Undecidability of equality in the free locally cartesian closed
@@ -217,13 +243,30 @@ Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
 \bibitem[CD14]{clairambault2014biequivalence}
 Pierre Clairambault and Peter Dybjer.
 \newblock The biequivalence of locally cartesian closed categories and
-  martin-l{\"o}f type theories.
-\newblock {\em Mathematical Structures in Computer Science}, 24(6), 2014.
+  martin-l{\"{o}}f type theories.
+\newblock {\em Math. Struct. Comput. Sci.}, 24(6), 2014.
+\newblock \href {https://doi.org/10.1017/S0960129513000881}
+  {\path{doi:10.1017/S0960129513000881}}.
 
 \bibitem[CDMM10]{chapman2010gentle}
 James Chapman, Pierre-{\'E}variste Dagand, Conor McBride, and Peter Morris.
 \newblock The gentle art of levitation.
 \newblock {\em ACM Sigplan Notices}, 45(9):3--14, 2010.
+
+\bibitem[CH19]{cubicalcomptt}
+Evan Cavallo and Robert Harper.
+\newblock Higher inductive types in cubical computational type theory.
+\newblock {\em Proc. ACM Program. Lang.}, 3(POPL), January 2019.
+\newblock \href {https://doi.org/10.1145/3290314} {\path{doi:10.1145/3290314}}.
+
+\bibitem[CHM18]{cubicalhits}
+Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
+\newblock On higher inductive types in cubical type theory.
+\newblock In Anuj Dawar and Erich Gr{\"{a}}del, editors, {\em Proceedings of
+  the 33rd Annual {ACM/IEEE} Symposium on Logic in Computer Science, {LICS}
+  2018, Oxford, UK, July 09-12, 2018}, pages 255--264. {ACM}, 2018.
+\newblock \href {https://doi.org/10.1145/3209108.3209197}
+  {\path{doi:10.1145/3209108.3209197}}.
 
 \bibitem[CKS07]{carette2007finally}
 Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
@@ -264,6 +307,16 @@ Agda developers.
 \newblock Agda issue 2820, 2017.
 \newblock URL: \url{https://github.com/agda/agda/issues/2820}.
 
+\bibitem[DS99]{dybjer99finite}
+Peter Dybjer and Anton Setzer.
+\newblock A finite axiomatization of inductive-recursive definitions.
+\newblock In Jean{-}Yves Girard, editor, {\em Typed Lambda Calculi and
+  Applications, 4th International Conference, TLCA'99, L'Aquila, Italy, April
+  7-9, 1999, Proceedings}, volume 1581 of {\em Lecture Notes in Computer
+  Science}, pages 129--146. Springer, 1999.
+\newblock \href {https://doi.org/10.1007/3-540-48959-2\_11}
+  {\path{doi:10.1007/3-540-48959-2\_11}}.
+
 \bibitem[dVL14]{sop}
 Edsko de~Vries and Andres L{\"{o}}h.
 \newblock True sums of products.
@@ -272,6 +325,13 @@ Edsko de~Vries and Andres L{\"{o}}h.
   {WGP} 2014, Gothenburg, Sweden, August 31, 2014}, pages 83--94. {ACM}, 2014.
 \newblock \href {https://doi.org/10.1145/2633628.2633634}
   {\path{doi:10.1145/2633628.2633634}}.
+
+\bibitem[Dyb94]{inductivefamilies}
+Peter Dybjer.
+\newblock Inductive families.
+\newblock {\em Formal Aspects Comput.}, 6(4):440--465, 1994.
+\newblock \href {https://doi.org/10.1007/BF01211308}
+  {\path{doi:10.1007/BF01211308}}.
 
 \bibitem[Dyb95]{Dybjer96internaltype}
 Peter Dybjer.
@@ -283,6 +343,12 @@ Peter Dybjer.
 \newblock \href {https://doi.org/10.1007/3-540-61780-9\_66}
   {\path{doi:10.1007/3-540-61780-9\_66}}.
 
+\bibitem[Fre72]{freyd1972aspects}
+Peter Freyd.
+\newblock Aspects of topoi.
+\newblock {\em Bulletin of the Australian Mathematical Society}, 7(1):1--76,
+  1972.
+
 \bibitem[GKNB20]{gratzer20multimodal}
 Daniel Gratzer, G.~A. Kavvos, Andreas Nuyts, and Lars Birkedal.
 \newblock Multimodal dependent type theory.
@@ -292,6 +358,11 @@ Daniel Gratzer, G.~A. Kavvos, Andreas Nuyts, and Lars Birkedal.
   492--506. {ACM}, 2020.
 \newblock \href {https://doi.org/10.1145/3373718.3394736}
   {\path{doi:10.1145/3373718.3394736}}.
+
+\bibitem[GU06]{gabriel2006lokal}
+Peter Gabriel and Friedrich Ulmer.
+\newblock {\em Lokal pr{\"a}sentierbare kategorien}, volume 221.
+\newblock Springer-Verlag, 2006.
 
 \bibitem[Hed98]{hedberg}
 Michael Hedberg.
@@ -372,7 +443,7 @@ Ambrus Kaposi and Andr{\'a}s Kov{\'a}cs.
   {https://doi.org/10.4230/LIPIcs.FSCD.2018.20}
   {\path{doi:10.4230/LIPIcs.FSCD.2018.20}}.
 
-\bibitem[KK20]{hiits}
+\bibitem[KK20a]{hiits}
 Ambrus Kaposi and Andr{\'{a}}s Kov{\'{a}}cs.
 \newblock Signatures and induction principles for higher inductive-inductive
   types.
@@ -380,11 +451,21 @@ Ambrus Kaposi and Andr{\'{a}}s Kov{\'{a}}cs.
 \newblock \href {https://doi.org/10.23638/LMCS-16(1:10)2020}
   {\path{doi:10.23638/LMCS-16(1:10)2020}}.
 
+\bibitem[KK20b]{iqiit}
+Andr{\'{a}}s Kov{\'{a}}cs and Ambrus Kaposi.
+\newblock Large and infinitary quotient inductive-inductive types.
+\newblock In Holger Hermanns, Lijun Zhang, Naoki Kobayashi, and Dale Miller,
+  editors, {\em {LICS} '20: 35th Annual {ACM/IEEE} Symposium on Logic in
+  Computer Science, Saarbr{\"{u}}cken, Germany, July 8-11, 2020}, pages
+  648--661. {ACM}, 2020.
+\newblock \href {https://doi.org/10.1145/3373718.3394770}
+  {\path{doi:10.1145/3373718.3394770}}.
+
 \bibitem[KKA19]{kaposi2019constructing}
-Ambrus Kaposi, Andr{\'a}s Kov{\'a}cs, and Thorsten Altenkirch.
+Ambrus Kaposi, Andr{\'{a}}s Kov{\'{a}}cs, and Thorsten Altenkirch.
 \newblock Constructing quotient inductive-inductive types.
-\newblock {\em Proceedings of the ACM on Programming Languages}, 3(POPL):2,
-  2019.
+\newblock {\em Proc. {ACM} Program. Lang.}, 3({POPL}):2:1--2:24, 2019.
+\newblock \href {https://doi.org/10.1145/3290315} {\path{doi:10.1145/3290315}}.
 
 \bibitem[KKL19]{ind-ind-reduction}
 Ambrus Kaposi, Andr{\'{a}}s Kov{\'{a}}cs, and Ambroise Lafont.
@@ -465,6 +546,12 @@ Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.
 \newblock \href {https://doi.org/10.1007/3540543961\_7}
   {\path{doi:10.1007/3540543961\_7}}.
 
+\bibitem[ML84]{martinlof84sambin}
+Per Martin-L{\"o}f.
+\newblock {\em Intuitionistic type theory}, volume~1 of {\em Studies in Proof
+  Theory}.
+\newblock Bibliopolis, 1984.
+
 \bibitem[ML98]{maclane98categories}
 Saunders Mac~Lane.
 \newblock {\em {Categories for the Working Mathematician}}.
@@ -487,6 +574,13 @@ nLab contributors.
 Fredrik Nordvall~Forsberg.
 \newblock {\em Inductive-inductive definitions}.
 \newblock PhD thesis, Swansea University, 2013.
+
+\bibitem[PV07]{partialhorn}
+Erik Palmgren and Steven~J. Vickers.
+\newblock Partial horn logic and cartesian categories.
+\newblock {\em Ann. Pure Appl. Log.}, 145(3):314--353, 2007.
+\newblock \href {https://doi.org/10.1016/j.apal.2006.10.001}
+  {\path{doi:10.1016/j.apal.2006.10.001}}.
 
 \bibitem[PWK19]{pickering-multistage}
 Matthew Pickering, Nicolas Wu, and Csongor Kiss.
@@ -522,13 +616,22 @@ Michael Shulman.
 \newblock URL:
   \url{https://homotopytypetheory.org/2014/03/03/hott-should-eat-itself/}.
 
-\bibitem[Soj15]{homotopy-initial}
+\bibitem[Soj15a]{homotopy-initial}
 Kristina Sojakova.
 \newblock Higher inductive types as homotopy-initial algebras.
 \newblock In Sriram~K. Rajamani and David Walker, editors, {\em Proceedings of
   the 42nd Annual {ACM} {SIGPLAN-SIGACT} Symposium on Principles of Programming
   Languages, {POPL} 2015, Mumbai, India, January 15-17, 2015}, pages 31--42.
   {ACM}, 2015.
+\newblock \href {https://doi.org/10.1145/2676726.2676983}
+  {\path{doi:10.1145/2676726.2676983}}.
+
+\bibitem[Soj15b]{sojakova}
+Kristina Sojakova.
+\newblock Higher inductive types as homotopy-initial algebras.
+\newblock In {\em Proceedings of the 42Nd Annual ACM SIGPLAN-SIGACT Symposium
+  on Principles of Programming Languages}, POPL '15, pages 31--42, New York,
+  NY, USA, 2015. ACM.
 \newblock \href {https://doi.org/10.1145/2676726.2676983}
   {\path{doi:10.1145/2676726.2676983}}.
 
@@ -580,6 +683,14 @@ The {Univalent Foundations Program}.
 Tamara Von~Glehn.
 \newblock {\em Polynomials and models of type theory}.
 \newblock PhD thesis, University of Cambridge, 2015.
+
+\bibitem[VMA21]{cubicalagda}
+Andrea Vezzosi, Anders M{\"{o}}rtberg, and Andreas Abel.
+\newblock Cubical agda: {A} dependently typed programming language with
+  univalence and higher inductive types.
+\newblock {\em J. Funct. Program.}, 31:e8, 2021.
+\newblock \href {https://doi.org/10.1017/S0956796821000034}
+  {\path{doi:10.1017/S0956796821000034}}.
 
 \bibitem[Voe17]{voevodsky-initiality}
 Vladimir Voevodsky.

@@ -60,14 +60,34 @@
     year = {2007},
     pages = {57--58}}
 
-@INPROCEEDINGS{altenkirch11ii,
-  author = {Altenkirch, Thorsten and Morris, Peter and
-           Nordvall Forsberg, Fredrik and Setzer, Anton},
-  title = {A categorical semantics for inductive-inductive definitions},
-  booktitle = {CALCO},
-  editor = {Corradini, Andrea and Klin, Bartek},
-  series = {Lecture Notes in Computer Science},
-  year = {2011}
+@inproceedings{altenkirch11ii,
+  author    = {Thorsten Altenkirch and
+               Peter Morris and
+               Fredrik Nordvall Forsberg and
+               Anton Setzer},
+  editor    = {Andrea Corradini and
+               Bartek Klin and
+               Corina C{\^{\i}}rstea},
+  title     = {A Categorical Semantics for Inductive-Inductive Definitions},
+  booktitle = {Algebra and Coalgebra in Computer Science - 4th International Conference,
+               {CALCO} 2011, Winchester, UK, August 30 - September 2, 2011. Proceedings},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {6859},
+  pages     = {70--84},
+  publisher = {Springer},
+  year      = {2011},
+  url       = {https://doi.org/10.1007/978-3-642-22944-2\_6},
+  doi       = {10.1007/978-3-642-22944-2\_6},
+  timestamp = {Fri, 09 Apr 2021 18:48:00 +0200},
+  biburl    = {https://dblp.org/rec/conf/calco/AltenkirchMFS11.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@PHDTHESIS{forsberg-phd,
+  author = {Nordvall Forsberg, Fredrik},
+  title = {Inductive-inductive definitions},
+  school = {Swansea University},
+  year = {2013}
 }
 
 @article{awodey07,
@@ -83,12 +103,6 @@
     url = {http://dx.doi.org/10.1017/s0305004108001783},
     year = {2007}
 }
-
-@PHDTHESIS{forsberg-phd,
-  author = {Nordvall Forsberg, Fredrik},
-  title = {Inductive-inductive definitions},
-  school = {Swansea University},
-  year = {2013}}
 
 
 @book{awodey2010category,
@@ -1103,14 +1117,22 @@ classmath="{*03B15 (Higher-order logic)
  address = {New York, NY, USA},
  keywords = {abstract syntax, bound variables, de Bruijn representation, free variables, fresh names, haskell, implementing epigram, induction principles},
 }
-@ARTICLE{Dybjer97inductivefamilies,
-    author = {Peter Dybjer},
-    title = {Inductive Families},
-    journal = {Formal Aspects of Computing},
-    year = {1997},
-    volume = {6},
-    pages = {440--465}
+
+@article{inductivefamilies,
+  author    = {Peter Dybjer},
+  title     = {Inductive Families},
+  journal   = {Formal Aspects Comput.},
+  volume    = {6},
+  number    = {4},
+  pages     = {440--465},
+  year      = {1994},
+  url       = {https://doi.org/10.1007/BF01211308},
+  doi       = {10.1007/BF01211308},
+  timestamp = {Tue, 25 Aug 2020 16:46:00 +0200},
+  biburl    = {https://dblp.org/rec/journals/fac/Dybjer94.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
+
 @inproceedings{paulinmohring,
   author    = {Christine Paulin{-}Mohring},
   title     = {Inductive Definitions in the system {C}oq --- Rules and Properties},
@@ -1205,24 +1227,7 @@ classmath="{*03B15 (Higher-order logic)
  address = {New York, NY, USA},
  keywords = {higher inductive type, homotopy type theory, homotopy-initial algebra, w-suspension},
 }
-@article{Sojakova:2015:HIT:2775051.2676983,
- author = {Sojakova, Kristina},
- title = {Higher Inductive Types As Homotopy-Initial Algebras},
- journal = {SIGPLAN Not.},
- issue_date = {January 2015},
- volume = {50},
- number = {1},
- month = jan,
- year = {2015},
- issn = {0362-1340},
- pages = {31--42},
- numpages = {12},
- doi = {10.1145/2775051.2676983},
- acmid = {2676983},
- publisher = {ACM},
- address = {New York, NY, USA},
- keywords = {higher inductive type, homotopy type theory, homotopy-initial algebra, w-suspension},
-}
+
 @MISC{paoloHIT,
     author = {Paolo Capriotti},
     title = {Mutual and Higher Inductive Types in Homotopy Type Theory},
@@ -1729,7 +1734,7 @@ keywords = "identity types"
   publisher={Citeseer}
 }
 
-@online{agdadocs,
+@misc{agdadocs,
   author = {Agda developers},
   title = {Agda documentation},
   year = {2021},
@@ -1737,7 +1742,7 @@ keywords = "identity types"
   urldate = {2021-02-17}
 }
 
-@online{initiality-agda,
+@misc{initiality-agda,
   author = {Guillaume Brunerie and Menno de Boer},
   title = {Formalization of the initiality conjecture},
   year = {2020},
@@ -1745,7 +1750,7 @@ keywords = "identity types"
   urldate = {2021-07-31}
 }
 
-@online{initiality-project,
+@misc{initiality-project,
   author = {Initiality Project Contributors},
   title = {Initiality Project},
   year = {2019},
@@ -1753,7 +1758,7 @@ keywords = "identity types"
   urldate = {2021-07-31}
 }
 
-@online{leanmanual,
+@misc{leanmanual,
   author = {Lean developers},
   title = {Lean Reference Manual, Version 3.3},
   year = {2021},
@@ -1761,7 +1766,7 @@ keywords = "identity types"
   urldate = {2021-02-17}
 }
 
-@online{idrisdocs,
+@misc{idrisdocs,
   author = {The Idris Community},
   title = {Documentation for the Idris Language},
   year = {2021},
@@ -1875,7 +1880,7 @@ keywords = "identity types"
   publisher={Cambridge Univ Press}
 }
 
-@online{mcbride2015datatypes,
+@misc{mcbride2015datatypes,
   title={Datatypes of Datatypes},
   author={McBride, Conor},
   year={2015},
@@ -1955,7 +1960,7 @@ keywords = "identity types"
   publisher={\url{http://www.mathematik.tu-darmstadt.de/~streicher/HabilStreicher.pdf}}
 }
 
-@online{agda-stdlib,
+@misc{agda-stdlib,
   author = {Agda developers},
   title = {Agda standard library},
   year = 2017,
@@ -1983,7 +1988,7 @@ keywords = "identity types"
   publisher={Cambridge Univ Press}
 }
 
-@online{initialCwF,
+@misc{initialCwF,
   author = {Simon Castellan},
   title = {Dependent type theory as the initial category with families},
   year = 2014,
@@ -1998,7 +2003,7 @@ keywords = "identity types"
   year={2009}
 }
 
-@online{stlc-nbe,
+@misc{stlc-nbe,
   author = {András Kovács},
   title = {Correctness of normalization-by-evaluation for STLC},
   year = 2017,
@@ -2006,7 +2011,7 @@ keywords = "identity types"
   urldate = {2017-04-07}
 }
 
-@online{presheaf-ccc,
+@misc{presheaf-ccc,
   author = {nLab contributors},
   title = {closed monoidal structure on presheaves},
   year = 2017,
@@ -2014,7 +2019,7 @@ keywords = "identity types"
   urldate = {2017-04-07}
 }
 
-@online{preorder,
+@misc{preorder,
   author = {nLab contributors},
   title = {preorder},
   year = 2017,
@@ -2022,7 +2027,7 @@ keywords = "identity types"
   urldate = {2017-04-07}
 }
 
-@online{wide-subcategory,
+@misc{wide-subcategory,
   author = {nLab contributors},
   title = {wide subcategory},
   year = 2017,
@@ -2030,7 +2035,7 @@ keywords = "identity types"
   urldate = {2017-04-07}
 }
 
-@online{intrinsic-sysF-nbe,
+@misc{intrinsic-sysF-nbe,
   author = {András Kovács},
   title = {Normalization by evaluation for intrinsic System F},
   year = 2017,
@@ -2257,25 +2262,40 @@ keywords = "intuitionistic type theory, identity types, homotopy type theory, hi
   annote =	{Keywords: homotopy type theory, inductive-inductive types, higher inductive types, quotient inductive types, logical relations}
 }
 
-@article{cubicalhits,
- author    = {Coquand, Thierry and Huber, Simon and M\"ortberg, Anders},
- journal   = {LICS '18: Proceedings of the 33rd Annual ACM/IEEE Symposium on Logic in Computer Science},
- year      = {2018},
- isbn      = {978-1-4503-5583-4},
- location  = {Oxford, United Kingdom},
- publisher = {ACM},
- title     = {On Higher Inductive Types in Cubical Type Theory}
+@inproceedings{cubicalhits,
+  author    = {Thierry Coquand and
+               Simon Huber and
+               Anders M{\"{o}}rtberg},
+  editor    = {Anuj Dawar and
+               Erich Gr{\"{a}}del},
+  title     = {On Higher Inductive Types in Cubical Type Theory},
+  booktitle = {Proceedings of the 33rd Annual {ACM/IEEE} Symposium on Logic in Computer
+               Science, {LICS} 2018, Oxford, UK, July 09-12, 2018},
+  pages     = {255--264},
+  publisher = {{ACM}},
+  year      = {2018},
+  url       = {https://doi.org/10.1145/3209108.3209197},
+  doi       = {10.1145/3209108.3209197},
+  timestamp = {Wed, 21 Nov 2018 12:44:18 +0100},
+  biburl    = {https://dblp.org/rec/conf/lics/CoquandHM18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{kaposi2019constructing,
-  title={Constructing quotient inductive-inductive types},
-  author={Kaposi, Ambrus and Kov{\'a}cs, Andr{\'a}s and Altenkirch, Thorsten},
-  journal={Proceedings of the ACM on Programming Languages},
-  volume={3},
-  number={POPL},
-  pages={2},
-  year={2019},
-  publisher={ACM}
+  author    = {Ambrus Kaposi and
+               Andr{\'{a}}s Kov{\'{a}}cs and
+               Thorsten Altenkirch},
+  title     = {Constructing quotient inductive-inductive types},
+  journal   = {Proc. {ACM} Program. Lang.},
+  volume    = {3},
+  number    = {{POPL}},
+  pages     = {2:1--2:24},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3290315},
+  doi       = {10.1145/3290315},
+  timestamp = {Wed, 17 Feb 2021 08:54:00 +0100},
+  biburl    = {https://dblp.org/rec/journals/pacmpl/KaposiKA19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{ahrens2015univalent,
@@ -2625,13 +2645,19 @@ address = {New York, NY, USA},
 }
 
 @article{clairambault2014biequivalence,
-  title={The biequivalence of locally cartesian closed categories and Martin-L{\"o}f type theories},
-  author={Clairambault, Pierre and Dybjer, Peter},
-  journal={Mathematical Structures in Computer Science},
-  volume={24},
-  number={6},
-  year={2014},
-  publisher={Cambridge University Press}
+  author    = {Pierre Clairambault and
+               Peter Dybjer},
+  title     = {The biequivalence of locally cartesian closed categories and Martin-L{\"{o}}f
+               type theories},
+  journal   = {Math. Struct. Comput. Sci.},
+  volume    = {24},
+  number    = {6},
+  year      = {2014},
+  url       = {https://doi.org/10.1017/S0960129513000881},
+  doi       = {10.1017/S0960129513000881},
+  timestamp = {Wed, 01 Apr 2020 08:48:45 +0200},
+  biburl    = {https://dblp.org/rec/journals/mscs/ClairambaultD14.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{sterling2019algebraic,
@@ -2724,7 +2750,7 @@ address = {New York, NY, USA},
   year={2002},
   publisher={Oxford University Press}
 }
-@article{10.1145/3290314,
+@article{cubicalcomptt,
  author = {Cavallo, Evan and Harper, Robert},
  title = {Higher Inductive Types in Cubical Computational Type Theory},
  year = {2019},
@@ -3473,7 +3499,7 @@ note = {In submission},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@online{whynotw,
+@misc{whynotw,
   author = {Jasper Hugunin},
   title = {Why not {W}?},
   year = {2021},
@@ -3481,7 +3507,7 @@ note = {In submission},
   urldate = {2021-05-25}
 }
 
-@online{internallogic,
+@misc{internallogic,
   author = {nLab contributors},
   title = {Internal logic},
   year = {2021},
@@ -3881,7 +3907,7 @@ https://ncatlab.org/nlab/show/internal+logic
   publisher={Springer Science \& Business Media}
 }
 
-@online{hott-eat-itself,
+@misc{hott-eat-itself,
   author = {Michael Shulman},
   title = {Homotopy Type Theory should eat itself (but so far, it’s too big to swallow)},
   year = {2014},
@@ -3986,7 +4012,7 @@ https://ncatlab.org/nlab/show/internal+logic
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@online{agda-sized-issue,
+@misc{agda-sized-issue,
   author = {Agda developers},
   title = {Agda Issue 2820},
   year = {2017},
@@ -4127,10 +4153,120 @@ https://ncatlab.org/nlab/show/internal+logic
   publisher={Citeseer}
 }
 
-@online{hiit-sig-program,
+@misc{hiit-sig-program,
   author = {András Kovács},
   title = {Program for checking higher inductive-inductive signatures},
   year = {2020},
   url = {https://github.com/akaposi/hiit-signatures/tree/master/elims-demo},
   urldate = {2021-08-29}
+}
+
+@article{cubicalagda,
+  author    = {Andrea Vezzosi and
+               Anders M{\"{o}}rtberg and
+               Andreas Abel},
+  title     = {Cubical Agda: {A} dependently typed programming language with univalence
+               and higher inductive types},
+  journal   = {J. Funct. Program.},
+  volume    = {31},
+  pages     = {e8},
+  year      = {2021},
+  url       = {https://doi.org/10.1017/S0956796821000034},
+  doi       = {10.1017/S0956796821000034},
+  timestamp = {Sun, 16 May 2021 00:13:31 +0200},
+  biburl    = {https://dblp.org/rec/journals/jfp/VezzosiMA21.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{iqiit,
+  author    = {Andr{\'{a}}s Kov{\'{a}}cs and
+               Ambrus Kaposi},
+  editor    = {Holger Hermanns and
+               Lijun Zhang and
+               Naoki Kobayashi and
+               Dale Miller},
+  title     = {Large and Infinitary Quotient Inductive-Inductive Types},
+  booktitle = {{LICS} '20: 35th Annual {ACM/IEEE} Symposium on Logic in Computer
+               Science, Saarbr{\"{u}}cken, Germany, July 8-11, 2020},
+  pages     = {648--661},
+  publisher = {{ACM}},
+  year      = {2020},
+  url       = {https://doi.org/10.1145/3373718.3394770},
+  doi       = {10.1145/3373718.3394770},
+  timestamp = {Tue, 02 Jun 2020 17:19:31 +0200},
+  biburl    = {https://dblp.org/rec/conf/lics/KovacsK20.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ind-ind-reduction,
+  author    = {Ambrus Kaposi and
+               Andr{\'{a}}s Kov{\'{a}}cs and
+               Ambroise Lafont},
+  editor    = {Marc Bezem and
+               Assia Mahboubi},
+  title     = {For Finitary Induction-Induction, Induction Is Enough},
+  booktitle = {25th International Conference on Types for Proofs and Programs, {TYPES}
+               2019, June 11-14, 2019, Oslo, Norway},
+  series    = {LIPIcs},
+  volume    = {175},
+  pages     = {6:1--6:30},
+  publisher = {Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik},
+  year      = {2019},
+  url       = {https://doi.org/10.4230/LIPIcs.TYPES.2019.6},
+  doi       = {10.4230/LIPIcs.TYPES.2019.6},
+  timestamp = {Mon, 21 Dec 2020 13:23:22 +0100},
+  biburl    = {https://dblp.org/rec/conf/types/KaposiKL19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@book{gabriel2006lokal,
+  title={Lokal pr{\"a}sentierbare kategorien},
+  author={Gabriel, Peter and Ulmer, Friedrich},
+  volume={221},
+  year={2006},
+  publisher={Springer-Verlag}
+}
+
+@article{partialhorn,
+  author    = {Erik Palmgren and
+               Steven J. Vickers},
+  title     = {Partial Horn logic and cartesian categories},
+  journal   = {Ann. Pure Appl. Log.},
+  volume    = {145},
+  number    = {3},
+  pages     = {314--353},
+  year      = {2007},
+  url       = {https://doi.org/10.1016/j.apal.2006.10.001},
+  doi       = {10.1016/j.apal.2006.10.001},
+  timestamp = {Fri, 21 Feb 2020 21:18:56 +0100},
+  biburl    = {https://dblp.org/rec/journals/apal/PalmgrenV07.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{freyd1972aspects,
+  title={Aspects of topoi},
+  author={Freyd, Peter},
+  journal={Bulletin of the Australian Mathematical Society},
+  volume={7},
+  number={1},
+  pages={1--76},
+  year={1972},
+  publisher={Cambridge University Press}
+}
+
+@book{adamek1994locally,
+  title={Locally presentable and accessible categories},
+  author={Ad{\'a}mek, Ji{\v{r}}{\'\i} and Adamek, J and Rosicky, J and others},
+  volume={189},
+  year={1994},
+  publisher={Cambridge University Press}
+}
+
+@article{barr1985toposes,
+  title={Toposes, triples and theories},
+  author={Barr, Michael},
+  journal={Grundlehren der mathematischen Wissenschaften},
+  volume={278},
+  year={1985},
+  publisher={Springer-Verlag}
 }

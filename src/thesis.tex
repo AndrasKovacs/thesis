@@ -317,7 +317,7 @@ which is viewed as a proper type theory and comes equipped with a model
 theory. \emph{Semantics} of signatures is given by interpreting them in certain
 models of the theory of signatures. Semantics should at least provide a notion
 of induction principle for each signature; in this chapter we provide a bit more
-than that, and substantially more in Chapters \ref{chap:fqiit} and
+than that, and we will do substantially more in Chapters \ref{chap:fqiit} and
 \ref{chap:iqiit}.
 
 \subsubsection{Metatheory}
@@ -333,7 +333,7 @@ subset of Agda.
 \label{sec:simple-signatures}
 
 Generally, more expressive theories of signatures can describe larger classes of
-theories. As we are aiming at minimalism right now, the current theory of
+theories. As we are aiming for minimalism right now, the current theory of
 signatures is as follows:
 
 \begin{mydefinition}
@@ -1879,7 +1879,8 @@ $\Ty_0$ style, we do not have quote/splice, but we have to keep track of stages
 in all type/term formers. It would be interesting to compare the two flavors
 in prototype implementations of staged systems.
 
-\section{Standard Semantics of 2LTT}
+\section{Presheaf Semantics of 2LTT}
+
 
 We review the standard semantics of 2LTT which we use in the rest of the
 thesis. This justifies the metaprogramming view, that 2LTT allows meta-level
@@ -2310,9 +2311,8 @@ the unique element of the terminal presheaf $\K\,\top$:
 \[
   |\Alg\,\ms{NatSig}|\,\{\emptycon\}\,\tt : \Set
 \]
-We only need to compute definitions now. We use the simplified semantics for
-$\mi{suc} : \Tm_0\,X \to \Tm_0\,X$, since the function domain is an inner
-type. We get the following:
+We compute the definitions now. We use the simplified semantics for $\mi{suc} :
+\Tm_0\,X \to \Tm_0\,X$, since the function domain is an inner type.
 \[
 |\Alg\,\ms{NatSig}|\,\{\emptycon\}\,\tt \equiv
 (X : \Ty_{\mbbC}\,\emptycon) \times (\mi{zero} : \Tm_{\mbbC}\,\emptycon\,X) \times (\mi{suc} : \Tm_{\mbbC}\,(\emptycon \ext X)\,X)
@@ -2387,7 +2387,7 @@ depending on contexts extended with the interpretation of $X$.
       \times\,& (\mi{zero^D} &&: \Tm_0\,(X^D\,\mi{zero}))\\
       \times\,& (\mi{suc^D} &&: (n : \Tm_0\,X) \to \Tm_0\,(X^D\,n) \to \Tm_0\,(X^D\,(\mi{suc}\,n)))
 \end{alignat*}
-Let us look at the presheaf interpretation now. We simplify functions with inner
+Let us look at the presheaf interpretation. We simplify functions with inner
 domains everywhere. Also note that for $\ms{suc} : \Tm_0\,X \to \Tm_0\,X$, we
 get $|\ms{suc}|\,\tt : \Tm_{\mbbC}\,(\emptycon\ext n : |X|\,\tt)\,(|X|\,\tt)$ in
 the semantics, so a $\ms{suc}\,t$ application is translated as a substitution
@@ -2472,8 +2472,8 @@ preserve all structure.
   & \down\,: \SigTm_1\,\Gamma\,A &&\to \Tm_0\,(\SigTm_0\,(\down\!\Gamma)\,(\down\!A))\\
   & \down\,: \Sub_1\,\Gamma\,\Delta &&\to \Tm_0\,(\Sub_0\,(\down\!\Gamma)\,(\down\!\delta))
 \end{alignat*}
-These functions are called ``lifting'' in the context of multi-stage
-programming; see e.g.\ the $\ms{Lift}$ typeclass in Haskell
+These are called ``lifting'' or ``serialization'' in the context of
+multi-stage programming; see e.g.\ the $\ms{Lift}$ typeclass in Haskell
 \cite{pickering-multistage}. There, like here, the point is to build
 object-language terms from meta-level (``compile-time'') values.
 
@@ -3202,7 +3202,7 @@ $\Ty\,\Delta$ to $\Ty\,\Gamma$, which sends $A$ to $A[\sigma]$ and $t :
   \end{itemize}
 \end{notation}
 
-\begin{theorem}[Equivalence of types and slices, c.f.\ {\cite[Section 2.2]{clairambault2014biequivalence}}]
+\begin{theorem}[Equivalence of types and slices, c.f.\ {\cite[Section 2.2]{clairambault2014biequivalence}}]\label{thm:ty-slice}
 Assume that we work in an flcwf $\bGamma$. For each $\Gamma : \Con$, the type
 category $\Ty\,\Gamma$ is equivalent to the slice category $\bGamma/\Gamma$.
 \end{theorem}
@@ -3966,8 +3966,6 @@ But we have $\Obj : \U$ in $\ms{CatSig}$, so we would need to have $\top : \U$.
 In Chapter \ref{chap:iqiit}, we present a more expressive ToS which does include
 $\top : \U$, and it will be sufficient to rephrase a wider range of constructions
 as signature substitutions.
-
-\todo{TODO}
 
 \subsection{Recovering AMDS Interpretations}
 
@@ -5269,6 +5267,188 @@ always contextual by the inductive nature of raw contexts.
 Hence, it is safe to say that any model of a type theory which supports the
 assumptions of De Boer and Brunerie, also supports all closed QIITs.
 
+\section{Related Work}
+
+This chapter is based on the following publications, all coauthored by the
+current thesis' author.
+\begin{enumerate}
+  \item ``Constructing Quotient Inductive-Inductive Types'' \cite{kaposi2019constructing}
+  \item ``Large and Infinitary Quotient Inductive-Inductive Types'' \cite{iqiit}
+  \item ``For Finitary Induction-Induction, Induction is Enough'' \cite{ind-ind-reduction}
+\end{enumerate}
+We summarize the differences and enhancements in this chapter, in comparison to the above
+(1)-(3) sources.
+
+The theory of signatures is similar to that in (1), except (1) does not include
+eliminators for $\Pi$ and $\Pie$, and it has $\Id : \Tm\,\Gamma\,\U \to
+\Tm\,\Gamma\,\U \to \Ty\,\Gamma$, i.e.\ it cannot equate terms with arbitrary
+types.
+
+The usage of 2LTT is novel compared to (1)-(3). In (1), the semantics had a cwf
+with $\Id$ and $\K$ for each signature; this was extended with $\Sigma$ in (2)
+to get the notion of flcwf that we also use in this chapter.
+
+The current term algebra construction is the same as in (1), but universe levels
+were not treated rigorously in (1); instead we adapt the more precise universe
+treatment from (2). Notions of bootstrapping and levitation are also
+``backported'' from (2) to closed finitary signatures.
+
+(3) is summarized in the current chapter without any notable change.
+
+\subsubsection{Generalized Algebraic Theories}
+
+FQII signatures and Cartmell's generalized algebraic theories \cite{gat} are
+close in expressive power, but they do not appear to be equivalent.
+
+GATs may contain an infinite number of rules, while FQII signatures are finitely
+long. On the other hand, FQII signatures have $\Pie$ and GATs do not. It appears
+that infinite signatures is stronger than $\Pie$: it is possible to recover
+$\Pie$ by adding a rule for every value of the external index, but it is not
+possible to recover infinite signatures with $\Pie$. The reason is that in $\Pie
+: (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma$, the $\Gamma$
+context is fixed, so it is not possible to represent a family of signature entries
+where each entry may refer to the previous entry within the same family. For example,
+the following (pseudo)-GAT has no corresponding FQII signature:
+\begin{alignat*}{3}
+  &A_0 : \U\\
+  &A_1 : A_0 \to \U\\
+  &A_2 : (a_0 : A_0) \to A_1\,a_1 \to \U\\
+  &A_3 : (a_0 : A_0)(a_1 : A_1\,a_0) \to A_2\,a_0\,a_1 \to \U\\
+  &...
+\end{alignat*}
+Could we somehow include these? The most convenient way would be to define
+signatures coinductively. However, the would cause a mismatch, that described
+theories are inductive, while the ToS itself is coinductive, which rules out
+levitation and bootstrapping. It is potential future work to investigate such
+coinductive signatures.
+
+This leads us to the main difference in formalization between GATs and FQII
+signatures: the theory of GATs itself is not presented as a GAT, instead it has
+a low-level presentation with raw syntax and well-formedness relations. As a
+result, the immediate metatheory of GATs is roughly as tedious as we can expect
+from raw syntaxes.
+
+This is a motivation for getting a formal escape hatch from GATs, by showing
+their equivalence to contextual categories. Contextual categories are algebraic
+and more convenient to handle than GATs. In \cite{cartmellthesis} one leg of
+this equivalence is the construction of a classifying contextual category for
+each GAT, which is essentially a term model construction from quotiented raw
+syntax. A downside of this setup is that classifying contextual categories
+cannot be easily written out by hand like GATs. Thus, GATs necessarily remain
+the practical way for specifying the classifying categories.
+
+In contrast, the theory of FQII signatures is itself algebraic, possesses a nice
+model theory (as an infinitary QII theory), and it is only mildly more complex
+than the theory of contextual categories. Since the immediate theory of
+signatures is already quite nice, we do not feel as much pressure to look for
+nicer presentations.
+
+Nevertheless, compact alternative presentations would be still interesting to
+research.
+\begin{itemize}
+  \item We could look for for an analogue of the
+    GAT-contextual-category correspondence for our signatures. This would
+    send each signature to its classifying category.
+  \item We could also look for an analogue of the Gabriel-Ulmer duality
+    \cite{gabriel2006lokal}. This would send each signature to its category of models in
+    $\bs{\Set}$. In the other direction, we would need a way to restrict categories
+    to those which are categories of algebras.
+\end{itemize}
+
+\subsubsection{Essentially algebraic theories}
+
+Essentially algebraic theories (EATs) \cite{freyd1972aspects} are categories
+with finite limits. This is a more semantic notion of an algebraic signature,
+much like how contextual categories are a more semantic presentation of
+``syntactic'' GATs. For EATs $\Gamma$ and $\Delta$, the $\Gamma$-algebras
+internal to $\Delta$ are simply the finite limit preserving functors from
+$\Gamma$ to $\Delta$, while algebra morphisms are natural transformations.
+
+We have more syntactic notions of essentially algebraic signatures as well. For
+example, the signatures of Adámek and Rosicky
+\cite[Section~3.D]{adamek1994locally} or the Partial Horn theories of Palmgren
+and Vickers \cite{partialhorn} are such. These signatures are also specified
+using raw syntax, but they are significantly easier to formalize than GATs, as
+the syntax of signatures admits fewer dependencies. However, the lack of
+dependency also causes a significant encoding overhead on comparison to GATs or
+FQII signatures. For a classic example, the theory of transitive directed graphs
+is given with an FQII signature as
+\begin{alignat*}{3}
+  & \ms{V} &&: \U\\
+  & \ms{E} &&: \ms{V} \to \ms{V} \to \U\\
+  & \blank\circ\blank &&: (i\,j\,k : \ms{V}) \to \ms{E}\,i\,j \to \ms{E}\,j\,k \to \El\,(\ms{E}\,i\,k)
+\end{alignat*}
+The same in a pseudo-EA notation could be:
+\begin{alignat*}{3}
+  & \ms{V}            &&: \Set\\
+  & \ms{E}            &&: \Set\\
+  & \ms{src}          &&: \ms{E} \to \ms{V}\\
+  & \ms{tgt}          &&: \ms{E} \to \ms{V}\\
+  & \blank\circ\blank &&: (f\,g : \ms{E}) \to \ms{tgt}\,f = \ms{src}\,g \to (h : \ms{E}) \times (\ms{src}\,h = \ms{src}\,f) \times (\ms{tgt}\,h = \ms{tgt}\,g)
+\end{alignat*}
+In short, the FQII notation is ``indexed'', while the EA is ``fibered''. Also
+recall Theorem \ref{thm:ty-slice}. While this example is not wildly different in
+the two cases, if we move to more complex theories, such as type theories, the
+encoding overhead of EA signatures is much greater. In informal mathematics,
+this is still not an issue, but in mechanized mathematics, it is. Type
+dependencies are a formal complication, but in proof assistants they enable more
+compact definitions. They also often force indices to be particular values, which
+enables inference and unification to fill in more details in surface syntaxes.
+
+Sketches (see e.g.\ \cite[Section~4]{barr1985toposes}) are another way to
+specify EATs. They lie somewhere between the syntactic/logical styles of
+specification, and just taking EATs to be finitely complete categories. They
+support an elegant metatheory, but they involve an encoding overhead which is
+likely unworkable in mechanized settings.
+
+All in all, there is a rich literature on EATs, sketches and related topics, and
+it would be interesting to try to connect our signatures to any of these, or try
+to reproduce the numerous related results in categorical universal algebra. This
+remains future work for now.
+
+\subsubsection{Prior work on (quotient) inductive types}
+
+The current work grew out of a line of research in the field of type
+theory. This involved working out more and more expressive classes of inductive
+types.
+
+Martin-Löf's W-types \cite{martinlof84sambin} are an early example for a scheme
+for inductive types. In fact, it is better viewed as a single parameterized
+inductive type, which allows construction of a remarkable range of inductive
+types \cite{whynotw}, although with some encoding overheads.
+
+Inductive families \cite{inductivefamilies} allow indexing the inductive sort
+with external types. This directly supports only single-sorted signatures, but
+some form of mutual induction can be easily modeled through the
+indexing. Inductive families have become a core feature in all major
+implementations of type theories, such as Coq, Idris, Lean or Agda.
+
+Inductive-recursive types \cite{dybjer99finite} allow mutual definition of an
+inductive sort and a function which acts on the sort. These types are absent
+from this thesis, they are not representable with any of our theories of
+signatures. Induction-recursion is notable for tremendously boosting the
+proof-theoretic strength of a type theory; a primary motivation for it was to
+explore the limits of predicative constructive mathematics. It is useful for
+modeling a wide variety of universe features internally to a type theory
+\cite{kovacs2021generalized}.
+
+Induction-induction was described in \cite{altenkirch11ii} and in
+\cite{forsberg-phd}. This notion allowed two inductive sorts, where the second
+one may be indexed over the first. As we mentioned previously, this notion is
+more restricted than what was covered in this chapter.
+
+\cite{altenkirch18qiit} investigated QIITs. The notion of signature
+here is more of a semantic nature than ours. Signatures are defined
+simultaneously with their categories of algebras. A signature is a inductive
+list of functors: at each signature entry, we extend the category of algebras
+with a functor whose domain is the current category of algebras. This can be
+viewed as a generalization of F-algebras as a form of specification. However,
+there is no strict positivity restriction in signatures, hence no attempt at
+constructing initial algebras either.
+
+We will look at work related to infinitary QITs in Section
+\ref{sec:iqii-related-work} and at work related to higher inductive types in
+Section \ref{sec:hii-related-work}.
 
 \chapter[Infinitary QII Signatures]{Infinitary Quotient Inductive-Inductive Signatures}
 \label{chap:iqiit}
@@ -6129,7 +6309,10 @@ types to ToS, as $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty
 First, unlike in the finitary case, we have no opportunity to minimize
 assumptions on the inner theory. Already when we compute algebras, we need inner
 $\Pi$ for infinitary functions, inner $\top$ for $\top$, inner $\Sigma$ for
-$\Sigma$ and inner $\blank\!=\!\blank$ for $\Id$.
+$\Sigma$ and inner $\blank\!=\!\blank$ for $\Id$. Note though that we still get
+semantics in any LCCC (locally cartesian closed category), since we can build a
+cwf with the required type formers from any LCCC
+\cite{clairambault2014biequivalence}.
 
 Second: can we add the ``large'' equality type, which includes sort equations,
 back to infinitary signatures? We dropped sort equations in this chapter because
@@ -6141,10 +6324,8 @@ components which depend on $\emptycon$ and $\blank\!\ext\!\blank$, we can drop
 isofibrancy too from the model, and everything works. In this case, we still get
 a category of algebras, plus a notion of induction, but we cannot show that
 initiality is equivalent to induction, as the proof of Theorem
-\ref{thm:initiality-induction} depends on $\blank\!\ext\!\blank$. We cannot do
-term algebra constructions (see in Section \ref{sec:inf-term-algebras}) and
-lambda-encodings (in Section \ref{sec:lambda-encodings}) either, since they rely
-on isofibrancy.
+\ref{thm:initiality-induction} depends on $\blank\!\ext\!\blank$.
+
 
 \subsubsection{Substitutions}
 
@@ -6597,6 +6778,9 @@ universe. Thus we recover all concepts that are used in the term algebra and
 eliminator constructions.
 \end{mydefinition}
 \endgroup
+
+\section{Related Work}
+\label{sec:iqii-related-work}
 
 \chapter{Higher Inductive-Inductive Signatures}
 \label{chap:hiit}
@@ -7269,8 +7453,8 @@ The interpretation of $\ms{\Pie}$ is unchanged. This concludes the AMDS semantic
 \subsection{Evaluation}
 
 The main advantage of the signatures in the current chapter is their generality.
-We cover almost every higher inductive definition in the literature in a direct
-manner, without relying on circuitous encodings.
+We cover almost every higher inductive definition in the literature, and do so
+in a direct manner, with minimal encoding overhead.
 
 It is also possible to mechanically check validity of signatures and compute
 AMDS interpretations. The current author has written a Haskell program which
@@ -7283,20 +7467,21 @@ patch up.
 On the other hand, we note that our semantics is in a minimal intensional
 theory, a fragment of the ``book'' version of homotopy type theory. This setting
 supports neither computational univalence nor computational higher inductive
-types. If our goal is to add computationally adequate HIITs to a theory (or
-implementation), the current chapter is not immediately applicable. In a cubical
-setting we would need to reformulate both signatures and semantics. However,
-the current work should be still helpful as a guideline, and a point of
-comparison and validation.
+types. If our goal is to add computationally adequate HIITs to a theory (and
+eventually to its implementation), the current chapter is not immediately
+applicable. In a cubical setting we would need to reformulate both signatures
+and semantics. However, the current work should be still helpful as a guideline,
+and a provide a point of comparison and validation.
 
 
 \subsection{Related Work}
+\label{sec:hii-related-work}
 
 This chapter is based on ``A Syntax for Higher Inductive-Inductive Types''
 \cite{hiit} and ``Signatures and Induction Principles for Higher
 Inductive-Inductive Types'' \cite{hiits}, both by Ambrus Kaposi and the current
 author. The latter is an extended journal version of the former. In this
-chapter, we extend and refine these source in the following ways.
+chapter, we extend and refine these sources in the following ways.
 \begin{itemize}
 \item
     We use 2LTT. In the papers, we instead used a custom syntactic translation:
@@ -7324,12 +7509,34 @@ chapter, we extend and refine these source in the following ways.
     signatures as much as possible.
 \end{itemize}
 
-\todo{more related work}
+The homotopy type theory book \cite{hottbook} introduced numerous higher
+inductive types and developed their use cases, but it did not give a theory of
+signatures, nor discussed semantics.
 
+Sojakova \cite{sojakova} specified a class of HITs called W-suspensions
+(building on W-types), and proved the equivalence of induction and homotopy
+initiality, working internally to an intensional type theory.
 
+Lumsdaine and Shulman gave a general specification of models of type theories
+supporting higher inductive types \cite{lumsdaineShulman}. They gave a more
+semantic specification of algebras, as algebras of a cell monad, and
+characterized the class of models which support initial algebras. They did not
+cover indexed families or induction-induction.
 
+Coquand, Huber and Mörtberg \cite{cubicalhits} specified syntax for a cubical
+type theory which supports several HITs (sphere, torus, suspensions,
+truncations, pushouts) and built semantics in cubical sets.
 
+Cavallo and Harper \cite{cubicalcomptt} specify HITs which support indexed
+families and arbitrary higher paths, although not induction-induction. They
+provide semantics in a PER (partial equivalence relation) realizability setting.
 
+Cubical Agda \cite{cubicalagda} is the principal proof assistant which natively
+supports computational univalence and HITs. Its implementation of pattern
+matching, mutual inductive definitions, termination checking and strict
+positivity checking yields of a large class of higher \emph{inductive-inductive}
+types. However, there is no compact theory of signatures (valid specifications
+fall out from positivity/termination checking) nor a categorical semantics.
 
 
 \appendix
