@@ -58,6 +58,15 @@ Peter Aczel.
   Samuel R. Buss, Ulrich Kohlenbach, and Michael Rathjen (Eds.). Mathematisches
   Forschungsinstitut Oberwolfach, Oberwolfach}, page 2967, 2011.
 
+\bibitem[ADK17]{partiality}
+Thorsten Altenkirch, Nils~Anders Danielsson, and Nicolai Kraus.
+\newblock Partiality, revisited.
+\newblock In {\em Proceedings of the 20th International Conference on
+  Foundations of Software Science and Computation Structures - Volume 10203},
+  page 534–549, Berlin, Heidelberg, 2017. Springer-Verlag.
+\newblock \href {https://doi.org/10.1007/978-3-662-54458-7_31}
+  {\path{doi:10.1007/978-3-662-54458-7_31}}.
+
 \bibitem[AHH18]{angiuli2018cartesian}
 Carlo Angiuli, Kuen-Bang~Favonia Hou, and Robert Harper.
 \newblock Cartesian cubical computational type theory: Constructive reasoning
@@ -342,6 +351,18 @@ Peter Dybjer.
   pages 120--134. Springer, 1995.
 \newblock \href {https://doi.org/10.1007/3-540-61780-9\_66}
   {\path{doi:10.1007/3-540-61780-9\_66}}.
+
+\bibitem[FPS20]{inf-qits}
+Marcelo~P. Fiore, Andrew~M. Pitts, and S.~C. Steenkamp.
+\newblock Constructing infinitary quotient-inductive types.
+\newblock In Jean Goubault{-}Larrecq and Barbara K{\"{o}}nig, editors, {\em
+  Foundations of Software Science and Computation Structures - 23rd
+  International Conference, {FOSSACS} 2020, Held as Part of the European Joint
+  Conferences on Theory and Practice of Software, {ETAPS} 2020, Dublin,
+  Ireland, April 25-30, 2020, Proceedings}, volume 12077 of {\em Lecture Notes
+  in Computer Science}, pages 257--276. Springer, 2020.
+\newblock \href {https://doi.org/10.1007/978-3-030-45231-5\_14}
+  {\path{doi:10.1007/978-3-030-45231-5\_14}}.
 
 \bibitem[Fre72]{freyd1972aspects}
 Peter Freyd.

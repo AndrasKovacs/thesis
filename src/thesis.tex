@@ -5599,9 +5599,10 @@ signature can be helpful for deriving some of the metatheory of Dijkstra monads
 
 In the 2LTT-based semantics, we will get $\ms{M} : \U_0 \to \Ty_0$, which is not
 quite an endofunctor, but it would be straightforward to refine the semantics so
-that we can pick universes for underlying types of algebras, and have $\ms{M} : \U_0
-\to \U_0$. Alternatively, we will also have the ETT-based semantics, where
-universe levels are explicitly handled.
+that we can pick universes for underlying types of algebras, and have $\ms{M} :
+\U_0 \to \U_0$. Alternatively, we will also have the ETT-based semantics in
+Section \ref{sec:inf-term-algebras}, where universe levels are explicitly
+handled.
 \end{myexample}
 
 \begin{myexample}
@@ -5626,7 +5627,7 @@ failure is the interpretation of the unit type $\bs{\top : \Tm\,\Gamma\,\U}$.
 In the semantics, this is the same as defining $\bs{\top :
   \Sub\,\Gamma\,\Ty_0}$, where $\bs{\Ty_0}$ is the flcwf of inner types. The
 only sensible definition here is the functor which is constantly $\top_0$. But
-this does not strictly preserve comprehension or the finite limit type formers.
+this does not strictly preserve context comprehension or the finite limit type formers.
 If we have
 \begin{alignat*}{3}
   &\bs{\top} : \Con_{\bGamma} \to \Ty_0\\
@@ -5719,7 +5720,7 @@ we use \textbf{bold} font to refer to components of $\bM$.
 
 $\bGamma : \bCon$ is again an flcwf, but with a minor change: $\K$ is not strict
 anymore, so we have $(\appK,\,\lamK) : \Tm\,\Gamma\,(\K\,\Delta) \simeq
-\Sub\,\Gamma\,\Delta$. As well will see shortly, $\bs{A[\sigma]}$ does not
+\Sub\,\Gamma\,\Delta$. As we will see shortly, $\bs{A[\sigma]}$ does not
 support strict displayed $\K$ anymore, hence the change.
 
 \subsubsection{Substitutions}
@@ -6779,8 +6780,34 @@ eliminator constructions.
 \end{mydefinition}
 \endgroup
 
+
 \section{Related Work}
 \label{sec:iqii-related-work}
+
+This chapter is based on the publication ``Large and Infinitary Quotient
+Inductive-Inductive Types'' \cite{iqiit}. We make the following changes:
+\begin{itemize}
+  \item We add $\top$ and $\Sigma$ to the ToS.
+  \item We use 2LTT for the flcwf semantics, while the paper only used the cumulative
+        ETT setting.
+\end{itemize}
+
+Fiore, Pitts and Steenkamp developed QW types
+\cite{inf-qits}, a notion of quotient inductive types that generalizes
+W-types. They construct QW-types in Agda, using sized types and ``nested''
+inductive usage of simple quotients. This means using $\blank/\blank$ as an
+external type operator, applied to internal inductive sorts in a signature,
+similarly to how we use lists in the rose tree example in Section
+\ref{sec:fqiit-tos}.
+
+Essentially algebraic theories generalize to the infinitary cases in a
+straightforward way \cite{adamek1994locally}.
+
+Specific examples of infinitary QIITs where introduced in \cite{hottbook}, as
+QIITs for Cauchy real numbers, surreal numbers, and cumulative set hierarchies.
+In \cite{partiality}, a partiality monad is specified as an infinitary QIITs.
+
+
 
 \chapter{Higher Inductive-Inductive Signatures}
 \label{chap:hiit}
