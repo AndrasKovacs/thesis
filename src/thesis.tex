@@ -2722,7 +2722,7 @@ signatures.
 
 We use two different setups for semantics in this chapter.
 \begin{itemize}
-  \item In Sections \ref{sec:fqiit-tos}-\ref{sec:fqiit-semantics} we work in 2LTT, thereby
+  \item In Sections \ref{sec:fqiit-tos}-\ref{sec:fqii-left-adjoint} we work in 2LTT, thereby
         getting a generalized semantics for signatures. Here we keep details about universe
         levels to the minimum.
   \item In Section \ref{sec:fqiit-term-algebras}, we work in an
@@ -3743,6 +3743,143 @@ evident parameterized variant of $\blank\ext\blank$:
 \end{alignat*}
 \end{myexample}
 
+\section{Left Adjoints of Substitutions}
+\label{sec:fqii-left-adjoint}
+
+In this section we show that if all signatures have initial algebras, then the
+semantic interpretation of each $\nu : \Sub\,\Omega\,\Delta$ has a left adjoint
+functor. From this, it will also follow that categories of algebras have all $\Ty_0$-small
+colimits. We have the following setup.
+\begin{itemize}
+  \item
+  We write $\llb\blank\rrb$ for the interpretation into the flcwf model $\bM$.
+  \item
+  We close types in ToS under $\top$ and $\Sigma$, that is, we have $\top :
+  \Ty\,\Gamma$ and $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to
+  \Ty\,\Gamma$. It is straightforward to extend the flcwf semantics with these
+  type formers; in particular, since ToS is an infinitary QII theory, $\top$ and
+  $\Sigma$ follow from the semantics given in Chapter \ref{chap:iqiit}. In
+  the following we will need to talk about signatures depending on signatures,
+  and $\top$ and $\Sigma$ are more convenient for this purpose than telescopes.
+\end{itemize}
+
+Given $\nu : \Sub\,\Omega\,\Delta$ in the ToS syntax, we get $\sem{\nu} :
+\sem{\Omega} \to \sem{\Delta}$ as a functor between $\sem{\Omega}$ and
+$\sem{\Delta}$ categories of algebras. We seek to construct some $\ms{L} :
+\sem{\Delta} \to \sem{\Omega}$ such that $\ms{L} \dashv \sem{\nu}$.
+
+The basic idea is the following: the existence of left adjoints is equivalently
+characterized by having an initial object in the comma category
+$\delta/\sem{\nu}$ for each $\delta : \Delta^A$
+\cite[Section~IV]{maclane98categories}. Thus, it is enough to find some
+signature $\Omega$ such that $\sem{\Omega}$ is equivalent to
+$\delta/\sem{\nu}$, and by assumption we get an initial object. The objects
+of $\delta/\sem{\nu}$ consist of the following:
+\[
+  (\omega : \Omega^A) \times (\eta : \Delta^M\,\delta\,(\nu^A\,\omega))
+\]
+Of the two components, $\omega : \Omega^A$ can be clearly represented as the
+$\Omega$ signature. The $\eta$ component is a bit
+more complicated. We need to represent a $\Delta$-morphism, but whose domain is
+an \emph{external} algebra, and whose codomain is an algebra internal to the ToS
+syntax. In other words, we need a notion of ``heterogeneous'' morphism, where
+the domain lives in the usual flcwf semantics, but the codomain lives in the
+syntactic slice model $\ToS/\Omega$.
+
+\begin{mydefinition}[\textbf{Heterogeneous morphisms}]
+Fixing $\Omega : \Con$, we define $\blank^{HM}$ by induction on the ToS.
+\begin{alignat*}{3}
+  &\blank^{HM} &&: (\Gamma : \Con) \to \Gamma^A \to \Sub\,\Omega\,\Gamma \to \Ty\,\Omega\\
+  &\blank^{HM} &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Tm\,\Omega\,(\Delta^{HM}\,(\sigma^A\,\gamma_0)\,(\sigma \circ\,\gamma_1))\\
+  &\blank^{HM} &&: (A : \Ty\,\Gamma) \to A^A\,\gamma_0 \to \Tm\,\Omega\,(A[\gamma_1])
+  \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Ty\,\Omega\\
+  &\blank^{HM} &&: (t : \Tm\,\Gamma\,A)(\gamma^{HM} : \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1))
+   \to \Tm\,\Omega\,(A^{HM}\,(t^A\,\gamma_0)\,(t[\gamma_1])\,\gamma^{HM})
+\end{alignat*}
+The interpretation on contexts sums up the difference between the
+``homogeneous'' $\blank^{HM}$ and the current one. In the homogeneous
+interpretation, we have $\Gamma^{HM} : \Gamma^A \to \Gamma^A \to \Set$, in the
+heterogeneous one the codomain of the relation is syntactic, and the return type
+as well. We use $\top$ and $\Sigma$ in ToS to interpret contexts:
+\begin{alignat*}{3}
+  &\emptycon^{HM}\,\gamma_0\,\gamma_1 &&\defn \top\\
+  &(\Gamma\ext A)^{HM}\,(\gamma_0,\,\alpha_0)\,(\gamma_1\,\alpha_1) &&\defn
+    \Sigma\,(\gamma^{HM} : \Gamma^{HM}\,\gamma_0\,\gamma_1)\,(A^{HM}\,\alpha_0\,\alpha_1\,\gamma^{HM})
+\end{alignat*}
+We use a nameful notation for $\Sigma$-binding on the right hand side. In the
+cwf interpretation we similarly reuse ToS type formers in a mechanical way,
+following the definitions of the homogeneous $\blank^{HM}$.
+
+\noindent $\U$ is interpreted using external function types:
+\begin{alignat*}{3}
+  & \U^{HM} : (a_0 : \Ty_0)(a_1 : \Tm\,\Omega\,\U) \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1)
+  \to \Ty\,\Omega\\
+  & \U^{HM}\,a_0\,a_1\,\gamma^{HM} \defn a_0 \toe \El\,a_1
+\end{alignat*}
+$\El^{HM}$ uses the $\Id$ type in ToS:
+\begin{alignat*}{3}
+  & (\El\,a)^{HM} : a^A\,\gamma_0 \to \Tm\,\Omega\,(\El\,(a[\gamma_1])) \to \Ty\,\Omega\\
+  & (\El\,a)^{HM}\,\alpha_0\,\alpha_1\,\gamma^{HM} \defn \Id\,(a^{HM}\,\gamma^{HM}\,\alpha_0)\,\alpha_1
+\end{alignat*}
+In $\Pi$ we give the usual pointwise definition, using the external function type:
+\[
+  (\Pi\,a\,B)^{HM}\,t_0\,t_1\,\gamma^{HM} \defn (\alpha : a^A\,\gamma_0) \toe B^{HM}\,(t_0\,\alpha)\,(t_1\,(a^{HM}\,\gamma^{HM}\,\alpha))\,(\gamma^{HM},\,\refl)
+\]
+In $\Id$, we reuse the $\Id$ in ToS:
+\begin{alignat*}{3}
+  &(\Id\,t\,u)^{HM} : t^A\,\gamma_0 \equiv u^A\,\gamma_0 \to \Tm\,\Omega\,(\Id\,(t[\gamma_1])\,(u[\gamma_1]))
+   \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Ty\,\Omega\\
+  &(\Id\,t\,u)^{HM}\,p_0\,p_1\,\gamma^{HM} \defn  \Id\,(t^{HM}\,\gamma^{HM})\,(u^{HM}\,\gamma^{HM})
+\end{alignat*}
+External functions are again external functions.
+\[
+  (\Pie\,\ms{Ix}\,B)^{HM}\,t_0\,t_1\,\gamma^{HM} \defn (i : \ms{Ix}) \toe (B\,i)^{HM}\,(t_0\,i)\,(t_1\,i)\,\gamma^{HM}
+\]
+The newly added $\top$ and $\Sigma$ type formers are evident:
+\begin{alignat*}{3}
+  &\top^{HM}\,\tt\,\tt\,\gamma^M \defn \top\\
+  &(\Sigma\,A\,B)^{HM}\,(\alpha_0,\,\beta_0)\,(\alpha_1,\,\beta_1) \defn\\
+  &\hspace{2em}\Sigma\,(\alpha^{HM} : A^{HM}\,\alpha_0\,\alpha_1\,\gamma^M)\,
+          (B^{HM}\,\beta_0\,\beta_1\,(\gamma^{HM},\,\alpha^{HM}))
+\end{alignat*}
+\end{mydefinition}
+
+\begin{mydefinition}[\textbf{Representing signature}]
+\label{def:fqii-rep-signature}
+\noindent For $\nu : \Sub\,\Omega\,\Delta$ and $\delta : \Delta^A$, we define the
+signature which represents $\delta/\sem{\nu}$:
+\[
+  \ms{Sig}_{\delta/\sem{\nu}} \defn \Omega \ext \Delta^{HM}\,\delta\,\nu
+\]
+Now, we have that
+\begin{alignat*}{3}
+  &(\ms{Sig}_{\delta/\sem{\nu}})^A &&\equiv (\omega : \Omega^A) \times ((\Delta^{HM}\,\delta\,\nu)^A\,\omega)\\
+  &(\ms{Sig}_{\delta/\sem{\nu}})^M\,(\omega_0,\,\eta_0)\,(\omega_1,\,\eta_1) &&\equiv (\omega^M : \Omega^M\,\omega_0\,\omega_1) \times ((\Delta^{HM}\,\delta\,\nu)^M\,\eta_0\,\eta_1\,\omega^M)
+\end{alignat*}
+It remains to show that $\sem{\ms{Sig}_{\delta/\sem{\nu}}}$ is indeed equivalent
+to $\delta/\sem{\nu}$. It suffices to show that sets of objects and morphisms
+are isomorphic. We need the following:
+\begin{alignat*}{3}
+  & (\Delta^{HM}\,\delta\,\nu)^A\,\omega &&\simeq \Delta^M\,\delta\,(\nu^A\,\omega)\\
+  & (\Delta^{HM}\,\delta\,\nu)^M\,\eta_0\,\eta_1\,\omega^M &&\simeq (\nu^M\,\omega^M \circ \eta_0 \equiv \eta_1)
+\end{alignat*}
+These can be shown by induction on ToS again; we omit describing this here.
+\end{mydefinition}
+
+\begin{theorem}
+If every FQII signature has an initial algebra, then for every $\nu :
+\Sub\,\Omega\,\Delta$, there exists a left adjoint of $\sem{\nu} : \sem{\Omega} \to \sem{\Delta}$.
+\end{theorem}
+\begin{proof}
+For each $\delta : \Delta^A$, the comma category $\delta/\sem{\nu}$ can be
+specified with $\ms{Sig}_{\delta/\sem{\nu}}$ by Definition
+\ref{def:fqii-rep-signature}, hence it has an initial object. The left adjoint
+$\ms{L} : \sem{\Delta} \to \sem{\Omega}$ sends each $\delta : \Delta^A$ to the
+$\omega : \Omega^A$ component of the initial algebra of
+$\ms{Sig}_{\delta/\sem{\nu}}$.
+\end{proof}
+
+\todo{Corollary: signature semantics of signatures!}
 
 \section{Discussion of Semantics}
 
@@ -4570,152 +4707,6 @@ the eliminator.
   $\Omega^T\,\id : \Omega^A_{k}$ supports elimination by Definition \ref{def:fqiit-eliminator},
   and elimination is equivalent to initiality by Theorem \ref{thm:initiality-induction}.
 \end{proof}
-
-\section{Left Adjoints of Substitutions}
-
-In this section we show that if all signatures have initial algebras, then the
-semantic interpretation of each $\nu : \Sub\,\Omega\,\Delta$ has a left adjoint
-functor. We have the following setup and assumptions.
-\begin{itemize}
-  \item
-  We switch back to the 2LTT-based setup: we have ToS in the outer theory, and
-  underlying sorts in algebras are in $\Ty_0$.
-  \item
-  We write $\llb\blank\rrb$ for the interpretation into the flcwf model $\bM$.
-  \item
-  We assume that an initial algebra exists for each signature.
-  \item
-  We extend types in ToS with $\top$ and $\Sigma$, that is, we have $\top :
-  \Ty\,\Gamma$ and $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to
-  \Ty\,\Gamma$. It is straightforward to extend the flcwf semantics with these
-  type formers; in particular, since ToS is an infinitary QII theory, $\top$ and
-  $\Sigma$ follow from the semantics given in Chapter \ref{chap:iqiit}. $\top$
-  and $\Sigma$ allows us to use ToS types as signatures (instead of contexts), which
-  will be useful shortly.
-\end{itemize}
-
-Given $\nu : \Sub\,\Omega\,\Delta$ in the ToS syntax, we get $\sem{\nu} :
-\sem{\Omega} \to \sem{\Delta}$ as a functor between $\sem{\Omega}$ and
-$\sem{\Delta}$ categories of algebras. We seek to construct some $\ms{L} :
-\sem{\Delta} \to \sem{\Omega}$ such that $\ms{L} \dashv \sem{\nu}$.
-
-The basic idea is the following: the existence of left adjoints is equivalently
-characterized by having an initial object in the comma category
-$\delta/\sem{\nu}$ for each $\delta : \Delta^A$
-\cite[Section~IV]{maclane98categories}. Thus, it is enough to find some
-signature $\Omega$ such that $\sem{\Omega}$ is equivalent to
-$\delta/\sem{\nu}$, and by assumption we get an initial object. The objects
-of $\delta/\sem{\nu}$ consist of the following:
-\[
-  (\omega : \Omega^A) \times (\eta : \Delta^M\,\delta\,(\nu^A\,\omega))
-\]
-Of the two components, $\omega : \Omega^A$ can be clearly represented as the
-$\Omega$ signature. The $\eta$ component is a bit
-more complicated. We need to represent a $\Delta$-morphism, but whose domain is
-an \emph{external} algebra, and whose codomain is an algebra internal to the ToS
-syntax. In other words, we need a notion of ``heterogeneous'' morphism, where
-the domain lives in the usual flcwf semantics, but the codomain lives in the
-syntactic slice model $\ToS/\Omega$.
-
-\begin{mydefinition}[\textbf{Heterogeneous morphisms}]
-Fixing $\Omega : \Con$, we define $\blank^{HM}$ by induction on the ToS.
-\begin{alignat*}{3}
-  &\blank^{HM} &&: (\Gamma : \Con) \to \Gamma^A \to \Sub\,\Omega\,\Gamma \to \Ty\,\Omega\\
-  &\blank^{HM} &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Tm\,\Omega\,(\Delta^{HM}\,(\sigma^A\,\gamma_0)\,(\sigma \circ\,\gamma_1))\\
-  &\blank^{HM} &&: (A : \Ty\,\Gamma) \to A^A\,\gamma_0 \to \Tm\,\Omega\,(A[\gamma_1])
-  \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Ty\,\Omega\\
-  &\blank^{HM} &&: (t : \Tm\,\Gamma\,A)(\gamma^{HM} : \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1))
-   \to \Tm\,\Omega\,(A^{HM}\,(t^A\,\gamma_0)\,(t[\gamma_1])\,\gamma^{HM})
-\end{alignat*}
-The interpretation on contexts sums up the difference between the
-``homogeneous'' $\blank^{HM}$ and the current one. In the homogeneous
-interpretation, we have $\Gamma^{HM} : \Gamma^A \to \Gamma^A \to \Set$, in the
-heterogeneous one the codomain of the relation is syntactic, and the return type
-as well. We use $\top$ and $\Sigma$ in ToS to interpret contexts:
-\begin{alignat*}{3}
-  &\emptycon^{HM}\,\gamma_0\,\gamma_1 &&\defn \top\\
-  &(\Gamma\ext A)^{HM}\,(\gamma_0,\,\alpha_0)\,(\gamma_1\,\alpha_1) &&\defn
-    \Sigma\,(\gamma^{HM} : \Gamma^{HM}\,\gamma_0\,\gamma_1)\,(A^{HM}\,\alpha_0\,\alpha_1\,\gamma^{HM})
-\end{alignat*}
-We use a nameful notation for $\Sigma$-binding on the right hand side. In the
-cwf interpretation we similarly reuse ToS type formers in a mechanical way,
-following the definitions of the homogeneous $\blank^{HM}$.
-
-\noindent $\U$ is interpreted using external function types:
-\begin{alignat*}{3}
-  & \U^{HM} : (a_0 : \Ty_0)(a_1 : \Tm\,\Omega\,\U) \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1)
-  \to \Ty\,\Omega\\
-  & \U^{HM}\,a_0\,a_1\,\gamma^{HM} \defn a_0 \toe \El\,a_1
-\end{alignat*}
-$\El^{HM}$ uses the $\Id$ type in ToS:
-\begin{alignat*}{3}
-  & (\El\,a)^{HM} : a^A\,\gamma_0 \to \Tm\,\Omega\,(\El\,(a[\gamma_1])) \to \Ty\,\Omega\\
-  & (\El\,a)^{HM}\,\alpha_0\,\alpha_1\,\gamma^{HM} \defn \Id\,(a^{HM}\,\gamma^{HM}\,\alpha_0)\,\alpha_1
-\end{alignat*}
-In $\Pi$ we give the usual pointwise definition, using the external function type:
-\[
-  (\Pi\,a\,B)^{HM}\,t_0\,t_1\,\gamma^{HM} \defn (\alpha : a^A\,\gamma_0) \toe B^{HM}\,(t_0\,\alpha)\,(t_1\,(a^{HM}\,\gamma^{HM}\,\alpha))\,(\gamma^{HM},\,\refl)
-\]
-In $\Id$, we reuse the $\Id$ in ToS:
-\begin{alignat*}{3}
-  &(\Id\,t\,u)^{HM} : t^A\,\gamma_0 \equiv u^A\,\gamma_0 \to \Tm\,\Omega\,(\Id\,(t[\gamma_1])\,(u[\gamma_1]))
-   \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Ty\,\Omega\\
-  &(\Id\,t\,u)^{HM}\,p_0\,p_1\,\gamma^{HM} \defn  \Id\,(t^{HM}\,\gamma^{HM})\,(u^{HM}\,\gamma^{HM})
-\end{alignat*}
-External functions are again external functions.
-\[
-  (\Pie\,\ms{Ix}\,B)^{HM}\,t_0\,t_1\,\gamma^{HM} \defn (i : \ms{Ix}) \toe (B\,i)^{HM}\,(t_0\,i)\,(t_1\,i)\,\gamma^{HM}
-\]
-The newly added $\top$ and $\Sigma$ type formers are evident:
-\begin{alignat*}{3}
-  &\top^{HM}\,\tt\,\tt\,\gamma^M \defn \top\\
-  &(\Sigma\,A\,B)^{HM}\,(\alpha_0,\,\beta_0)\,(\alpha_1,\,\beta_1) \defn\\
-  &\hspace{2em}\Sigma\,(\alpha^{HM} : A^{HM}\,\alpha_0\,\alpha_1\,\gamma^M)\,
-          (B^{HM}\,\beta_0\,\beta_1\,(\gamma^{HM},\,\alpha^{HM}))
-\end{alignat*}
-\end{mydefinition}
-
-\subsubsection{Representing signature}
-
-\noindent For $\nu : \Sub\,\Omega\,\Delta$ and $\delta : \Delta^A$, we define the
-signature which represents $\delta/\sem{\nu}$:
-\[
-  \ms{Sig}_{\delta/\sem{\nu}} \defn \Omega \ext \Delta^{HM}\,\delta\,\nu
-\]
-Now, we have that
-\begin{alignat*}{3}
-  &(\ms{Sig}_{\delta/\sem{\nu}})^A &&\equiv (\omega : \Omega^A) \times ((\Delta^{HM}\,\delta\,\nu)^A\,\omega)\\
-  &(\ms{Sig}_{\delta/\sem{\nu}})^M\,(\omega_0,\,\eta_0)\,(\omega_1,\,\eta_1) &&\equiv (\omega^M : \Omega^M\,\omega_0\,\omega_1) \times ((\Delta^{HM}\,\delta\,\nu)^M\,\eta_0\,\eta_1\,\omega^M)
-\end{alignat*}
-It remains to show that $\sem{\ms{Sig}_{\delta/\sem{\nu}}}$ is indeed equivalent
-to $\delta/\sem{\nu}$. It suffices to show that sets of objects and morphisms
-are isomorphic. We need the following:
-\begin{alignat*}{3}
-  & (\Delta^{HM}\,\delta\,\nu)^A\,\omega &&\simeq \Delta^M\,\delta\,(\nu^A\,\omega)\\
-  & (\Delta^{HM}\,\delta\,\nu)^M\,\eta_0\,\eta_1\,\omega^M &&\simeq (\nu^M\,\omega^M \circ \eta_0 \equiv \eta_1)
-\end{alignat*}
-These can be shown by induction on ToS again; we omit describing this here.
-
-
-%% ((ω₀, η₀) -> (ω₁, η₁)) ≡
-%%     (ωᴹ : Ωᴹ ω₀ ω₁)
-%%   × (ηᴹ : νᴹ ωᴹ ∘ η₀ ≡ η₁)
-
-
-
-
-
-
-%% \begin{mydefinition} For each $\nu : \Sub\,\Omega\,\Delta$ and $\delta : \Delta^A$, the
-%% comma category $\delta/\sem{\nu}$ is represented with $
-
-%% \end{mydefinition}
-
-
-
-
-
-
 
 
 %% \section{Lambda-Encodings}

@@ -387,8 +387,10 @@ Peter Gabriel and Friedrich Ulmer.
 
 \bibitem[Hed98]{hedberg}
 Michael Hedberg.
-\newblock A coherence theorem for {M}artin-{L}{\"o}f's type theory.
-\newblock {\em Journal of Functional Programming}, 8(04):413--436, 1998.
+\newblock A coherence theorem for martin-l{\"{o}}f's type theory.
+\newblock {\em J. Funct. Program.}, 8(4):413--436, 1998.
+\newblock URL:
+  \url{http://journals.cambridge.org/action/displayAbstract?aid=44199}.
 
 \bibitem[Hof95]{hofmann1995extensional}
 Martin Hofmann.
