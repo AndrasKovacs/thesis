@@ -21,6 +21,12 @@ algebra for every signature. The components of δ/⟦R⟧ are:
   Lδ : Ωᴬ
   η  : Δᴹ δ (Rᴬ Lδ)
 
+------------------------------------------------------------
+
+  (γ : Γᴬ) × (η : Δᴹ δ (⟦σ⟧ γ))
+
+------------------------------------------------------------
+
 (Lδ : Ωᴬ) is clearly represented by the Ω signature.
 
 (η : Δᴹ Lδ (⟦R⟧ Lδ)) is less obvious. For this need to show that "heterogeneous"
@@ -132,7 +138,7 @@ the morphisms of δ/⟦R⟧ are the same as the morphisms of ⟦Ω'⟧.
 (δ/⟦R⟧)((ω₀, η₀), (ω₁, η₁)) consists of
 
   ω₀₁ : Ωᴹ ω₀ ω₁
-  η₀₁ : Rᴬ ω₀₁ ∘ η₀ = η₁ ∘ Rᴬ ω₀₁ η₁
+  η₀₁ : Rᴬ ω₀₁ ∘ η₀ = η₁
 
 Ω'ᴹ (ω₀, η₀) (ω₁, η₁) consists of
 
@@ -141,3 +147,10 @@ the morphisms of δ/⟦R⟧ are the same as the morphisms of ⟦Ω'⟧.
 
 This would also require some busywork to check. It's clear to me though that it works. Again, probably
 there's some magic which would allow us to compress the checking obligations.
+
+η₀ : Δᴹ δ (νᴬ ω₀)
+η₁ : Δᴹ δ (νᴬ ω₁)
+
+((ω₀, η₀) -> (ω₁, η₁)) ≡
+    (ωᴹ : Ωᴹ ω₀ ω₁)
+  × (ηᴹ : νᴹ ωᴹ ∘ η₀ ≡ η₁)

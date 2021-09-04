@@ -499,3 +499,6 @@ J b pr {u} p : Tm Γ (El (b[u ↦ u, p ↦ p])
 
 - Sig semantics of sigs
   - Add IQII model constructions using this
+
+
+--------------------------------------------------------------------------------
