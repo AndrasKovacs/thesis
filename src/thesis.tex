@@ -169,6 +169,7 @@
 
 \newcommand{\toinf}{\to^{\ms{inf}}}
 \newcommand{\lambdainf}{\lambda^{\ms{inf}}}
+\newcommand{\lambdae}{\lambda^{\ms{ext}}}
 
 \newcommand{\p}{\mathsf{p}}
 \newcommand{\q}{\mathsf{q}}
@@ -3780,7 +3781,7 @@ of $\delta/\sem{\nu}$ consist of the following:
 Of the two components, $\omega : \Omega^A$ can be clearly represented as the
 $\Omega$ signature. The $\eta$ component is a bit
 more complicated. We need to represent a $\Delta$-morphism, but whose domain is
-an \emph{external} algebra, and whose codomain is an algebra internal to the ToS
+an external algebra, and whose codomain is an algebra internal to the ToS
 syntax. In other words, we need a notion of ``heterogeneous'' morphism, where
 the domain lives in the usual flcwf semantics, but the codomain lives in the
 syntactic slice model $\ToS/\Omega$.
@@ -3815,7 +3816,9 @@ following the definitions of the homogeneous $\blank^{HM}$.
   \to \Ty\,\Omega\\
   & \U^{HM}\,a_0\,a_1\,\gamma^{HM} \defn a_0 \toe \El\,a_1
 \end{alignat*}
-$\El^{HM}$ uses the $\Id$ type in ToS:
+Note that this does not work if $a_0$ is syntactic and $a_1$ is external, as we
+have no function type in ToS with external codomain; so $\blank^{HM}$ would not
+work with an external second parameter. $\El^{HM}$ uses the $\Id$ type in ToS:
 \begin{alignat*}{3}
   & (\El\,a)^{HM} : a^A\,\gamma_0 \to \Tm\,\Omega\,(\El\,(a[\gamma_1])) \to \Ty\,\Omega\\
   & (\El\,a)^{HM}\,\alpha_0\,\alpha_1\,\gamma^{HM} \defn \Id\,(a^{HM}\,\gamma^{HM}\,\alpha_0)\,\alpha_1
@@ -3877,7 +3880,6 @@ $\ms{L} : \sem{\Delta} \to \sem{\Omega}$ sends each $\delta : \Delta^A$ to the
 $\omega : \Omega^A$ component of the initial algebra of
 $\ms{Sig}_{\delta/\sem{\nu}}$.
 \end{proof}
-
 
 \section{Discussion of Semantics}
 
@@ -5405,6 +5407,7 @@ Hence, it is safe to say that any model of a type theory which supports the
 assumptions of De Boer and Brunerie, also supports all closed QIITs.
 
 \section{Related Work}
+\label{sec:fqii-related-work}
 
 This chapter is based on the following publications, all coauthored by the
 current thesis' author.
@@ -5425,6 +5428,8 @@ The usage of 2LTT is novel compared to (1)-(3). In (1), the semantics had a cwf
 with $\Id$ and $\K$ for each signature; this was extended with $\Sigma$ in (2)
 to get the notion of flcwf that we also use in this chapter.
 
+The construction of left adjoints of substitutions is novel.
+
 The current term algebra construction is the same as in (1), but universe levels
 were not treated rigorously in (1); instead we adapt the more precise universe
 treatment from (2). Notions of bootstrapping and levitation are also
@@ -5439,7 +5444,7 @@ close in expressive power, but they do not appear to be equivalent.
 
 GATs may contain an infinite number of rules, while FQII signatures are finitely
 long. On the other hand, FQII signatures have $\Pie$ and GATs do not. It appears
-that infinite signatures is stronger than $\Pie$: it is possible to recover
+that infinite signatures are stronger than $\Pie$: it is possible to recover
 $\Pie$ by adding a rule for every value of the external index, but it is not
 possible to recover infinite signatures with $\Pie$. The reason is that in $\Pie
 : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma$, the $\Gamma$
@@ -5465,11 +5470,11 @@ a low-level presentation with raw syntax and well-formedness relations. As a
 result, the immediate metatheory of GATs is roughly as tedious as we can expect
 from raw syntaxes.
 
-This is a motivation for getting a formal escape hatch from GATs, by showing
-their equivalence to contextual categories. Contextual categories are algebraic
-and more convenient to handle than GATs. In \cite{cartmellthesis} one leg of
-this equivalence is the construction of a classifying contextual category for
-each GAT, which is essentially a term model construction from quotiented raw
+This is a motivation for formally getting away from GATs, by showing their
+equivalence to contextual categories. Contextual categories are algebraic and
+more convenient to handle than GATs. In \cite{cartmellthesis} one leg of this
+equivalence is the construction of a classifying contextual category for each
+GAT, which is essentially a term model construction from quotiented raw
 syntax. A downside of this setup is that classifying contextual categories
 cannot be easily written out by hand like GATs. Thus, GATs necessarily remain
 the practical way for specifying the classifying categories.
@@ -5842,7 +5847,7 @@ structure identity principle.
 
 Both of these would be interesting to check in future work. As a third
 alternative, instead of stopping at set-truncated algebras in HoTT, we might as
-well consider types at arbitrary h-level, and construct
+well consider types at arbitrary h-levels, and construct
 $(\omega,\,1)$-categories of algebras. This comprises a semantics of higher
 inductive-inductive signatures. We do not present a full higher-categorical
 semantics in this thesis; we only present a fragment of it in Chapter
@@ -6340,9 +6345,9 @@ $\bPiinf\,\mi{Ix}\,\bb \bs{:} \bTm\,\bGamma\,\bU$. The underlying functions
 are:
 \begin{alignat*}{3}
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ulGamma    &&:= (i : \mi{Ix})\ra \bb\,i\,\ulGamma\\
-  & (\bPiinf\,\mi{Ix}\,\bb)\,\ulsigma    &&:= \lambda\,i.\, \bb\,i\,\ulsigma\\
+  & (\bPiinf\,\mi{Ix}\,\bb)\,\ulsigma    &&:= \lambda\,f\,i.\, \bb\,i\,\ulsigma\,(f\,i)\\
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ulA\       &&:= \lambda\,\Gamma.\,(i : \mi{Ix})\ra \bb\,i\,\ulA\,(\Gamma\, a)\\
-  & (\bPiinf\,\mi{Ix}\,\bb)\,\ult        &&:= \lambda\,i.\, \bb\,i\,\ult
+  & (\bPiinf\,\mi{Ix}\,\bb)\,\ult        &&:= \lambda\,f\,i.\, \bb\,i\,\ult\,(f\,i)
 \end{alignat*}
 We rely on $\Pi$ in the inner theory. The preservation isomorphisms are
 pointwise inherited from $\bb$. One direction of the isomorphisms is defined as
@@ -6405,10 +6410,100 @@ underlying functions.
 
 \subsubsection{External function type}
 
-For $\mi{Ix} : \Set_j$ and $\bB : \mi{Ix} \ra \bTy\,\bGamma$, we define $\bPie\,\mi{Ix}\,\bB
-\bs{:} \bTy\,\bGamma$ as the $\mi{Ix}$-indexed direct product of $\bB$. Since the
-indexing is given by a metatheoretic function, every component is given in the
-evident pointwise way, including iso-cleaving.
+For $\mi{Ix} : \Set_j$ and $\bB : \mi{Ix} \ra \bTy\,\bGamma$, we define
+$\bPie\,\mi{Ix}\,\bB \bs{:} \bTy\,\bGamma$ as the $\mi{Ix}$-indexed direct
+product of $\bB$. Since the indexing is given by a metatheoretic function, every
+component is given in the evident pointwise way, including iso-cleaving. This
+concludes the definition of the $\bM$ model.
+
+\section{Left Adjoints of Substitutions}
+
+In the following we adapt Section \ref{sec:fqii-left-adjoint} to infinitary
+signatures.
+
+\begin{itemize}
+  \item
+  We again write $\llb\blank\rrb$ for the interpretation into the flcwf model $\bM$.
+  \item
+  We also add $\top : \Ty\,\Gamma$ and $\Sigma : (A : \Ty\,\Gamma) \to
+  \Ty\,(\Gamma \ext A) \to \Ty\,\Gamma$ to the ToS. Again we do not elaborate
+  much on their semantics; $\top$ is given as ${\bs{\ms{K}}\,\bemptycon}$ in
+  the model and $\Sigma$ is given by component-wise $\Sigma$.
+\end{itemize}
+We again fix $\Omega : \Con$ and define heterogeneous morphisms. The types of
+eliminators stay exactly the same:
+\begin{alignat*}{3}
+  &\blank^{HM} &&: (\Gamma : \Con) \to \Gamma^A \to \Sub\,\Omega\,\Gamma \to \Ty\,\Omega\\
+  &\blank^{HM} &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Tm\,\Omega\,(\Delta^{HM}\,(\sigma^A\,\gamma_0)\,(\sigma \circ\,\gamma_1))\\
+  &\blank^{HM} &&: (A : \Ty\,\Gamma) \to A^A\,\gamma_0 \to \Tm\,\Omega\,(A[\gamma_1])
+  \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Ty\,\Omega\\
+  &\blank^{HM} &&: (t : \Tm\,\Gamma\,A)(\gamma^{HM} : \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1))
+   \to \Tm\,\Omega\,(A^{HM}\,(t^A\,\gamma_0)\,(t[\gamma_1])\,\gamma^{HM})
+\end{alignat*}
+We only need to show that the new type formers in $\U$, namely $\top$, $\Sigma$,
+$\Id$ and $\Piinf$, can be also covered in the definition of $\blank^{HM}$. This
+turns out to be just as mechanical as before. We have the following:
+\begin{alignat*}{3}
+  & \top^{HM}\,\gamma^{HM} : \Tm\,\Omega\,(\top \toe \El\,\top)\\
+  & \top^{HM}\,\gamma^{HM} \defn \lambdae\,\_.\,\tt
+\end{alignat*}
+\begin{alignat*}{3}
+  & (\Sigma\,a\,b)^{HM}\,\gamma^{HM} : \\
+  & \hspace{2em} \Tm\,\Omega\,(((\alpha : a^A\,\gamma_0) \times (b^A\,(\gamma_0,\,\alpha))) \toe \El\,(\Sigma\,(\alpha : a[\gamma_1])\,(b[\gamma_1,\,\alpha])))\\
+  & (\Sigma\,a\,b)^{HM}\,\gamma^{HM} \defn \lambdae\,(\alpha,\,\beta).\,(a^{HM}\,\gamma^{HM}\,\alpha,\,b^{HM}\,(\gamma^{HM},\,\refl)\,\beta)\\
+  & \\
+  & (\Piinf\,\ms{Ix}\,b)^{HM}\,\gamma^{HM} : \Tm\,\Omega\,(((i : \ms{Ix}) \to (b\,i)^A\,\gamma_0) \toe \El\,((i : \ms{Ix}) \toinf (b\,i)[\gamma_1]))\\
+  & (\Piinf\,\ms{Ix}\,b)^{HM}\,\gamma^{HM} \defn \lambdae\,f.\,\lambdainf\,i.\,(f\,i)^{HM}\,\gamma^{HM}
+\end{alignat*}
+For $\Id$, we again have to complete a square.
+\[
+(\Id\,t\,u)\,\gamma^{HM} : \Tm\,\Omega\,((t^A\,\gamma_0 = u^A\,\gamma_0) \toe \El\,(\Id\,(t[\gamma_1])\,(u[\gamma_1])))
+\]
+This follows from $t^{HM}\,\gamma^{HM}$ and $u^{HM}\,\gamma^{HM}$, the same way
+as in the flcwf semantics before.
+
+\begin{theorem}
+If every infinitary QII signature has an initial algebra, then for every $\nu :
+\Sub\,\Omega\,\Delta$, there exists a left adjoint of $\sem{\nu} : \sem{\Omega}
+\to \sem{\Delta}$.
+\end{theorem}
+\begin{proof}
+For each $\delta : \Delta^A$, the comma category $\delta/\sem{\nu}$ can be
+specified (up to isomorphism) by the signature $\Omega \ext
+\Delta^{HM}\,\delta\,\nu$, thus it has an initial object. Hence $\sem{\nu}$ has
+a left adjoint.
+\end{proof}
+
+\section{Signature Semantics of Signatures}
+
+We have seen that the $\blank^{HM}$ interpretation yields a notion of algebra
+morphism that is specified in ToS. What else can we represent in ToS? For
+example, could we internalize $\blank^D$, $\blank^M$ and $\blank^S$? In this
+section we show that the full flcwf semantics can be expressed internally to
+ToS.
+
+This means that for each $\Gamma : \Con$, we get $\Gamma^A : \Ty\,\emptycon$ as
+the notion of algebras, $\Gamma^M : \Ty\,(\emptycon\ext(\gamma_0 :
+\Gamma^A)\ext(\gamma_1 : \Gamma^A))$ as the notion of morphisms, $\id :
+\Tm\,(\emptycon\ext(\gamma : \Gamma^A))\,(\Gamma^M[\gamma_0 \mapsto
+  \gamma,\,\gamma_1 \mapsto \gamma])$ for the identity morphisms, and likewise
+we get the whole flcwf of algebras in such an internal manner.
+
+As we shall see shortly, capturing the full flcwf semantics is possible with the
+infinitary ToS, but it is not possible in the finitary case. The reason is that
+the type formers in $\U$ are necessary to build some components of the
+semantics. Recall that
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Discussion of Semantics}
 
@@ -7003,8 +7098,9 @@ problem of ``HoTT eating itself'' \cite{hott-eat-itself}. It is also closely
 related to the problem of representing semisimplicial types in HoTT. If we can
 construct semisimplicial types in an embedded type theory, and interpret that
 into non-truncated HoTT types, that would indeed solve the problem. But so far
-it has not been solved, or proven impossible. A key original motivation for 2LTT
-was precisely to allow construction of semisimplicial types \cite{twolevel}.
+it has not been solved, or proven impossible to solve. A key original motivation
+for 2LTT was precisely to allow construction of semisimplicial types
+\cite{twolevel}.
 
 We give a short summary of the problem; see \cite[Section~4]{hiits} for more
 discussion. The goal is to have a notion of model of a dependent type theory in
@@ -7054,7 +7150,7 @@ equality. This choice has an impact on the supported ToS features.
   ``weak'' case, we may have $\beta\eta$ only up to internal $\Id$.
 \end{itemize}
 It makes sense to develop both semantics. Weak morphisms and sections are
-useful, because can be defined purely in the inner theory (or in HoTT). Strict
+useful, because they can be defined purely in the inner theory (or in HoTT). Strict
 morphisms and sections are useful if we want to specify type formers, since type
 theories usually assume strict $\beta$-rules for recursors and eliminators. In
 this chapter, we specify theories of signatures and semantics for both cases.
@@ -7405,9 +7501,10 @@ to write equivalences in signatures, using any of the standard definitions
 
 \subsection{Semantics}
 
-We do not repeat the tables that we gave for the semantics of the strict ToS, as
-much of it remains essentially the same. We consider the components of the model
-in order, highlighting relevant changes and points of interest.
+We do not repeat the tables for the strict ToS semantics in Appendix
+\ref{app:hii-amds}, as much of it remains essentially the same in the weak
+case. We consider the components of the model in order, highlighting relevant
+changes and points of interest.
 
 \begin{notation}
 We may omit induction motives in $\tr$ and $\J$ in the following, as they will
@@ -7983,7 +8080,7 @@ theory.
   &(t,\,u)^M\,\gamma^M &&\defn \refl \\
   &(\Id\,t\,u)^M\,\gamma^M &&\defn \lambda\,(p : t^A\,\gamma_0 = u^A\,\gamma_0).\,\ap\,(a^M\,\gamma^M)\,p\\
   &\refl^M\,\gamma^M &&\defn \refl\\
-  &(\Piinf\,\mi{Ix}\,b)^M\,\gamma^M\,t &&\defn \lambda\,i.\,(b\,i)^M\,\gamma^M\,(t\,i)\\
+  &(\Piinf\,\mi{Ix}\,b)^M\,\gamma^M &&\defn \lambda\,t\,i.\,(b\,i)^M\,\gamma^M\,(t\,i)\\
   &(\appinf\,t\,i)^M\,\gamma^M &&\defn \refl \\
   &(\laminf\,t)^M\,\gamma^M &&\defn \refl \\
   &(\Pi\,a\,B)^M\,t_0\,t_1\,\gamma^M &&\defn (\alpha : a^A\,\gamma_0) \to B^M\,(t_0\,\alpha)\,(t_1\,(a^M\,\gamma^M\,\alpha))\,(\gamma^M,\,\refl)\\
@@ -8061,7 +8158,7 @@ theory.
   &(t,\,u)^S\,\gamma^S &&\defn \refl \\
   &(\Id\,t\,u)^S\,\gamma^S &&\defn \lambda\,(p : t^A\,\gamma = u^A\,\gamma).\,\apd\,(a^S\,\gamma^S)\,p\\
   &\refl^S\,\gamma^S &&\defn \refl\\
-  &(\Piinf\,\mi{Ix}\,b)^S\,\gamma^S\,t &&\defn \lambda\,i.\,(b\,i)^S\,\gamma^S\,(t\,i)\\
+  &(\Piinf\,\mi{Ix}\,b)^S\,\gamma^S &&\defn \lambda\,t\,i.\,(b\,i)^S\,\gamma^S\,(t\,i)\\
   &(\appinf\,t\,i)^S\,\gamma^S &&\defn \refl \\
   &(\laminf\,t)^S\,\gamma^S &&\defn \refl \\
   &(\Pi\,a\,B)^S\,t\,t^D\,\gamma^S &&\defn (\alpha : a^A\,\gamma) \to B^S\,(t\,\alpha)\,(t^D\,(a^S\,\gamma^S\,\alpha))\,(\gamma^S,\,\refl)\\

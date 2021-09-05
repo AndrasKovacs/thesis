@@ -506,3 +506,92 @@ J b pr {u} p : Tm Γ (El (b[u ↦ u, p ↦ p])
 - sig semantics, small colimits
 - introduction
 - update related work src comparisons in the end
+
+-- Signature semantics
+--------------------------------------------------------------------------------
+
+We have a 2LTT whose intended semantics is presheaves over the *ToS*
+
+   TyS : Set           ToS types
+   TmS : TyS → Set     ToS terms
+   US  : TyS           universe in ToS
+   ElS : TmS US → TyS  decding in ToS
+   Ty0 : Set           universe of "external indices", behaves as an ordinary external type
+                       in the intended PSh model!
+
+   TyS/US closed under ToS type formers
+
+
+   TyS closed under Σ, ⊤, Πᵉ, Π
+
+   US  closed under Σ, ⊤, Id, Πⁱⁿᶠ
+
+flcwf model:
+
+   Con := flcwf of TyS
+      Con     : TyS
+      Sub Γ Δ : TmS Γ → TmS Δ → TyS
+      Ty Γ    : TmS Γ → TyS
+      Tm Γ A  : (γ : TmS Γ) → TmS (A γ)
+
+   Sub Γ Δ := weak flcwf morphisms
+
+   Ty Γ := isofibration
+     A.Con       : TmS Γ.Con → TyS
+     A.Sub Γ* Δ* : A.Con Γ → A.Con Δ → Γ.Sub Γ Δ → TyS         -- TmS-es everywhere!
+     A.Ty Γ*     : A.Con Γ → Γ.Ty Γ → TyS
+     A.Tm Γ* A*  : (γ* : A.Con Γ) → A.Ty Γ A → Γ.Tm Γ A → TyS
+
+   Tm Γ A := weak flcwf sections
+
+   ∙   : uses ⊤ in TyS
+   _▶_ : uses Σ everywhere
+
+
+  U := constantly (flcwf of types in US)
+
+    Con     := US
+    Sub Γ Δ := Γ →ⁱ El Δ
+    Ty Γ    := Γ →ⁱ US
+    Tm Γ A  := (γ : Γ) →ⁱ El (A γ)
+    ∙       := ⊤
+    _▶_     := Σ
+    ...
+    Σ       := Σ
+    K       := ...
+    Id      := Id
+
+  El a                       a : weak morphism from Γ to U
+
+    Con Γ       := El (a Γ)
+    Sub Γ* Δ* σ := Id (a σ Γ*) Δ*         -- Id in TyS!
+    Ty Γ* A     := El (a A Γ*)
+    Tm Γ* A* t  := Id (a t Γ*) A*
+
+  Id a t u : Tm Γ U
+
+    Con Γ  := Id (t Γ) (u Γ)         -- Id in US!
+    Sub σ  := Id (t σ) (u σ)
+    ...
+
+  Π a B : Ty Γ
+
+    Con Γ       := (γ : a Γ) →ⁱ B.Con (Γ, γ)
+    Sub Γ* Δ* σ := (γ : a Γ) →ⁱ B.Sub (Γ γ) (Δ (a σ γ)) (σ, refl)
+    Ty Γ* A     := {γ : a Γ} →ⁱ (α : a A γ) →ⁱ
+
+  Πᵉˣᵗ Ix B : Ty Γ
+
+    Con Γ       := (i : Ix) →ᵉ (B i).Con Γ
+    Sub Γ* Δ* σ := (i : Ix) →ᵉ ....
+    ...
+
+  Πⁱⁿᶠ Ix b : Tm Γ U
+
+    Con Γ := (i : Ix) →ⁱⁿᶠ (b i) Γ    : US
+
+    Sub : (σ : Γ.Sub Γ₀ Γ₁) → ((i : Ix) →ⁱⁿᶠ (b i) Γ₀) →ⁱ El ((i : Ix) →ⁱⁿᶠ (b i) Γ₁)
+    Sub σ := λⁱ t. λⁱⁿᶠ i. b i σ (t i)    OK   !!
+
+      b i : Tm Γ U
+      b i σ : b i Γ₀ →ⁱ b i Γ₁
