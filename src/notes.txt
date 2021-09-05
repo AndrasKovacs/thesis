@@ -484,7 +484,7 @@ J b pr {u} p : Tm Γ (El (b[u ↦ u, p ↦ p])
   prᴹ γᴹ : bᴹ (γᴹ, tᴹ, refl) (prᴬ γ₀) ≡ (prᴬ γ₁) would be OK, but we fail because we can't eliminate
            from pᴬ to strict equality!
 
--- FINAL todos
+
 --------------------------------------------------------------------------------
 
 - Intro
@@ -502,3 +502,7 @@ J b pr {u} p : Tm Γ (El (b[u ↦ u, p ↦ p])
 
 
 --------------------------------------------------------------------------------
+
+- sig semantics, small colimits
+- introduction
+- update related work src comparisons in the end

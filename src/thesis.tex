@@ -3154,9 +3154,9 @@ $\Tm\,\Gamma\,A$ in an flcwf is propositional when $\Gamma$ is initial.
 $\reflect\,(\ms{ind}\,(\Id\,t\,u)) : t \equiv u$.
 \end{proof}
 
-Note that the above proof does not rely on $\Sigma$-types in the flcwf, so why
+Note that the above proofs do not rely on $\Sigma$-types in the flcwf, so why
 do we include them in the semantics? One reason is the prior result by
-Clairmabault and Dybjer \cite{clairambault2014biequivalence} that a slightly
+Clairmabault and Dybjer \cite{clairambault2014biequivalence}, that a slightly
 different formulation of flcwfs is biequivalent to finitely complete
 categories. More concretely, in ibid.\ there is a 2-category of cwfs with
 $\Sigma$, $\Id$ and ``democracy'', the last of which is equivalent to the weak
@@ -3748,19 +3748,18 @@ evident parameterized variant of $\blank\ext\blank$:
 
 In this section we show that if all signatures have initial algebras, then the
 semantic interpretation of each $\nu : \Sub\,\Omega\,\Delta$ has a left adjoint
-functor. From this, it will also follow that categories of algebras have all $\Ty_0$-small
-colimits. We have the following setup.
+functor. We have the following setup.
 \begin{itemize}
   \item
   We write $\llb\blank\rrb$ for the interpretation into the flcwf model $\bM$.
   \item
   We close types in ToS under $\top$ and $\Sigma$, that is, we have $\top :
   \Ty\,\Gamma$ and $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to
-  \Ty\,\Gamma$. It is straightforward to extend the flcwf semantics with these
-  type formers; in particular, since ToS is an infinitary QII theory, $\top$ and
-  $\Sigma$ follow from the semantics given in Chapter \ref{chap:iqiit}. In
-  the following we will need to talk about signatures depending on signatures,
-  and $\top$ and $\Sigma$ are more convenient for this purpose than telescopes.
+  \Ty\,\Gamma$. The flcwf semantics can be immediately extended with these type
+  formers, since flcwfs are given by an FQII signature, hence they form an flcwf
+  themselves and support $\top$ (as $\K\,\emptycon$) and $\Sigma$. In the
+  following we will need to talk about signatures depending on signatures, and
+  $\top$ and $\Sigma$ are more convenient for this purpose than telescopes.
 \end{itemize}
 
 Given $\nu : \Sub\,\Omega\,\Delta$ in the ToS syntax, we get $\sem{\nu} :
@@ -3879,7 +3878,6 @@ $\omega : \Omega^A$ component of the initial algebra of
 $\ms{Sig}_{\delta/\sem{\nu}}$.
 \end{proof}
 
-\todo{Corollary: signature semantics of signatures!}
 
 \section{Discussion of Semantics}
 
@@ -6662,7 +6660,7 @@ For the identity type, we need
 This follows from $t^T\,\nu$, $u^T\,\nu$ and the specifying isomorphism of
 $\Id$.
 
-\subsubsection{Infinitary function}
+\subsubsection{Infinitary functions}
 This function type follows the same pattern. We define the isomorphism below
 using induction hypotheses and the specifying isomorphism of $\Piinf$.
 \[
@@ -6671,7 +6669,7 @@ using induction hypotheses and the specifying isomorphism of $\Piinf$.
 ((i : \mi{Ix}) \to (b\,i)^A\,(\Gamma\,\nu))
 \]
 
-\subsubsection{Inductive function}
+\subsubsection{Inductive functions}
 Inductive functions are interpreted using transport along $a^T\,\nu :
 \Tm\,\Omega\,(\El\,(a[\nu])) \simeq a^A\,(\Gamma^T\,\nu)$:
 \begin{alignat*}{3}
@@ -7687,6 +7685,10 @@ supporting higher inductive types \cite{lumsdaineShulman}. They gave a more
 semantic specification of algebras, as algebras of a cell monad, and
 characterized the class of models which support initial algebras. They did not
 cover indexed families or induction-induction.
+
+Dybjer and Moeneclaey \cite{moeneclaey} gave signatures for class of finitary
+HITs with up to 2-dimensional path constructors, and built semantics in
+groupoids.
 
 Coquand, Huber and Mörtberg \cite{cubicalhits} specified syntax for a cubical
 type theory which supports several HITs (sphere, torus, suspensions,

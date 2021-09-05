@@ -316,6 +316,16 @@ Agda developers.
 \newblock Agda issue 2820, 2017.
 \newblock URL: \url{https://github.com/agda/agda/issues/2820}.
 
+\bibitem[DM18]{moeneclaey}
+Peter Dybjer and Hugo Moeneclaey.
+\newblock Finitary higher inductive types in the groupoid model.
+\newblock {\em Electronic Notes in Theoretical Computer Science}, 336:119 --
+  134, 2018.
+\newblock The Thirty-third Conference on the Mathematical Foundations of
+  Programming Semantics (MFPS XXXIII).
+\newblock \href {https://doi.org/10.1016/j.entcs.2018.03.019}
+  {\path{doi:10.1016/j.entcs.2018.03.019}}.
+
 \bibitem[DS99]{dybjer99finite}
 Peter Dybjer and Anton Setzer.
 \newblock A finite axiomatization of inductive-recursive definitions.
