@@ -529,10 +529,10 @@ We have a 2LTT whose intended semantics is presheaves over the *ToS*
 flcwf model:
 
    Con := flcwf of TyS
-      Con     : TyS
-      Sub Γ Δ : TmS Γ → TmS Δ → TyS
-      Ty Γ    : TmS Γ → TyS
-      Tm Γ A  : (γ : TmS Γ) → TmS (A γ)
+      Con : TyS
+      Sub : TmS Con → Tms Con → TyS
+      Ty  : TmS Con → TyS
+      Tm  : (Γ : TmS Con) → Tms (Ty Γ) → TyS
 
    Sub Γ Δ := weak flcwf morphisms
 
@@ -568,6 +568,17 @@ flcwf model:
     Ty Γ* A     := El (a A Γ*)
     Tm Γ* A* t  := Id (a t Γ*) A*
 
+  ⊤ : Tm Γ U
+
+    Con Γ  := ⊤
+    Sub σ  := λⁱ_. tt
+    Ty A   := λⁱ_. ⊤
+    Tm Γ A := λⁱ_. tt
+
+  Σ : (a : Tm Γ U) → Tm (Γ ▶ El a) U → Tm Γ U
+
+    Con Γ := Σ (α : a Γ) (b (Γ, α))
+
   Id a t u : Tm Γ U
 
     Con Γ  := Id (t Γ) (u Γ)         -- Id in US!
@@ -578,7 +589,7 @@ flcwf model:
 
     Con Γ       := (γ : a Γ) →ⁱ B.Con (Γ, γ)
     Sub Γ* Δ* σ := (γ : a Γ) →ⁱ B.Sub (Γ γ) (Δ (a σ γ)) (σ, refl)
-    Ty Γ* A     := {γ : a Γ} →ⁱ (α : a A γ) →ⁱ
+
 
   Πᵉˣᵗ Ix B : Ty Γ
 
@@ -591,7 +602,16 @@ flcwf model:
     Con Γ := (i : Ix) →ⁱⁿᶠ (b i) Γ    : US
 
     Sub : (σ : Γ.Sub Γ₀ Γ₁) → ((i : Ix) →ⁱⁿᶠ (b i) Γ₀) →ⁱ El ((i : Ix) →ⁱⁿᶠ (b i) Γ₁)
-    Sub σ := λⁱ t. λⁱⁿᶠ i. b i σ (t i)    OK   !!
+    Sub σ := λⁱ t. λⁱⁿᶠ i. b i σ (t i)    OK   !!  noice
 
       b i : Tm Γ U
       b i σ : b i Γ₀ →ⁱ b i Γ₁
+
+    Ty A := λ Γ*. (i : Ix) →ⁱⁿᶠ b i A (Γ*
+
+
+
+  ⊤ : Ty Γ
+
+    Con _ := ⊤
+    Sub _ _ _ := tt

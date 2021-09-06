@@ -105,6 +105,12 @@
 \newcommand{\tr}{\ms{tr}}
 \newcommand{\happly}{\ms{happly}}
 \newcommand{\funext}{\ms{funext}}
+\newcommand{\toind}{\to^{\ms{ind}}}
+
+\newcommand{\Tys}{\ms{Ty_{sig}}}
+\newcommand{\Tms}{\ms{Tm_{sig}}}
+\newcommand{\Us}{\ms{U_{sig}}}
+\newcommand{\Els}{\ms{El_{sig}}}
 
 \newcommand{\Ix}{\mi{Ix}}
 
@@ -2157,7 +2163,7 @@ u)$ isomorphism is evident, assuming UIP and function extensionality for the
 metatheoretic $\blank\!\equiv\!\blank$ relation (which we do assume).
 \end{mydefinition}
 
-\subsection{Modeling The Inner Layer}
+\subsection{Modeling the Inner Layer}
 
 We assume now that $\mbbC$ is a cwf. We write types as $a,\,b,\,c :
 \Ty_\mbbC\,i$ and terms as $t,\,u,\,v : \Tm_\mbbC\,i\,a$. We reuse $\emptycon$
@@ -2165,6 +2171,7 @@ for the terminal object and $\blank\ext\blank$ for context extension, and
 likewise reuse notation for substitutions.
 
 \begin{mydefinition}[\textbf{$\Ty_{0}$, $\Tm_{0}$}]
+\label{def:psh-ty0-tm0}
 First, note that $\Ty_{\mbbC}$ is a presheaf over $\mbbC$, and $\Tm_{\mbbC}$ is
 a displayed presheaf over $\Ty_{\mbbC}$; this follows from the requirement that
 they form a family structure over $\mbbC$. Hence, in the presheaf model
@@ -2217,6 +2224,7 @@ transfer from $\mbbC$ to $(\Ty_0,\,\Tm_0)$. This holds for every type former
 mentioned in this thesis.
 
 \subsection{Functions With Inner Domains}
+\label{sec:functions-with-inner-domains}
 
 There is a useful semantic simplification in the standard presheaf model, in
 cases where we have functions of the form $\Pi\,(\Tm_0\,A)\,B$. This greatly
@@ -6346,7 +6354,7 @@ are:
 \begin{alignat*}{3}
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ulGamma    &&:= (i : \mi{Ix})\ra \bb\,i\,\ulGamma\\
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ulsigma    &&:= \lambda\,f\,i.\, \bb\,i\,\ulsigma\,(f\,i)\\
-  & (\bPiinf\,\mi{Ix}\,\bb)\,\ulA\       &&:= \lambda\,\Gamma.\,(i : \mi{Ix})\ra \bb\,i\,\ulA\,(\Gamma\, a)\\
+  & (\bPiinf\,\mi{Ix}\,\bb)\,\ulA\       &&:= \lambda\,\Gamma.\,(i : \mi{Ix})\ra \bb\,i\,\ulA\,(\Gamma\, i)\\
   & (\bPiinf\,\mi{Ix}\,\bb)\,\ult        &&:= \lambda\,f\,i.\, \bb\,i\,\ult\,(f\,i)
 \end{alignat*}
 We rely on $\Pi$ in the inner theory. The preservation isomorphisms are
@@ -6474,13 +6482,13 @@ specified (up to isomorphism) by the signature $\Omega \ext
 a left adjoint.
 \end{proof}
 
-\section{Signature Semantics of Signatures}
+\section{Signature-Based Semantics of Signatures}
 
 We have seen that the $\blank^{HM}$ interpretation yields a notion of algebra
 morphism that is specified in ToS. What else can we represent in ToS? For
 example, could we internalize $\blank^D$, $\blank^M$ and $\blank^S$? In this
 section we show that the full flcwf semantics can be expressed internally to
-ToS.
+the ToS syntax.
 
 This means that for each $\Gamma : \Con$, we get $\Gamma^A : \Ty\,\emptycon$ as
 the notion of algebras, $\Gamma^M : \Ty\,(\emptycon\ext(\gamma_0 :
@@ -6489,17 +6497,210 @@ the notion of algebras, $\Gamma^M : \Ty\,(\emptycon\ext(\gamma_0 :
   \gamma,\,\gamma_1 \mapsto \gamma])$ for the identity morphisms, and likewise
 we get the whole flcwf of algebras in such an internal manner.
 
-As we shall see shortly, capturing the full flcwf semantics is possible with the
-infinitary ToS, but it is not possible in the finitary case. The reason is that
-the type formers in $\U$ are necessary to build some components of the
-semantics. Recall that
+As we will shortly see, capturing the full flcwf semantics is possible with the
+infinitary ToS, but not with the finitary ToS, because it lacks the necessary
+type formers in $\U$.
 
+It would be needlessly tedious and repetitive to redo the flcwf semantics while
+explicitly working with ToS components. Instead, we repurpose 2LTT for this use
+case. Recall that 2LTT allows to get semantics internally to any cwf with $\Pi$,
+$\Sigma$, $\top$ and $\Id$. In the current section we aim to get semantics
+internally to the ToS syntax. In short, this means that we work in a 2LTT where
+the inner theory is the theory of signatures. The picture is a bit more
+nuanced though.
 
+First, since ToS lives inside 2LTT, and we want to get presheaves over ToS in
+the presheaf model, the metatheoretic setting of the presheaf model must be also
+a 2LTT. This might get a bit confusing, so let us expand:
+\begin{itemize}
+ \item The syntax of 2LTT internalizes the ToS syntax as an assumed type former.
+ \item The presheaf model of 2LTT lives inside yet another 2LTT, let us call it 2LTT*,
+       which embeds \emph{both} the 2LTT syntax and the ToS syntax separately.
+ \item In the presheaf model, the base cwf is the cwf of the ToS syntax in 2LTT*.
+ \item The $\Ty_0$ type former in 2LTT is interpreted in the presheaf model using the $\Ty_0$ type former
+       in 2LTT*.
+ \item We add $\Tys : \Set$ and $\Tms : \Tys \to \Set$ to 2LTT. $\Tys$ is
+   interpreted as the presheaf of ToS types, and $\Tms$ is interpreted using the
+   displayed presheaf of ToS terms, following Definition \ref{def:psh-ty0-tm0}.
+ \item
+   We close $\Tys$ under type formers which represent all type formers in ToS.
+   Like in the previous section, we assume that ToS types are closed under
+   $\top$ and $\Sigma$, so we have $\top$, $\Sigma$, inductive $\Pi$, $\Pie$ and
+   $\U$ in $\Tys$.  The $\U$ in $\Tys$ has $\El : \Tms\,\U \to \Tys$, and it is
+   closed under $\top$, $\Sigma$, $\Piinf$ and $\Id$. In the presheaf model, all
+   structure in $\Tys$ is interpreted using ToS type formers in the evident way.
+\end{itemize}
 
+\begin{notation}
+We shall omit $\Tms$ in the following, similarly to how we previously omitted
+$\Tm_0$. We keep omitting $\Tm_0$ in the new setup as well. However, we
+will still mark $\El : \U \to \Tys$ explicitly.
+\end{notation}
 
+For reference, we list type formers in $\Tys$ below.
+\begingroup
+\allowdisplaybreaks
+\begin{alignat*}{3}
+  & \U               &&: \Tys\\
+  & \El              &&: \U \to \Tys\\
+  & \top             &&: \U \\
+  & \Sigma           &&: (a : \U) \to (\El\,a \to \U) \to \U \\
+  & \Id              &&: \El\,a \to \El\,a \to \U \\
+  & \Piinf           &&: (\ms{Ix} : \Ty_0) \to (\ms{Ix} \to \U) \to \U\\
+  & \Pi              &&: (a : \U) \to (\El\,a \to \Tys) \to \Tys\\
+  & \Pie             &&: (\ms{Ix} : \Ty_0) \to (\ms{Ix} \to \Tys) \to \Tys\\
+  & \Sigma           &&: (A : \Tys) \to (A \to \Tys) \to \Tys\\
+  & \top             &&: \Tys
+\end{alignat*}
+\endgroup
 
+\begin{notation}
+We will use the $\blank\!\toe\!\blank$ and $\blank\!\toinf\!\blank$ notations
+in the following for $\Piinf$ and $\Pie$, but additionally we use $\blank\!\toind\!\blank$
+for inductive functions, to disambiguate them from outer functions in 2LTT.
+\end{notation}
 
+We revisit now the flcwf semantics in the new setting. The goal is to produce
+output by the signature-based semantics, such that if use the original
+$\blank^A$ interpretation on that, we get results that are equivalent to what
+get when directly using the original semantics. For the simplest example, for
+$\Gamma : \Con$, we get $\Gamma^A_{\ms{sig}} : \Ty\,\emptycon$ from the
+signature semantics, then we get $(\Gamma^A_{\ms{sig}})^A\,\tt :
+\Set$ from the original semantics, which should be equivalent to
+$\Gamma^A : \Set$.
 
+In this section, we only describe the signature-based semantics, and we do not
+formally check the round-trip property. The round-tripping seems very plausible
+though, since as we will see, the signature-based semantics is exactly the same
+as the direct semantics, modulo the change of universes and type formers.
+
+We look at key parts of the model. In each case, we generally only check that we
+have sufficient type formers. We again write components of the model in
+\textbf{bold} font.
+
+\subsubsection{Base cwf}
+Contexts in the model are still flcwfs, but now $\Con$, $\Sub$, $\Ty$ and $\Tm$ in
+flcwfs all return in $\Tys$. Hence, assuming $\bGamma : \bCon$, we have
+\begin{alignat*}{3}
+  &\Con_{\bGamma} &&: \Tys \\
+  &\Sub_{\bGamma} &&: \Con_{\bGamma} \to \Con_{\bGamma} \to \Tys \\
+  &\Ty_{\bGamma}  &&: \Con_{\bGamma} \to \Tys \\
+  &\Tm_{\bGamma}  &&: (\Gamma : \Con_{\bGamma}) \to \Ty_{\bGamma}\,\Gamma \to \Tys
+\end{alignat*}
+We specify all equations using outer equality (since the $\Id$ types in $\Tys$
+are extensional, this makes no difference). Similarly, components of $\bA :
+\bTy\,\bGamma$ return in $\Tys$. Substitutions and terms in the model are
+unchanged, they are weak morphisms and sections respectively. For $\bemptycon :
+\bCon$, we use $\top : \Tys$ to define the components. Likewise, we use
+the $\Sigma$ type in $\Tys$ to define $\blank\bs{\ext}\blank$.
+
+If we write $\Tms$ explicitly, we have e.g.\ $\Sub_{\bGamma} :
+\Tms\,\Con_{\bGamma} \to \Tms\,\Con_{\bGamma} \to \Tys$. Thus, we may use the
+simplified interpretation of functions with inner domains, from Section
+\ref{sec:functions-with-inner-domains}, and if we interpret the type of
+$\Sub_{\bGamma}$ at the empty context in the presheaf model, we get
+$\Ty\,(\emptycon\,\ext|\Con_{\bGamma}|\,\tt\,\ext |\Con_{\bGamma}|\,\tt)$.
+
+\subsubsection{Universe}
+
+$\bU : \bTy\,\bGamma$ is defined as $\bU : \bCon$, and we take the constant
+displayed flcwf of the definition. Now, we have $\bU : \bCon$ as the flcwf of
+types in $\U : \Tys$.
+\begin{alignat*}{3}
+  &\Con_{\bU} && \defn \U \\
+  &\Sub_{\bU}\,\Gamma\,\Delta && \defn \Gamma \toind \El\,\Delta\\
+  &\Ty_{\bU}\,\Gamma && \defn \Gamma \toind \U\\
+  &\Tm_{\bU}\,\Gamma\,A && \defn (\gamma : \Gamma) \toind \El\,(A\,\gamma)\\
+\end{alignat*}
+$\emptycon_{\bU}$, $\blank\ext_{\bU}\blank$ and $\Id_{\bU}$ are defined using
+the type formers in $\U$. As before, $\K_{\bU}$ is defined simply as a constant
+function.  In $\bEl\,\ba : \bTy\,\bGamma$, we use the $\Id$ type in $Tys$ in
+morphisms and sections:
+\begin{alignat*}{3}
+  &\Con_{\bEl\,\ba}\,\ulGamma && \defn \El\,(\ba\,\ulGamma) \\
+  &\Sub_{\bEl\,\ba}\,\Gamma\,\Delta\,\ulsigma && \defn \Id\,(\ba\,\ulsigma\,\Gamma)\,\Delta\\
+  &\Ty_{\bEl\,\ba}\,\Gamma\,\ulA && \defn \El\,(\ba\,\ulA\,\Gamma)\\
+  &\Tm_{\bEl\,\ba}\,\Gamma\,A\,\ult && \defn \Id\,(\ba\,\ult,\Gamma)\,A
+\end{alignat*}
+
+\subsubsection{Type formers in $\bU$}
+
+For $\bs{\top}$, $\bs{\Sigma}$ and $\bId$ in $\bU$, we use $\top$, $\Sigma$ and
+$\Id$ in $\U : \Tys$ in a straightforward way. For $\bPiinf\,\ms{Ix}\,\bb$, we
+have the following:
+\[
+   \Con_{(\bPiinf\,\ms{Ix}\,\bb)}\,\ulGamma \defn (i : \ms{Ix}) \toinf (\bb\,i)\,\ulGamma
+\]
+Let us look at morphisms:
+\begin{alignat*}{3}
+  &\Sub_{(\bPiinf\,\ms{Ix}\,\bb)}\,\ulsigma : ((i : \ms{Ix}) \toinf (\bb\,i)\,\ulGamma)
+    \toind \El\,((i : \ms{Ix}) \toinf (\bb\,i)\,\ulDelta)\\
+  &\Sub_{(\bPiinf\,\ms{Ix}\,\bb)}\,\ulsigma \defn \lambda^{\ms{ind}}\,t.\,\lambdainf\,i.\,
+    (\bb\,i)\,\ulsigma\,(t\,i)
+\end{alignat*}
+Here, we map an infinitary function to another one, which checks out just fine,
+since $\toind$ allows such mapping. We have just enough higher-order functions
+to complete this definition. The rest of $\bPiinf\,\ms{Ix}\,\bb$ follows evidently.
+
+\subsubsection{$\bs{\Pi}$, $\bs{\Pie}$, $\bs{\top}$, $\bs{\Sigma}$}
+
+In $\bs{\Pi\,a\,B}$, we use inductive functions in components:
+\begin{alignat*}{3}
+  &\Con_{(\bs{\Pi\,a\,B})}\,\ulGamma &&\defn (\gamma : \ba\,\ulGamma) \toind \Con_{\bB}\,(\ulGamma,\,\gamma)\\
+  &\Sub_{(\bs{\Pi\,a\,B})}\,\Gamma\,\Delta\,\ulsigma &&\defn (\gamma : \ba\,\ulGamma) \toind \Sub_{\bB}\,(\Gamma\,\gamma)\,(\Delta\,(\ba\,\ulsigma\,\gamma))\,(\ulsigma,\,\refl)\\
+  & ... &&
+\end{alignat*}
+In $\bs{\Pie}$, we use $\toe$. In $\bs{\top}$ and $\bs{\Sigma}$, we use $\top$ and $\Sigma$ in $\Tys$. This concludes the definition of the signature-based semantics.
+
+\begin{mydefinition}[\textbf{Signature-based AMDS interpretation}]
+For some $\Gamma : \Con$, we define the following by interpreting $\Gamma$ in
+the signature-based flcwf model, then interpreting the result in the presheaf
+model of 2LTT.
+\begin{alignat*}{3}
+  &\Gamma^A_{\ms{sig}} &&: \Ty\,\emptycon \\
+  &\Gamma^M_{\ms{sig}} &&: \Ty\,(\emptycon\ext(\gamma_0 : \Gamma^A_{\ms{sig}})\ext(\gamma_1 : \Gamma^A_{\ms{sig}}))\\
+  &\Gamma^D_{\ms{sig}} &&: \Ty\,(\emptycon\ext(\gamma : \Gamma^A_{\ms{sig}}))\\
+  &\Gamma^S_{\ms{sig}} &&: \Ty\,(\emptycon\ext(\gamma : \Gamma^A_{\ms{sig}})\ext(\gamma^D : \Gamma^D_{\ms{sig}}))
+\end{alignat*}
+\end{mydefinition}
+
+\subsection{Applications}
+
+The signature-based semantics is often helpful when we want to construct new
+signatures from old ones. We describe two specific applications in the
+following.
+
+\subsubsection{Colimits}
+We would like to use left adjoints of substitutions to build colimits in
+categories of algebras. For this, it enough to build $\Ty_0$-small indexed
+coproducts and binary coequalizers.
+
+For some $\Gamma : \Con$, we get $\Gamma^A_{\ms{tos}} : \Ty\,\emptycon$. For
+convenience we shall work with $\Gamma^A_{\ms{tos}}$ in the following. First, we
+construct $\ms{Ix}$-indexed coproducts in the category of $\Gamma$-algebras, by
+taking the left adjoint of the following diagonal substitution:
+\begin{alignat*}{3}
+  &\ms{diag} : \Sub\,(\emptycon\ext(\gamma : \Gamma^A_{\ms{tos}}))\,(\emptycon\ext (f : (\ms{Ix} \toe \Gamma^A_{\ms{tos}})))\\
+  &\ms{diag} \defn (f \mapsto \lambda^{\ms{ext}}\,i.\,\gamma)
+\end{alignat*}
+For coequalizers,we again take the left adjoint of a diagonal substitution, but
+here we need to rely on internal morphisms in the signature:
+\begin{alignat*}{3}
+  &\ms{diag} : \Sub\,&&(\emptycon&&\ext(\gamma : \Gamma^A_{\ms{tos}}))\\
+  &&&(\emptycon&&\ext (\gamma_0 : \Gamma^A_{\ms{tos}}) \ext (\gamma_1 : \Gamma^A_{\ms{tos}})\\
+  &&&&&\ext (f : \Gamma^M_{\ms{tos}}[\gamma_0 \mapsto \gamma_0,\,\gamma_1 \mapsto \gamma_1])\\
+  &&&&&\ext (g : \Gamma^M_{\ms{tos}}[\gamma_0 \mapsto \gamma_1,\,\gamma_1 \mapsto \gamma_0]))\\
+  &\rlap{$\ms{diag} \defn (\gamma_0 \mapsto \gamma,\,\gamma_1 \mapsto \gamma,\,f \mapsto \id_{\ms{tos}}[\gamma \mapsto \gamma],\,
+           g \mapsto \id_{\ms{tos}}[\gamma \mapsto \gamma]) $}
+\end{alignat*}
+Above, we use $\id_{\ms{tos}} : \Tm\,(\emptycon\ext(\gamma : \Gamma^A_{\ms{tos}}))\,(\Gamma^M_{\ms{tos}}\,[\gamma_0 \mapsto \gamma,\,\gamma_1 \mapsto \gamma])$, which also comes from the signature-based
+semantics.
+
+\subsubsection{Unfolded signatures for internal algebras}
+
+Consider algebras which are internal to some category of algebras. For example,
+double categories are categories internally to the category of categories. We can
+always
 
 
 
@@ -6533,9 +6734,9 @@ Of course, we can transport over multiple types, or telescopes of types too, by
 iterated transport. For instance, given $A : \Ty\,\Gamma$, $B : \Ty\,(\Gamma
 \ext A)$, $\alpha : A^A\,\gamma$ and $\beta : B^A\,(\gamma,\,\alpha)$, we can
 transport $\alpha$ first, then transport $\beta$ by
-$(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, we could add large $\Sigma$
-types to ToS, as $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty
-\Gamma$, thereby making iterated transport superfluous.
+$(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, if have large $\Sigma$ types
+in ToS, as $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty \Gamma$,
+that makes iterated transport superfluous.
 
 \subsubsection{Variations of semantics}
 
