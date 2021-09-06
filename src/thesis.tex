@@ -4098,20 +4098,45 @@ models, it is less obvious to extend the construction to a functor of categories
 of models - which we do get for free here.
 \end{myexample}
 
-\textbf{Limitations.} In the finitary ToS syntax, when defining substitutions
-(that is, model constructions) we can only ever use assumed type constructors.
-For a counter-example, take the substitution in
+\begin{myexample}
+The gluing construction by Kaposi, Huber and Sattler \cite{gluing} takes as
+input two models of some type theory together with a weak cwf-morphism between
+them (which, like our weak morphisms, preserve comprehension up to isomorphism),
+and produces as output a displayed model over the first model. Depending on the
+choice of the inputs, the gluing construction can yield parametricity
+translations and canonicity proofs as well.
+
+Let us use $\ms{TT} : \Ty\,\emptycon$ for the signature of the type theory,
+given as an iterated large $\Sigma$-type. Then, the notion of weak cwf-morphism
+is also expressible in ToS as $\ms{morph} : \Ty\,(\emptycon\ext(M_0 :
+\ms{TT})\ext(M_1 : \ms{TT}))$, and the notion of displayed model as well, as
+$\ms{TT}^D : \Ty\,(\emptycon\ext(M : \ms{TT}))$. Thus, we can give a ``type''
+for the gluing construction, as follows:
+\begin{alignat*}{3}
+  &\Tm\,&&(\emptycon\,\ext (M_0 : \ms{TT}) \ext (M_1 : \ms{TT}) \ext (f : \ms{morph}[M_0 \mapsto M_0,\,M_1 \mapsto M_1]))\\
+  & && (\ms{TT}^D[M \mapsto M_0])
+\end{alignat*}
+Moreover, the gluing construction itself can be given as an inhabitant of the
+above type. This construction works in the ToS, because all it does is reusing
+structure $M_1$ to define the displayed model over $M_0$.
+\end{myexample}
+
+\textbf{Limitations.}
+In the finitary ToS syntax, when defining substitutions we can only ever use
+assumed type constructors. If we assume a $\Sigma$ and $\top$ type formers in
+the domain signature of a construction, we might be able to work around the lack
+of $\Sigma$ and $\top$ in $\U$ in the ToS itself. This does not always work
+though; for example, take the substitution in
 $\Sub\,\ms{MonoidSig}\,\ms{CatSig}$ which maps a monoid to a single-object
-category. Assuming $\ms{M} : \U$ is the carrier set in $\ms{MonoidSig}$, we would
-need to have the following:
+category. Assuming $\ms{M} : \U$ is the carrier set in $\ms{MonoidSig}$, we
+would need to have the following:
 \begin{alignat*}{3}
   &\ms{Obj} &&\defn \top \\
   &\ms{Hom} &&\defn \lambda\,\_\,\_.\, \ms{M}
 \end{alignat*}
 But we have $\Obj : \U$ in $\ms{CatSig}$, so we would need to have $\top : \U$.
 In Chapter \ref{chap:iqiit}, we present a more expressive ToS which does include
-$\top : \U$, and it will be sufficient to rephrase a wider range of constructions
-as signature substitutions.
+$\top : \U$.
 
 \subsection{Recovering AMDS Interpretations}
 
@@ -6664,13 +6689,26 @@ model of 2LTT.
 \end{alignat*}
 \end{mydefinition}
 
-\subsection{Applications}
+\subsubsection{Backporting to finitary signatures}
+
+It is apparent from the previous section that the signature-based full flcwf
+model requires at least $\top$, $\Sigma$ and $\Id$ in $\U$: in the definition of
+$\bU$ in the model these are needed to define the family structure and the
+finite limit structure.
+
+Hence, if we want to only support structure in $\Tys$ corresponding to a theory
+of finitary signatures, we need to drop all semantic components which rely on
+the missing type formers. We have seen this kind of trimmed semantics in Section
+\ref{sec:fqii-variations}. In particular, we still get a category of algebras
+for each signature, since that can be modeled without $\top$, $\Sigma$ and
+$\Id$.
+
+\subsubsection{Application: colimits}
 
 The signature-based semantics is often helpful when we want to construct new
-signatures from old ones. We describe two specific applications in the
-following.
+signatures from old ones. We give an example application, in the construction of
+colimits.
 
-\subsubsection{Colimits}
 We would like to use left adjoints of substitutions to build colimits in
 categories of algebras. For this, it enough to build $\Ty_0$-small indexed
 coproducts and binary coequalizers.
@@ -6693,18 +6731,13 @@ here we need to rely on internal morphisms in the signature:
   &\rlap{$\ms{diag} \defn (\gamma_0 \mapsto \gamma,\,\gamma_1 \mapsto \gamma,\,f \mapsto \id_{\ms{tos}}[\gamma \mapsto \gamma],\,
            g \mapsto \id_{\ms{tos}}[\gamma \mapsto \gamma]) $}
 \end{alignat*}
-Above, we use $\id_{\ms{tos}} : \Tm\,(\emptycon\ext(\gamma : \Gamma^A_{\ms{tos}}))\,(\Gamma^M_{\ms{tos}}\,[\gamma_0 \mapsto \gamma,\,\gamma_1 \mapsto \gamma])$, which also comes from the signature-based
-semantics.
+Above, we use $\id_{\ms{tos}} : \Tm\,(\emptycon\ext(\gamma :
+\Gamma^A_{\ms{tos}}))\,(\Gamma^M_{\ms{tos}}\,[\gamma_0 \mapsto \gamma,\,\gamma_1
+  \mapsto \gamma])$, which also comes from the signature-based semantics.
 
-\subsubsection{Unfolded signatures for internal algebras}
-
-Consider algebras which are internal to some category of algebras. For example,
-double categories are categories internally to the category of categories. We can
-always
-
-
-
-
+Of course, if we want to be fully precise, we need to show that what we get is
+equivalent to coproducts and coequalizers in the external sense. For this, we
+would need the round-trip property of the signature-based semantics.
 
 \section{Discussion of Semantics}
 
@@ -6760,39 +6793,38 @@ a category of algebras, plus a notion of induction, but we cannot show that
 initiality is equivalent to induction, as the proof of Theorem
 \ref{thm:initiality-induction} depends on $\blank\!\ext\!\blank$.
 
+\subsubsection{Model Constructions}
 
-\subsubsection{Substitutions}
+In this chapter we gain some expressive power in defining model constructions
+using substitutions or terms. For starters, the construction of categories from
+monoids works now:
 
-\todo{Add section on signature semantics of signatures!!}
+\begin{myexample}
+Let us have
+$\ms{MonoidSig}$ as the signature for monoids, with $\ms{M} : \U$ as the carrier
+set, $\blank\!\cdot\!\blank : \ms{M} \to \ms{M} \to \El\,\ms{M}$ as
+multiplication and $\epsilon : \El\,\ms{M}$ as identity the element. We define
+$\sigma : \Sub\,\ms{MonoidSig}\,\ms{CatSig}$ to contain $\ms{Obj} \defn \top$,
+$\ms{Hom} \defn \lambda\,\_\,\_.\,\ms{M}$, $\id \defn \epsilon$ and
+$\blank\!\circ\!\blank \defn \blank\!\cdot\!\blank$.
+\end{myexample}
 
-%% In this chapter we gain significant expressive power in defining model
-%% constructions. Generally speaking, almost all constructions in the literature
-%% which have been dubbed ``syntactic translations'' or ``syntactic models'' can be
-%% now defined as ToS substitutions. Intuitively, this works because
-%% \begin{itemize}
-%% \item
-%%   Syntactic translations usually do not rely on models being actually syntactic.
-%%   They do not use induction on syntax in the \emph{target} theory. A rare and
-%%   notable counterexample is our construction of recursors and eliminators for
-%%   term models. These are perhaps ``syntactic'' in the sense that they
-%%   prominently involve the syntax of some type theory. And they actually rely on
-%%   syntax being syntax, because they construct recursor/eliminator functions by
-%%   induction on terms.
-%% \item
-%%   Syntactic translations rarely if ever involve higher-order constructions.
-%%   Such would be interpreting $\Con$ with $(\Con \to \Con) \to \Con$, for a
-%%   contrived example.
-%% \end{itemize}
-
-%% \begin{myexample}
-%% For a warmup example, now we can construct categories from monoids. Let us have
-%% $\ms{MonoidSig}$ as the signature for monoids, with $\ms{M} : \U$ as the carrier
-%% set, $\blank\!\cdot\!\blank : \ms{M} \to \ms{M} \to \El\,\ms{M}$ as
-%% multiplication and $\epsilon : \El\,\ms{M}$ as identity the element. We define
-%% $\sigma : \Sub\,\ms{MonoidSig}\,\ms{CatSig}$ to contain $\ms{Obj} \defn \top$,
-%% $\ms{Hom} \defn \lambda\,\_\,\_.\,\ms{M}$, $\id \defn \epsilon$ and
-%% $\blank\!\circ\!\blank \defn \blank\!\cdot\!\blank$.
-%% \end{myexample}
+Generally speaking, many constructions in the literature which have been dubbed
+\emph{syntactic models} or \emph{syntactic translations} \cite{next700} can be
+defined now in the ToS, for the following reasons.
+\begin{itemize}
+\item
+  Syntactic translations usually do not rely on models being actually syntactic:
+  they do not use induction on syntax in the \emph{target} theory. A rare and
+  counterexample is our constructions of recursors and eliminators for term
+  models. These are perhaps syntactic in the sense that they prominently involve
+  the syntax of some type theory. And they actually rely on syntax being syntax,
+  because they construct recursor/eliminator functions by induction on terms.
+\item
+  Syntactic translations rarely if ever involve higher-order constructions.
+  Such would be interpreting $\Con$ with $(\Con \to \Con) \to \Con$, for a
+  contrived example.
+\end{itemize}
 
 
 \section{Term Algebras}
