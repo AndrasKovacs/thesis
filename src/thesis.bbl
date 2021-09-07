@@ -198,6 +198,16 @@ Patrick Bahr and Tom Hvitved.
 \newblock \href {https://doi.org/10.1145/2036918.2036930}
   {\path{doi:10.1145/2036918.2036930}}.
 
+\bibitem[BJP10]{bernardy12parametricity}
+Jean{-}Philippe Bernardy, Patrik Jansson, and Ross Paterson.
+\newblock Parametricity and dependent types.
+\newblock In Paul Hudak and Stephanie Weirich, editors, {\em Proceeding of the
+  15th {ACM} {SIGPLAN} international conference on Functional programming,
+  {ICFP} 2010, Baltimore, Maryland, USA, September 27-29, 2010}, pages
+  345--356. {ACM}, 2010.
+\newblock \href {https://doi.org/10.1145/1863543.1863592}
+  {\path{doi:10.1145/1863543.1863592}}.
+
 \bibitem[BKS21]{bocquet2021induction}
 Rafa{\"e}l Bocquet, Ambrus Kaposi, and Christian Sattler.
 \newblock Induction principles for type theories, internally to presheaf

@@ -4099,26 +4099,26 @@ of models - which we do get for free here.
 \end{myexample}
 
 \begin{myexample}
+\label{ex:gluing}
 The gluing construction by Kaposi, Huber and Sattler \cite{gluing} takes as
 input two models of some type theory together with a weak cwf-morphism between
-them (which, like our weak morphisms, preserve comprehension up to isomorphism),
-and produces as output a displayed model over the first model. Depending on the
-choice of the inputs, the gluing construction can yield parametricity
+them, and produces as output a displayed model over the first model. Depending
+on the choice of the inputs, the gluing construction can yield parametricity
 translations and canonicity proofs as well.
 
 Let us use $\ms{TT} : \Ty\,\emptycon$ for the signature of the type theory,
 given as an iterated large $\Sigma$-type. Then, the notion of weak cwf-morphism
 is also expressible in ToS as $\ms{morph} : \Ty\,(\emptycon\ext(M_0 :
 \ms{TT})\ext(M_1 : \ms{TT}))$, and the notion of displayed model as well, as
-$\ms{TT}^D : \Ty\,(\emptycon\ext(M : \ms{TT}))$. Thus, we can give a ``type''
+$\ms{TT}^D : \Ty\,(\emptycon\ext(M : \ms{TT}))$\footnote{We will be also able to automatically derive $\ms{TT}^D$ from $\ms{TT}$, in Section \ref{sec:signature-semantics}.}. Thus, we can give a ``type''
 for the gluing construction, as follows:
 \begin{alignat*}{3}
   &\Tm\,&&(\emptycon\,\ext (M_0 : \ms{TT}) \ext (M_1 : \ms{TT}) \ext (f : \ms{morph}[M_0 \mapsto M_0,\,M_1 \mapsto M_1]))\\
   & && (\ms{TT}^D[M \mapsto M_0])
 \end{alignat*}
 Moreover, the gluing construction itself can be given as an inhabitant of the
-above type. This construction works in the ToS, because all it does is reusing
-structure $M_1$ to define the displayed model over $M_0$.
+above type. This construction works in the ToS, because it only reuses structure
+from $M_1$ to define the displayed model over $M_0$.
 \end{myexample}
 
 \textbf{Limitations.}
@@ -4149,6 +4149,12 @@ $\Id$ and $\K$ columns can be unfolded. We get the whole model by filling every
 cell of the unfolded table with a definition. Of course, many of these cells are
 equations between equations, hence trivial by UIP.
 
+This setup is very regular and convenient, because we can extract a displayed
+ToS model from any column, which may depend on columns to the left. The whole
+model is the total model of all columns. For example, the $\Con$ column does not
+depend on anything, so it is a plain model. The $\Ty$ column is displayed over
+$\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
+
 \begin{figure}
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|  }
@@ -4168,12 +4174,6 @@ equations between equations, hence trivial by UIP.
 \caption{The flcwf model of the theory of signatures}
 \label{fig:fqiit-model}
 \end{figure}
-
-This setup is very regular and convenient, because we can extract a displayed
-ToS model from any column, which may depend on columns to the left. The whole
-model is the total model of all columns. For example, the $\Con$ column does not
-depend on anything, so it is a plain model. The $\Ty$ column is displayed over
-$\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
 
 See also Appendix \ref{app:fqii-amds} for a tabular specification of the AMDS
 interpretations.
@@ -6508,6 +6508,7 @@ a left adjoint.
 \end{proof}
 
 \section{Signature-Based Semantics of Signatures}
+\label{sec:signature-semantics}
 
 We have seen that the $\blank^{HM}$ interpretation yields a notion of algebra
 morphism that is specified in ToS. What else can we represent in ToS? For
@@ -6809,22 +6810,57 @@ $\ms{Hom} \defn \lambda\,\_\,\_.\,\ms{M}$, $\id \defn \epsilon$ and
 $\blank\!\circ\!\blank \defn \blank\!\cdot\!\blank$.
 \end{myexample}
 
-Generally speaking, many constructions in the literature which have been dubbed
-\emph{syntactic models} or \emph{syntactic translations} \cite{next700} can be
-defined now in the ToS, for the following reasons.
+Many constructions in the literature which have been dubbed \emph{syntactic
+models} \cite{next700} or \emph{syntactic translations} can be defined now in
+the ToS, for the following reasons.
 \begin{itemize}
 \item
   Syntactic translations usually do not rely on models being actually syntactic:
-  they do not use induction on syntax in the \emph{target} theory. A rare and
-  counterexample is our constructions of recursors and eliminators for term
+  they do not use induction on \emph{target} theory syntax. A rare
+  counterexample is our construction of recursors and eliminators for term
   models. These are perhaps syntactic in the sense that they prominently involve
-  the syntax of some type theory. And they actually rely on syntax being syntax,
-  because they construct recursor/eliminator functions by induction on terms.
+  the syntax of some type theory, and they construct recursor/eliminator
+  functions by induction on terms.
 \item
   Syntactic translations rarely if ever involve higher-order constructions.
   Such would be interpreting $\Con$ with $(\Con \to \Con) \to \Con$, for a
   contrived example.
 \end{itemize}
+
+The gluing construction in Example \ref{ex:gluing} is already a fairly general
+example that only requires the finitary ToS to define. That construction is more
+in an ``indexed'' style, but now we can also do constructions in a more
+``fibered'' style.
+
+\begin{myexample}
+We may consider a unary parametricity translation in the style of Bernardy,
+Jansson, and Paterson \cite{bernardy12parametricity}, which makes use of the
+small $\Sigma$-type in the theory of signature. We assume $\ms{TT} :
+\Ty\,\emptycon$ as the signature for the theory, and $\ms{TT}^D :
+\Ty\,(\emptycon\,\ext\,(M : \ms{TT}))$ as the signature for displayed models.
+The translation can be typed as $\Tm\,(\emptycon\ext (M : \ms{TT}))\,\ms{TT}^D$:
+we assume a model of the theory, and build a displayed model over the same
+theory. Informally, when $M$ is initial, we get a translation which doubles each
+context:
+\[
+  \sem{\Gamma \ext (a : A)} \equiv \sem{\Gamma} \ext (a : A) \ext (a^D : \sem{A}\,a)
+\]
+Formally, however, this is not well-typed because $A$ lives in $\Gamma$, not in
+$\sem{\Gamma}$. Hence, in the definition of contexts in the displayed model, we
+also include a substitution which projects out the ``base'' parts of contexts.
+This can be used to weaken types in base contexts to total contexts.
+\begin{alignat*}{3}
+  &\Con : \Con_{M} \to \U\\
+  &\Con\,\ulGamma \defn \Sigma\,(\ulGamma' : \Con_M)\,(\proj : \Sub_M\,\ulGamma'\,\ulGamma)
+\end{alignat*}
+This requires the small $\Sigma$-type in ToS. It is possible to rephrase the
+construction without type formers in $\U$; again, Example \ref{ex:gluing} has unary
+parametricity as a special case. However, the fibered version has the advantage
+that contexts are translated to contexts, types to types, and terms to terms,
+which makes it more convenient if we actually want to implement it as program
+translation. In contrast, the gluing definition of unary parametricity maps
+contexts to types.
+\end{myexample}
 
 
 \section{Term Algebras}
