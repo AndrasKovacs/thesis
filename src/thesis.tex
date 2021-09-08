@@ -1753,7 +1753,7 @@ used features and conventions below.
   \item
     We have the convention that $\blank\!=\!\blank$ refers to the inner equality
     type, while $\blank\!\equiv\!\blank$ refers to the outer equality type. If
-    the inner equality is also extensional, the choice between
+    the inner equality is extensional, the choice between
     $\blank\!=\!\blank$ and $\blank\!\equiv\!\blank$ is immaterial, but in
     Section \ref{sec:2ltt-simple-signatures} and Chapter \ref{chap:hiit} we do
     have intensional inner equality.
@@ -2768,10 +2768,10 @@ before, we abbreviate ``theory of signatures'' as ToS. In this chapter, by
 signature we mean an FQII signature unless otherwise specified.
 
 Additionally, we abbreviate ``quotient inductive-inductive types'' as QIIT, and
-we may qualify it to FQIIT is it is finitary. A \emph{type} in this sense in
+we may qualify it to FQIIT if it is finitary. A \emph{type} in this sense is
 simply the initial algebra for a given FQII signature. We shall use this naming
-in the rest of the thesis; an \emph{inductive type} will always be the initial
-algebra for a signature.
+in the rest of the thesis; an \emph{inductive type} is an initial algebra for a
+signature. Also, we use \emph{syntax} as a synonym for initial algebra.
 
 \begin{mydefinition}
 \label{def:fqiit-tos}
@@ -3765,7 +3765,7 @@ functor. We have the following setup.
   We close types in ToS under $\top$ and $\Sigma$, that is, we have $\top :
   \Ty\,\Gamma$ and $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to
   \Ty\,\Gamma$. The flcwf semantics can be immediately extended with these type
-  formers, since flcwfs are given by an FQII signature, hence they form an flcwf
+  formers: since flcwfs are given by an FQII signature, they form an flcwf
   themselves and support $\top$ (as $\K\,\emptycon$) and $\Sigma$. In the
   following we will need to talk about signatures depending on signatures, and
   $\top$ and $\Sigma$ are more convenient for this purpose than telescopes.
@@ -4982,7 +4982,7 @@ notion of induction. For the theory of \emph{closed} signatures, we can do
 better, because that ToS is itself a closed FQII theory. This is
 \emph{levitation} \cite{chapman2010gentle}, i.e.\ the situation where a ToS contains a
 signature for itself. Levitation is useful for bootstrapping: it shall be
-sufficient to specify \emph{only the notion of model} for ToS, and notions of
+sufficient to specify only the notion of model for ToS, and notions of
 ToS-morphisms, initiality and induction can be computed from that. This
 bootstrapping process eliminates the need for either
 \begin{itemize}
@@ -5135,7 +5135,7 @@ quotienting with relations. We do not actually know what is the basic type
 former, the magic ingredient from which infinitary QIITs are actually
 constructible, and which is simple enough. Simplicity is key, of course; in
 Chapter \ref{chap:iqiit} we construct infinitary QIITs from the infinitary ToS
-syntax, but that is again far from simple.
+syntax, but that is certainly not a simple structure.
 
 In \cite[Section~2.2]{ttintt}, there is an argument that infinitary quotient
 inductive types extend the base type theory with constructive choice
@@ -5325,7 +5325,7 @@ This theory has the following type formers (on the top of the base cwf):
   \item Inductive function type $\Pi$, but without $\lami$, and thus without $\beta\eta$-rules.
   \item External function type $\Pie$, but again without $\lame$.
 \end{itemize}
-Concretely, this ToS is tuned so that
+This ToS is tuned so that
 \begin{enumerate}
   \item No quotients are required in its construction.
   \item The generic term model construction still goes through for every signature in
@@ -6450,6 +6450,7 @@ component is given in the evident pointwise way, including iso-cleaving. This
 concludes the definition of the $\bM$ model.
 
 \section{Left Adjoints of Substitutions}
+\label{sec:iqii-left-adjoints}
 
 In the following we adapt Section \ref{sec:fqii-left-adjoint} to infinitary
 signatures.
@@ -6474,8 +6475,9 @@ eliminators stay exactly the same:
    \to \Tm\,\Omega\,(A^{HM}\,(t^A\,\gamma_0)\,(t[\gamma_1])\,\gamma^{HM})
 \end{alignat*}
 We only need to show that the new type formers in $\U$, namely $\top$, $\Sigma$,
-$\Id$ and $\Piinf$, can be also covered in the definition of $\blank^{HM}$. This
-turns out to be just as mechanical as before. We have the following:
+$\Id$ and $\Piinf$, can be also covered in the definition of $\blank^{HM}$. The
+new type formers turn out to work exactly as mechanically as the previous
+ones. We have the following:
 \begin{alignat*}{3}
   & \top^{HM}\,\gamma^{HM} : \Tm\,\Omega\,(\top \toe \El\,\top)\\
   & \top^{HM}\,\gamma^{HM} \defn \lambdae\,\_.\,\tt
@@ -6511,8 +6513,8 @@ a left adjoint.
 \label{sec:signature-semantics}
 
 We have seen that the $\blank^{HM}$ interpretation yields a notion of algebra
-morphism that is specified in ToS. What else can we represent in ToS? For
-example, could we internalize $\blank^D$, $\blank^M$ and $\blank^S$? In this
+morphism that is specified inside ToS. What else can we represent in ToS? For
+example, can we internalize $\blank^D$, $\blank^M$ and $\blank^S$? In this
 section we show that the full flcwf semantics can be expressed internally to
 the ToS syntax.
 
@@ -6587,12 +6589,11 @@ for inductive functions, to disambiguate them from outer functions in 2LTT.
 \end{notation}
 
 We revisit now the flcwf semantics in the new setting. The goal is to produce
-output by the signature-based semantics, such that if use the original
-$\blank^A$ interpretation on that, we get results that are equivalent to what
-get when directly using the original semantics. For the simplest example, for
-$\Gamma : \Con$, we get $\Gamma^A_{\ms{sig}} : \Ty\,\emptycon$ from the
-signature semantics, then we get $(\Gamma^A_{\ms{sig}})^A\,\tt :
-\Set$ from the original semantics, which should be equivalent to
+output by the signature-based semantics, such that if we use the original
+$\blank^A$ interpretation on that, we get results that are equivalent to what we
+get from the direct semantics. For the simplest example, for $\Gamma : \Con$, we
+get $\Gamma^A_{\ms{sig}} : \Ty\,\emptycon$ from the signature-based semantics,
+then we get $(\Gamma^A_{\ms{sig}})^A\,\tt : \Set$, which should be equivalent to
 $\Gamma^A : \Set$.
 
 In this section, we only describe the signature-based semantics, and we do not
@@ -6711,8 +6712,8 @@ signatures from old ones. We give an example application, in the construction of
 colimits.
 
 We would like to use left adjoints of substitutions to build colimits in
-categories of algebras. For this, it enough to build $\Ty_0$-small indexed
-coproducts and binary coequalizers.
+categories of algebras. For this, it enough to build indexed coproducts and
+binary coequalizers.
 
 For some $\Gamma : \Con$, we get $\Gamma^A_{\ms{tos}} : \Ty\,\emptycon$. For
 convenience we shall work with $\Gamma^A_{\ms{tos}}$ in the following. First, we
@@ -6745,7 +6746,7 @@ would need the round-trip property of the signature-based semantics.
 \subsubsection{Iso-fibrancy as a structure identity principle}
 
 The flcwfs of algebras that we get from the infinitary semantics are exactly the
-same as in the finitary case. However, signature types are a bit more
+same as in the finitary case. However, semantic types are a bit more
 interesting. The iso-fibrancy of types can be understood as a weaker version of
 the \emph{structure identity principle} in homotopy type theory.
 
@@ -6785,7 +6786,7 @@ cwf with the required type formers from any LCCC
 Second: can we add the ``large'' equality type, which includes sort equations,
 back to infinitary signatures? We dropped sort equations in this chapter because
 they are clearly not isofibrant. We can add them back into the mix though, at
-the price of dropping things from the semantics of signatures. The reason for
+the price of dropping components from the semantics of signatures. The reason for
 having isofibrant types is that type formers in $\U$ preserve $\emptycon$ and
 $\blank\!\ext\!\blank$ only up to isomorphism. If we drop all semantic
 components which depend on $\emptycon$ and $\blank\!\ext\!\blank$, we can drop
@@ -6896,7 +6897,7 @@ level, and define $\blank^T$ by induction on $\syn_j$.
 \end{alignat*}
 In short, interpretations of substitutions and terms are weakened to
 isomorphisms.  By $\simeq_{\id}$ we mean a displayed isomorphism of objects in
-the semantic $A$ (which is an flcwf isofibration); recall Definition
+the semantic $A$ type (which is an flcwf isofibration); recall Definition
 \ref{def:displayed-iso}.  The isomorphism is ``vertical'' since it lies over
 $\id$.
 
@@ -6968,20 +6969,20 @@ The composition of $t^T\,\nu$ and the above now checks out:
   (\sigma,\,t)^T\,\nu \defn (\sigma^T\,\nu,\,t^T\,\nu\circ \coh\,(\sigma^T\,\nu)\,(A^T\,(\sigma\circ\nu)\,(t[\nu])))
 \]
 We omit the rest of the cwf interpretation. It should be apparent that explicit
-$\coe$ and $\coh$-handling is fairly technical. It should be noted though that
-in a proof assistant, the finitary and infinitary constructions would be of
+$\coe$ and $\coh$-handling is fairly technical. We note though that in a proof
+assistant, the finitary and infinitary term model constructions would be of
 similar difficulty, because there we cannot rely on equality reflection and
 implicit transports to magically tidy up the formalization. In fact, even in the
-finitary case it would be a good idea to structure the formalization around coercions
-and coherences.
+finitary case it would be a good idea to structure the formalization around
+coercions and coherences.
 
 The high-level explanation for why the weakened constructions continue to work,
 is the same as what we gave in the section on iso-fibrant semantics: we do
 nothing which would violate stability under isomorphisms; additionally, because
 our isofibrations are \emph{split}, coercion and coherence compute strictly on
-identities and compositions, which ensures that conversion equations in the syntax
-are respected. For example, functoriality of the type substitution defined above
-relies on $\coe$ computation on identity and composition.
+identities and compositions, which ensures that conversion equations in the
+syntax are respected. For example, functoriality of type substitution relies on
+$\coe$ computation on identity and composition.
 
 \subsubsection{Universe}
 The universe is interpreted as follows.
@@ -7288,9 +7289,12 @@ eliminator constructions.
 This chapter is based on the publication ``Large and Infinitary Quotient
 Inductive-Inductive Types'' \cite{iqiit}. We make the following changes:
 \begin{itemize}
-  \item We add $\top$ and $\Sigma$ to the ToS.
   \item We use 2LTT for the flcwf semantics, while the paper only used the cumulative
         ETT setting.
+  \item We add the construction of left adjoints and the signature-based semantics in
+        Sections \ref{sec:iqii-left-adjoints}-\ref{sec:signature-semantics}.
+  \item We add small $\top$ and $\Sigma$ to the ToS, and also their large counterparts
+        in Sections \ref{sec:iqii-left-adjoints}-\ref{sec:signature-semantics}.
 \end{itemize}
 
 Fiore, Pitts and Steenkamp developed QW types
