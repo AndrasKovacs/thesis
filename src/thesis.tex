@@ -295,37 +295,38 @@
 \clearpage
 %% \maketitle
 
-\begin{titlepage}
-    \begin{center}
-        \vspace*{1cm}
 
-        {\LARGE \textbf{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}}
+%% \begin{titlepage}
+%%     \begin{center}
+%%         \vspace*{1cm}
 
-        %% \vspace{0.5cm}
-        %% \LARGE
-        %% Thesis Subtitle
-        \vspace{2em}
+%%         {\LARGE \textbf{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}}
 
-        {\Large \textsc{ András Kovács}}\\
-        %% \vspace{2em}
-        %% {\large \textit{Supervisor: Ambrus Kaposi}}
+%%         %% \vspace{0.5cm}
+%%         %% \LARGE
+%%         %% Thesis Subtitle
+%%         \vspace{2em}
 
-        \vfill
+%%         {\Large \textsc{ András Kovács}}\\
+%%         %% \vspace{2em}
+%%         %% {\large \textit{Supervisor: Ambrus Kaposi}}
 
-        {\large \textsc{Submitted in fulfillment of the requirements
-        for the degree of Doctor of Philosophy}}\\
+%%         \vfill
 
-        \vspace{0.8cm}
+%%         {\large \textsc{Submitted in fulfillment of the requirements
+%%         for the degree of Doctor of Philosophy}}\\
 
-        \includegraphics[width=0.4\textwidth]{elte_cimer_szines}
+%%         \vspace{0.8cm}
 
-        \large \textsc{
-        Eötvös Loránd University\\
-        Doctoral School of Informatics\\
-        September 2021}
+%%         \includegraphics[width=0.4\textwidth]{elte_cimer_szines}
 
-    \end{center}
-\end{titlepage}
+%%         \large \textsc{
+%%         Eötvös Loránd University\\
+%%         Doctoral School of Informatics\\
+%%         September 2021}
+
+%%     \end{center}
+%% \end{titlepage}
 
 
 
@@ -341,25 +342,80 @@
 
 \chapter{Introduction}
 
-\section{Overview}
+This thesis develops the usage of certain type theories as specification
+languages for algebraic theories and inductive types.
+
+\emph{Type theories} have emerged as popular metatheoretic settings for
+mechanized mathematics. One reason is that the field of type theory is generally
+aware of the issue of overheads in representation, and it is a common endeavor
+to search for concise ``synthetic'' ways to talk about different areas of
+mathematics. In type theory, it is a virtue to be able to directly say what we
+mean, and in a way such that simple-minded computers are able to verify it.
+
+\emph{Algebraic theories} are certain mathematical structures which are
+especially well-behaved, and which are ubiquitous in mathematics, such as groups
+or categories. In type theories, \emph{inductive types} are certain freely
+generated (initial) models of algebraic theories. Inductive types are a core
+feature in implementations of type theories, widely used in mathematical
+formalization, but also as the primary way to define the data structures which
+are used in programming.
+
+This thesis observes that if we are to specify more complicated algebraic
+theories, dependent type theories provide the natural tool to manage
+complexities. The expressive power of type theory which makes it suitable as a
+foundation for mechanized mathematics, also proves useful for more specialized
+tasks.
+
+We have an inevitable trade-off between the complexity of a mathematical
+language and the ease of usage of the language, or, its encoding
+overheads. Minimal languages are convenient to reason about and develop
+metatheory for, but they often require unrealistic amounts of boilerplate to
+work in. However, it is a worthwhile effort to try to move towards the Pareto
+frontier of this trade-off. We believe that the current thesis makes progress in
+this respect.
+
+\section{Contributions}
+
+\section{Publications}
 
 \section{How to Read This Thesis}
 
-We can summarize the dependencies of chapters as follows:
+We list several general references which could be helpful for readers of
+this thesis
+\begin{itemize}
+\item It is useful to have some user experience with a type-theory-based proof
+      assistant or programming language, such as Agda, Coq, Lean or Idris. In the
+      author's view, mechanized formalization is the most effective way to build
+      intuition about working in type theories.
+\item We heavily use categories-with-families \cite{cwfs,Hofmann97syntaxand,Dybjer96internaltype}
+      throughout the thesis.
+\item We use a modest amount of category theory, for which
+      \cite{awodey2010category} should be a sufficient reference.
+\item For the final Chapter \ref{chap:hiit}, the Homotopy Type Theory book \cite{hottbook}
+      provides context and motivation.
+\end{itemize}
+This thesis is mostly written in a linear fashion, as later chapters often
+revisit or generalize earlier concepts. There are some breaks from linearity
+though, so we summarize dependencies between chapters as follows:
 \begin{itemize}
   \item Chapter \ref{chap:2ltt} depends on Chapter \ref{chap:simple-inductive-signatures}.
-  \item All chapters after Chapter \ref{chap:2ltt} depend on it, since it describes a basic
-        metatheoretic setup.
-  \item Chapter \ref{chap:iqiit} revisits many constructions in Chapter \ref{chap:fqiit}.
+  \item All chapters after Chapter \ref{chap:2ltt} depend on it.
+  \item Chapter \ref{chap:iqiit} depends on Chapter \ref{chap:fqiit} as it
+        revisits most constructions from there.
   \item Chapter \ref{chap:hiit} only depends on Chapter \ref{chap:2ltt}.
 \end{itemize}
 
+\section{Formalization}
+
+Chapter \ref{chap:simple-inductive-signatures} is fully formalized in Agda, and
+the semantics of weak signatures in Chapter \ref{chap:hiit} is mostly formalized,
+with some omissions and shortcuts. The formalization can be found in \cite{TODO}.
 
 \section{Notation and Conventions}
 
-Throughout this thesis, we always work in some sort of type theory, albeit the
+Throughout this thesis, we always work in some sort of type theory, although the
 exact flavor of the type theory will vary. We summarize here the notations and
-conventions that will stay constant. Our style of notation is a mostly a mix of
+conventions that will stay consistent. Our style of notation is a mostly a mix of
 the homotopy type theory book \cite{hottbook} and the syntax of the proof
 assistant Agda.
 

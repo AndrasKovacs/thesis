@@ -151,6 +151,12 @@ Andreas Abel, Andrea Vezzosi, and Th{\'{e}}o Winterhalter.
 \newblock {\em Proc. {ACM} Program. Lang.}, 1({ICFP}):33:1--33:30, 2017.
 \newblock \href {https://doi.org/10.1145/3110277} {\path{doi:10.1145/3110277}}.
 
+\bibitem[Awo10]{awodey2010category}
+S.~Awodey.
+\newblock {\em Category Theory}.
+\newblock Oxford Logic Guides. OUP Oxford, 2010.
+\newblock URL: \url{http://books.google.co.uk/books?id=-MCJ6x2lC7oC}.
+
 \bibitem[Awo18]{awodey18natural}
 Steve Awodey.
 \newblock Natural models of homotopy type theory.
@@ -251,6 +257,14 @@ Simon Castellan, Pierre Clairambault, and Peter Dybjer.
 \newblock {\em Log. Methods Comput. Sci.}, 13(4), 2017.
 \newblock \href {https://doi.org/10.23638/LMCS-13(4:22)2017}
   {\path{doi:10.23638/LMCS-13(4:22)2017}}.
+
+\bibitem[CCD19]{cwfs}
+Simon Castellan, Pierre Clairambault, and Peter Dybjer.
+\newblock Categories with families: Unityped, simply typed, and dependently
+  typed.
+\newblock {\em CoRR}, abs/1904.00827, 2019.
+\newblock URL: \url{http://arxiv.org/abs/1904.00827}, \href
+  {http://arxiv.org/abs/1904.00827} {\path{arXiv:1904.00827}}.
 
 \bibitem[CCHM17]{cchm}
 Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
