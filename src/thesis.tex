@@ -23,6 +23,7 @@
 \presetkeys{todonotes}{inline}{}
 \usepackage{bm}
 \usepackage{titlesec}
+\usepackage{graphicx}
 
 \usepackage{multirow}
 \usepackage{tikz}
@@ -75,10 +76,12 @@
 %% Fonts and spacing
 %% --------------------------------------------------------------------------------
 
+%% \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 %% \geometry{left=3cm,right=2cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 
+
 \linespread{1.25}
-\geometry{left=4cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
+\geometry{left=3.8cm,right=2.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 
 
 %% Chapter style
@@ -275,37 +278,161 @@
 \newcommand{\rab}{\rangle}
 \newcommand{\defn}{:\equiv}
 \newcommand{\yon}{\ms{y}}
-
 \newcommand{\lub}{\,\sqcup\,}
-
 \newcommand{\bmsA}{\bs{\ms{A}}}
 
 
+%% Title
 %% --------------------------------------------------------------------------------
 
-\title{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}
-\date{2021 September}
-\author{András Kovács}
+%% \title{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}
+%% \date{2021 September}
+%% \author{András Kovács}
+
 
 %% --------------------------------------------------------------------------------
-
 \begin{document}
+\clearpage
+%% \maketitle
 
-\clearpage\maketitle
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+
+        {\LARGE \textbf{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}}
+
+        %% \vspace{0.5cm}
+        %% \LARGE
+        %% Thesis Subtitle
+        \vspace{2em}
+
+        {\Large \textsc{ András Kovács}}\\
+        %% \vspace{2em}
+        %% {\large \textit{Supervisor: Ambrus Kaposi}}
+
+        \vfill
+
+        {\large \textsc{Submitted in fulfillment of the requirements
+        for the degree of Doctor of Philosophy}}\\
+
+        \vspace{0.8cm}
+
+        \includegraphics[width=0.4\textwidth]{elte_cimer_szines}
+
+        \large \textsc{
+        Eötvös Loránd University\\
+        Doctoral School of Informatics\\
+        September 2021}
+
+    \end{center}
+\end{titlepage}
+
+
+
 \thispagestyle{empty}
 
 \frontmatter
 \tableofcontents{}
 
 \mainmatter
+
+\chapter*{Acknowledgments}
+\addcontentsline{toc}{chapter}{Acknowledgments}
+
 \chapter{Introduction}
-\section{Specification and Semantics for Inductive Types}
-\section{Overview of the Thesis and Contributions}
+
+\section{Overview}
+
+\section{How to Read This Thesis}
+
+We can summarize the dependencies of chapters as follows:
+\begin{itemize}
+  \item Chapter \ref{chap:2ltt} depends on Chapter \ref{chap:simple-inductive-signatures}.
+  \item All chapters after Chapter \ref{chap:2ltt} depend on it, since it describes a basic
+        metatheoretic setup.
+  \item Chapter \ref{chap:iqiit} revisits many constructions in Chapter \ref{chap:fqiit}.
+  \item Chapter \ref{chap:hiit} only depends on Chapter \ref{chap:2ltt}.
+\end{itemize}
+
+
 \section{Notation and Conventions}
-\subsection{Metatheory}
-\subsection{Universes}
-\label{sec:universes}
-\label{sec:notation}
+
+Throughout this thesis, we always work in some sort of type theory, albeit the
+exact flavor of the type theory will vary. We summarize here the notations and
+conventions that will stay constant. Our style of notation is a mostly a mix of
+the homotopy type theory book \cite{hottbook} and the syntax of the proof
+assistant Agda.
+
+\subsubsection{$\Sigma$-types}
+
+We write a dependent pair type as $(a : A) \times B$, where $B$ may refer to
+$a$.  Pairing is $(t,\,u)$, and projections are $\proj_1$ and
+$\proj_1$. Iterated $\Sigma$-types can written as $(a : A) \times (b : B) \times
+C$, for example. We often silently re-associate left-nested $\Sigma$-types to
+the right, e.g.\ write $(a : A) \times (b : B) \times C$ instead of
+$(\mi{ab} : (a : A) \times B) \times C$.
+
+Field projection notation: we reuse binder names in $\Sigma$-types as field
+projections. For example, if we have $t : (\ms{foo} : A) \times B$, then
+$\ms{foo}_t$ projects the first component from $t$. To make this a bit more
+convenient, we also allow to name the last components, for example if $t :
+(\ms{foo} : A) \times (\ms{bar} : B)$, then we have $\ms{foo}_t : A$, and
+$\ms{bar}_t : B[\ms{foo} \mapsto \ms{foo}_t]$. This notation is useful when we
+handle components of more complicated algebraic structures.
+
+\subsubsection{Unit type}
+
+Whenever the unit type is available, we name it $\top$, and its inhabitant $\tt$.
+
+\subsubsection{$\Pi$-types}
+Dependent function types are written as $(a : A) \to B$, where $B$ may depend on
+the $a$ variable. It is possible to group multiple binders with the same type,
+as in $(x\,y : A) \to B$. For non-dependent function types, we write plainly $A
+\to B$.  Functions are defined as $\lambda\,x.\,t$. We may group multiple
+binders, as in $\lambda\,x\,y\,z.\,t$, and optionally add type annotation to binders,
+as in $\lambda\,(x : A).\,t$.
+
+We also use Agda-like implicit arguments: a function type $\{a : A\} \to B$
+signals that we usually omit the argument in function applications. For example,
+if $\id : \{A : \Set\} \to A \to A$, we write $\id\,\true : \Bool$.  We can
+still make these arguments explicit, by using bracketed application, as in
+$\id\,\{\Bool\}\,\true$. Similarly, we may use bracketed $\lambda$, as in
+$\lambda\,\{A : \Set\}\,(x : A).\,x$, to bind implicit arguments.
+
+Sometimes we also write pattern matching abstraction, as in $\lambda\,(x,\,y).\,t$
+for a function with a $\Sigma$ domain.
+
+We may use implicit quantification as well: argument binders and types may be
+entirely omitted when it is clear where they are quantified. This resembles the
+implicit generalization in the Haskell or Idris programming languages. For example,
+the $A$ and $B$ types are implicitly quantified below:
+\begin{alignat*}{3}
+  &\ms{map} : (A \to B) \to \ms{List}\,A \to \ms{List}\,B\\
+  &\ms{map} \defn ...
+\end{alignat*}
+
+\subsubsection{Identity types}
+
+We use $\blank\!\equiv\!\blank$ and $\blank\!=\!\blank$ to denote identity
+types. We always use $\blank\!\equiv\!\blank$ as a ``strict'' equality which
+satisfies uniqueness of identity proofs. Reflexivity of identity is always
+written as $\refl$. We use $\blank\!=\!\blank$ as intensional identity in
+Chapter \ref{chap:simple-inductive-signatures}.  In later chapters,
+$\blank\!=\!\blank$ denotes the identity type in the inner layer of a two-level
+type theory, and $\blank\!\equiv\!\blank$ denotes the outer identity type.
+
+\subsubsection{Definitions}
+
+We give definitions using $\defn$, for example as in
+\begin{alignat*}{3}
+  &\ms{id} : \{A : \Set\} \to A \to A\\
+  &\ms{id}\,a \defn a
+\end{alignat*}
+Note that we write the function argument on the left of $\defn$, instead of
+writing a $\lambda$ on the right. We may switch between the two styles. The
+type signature can be omitted in a definition. We may also use pattern matching,
+like in $\ms{foo}\,(x,\,y) \defn ...$.
+
 
 \chapter{Simple Signatures}
 \label{chap:simple-inductive-signatures}
@@ -1449,7 +1576,7 @@ Recently several promising works emerged in this area
 is likely to be the preferred future direction in the metatheory of type
 theories, this thesis does not make use of it. The field is rather fresh, with
 several different approaches and limited amount of pedagogical exposition, and
-the new techniques would also raise the level of abstraction in this thesis, all
+the new techniques would also raise the level of abstraction in this thesis,
 contributing to making it less accessible. It is also not obvious how exactly
 HOAS-style could be employed to aid formalization here, and it would require
 significant additional research.  Often, a setup with multiple modalities
@@ -1457,7 +1584,8 @@ significant additional research.  Often, a setup with multiple modalities
 \cite{bocquet2021induction}, because we work with presheaves over different
 cwfs. It seems that a synthetic notion of dependent modes would be also required
 to formalize constructions in this thesis, since we often work with displayed
-presheaves over displayed cwfs. This is however not yet developed in literature.
+presheaves over displayed cwfs. This is however not yet developed in the
+literature.
 
 \begin{mydefinition}
 \label{def:constant-families}
@@ -2749,9 +2877,7 @@ dependent type theory, given as a cwf with certain type formers, in the style
 of Section \ref{sec:models-of-tts}.
 
 \subsubsection{Metatheory and terminology}
-We work in 2LTT with $\Ty_0$ and $\Tm_0$. We
-make the following assumptions. Later, we may assume more type formers at either
-levels as needed.
+We work in 2LTT with $\Ty_0$ and $\Tm_0$, and make the following assumptions:
 \begin{itemize}
   \item $\Ty_0$ is closed under $\top$, $\Sigma$ and extensional identity $\blank\!=\!\blank$.
         The inner identity reflects the outer one.
@@ -4126,7 +4252,7 @@ In the finitary ToS syntax, when defining substitutions we can only ever use
 assumed type constructors. If we assume a $\Sigma$ and $\top$ type formers in
 the domain signature of a construction, we might be able to work around the lack
 of $\Sigma$ and $\top$ in $\U$ in the ToS itself. This does not always work
-though; for example, take the substitution in
+though; for example, take the substitution with type
 $\Sub\,\ms{MonoidSig}\,\ms{CatSig}$ which maps a monoid to a single-object
 category. Assuming $\ms{M} : \U$ is the carrier set in $\ms{MonoidSig}$, we
 would need to have the following:
@@ -4373,7 +4499,7 @@ ToS induces an external type of terms as $\Tm\,\Gamma\,(\El\,a)$.
 
 We can view the generalization from $\emptycon$ to arbitrary $\Omega$ as
 switching from working in the syntactic model $\syn_j$, to working in the
-\emph{slice model} $\syn_j/\Omega$, where contexts are $\Omega$ extended with
+\emph{slice model} $\syn_j/\Omega$, where contexts are given as $\Omega$ extended with
 zero or more entries. And in $\syn_j/\Omega$, we have an $\Omega$-algebra quite
 trivially, by taking the identity morphism $\id :
 \Sub\,\Omega\,\Omega$\footnote{Writing $\blank^{\syn_j/\Omega}$ for the interpretation
@@ -6058,14 +6184,14 @@ Here, $\coe$ and $\coh$ abbreviate ``coercion'' and ``coherence'' respectively.
   & \coh &&: (\ult : \ulA \simeq \ulB)(A : \Ty_{\bA}\,\Gamma\,\ulA)
            \ra A \simeq_{\ult} \coe\,\ult\,A\\
   & \coe^{\id} && : \coe\,\id\,A \equiv A\\
-  & \coe^{\circ} && : \coe\,(\ult\circ\uldelta)\,A \equiv \coe\,\ult\,(\coe\,\uldelta\,A)\\
+  & \coe^{\circ} && : \coe\,(\ult\circ\ulu)\,A \equiv \coe\,\ult\,(\coe\,\ulu\,A)\\
   & \coh^{\id} &&: \coh\,\id\,A \equiv \id\\
-  & \coh^{\circ} &&: \coh\,(\ult\circ\uldelta)\,A \equiv \coh\,\ult\,(\coe\,\uldelta\,A)
-          \circ \coh\,\uldelta\,A
+  & \coh^{\circ} &&: \coh\,(\ult\circ\ulu)\,A \equiv \coh\,\ult\,(\coe\,\ulu\,A)
+          \circ \coh\,\ulu\,A
 \end{alignat*}
 Additionally, for $\sigma : \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma$, we have
 \begin{alignat*}{3}
-  & \coe[] &&: \coe\,(\ult[\ulsigma])\,(A[\sigma]) \equiv (\coe\,\ult\,A)[\sigma]\\
+  & \coe[] &&: \coe\,(\ult[\ulsigma\circ \p,\q])\,(A[\sigma]) \equiv (\coe\,\ult\,A)[\sigma]\\
   & \coh[] &&: \coh\,(\ult[\ulsigma\circ \p,\q])\,(A[\sigma]) \equiv (\coh\,\ult\,A)[\sigma]
 \end{alignat*}
 
@@ -6191,11 +6317,11 @@ The construction of isomorphisms is the same as in Theorem
 which we can use here.
 \end{proof}
 
-We note though that the move from Theorem \ref{thm:flpres} to here is not simply a
-logical predicate translation, because we are only lifting the codomain of a
+We note though that the move from Theorem \ref{thm:flpres} to here is not simply
+a logical predicate translation, because we are only lifting the codomain of a
 weak morphism to a displayed version, and we leave the domain non-displayed. We
-leave to future work the investigation of such asymmetrical (or
-``modal'') logical predicate translations.
+leave to future work the investigation of such asymmetrical logical predicate
+translations.
 
 
 
