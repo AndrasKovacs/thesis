@@ -25,6 +25,7 @@
 \usepackage{titlesec}
 \usepackage{graphicx}
 
+
 \usepackage{multirow}
 \usepackage{tikz}
 \usetikzlibrary{arrows,
@@ -296,37 +297,37 @@
 %% \maketitle
 
 
-%% \begin{titlepage}
-%%     \begin{center}
-%%         \vspace*{1cm}
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
 
-%%         {\LARGE \textbf{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}}
+        {\LARGE \textbf{Type-Theoretic Signatures for Algebraic Theories and Inductive Types}}
 
-%%         %% \vspace{0.5cm}
-%%         %% \LARGE
-%%         %% Thesis Subtitle
-%%         \vspace{2em}
+        %% \vspace{0.5cm}
+        %% \LARGE
+        %% Thesis Subtitle
+        \vspace{2em}
 
-%%         {\Large \textsc{ András Kovács}}\\
-%%         %% \vspace{2em}
-%%         %% {\large \textit{Supervisor: Ambrus Kaposi}}
+        {\Large \textsc{ András Kovács}}\\
+        %% \vspace{2em}
+        %% {\large \textit{Supervisor: Ambrus Kaposi}}
 
-%%         \vfill
+        \vfill
 
-%%         {\large \textsc{Submitted in fulfillment of the requirements
-%%         for the degree of Doctor of Philosophy}}\\
+        {\large \textsc{Submitted in fulfillment of the requirements
+        for the degree of Doctor of Philosophy}}\\
 
-%%         \vspace{0.8cm}
+        \vspace{0.8cm}
 
-%%         \includegraphics[width=0.4\textwidth]{elte_cimer_szines}
+        \includegraphics[width=0.4\textwidth]{elte_cimer_szines}
 
-%%         \large \textsc{
-%%         Eötvös Loránd University\\
-%%         Doctoral School of Informatics\\
-%%         September 2021}
+        \large \textsc{
+        Eötvös Loránd University\\
+        Doctoral School of Informatics\\
+        September 2021}
 
-%%     \end{center}
-%% \end{titlepage}
+    \end{center}
+\end{titlepage}
 
 
 
@@ -337,8 +338,8 @@
 
 \mainmatter
 
-\chapter*{Acknowledgments}
-\addcontentsline{toc}{chapter}{Acknowledgments}
+%% \chapter*{Acknowledgments}
+%% \addcontentsline{toc}{chapter}{Acknowledgments}
 
 \chapter{Introduction}
 
@@ -363,18 +364,44 @@ are used in programming.
 This thesis observes that if we are to specify more complicated algebraic
 theories, dependent type theories provide the natural tool to manage
 complexities. The expressive power of type theory which makes it suitable as a
-foundation for mechanized mathematics, also proves useful for more specialized
-tasks.
+foundation for mechanized mathematics, also proves useful for the more
+specialized task of specifying algebraic signatures.
 
-We have an inevitable trade-off between the complexity of a mathematical
-language and the ease of usage of the language, or, its encoding
-overheads. Minimal languages are convenient to reason about and develop
-metatheory for, but they often require unrealistic amounts of boilerplate to
-work in. However, it is a worthwhile effort to try to move towards the Pareto
-frontier of this trade-off. We believe that the current thesis makes progress in
-this respect.
+There is a trade-off between the complexity of a mathematical language and the
+ease of usage of the language. Minimal languages are convenient to reason about
+and develop metatheory for, but they often require an excessive amount of
+boilerplate to work in. However, it is a worthwhile effort to try to move
+towards the Pareto frontier of this trade-off. We believe that the current
+thesis makes progress in this respect.
 
-\section{Contributions}
+Our signatures are useful in broader mathematical contexts, but we are also
+concerned with potential implementation in proof assistants. Although it is
+unlikely that our signatures can be deployed in practice as they are, they
+should be still helpful as formal bases of practical implementations.
+
+\section{Overview \& Contributions}
+
+\todo{todo}
+
+We present three \emph{theories of signatures} in Chapters
+\ref{chap:fqiit}-\ref{chap:hiit}: these are type theories such that their typing
+contexts (i.e.\ lists of types) can be viewed as signatures for algebraic
+theories, specifying sorts, operations and equations.
+\begin{itemize}
+\item In Chapter \ref{chap:fqiit}, we describe finitary quotient
+      inductive-inductive signatures. These are close to generalized algebraic
+      theories \cite{gat} in expressive power. In particular, most type theories
+      themselves can be specified with finitary quotient inductive-inductive
+      signatures. For semantics, we build for each signature a category of algebras
+      (or models), internally to any category with sufficient structure.
+\item In Chapter \ref{chap:iqiit}, we describe infinitary quotient
+      inductive-inductive signatures. These allow specification of infinitely
+      branching trees (in the case of initial algebras). In type theories, W-types
+      are an archetypal example.
+\item In Chapter \ref{chap:hiit}, we describe higher inductive-inductive signatures.
+      These
+
+\end{itemize}
 
 \section{Publications}
 
@@ -3416,7 +3443,7 @@ are flcwfs.
 
 \subsubsection{Category}
 
-A \textbf{morphism} $\bsigma : \bSub\,\bGamma\,\bDelta$ is in an algebra
+A \textbf{morphism} $\bsigma : \bSub\,\bGamma\,\bDelta$ is an algebra
 homomorphism, viewing flcwfs as algebraic structures. Hence, $\bsigma$ includes
 a functor between underlying categories, but it also maps types to types and
 terms to terms, and strictly preserves all structure.
@@ -3911,11 +3938,11 @@ We have that
   (\lambda\,n.\,(\_ : N^S_0\,(s\,n) \equiv N^S_1\,(s\,n))))
 \end{alignat*}
 The underscores denote omitted equality proofs; they follow from the $z^S$ and
-$s^S$ components. It should be apparent that $\Id\,t\,u$ is isomorphic to $t
+$s^S$ components. It should be apparent that $\Tm\,\Gamma\,(\Id\,t\,u)$ is isomorphic to $t
 \equiv u$; this follows from function extensionality and decomposition of
 equalities of pairs. Thus, equality reflection holds in the flcwf of
 $\Nat$-algebras. Note that we do not need to use equality reflection for
-$\blank\equiv\blank$ to show this; it is simply a reshuffling of data along $\funext$.
+$\blank\equiv\blank$ to show this; it is simply a reshuffling of components along $\funext$.
 
 $\K : \Con \to \{\Delta : \Con\} \to \Ty\,\Delta$ yields a non-dependent displayed algebra:
 \[
@@ -4087,7 +4114,7 @@ an FQII signature, we get an flcwf for free. In some cases, we get exactly
 what is needed. For example, the flcwf of presheaves can be used as it is in the
 presheaf models of type theories.
 
-In other cases, the flcwf that we get ``for free'' has to be extended in some
+In other cases, the flcwf that we get has to be extended in some
 ways. This often happens if the objects in the model have an internal notion of
 ``equivalence'' which has to be respected by types.
 \begin{itemize}
@@ -5356,7 +5383,7 @@ and Brunerie et al.\ \cite{brunerie}.
     \end{alignat*}
     This can be given by a simple mutual inductive definition, which can be
     represented as an indexed inductive family. Indexed families can be
-    reduced in turn to indexed W-types \cite{mutualinductive}, which can be
+    reduced to indexed W-types \cite{mutualinductive}, which can be
     reduced in turn to W-types and the identity type.
   \item
     We define typing and conversion relations on the raw syntax. For dependent
@@ -5376,10 +5403,10 @@ and Brunerie et al.\ \cite{brunerie}.
   \item
     We construct a unique morphism from the above term model to an arbitrary
     model of the QII theory. This usually requires several steps. One approach
-    is to first define by induction on raw syntax a family of \emph{partial
-    functions} into the assumed model, then separately show that these functions
+    is to first define by induction on raw syntax a family of partial
+    functions into the assumed model, then separately show that these functions
     are total on well-typed input. The separation is necessary because the
-    induction principle for the raw syntax is \emph{too weak}: it cannot express
+    induction principle for the raw syntax is too weak: it cannot express
     the inductive-inductive indexing dependencies which would be required to
     construct the morphism in one go. For instance, if we have the QIIT syntax
     for ToS, and we have some displayed model $A$ over the syntax, the
@@ -5464,9 +5491,9 @@ comprises the true justification for that. Elaboration is the effective
 algorithm which converts raw syntax to ``core syntax'', i.e.\ typed categorical
 syntax. Given a piece of raw syntax, even if I have done the initiality
 construction, I have no effective way of learning which core syntactic object it
-corresponds to!  The elaboration literature is \emph{all about} practical
+corresponds to!  The elaboration literature is mainly about practical
 justifications for using certain raw syntaxes, and it comes with established
-ways to talk about power and correctness of elaboration algorithms.
+ways to talk about strength and correctness of elaboration algorithms.
 
 Second, there is a different motivation for the initiality construction:
 \emph{foundational minimalism}, the reduction of a complicated QIIT to basic
@@ -5535,7 +5562,7 @@ Third, it remains to check that the generic term model construction works with
 the pared-down ToS. We only need to check that the omission of $\lam$ and
 $\lame$ does not mess things up. Looking at Sections
 \ref{sec:fqii-term-algebra-construction} and
-\ref{sec:fqii-eliminator-construction}, we see that they do not: the
+\ref{sec:fqii-eliminator-construction}, we see that it does not: the
 interpretations of $\Pi$ and $\Pie$ only require applications in ToS, not
 abstractions.
 
@@ -5546,8 +5573,7 @@ ToS.  The generic term algebra construction in Section
 there being both $\lam$ and $\app$ for ``infinitary'' function types, with
 $\beta\eta$-rules. This makes the equational theory of ToS non-trivial, so
 quotients are necessary in the construction of the syntax. However, this
-requires mixing quotients and infinite branching, and in this case we do not
-even know how to construct the syntax.
+requires mixing quotients and infinite branching, which we cannot yet handle.
 
 We summarize the construction of the ToS syntax below. We refer the reader to
 \cite{ind-ind-reduction} for details.
@@ -6898,7 +6924,7 @@ categories of algebras. For this, it enough to build indexed coproducts and
 binary coequalizers.
 
 For some $\Gamma : \Con$, we get $\Gamma^A_{\ms{tos}} : \Ty\,\emptycon$. For
-convenience we shall work with $\Gamma^A_{\ms{tos}}$ in the following. First, we
+convenience we shall work with $\Gamma^A_{\ms{tos}}$ in the following, instead of $\Gamma$. First, we
 construct $\ms{Ix}$-indexed coproducts in the category of $\Gamma$-algebras, by
 taking the left adjoint of the following diagonal substitution:
 \begin{alignat*}{3}
@@ -8213,8 +8239,8 @@ chapter, we extend and refine these sources in the following ways.
     version also had a second identity type, but only for sort equations,
     i.e.\ it expressed only equality of inhabitants of $\U$.
 
-    The small and large identity types in this chapter are strictly more
-    expressive. The weaker definitions in the paper were just simple oversights.
+    The small and large identity types in this chapter are more expressive; the
+    weaker definitions in the paper were just oversights.
 
     The papers also omitted eliminators of type formers in weak signatures, and
     thus their $\beta\eta$ rules, and they did not have $\top$ or
