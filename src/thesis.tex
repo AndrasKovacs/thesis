@@ -319,7 +319,7 @@
 
         \vspace{0.8cm}
 
-        \includegraphics[width=0.3\textwidth]{elte_cimer_szines}
+        \includegraphics[width=0.35\textwidth]{elte_cimer_szines}
 
         \large \textsc{
         Eötvös Loránd University\\
@@ -1632,6 +1632,8 @@ formers, and finally universes.
 
 \begin{mydefinition}
 A $(\Ty,\,\Tm)$ family supports \textbf{$\Pi$-types} if it supports the following.
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   &\Pi           &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
   &\ms{\Pi[]}    &&: (\Pi\,A\,B)[\sigma] \equiv \Pi\,(A[\sigma])\,(B[\sigma\circ\p,\,\q])\\
@@ -1641,6 +1643,7 @@ A $(\Ty,\,\Tm)$ family supports \textbf{$\Pi$-types} if it supports the followin
   &\Pi\eta       &&: \lam\,(\app\,t) \equiv t\\
   &\lam[]        &&: (\lam\,t)[\sigma] \equiv \lam\,(t[\sigma\circ\p,\,\q])
 \end{alignat*}
+\endgroup
 Here, $\Pi$ is the type formation rule. $\ms{\Pi[]}$ is the type substitution
 rule, expressing that substituting $\Pi$ proceeds structurally on constituent
 types.  Note $B[\sigma\circ\p,\,\q]$, where we lift $\sigma$ over the additional
@@ -1782,6 +1785,8 @@ The motivation is to specify initial internal algebras in a cwf. However,
 specifying the uniqueness of recursors using definitional equality is
 problematic, if we are to have decidable and efficient conversion checking for a
 type theory. Consider the specification of $\Bool$ together with its recursor.
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \Bool  &&: \Ty\,\Gamma \\
   & \true  &&: \Tm\,\Gamma\,\Bool \\
@@ -1790,6 +1795,7 @@ type theory. Consider the specification of $\Bool$ together with its recursor.
   & \true\beta &&: \ms{BoolRec}\,B\,t\,f\,\true \equiv t\\
   & \false\beta &&: \ms{BoolRec}\,B\,t\,f\,\false \equiv f
 \end{alignat*}
+\endgroup
 $\ms{BoolRec}$ together with the $\beta$-rules specifies an internal
 $\Bool$-algebra morphism. A possible way to specify definitional uniqueness is
 as follows. Assuming $B : \Ty\,\Gamma$, $t : \Tm\,\Gamma\,B$, $f :
@@ -2817,12 +2823,13 @@ assume $(X,\,\omega) : \Alg\,\Omega$. Recall that $\omega : \Omega^A\,X$, thus
 $\Omega^A_{\leftarrow}\,\omega : \Tm_0\,((\down\!\Omega)^A\,X)$. We define $\ms{R} :
 \Tm_0\,\ms{T} \to \Tm_0\,X$ as $\ms{R}\,t \defn t^A\,(\Omega^A_{\leftarrow}\,\omega)$.
 \begin{alignat*}{3}
-& \hspace{-8em}\rlap{$\blank^R : (A : \SigTy_1)(t : \Tm_0\,(\SigTm_0\,(\down\!\Omega)\,(\down\!A))) \to A^M\,\ms{R}\,(A^T\,t)\,(\A^A_{\rightarrow}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega)))$}\\
-& \hspace{-8em}\iota^R\,&&t : t^A\,(\Omega^A_{\leftarrow}\,\omega) \equiv \iota^A_{\to}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega))\\
-& \hspace{-8em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)\\
-& \hspace{-8em}&& \\
-& \hspace{-8em}\rlap{$\blank^R : (\Gamma : \Con_1)(\nu : \Sub_1\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
-& \hspace{-8em}\rlap{$\Gamma^R\,\nu\,\{A\}\,x \defn A^R\,(\down\!(\nu\,x))$}
+& \hspace{-10em}\rlap{$\blank^R : (A : \SigTy_1)(t : \Tm_0\,(\SigTm_0\,(\down\!\Omega)\,(\down\!A))) \to A^M\,\ms{R}\,(A^T\,t)\,(\A^A_{\rightarrow}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega)))$}\\
+& \hspace{-10em}\iota^R\,&&t : t^A\,(\Omega^A_{\leftarrow}\,\omega) \equiv \iota^A_{\to}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega))\\
+& \hspace{-10em}(\iota\to A)^R\,&&t \defn \lambda\,u.\,A^R\,(\app\,t\,u)
+\end{alignat*}
+\begin{alignat*}{3}
+& \hspace{-9em}\rlap{$\blank^R : (\Gamma : \Con_1)(\nu : \Sub_1\,\Omega\,\Gamma) \to \Gamma^M\,\ms{R}\,(\Gamma^T\,\nu)\,(\nu^A\,\omega)$}\\
+& \hspace{-9em}\rlap{$\Gamma^R\,\nu\,\{A\}\,x \defn A^R\,(\down\!(\nu\,x))$}
 \end{alignat*}
 In the proof obligation for $t^A\,(\Omega^A_{\leftarrow}\,\omega) \equiv
 \iota^A_{\to}\,(t^A\,(\Omega^A_{\leftarrow}\,\omega))$, $\iota^A_{\to}$ computes
@@ -3542,6 +3549,8 @@ over the corresponding $\bGamma$ operation. In our notation with implicit
 arguments, equations in $\bA$ can be written the same way as in $\bGamma$, but
 of course there is extra indexing involved, and the displayed equations are
 well-typed because of their counterparts in the base.
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \id_{\bA} &&: \Sub\,\Gamma\,\Gamma\,\ul{\id_{\bGamma}}\\
   & \blank\circ_{\bA}\blank &&: \Sub\,\Delta\,\Xi\,\ulsigma \to \Sub\,\Gamma\,\Delta\,\uldelta
@@ -3560,6 +3569,7 @@ well-typed because of their counterparts in the base.
   &\Sigma_{\bA} &&: (A : \Ty_{\bA}\,\Gamma\,\ulA) \to \Ty_{\bA}\,(\Gamma \ext_{\bA} A)\,\ulB \to
                    \Ty_{\bA}\,\Gamma\,(\Sigma_{\bGamma}\,\ulA\,\ulB)
 \end{alignat*}
+\endgroup
 In the following we will often omit $_{\bGamma}$ and $_{\bA}$ subscripts on
 components; for example, in the type $\Con_{\bA}\,\emptycon$, the $\emptycon$ is
 clearly a base component in $\bGamma$.
@@ -3882,6 +3892,8 @@ objects and types, but not over displayed morphisms or terms anymore. So it is
 apparent that we cannot have issues with indexing variance. All structure in
 $\bs{\Pi\,a\,B}$ is pointwise inherited from $\bB$. We list some examples below
 for definitions.
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   &\emptycon_{\bs{\Pi\,a\,B}}\,\gamma &&\defn \emptycon_{\bB}\\
   &(\Gamma \ext_{\bs{\Pi\,a\,B}} A)\,(\gamma,\,\alpha) &&\defn (\Gamma\,\gamma \ext_{\bB} A\,\alpha)\\
@@ -3890,7 +3902,7 @@ for definitions.
   &A[\sigma]_{\bs{\Pi\,a\,B}}\,\{\gamma\}\,\alpha &&\defn (A\,\alpha)[\sigma\,\gamma]_{\bB}\\
   &\K_{\bs{\Pi\,a\,B}}\,\Delta\,\alpha &&\defn \K_{\bB}\,(\Delta\,\alpha)
 \end{alignat*}
-
+\endgroup
 For the specifying isomorphism $\bs{(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B)
   \simeq \Tm\,(\Gamma \ext \El\,a)\,B}$, note that the difference in
 presentation is exactly component-wise currying and uncurrying. For instance, in
@@ -4400,9 +4412,9 @@ Alternatively, we may just drop equality reflection from the ToS, and use
 transport and UIP as primitives. This recovers decidable surface syntax, but now
 we have to cover transport and UIP in the semantics, to be able to compute
 induction principles. This is not too difficult; in Chapter \ref{chap:hiit} we
-do the same for path induction $\J$ in the ToS. We even have a Haskell
-implementation of signature elaboration and computation of induction principles
-for that ToS \cite{hiit-sig-program}.
+do the same for path induction $\J$ in the ToS. In that case, we even have a
+Haskell implementation of signature elaboration and computation of induction
+principles \cite{hiit-sig-program}.
 
 Hence, handling signatures and computing induction principles is not difficult.
 Instead, the real gap between our ToS and practical implementations is that we
@@ -4433,6 +4445,22 @@ model is the total model of all columns. For example, the $\Con$ column does not
 depend on anything, so it is a plain model. The $\Ty$ column is displayed over
 $\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
 
+See also Appendix \ref{app:fqii-amds} for a tabular specification of the AMDS
+interpretations.
+
+From each displayed model, we get an eliminator, i.e.\ a family of
+interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
+$\blank^S$ in the table, but in principle we could refer to the eliminators of
+other columns as well. The interpretation functions can be defined in two ways:
+\begin{itemize}
+\item By separately taking the eliminators of each column, and referring to previous
+      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
+      the definition of the $\Ty$ column.
+\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
+      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
+\end{itemize}
+However, the two versions coincide because of the initiality of ToS syntax.
+
 \begin{figure}
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|  }
@@ -4452,22 +4480,6 @@ $\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on 
 \caption{The flcwf model of the theory of signatures}
 \label{fig:fqiit-model}
 \end{figure}
-
-See also Appendix \ref{app:fqii-amds} for a tabular specification of the AMDS
-interpretations.
-
-From each displayed model, we get an eliminator, i.e.\ a family of
-interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
-$\blank^S$ in the table, but in principle we could refer to the eliminators of
-other columns as well. The interpretation functions can be defined in two ways:
-\begin{itemize}
-\item By separately taking the eliminators of each column, and referring to previous
-      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
-      the definition of the $\Ty$ column.
-\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
-      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
-\end{itemize}
-However, the two versions coincide because of the initiality of ToS syntax.
 
 
 \section{Term Algebras}
@@ -5831,6 +5843,8 @@ is given with an FQII signature as
   & \blank\circ\blank &&: (i\,j\,k : \ms{V}) \to \ms{E}\,i\,j \to \ms{E}\,j\,k \to \El\,(\ms{E}\,i\,k)
 \end{alignat*}
 The same in a pseudo-EA notation could be:
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \ms{V}            &&: \Set\\
   & \ms{E}            &&: \Set\\
@@ -5838,6 +5852,7 @@ The same in a pseudo-EA notation could be:
   & \ms{tgt}          &&: \ms{E} \to \ms{V}\\
   & \blank\circ\blank &&: (f\,g : \ms{E}) \to \ms{tgt}\,f = \ms{src}\,g \to (h : \ms{E}) \times (\ms{src}\,h = \ms{src}\,f) \times (\ms{tgt}\,h = \ms{tgt}\,g)
 \end{alignat*}
+\endgroup
 In short, the FQII notation is ``indexed'', while the EA is ``fibered''. Also
 recall Theorem \ref{thm:ty-slice}. While this example is not wildly different in
 the two cases, if we move to more complex theories, such as type theories, the
@@ -6914,7 +6929,7 @@ types in $\U : \Tys$.
   &\Con_{\bU} && \defn \U \\
   &\Sub_{\bU}\,\Gamma\,\Delta && \defn \Gamma \toind \El\,\Delta\\
   &\Ty_{\bU}\,\Gamma && \defn \Gamma \toind \U\\
-  &\Tm_{\bU}\,\Gamma\,A && \defn (\gamma : \Gamma) \toind \El\,(A\,\gamma)\\
+  &\Tm_{\bU}\,\Gamma\,A && \defn (\gamma : \Gamma) \toind \El\,(A\,\gamma)
 \end{alignat*}
 $\emptycon_{\bU}$, $\blank\ext_{\bU}\blank$ and $\Id_{\bU}$ are defined using
 the type formers in $\U$. As before, $\K_{\bU}$ is defined simply as a constant
@@ -7979,6 +7994,8 @@ with strict equality. We list type formers below.
 
   $\Piinf : (\mi{Ix} : \U_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to
   \Tm\,\Gamma\,\U$ is specified below.
+  \begingroup
+  \allowdisplaybreaks
   \begin{alignat*}{3}
     &\appinf &&: \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b)) \to ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i)))\\
     &\laminf &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
@@ -7986,6 +8003,7 @@ with strict equality. We list type formers below.
     &\ms{\beta} &&: \Tm\,\Gamma\,(\ID\,(\appinf\,(\laminf\,t)\,i)\,(t\,i))\\
     &\ms{\eta}  &&: \Tm\,\Gamma\,(\ID\,(\ms{lam^{inf'}}\,(\appinf\,t))\,t)
   \end{alignat*}
+  \endgroup
 
   Why have equivalences in the specification of models, would it be enough to
   have isomorphisms? We choose equivalences because they yield better-behaved
