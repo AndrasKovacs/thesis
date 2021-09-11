@@ -319,7 +319,7 @@
 
         \vspace{0.8cm}
 
-        \includegraphics[width=0.4\textwidth]{elte_cimer_szines}
+        \includegraphics[width=0.3\textwidth]{elte_cimer_szines}
 
         \large \textsc{
         Eötvös Loránd University\\
@@ -376,39 +376,68 @@ thesis makes progress in this respect.
 
 Our signatures are useful in broader mathematical contexts, but we are also
 concerned with potential implementation in proof assistants. Although it is
-unlikely that our signatures can be deployed in practice as they are, they
+unlikely that our signatures can be deployed in practice exactly as they are, they
 should be still helpful as formal bases of practical implementations.
 
-\section{Overview \& Contributions}
+\section{Overview}
 
-\todo{todo}
+In \textbf{Chapter \ref{chap:simple-inductive-signatures}}, we present a minimal
+example of a type theory of signatures. This allows specifying single-sorted
+signatures without equations. The purpose of the chapter is didactic. We develop
+just enough semantics to get notions of initiality and induction for
+algebras. We also present a \emph{term algebra construction}: this shows that
+the initial algebra for each signature can be constructed from the syntax of
+signatures itself.
 
-We present three \emph{theories of signatures} in Chapters
-\ref{chap:fqiit}-\ref{chap:hiit}: these are type theories such that their typing
-contexts (i.e.\ lists of types) can be viewed as signatures for algebraic
-theories, specifying sorts, operations and equations.
+In \textbf{Chapter \ref{chap:2ltt}} we describe a metatheoretic setting which is
+often used in the thesis. This is \emph{two-level type theory}
+\cite{twolevel}. It allows us to develop general semantics for signatures, while
+still working inside a convenient type theory. As a demonstration, we generalize
+the semantics from Chapter \ref{chap:simple-inductive-signatures} so that it is
+given internally to arbitrary categories-with-families. As a special case,
+signatures can be interpreted in arbitrary categories with finite products.
+
+In \textbf{Chapter \ref{chap:fqiit}} we describe finitary quotient
+inductive-inductive signatures. These are close to generalized algebraic
+theories \cite{gat} in expressive power. In particular, most type theories
+themselves can be specified with finitary quotient inductive-inductive
+signatures. We significantly expand the semantics of signatures, now for each
+signature we provide a category of algebras with certain extra structure, which
+is equivalent to having finite limits. This allows us to prove for each
+signature the equivalence of initiality and induction. Also, owing to two-level
+type theory, signatures can be interpreted internally to any category with
+finite limits. Additionally
 \begin{itemize}
-\item In Chapter \ref{chap:fqiit}, we describe finitary quotient
-      inductive-inductive signatures. These are close to generalized algebraic
-      theories \cite{gat} in expressive power. In particular, most type theories
-      themselves can be specified with finitary quotient inductive-inductive
-      signatures. For semantics, we build for each signature a category of algebras
-      (or models), internally to any category with sufficient structure.
-\item In Chapter \ref{chap:iqiit}, we describe infinitary quotient
-      inductive-inductive signatures. These allow specification of infinitely
-      branching trees (in the case of initial algebras). In type theories, W-types
-      are an archetypal example.
-\item In Chapter \ref{chap:hiit}, we describe higher inductive-inductive signatures.
-      These
-
+  \item We present a term algebra construction.
+  \item We show that morphisms of signatures are interpreted as right adjoint functors
+        in the semantics.
+  \item We present how self-description of signatures can be exploited to minimize metatheoretic
+        assumptions.
+  \item We describe ways to construct initial algebras from simple type formers.
 \end{itemize}
 
-\section{Publications}
+In \textbf{Chapter \ref{chap:iqiit}}, we describe infinitary quotient
+inductive-inductive signatures. These allow specification of infinitely
+branching trees (as initial algebras). We adapt the semantics from the previous
+chapter. We also revisit term models, left adjoints of signature morphisms and
+self-description of signatures. Self-description in particular is significantly
+strengthened, since the full theories of signatures in Chapters
+\ref{chap:fqiit}-\ref{chap:iqiit} can be now described using infinitary quotient
+inductive-inductive signatures.
+
+In \textbf{Chapter \ref{chap:hiit}}, we describe higher inductive-inductive
+signatures. These differ from the previous signatures mostly in their intended
+semantics, whose context is now homotopy type theory \cite{hottbook}, and which
+allows specified equalities to be proof-relevant. The higher-dimensional
+generalization of types and equalities makes semantics more complicated, so we
+only present enough semantics to specify notions of initiality and induction for
+each signature. Additionally, we consider two different notions of algebra
+morphisms: one preserves structure strictly (up to definitional equality), while
+the other preserves structure up to paths.
 
 \section{How to Read This Thesis}
 
-We list several general references which could be helpful for readers of
-this thesis
+We list several general references which could be helpful for readers.
 \begin{itemize}
 \item It is useful to have some user experience with a type-theory-based proof
       assistant or programming language, such as Agda, Coq, Lean or Idris. In the
@@ -418,7 +447,7 @@ this thesis
       throughout the thesis.
 \item We use a modest amount of category theory, for which
       \cite{awodey2010category} should be a sufficient reference.
-\item For the final Chapter \ref{chap:hiit}, the Homotopy Type Theory book \cite{hottbook}
+\item For Chapter \ref{chap:hiit}, the Homotopy Type Theory book \cite{hottbook}
       provides context and motivation.
 \end{itemize}
 This thesis is mostly written in a linear fashion, as later chapters often
@@ -4347,6 +4376,46 @@ But we have $\Obj : \U$ in $\ms{CatSig}$, so we would need to have $\top : \U$.
 In Chapter \ref{chap:iqiit}, we present a more expressive ToS which does include
 $\top : \U$.
 
+\subsection{Using Signatures in Implementations}
+\label{sec:implementation}
+
+We may ask whether the current ToS is suitable for implementations of type
+theories. The answer is not wholly straightforward.
+
+Note that we must choose a concrete surface syntax in an implementation, and
+there are many design choices. The surface syntax would be almost certainly
+nameful, and may or may not leave $\El$-s implicit, since they are not difficult
+to insert by bidirectional elaboration. Besides the elaboration of surface
+syntax, we should have at least the computation of induction principles.
+
+Equality reflection in the ToS is a complication. If we have ``silent''
+transports along equality reflection, that makes elaboration of surface
+signatures undecidable. We might make transports explicit, which restores
+decidable checking, but that requires the ToS to be deeply embedded in some
+ambient theory\footnote{Equality reflection is simply an equality constructor in
+the embedded syntax, and has no bearing on decidability of type checking in the
+metalanguage.}.
+
+Alternatively, we may just drop equality reflection from the ToS, and use
+transport and UIP as primitives. This recovers decidable surface syntax, but now
+we have to cover transport and UIP in the semantics, to be able to compute
+induction principles. This is not too difficult; in Chapter \ref{chap:hiit} we
+do the same for path induction $\J$ in the ToS. We even have a Haskell
+implementation of signature elaboration and computation of induction principles
+for that ToS \cite{hiit-sig-program}.
+
+Hence, handling signatures and computing induction principles is not difficult.
+Instead, the real gap between our ToS and practical implementations is that we
+need to have computationally adequate treatment of quotients. In plain
+Martin-Löf type theories, computation gets stuck on quotients. We need to use
+more recent systems, such as a cubical type theories \cite{cubicalagda,xtt}, or
+some flavor of observational \cite{altenkirch2007observational} or setoid
+\cite{setoidtt} type theory. In each of these systems, the signatures and their
+semantics would need to be adapted, and we would need to work out additional
+details. For example, we would need to produce extra computation rules which
+explain the behavior of coercion or transport on QIIT constructors.
+
+
 \subsection{Recovering AMDS Interpretations}
 
 We have defined the $\bM$ model in a ``bundled'' fashion, but sometimes we will
@@ -8210,9 +8279,10 @@ theory, a fragment of the ``book'' version of homotopy type theory. This setting
 supports neither computational univalence nor computational higher inductive
 types. If our goal is to add computationally adequate HIITs to a theory (and
 eventually to its implementation), the current chapter is not immediately
-applicable. In a cubical setting we would need to reformulate both signatures
-and semantics. However, the current work should be still helpful as a guideline,
-and a provide a point of comparison and validation.
+applicable. As we mentioned in Section \ref{sec:implementation}, in a cubical
+setting we would need to reformulate both signatures and semantics. However, the
+current work should be still helpful as a guideline, and a provide a point of
+comparison and validation.
 
 
 \subsection{Related Work}

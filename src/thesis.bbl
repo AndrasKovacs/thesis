@@ -129,6 +129,12 @@ Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
 \newblock \href {https://doi.org/10.1007/s10817-018-9474-4}
   {\path{doi:10.1007/s10817-018-9474-4}}.
 
+\bibitem[AMS07]{altenkirch2007observational}
+Thorsten Altenkirch, Conor McBride, and Wouter Swierstra.
+\newblock Observational equality, now!
+\newblock In {\em Proceedings of the 2007 workshop on Programming languages
+  meets program verification}, pages 57--68. ACM, 2007.
+
 \bibitem[A{\"{O}}V18]{decidableconv}
 Andreas Abel, Joakim {\"{O}}hman, and Andrea Vezzosi.
 \newblock Decidability of conversion for type theory in type theory.
@@ -666,6 +672,13 @@ Jonathan Sterling and Carlo Angiuli.
   {IEEE}, 2021.
 \newblock \href {https://doi.org/10.1109/LICS52264.2021.9470719}
   {\path{doi:10.1109/LICS52264.2021.9470719}}.
+
+\bibitem[SAG20]{xtt}
+Jonathan Sterling, Carlo Angiuli, and Daniel Gratzer.
+\newblock A cubical language for bishop sets.
+\newblock {\em CoRR}, abs/2003.01491, 2020.
+\newblock URL: \url{https://arxiv.org/abs/2003.01491}, \href
+  {http://arxiv.org/abs/2003.01491} {\path{arXiv:2003.01491}}.
 
 \bibitem[Sch17]{scherer17deciding}
 Gabriel Scherer.
