@@ -1,7 +1,7 @@
 
 {-# OPTIONS --without-K --safe #-}
 
-module SimpleInductive6 where
+module SimpleSig where
 
 open import Lib
 
@@ -42,6 +42,7 @@ infixr 5 _∘_
 _∘_ : ∀ {Γ Δ Ξ} → Sub Δ Ξ → Sub Γ Δ → Sub Γ Ξ
 (σ ∘ δ) A x = (σ A x) [ δ ]
 
+-- algebras
 ------------------------------------------------------------
 
 Tyᴬ : Ty → Set → Set
@@ -58,6 +59,7 @@ Tmᴬ (app t u) γ = Tmᴬ t γ (Tmᴬ u γ)
 Subᴬ : ∀ {Γ Δ} → Sub Γ Δ → ∀ {X} → Conᴬ Γ X → Conᴬ Δ X
 Subᴬ σ γ A x = Tmᴬ (σ _ x) γ
 
+-- morphisms
 --------------------------------------------------------------------------------
 
 Tyᴹ : (A : Ty) → {X₀ X₁ : Set} → (X₀ → X₁) → Tyᴬ A X₀ → Tyᴬ A X₁ → Set
@@ -76,6 +78,7 @@ Subᴹ : ∀ {Γ Δ}(σ : Sub Γ Δ){X₀ X₁ Xᴹ}{γ₀ : Conᴬ Γ X₀}{γ�
       → Conᴹ Γ Xᴹ γ₀ γ₁ → Conᴹ Δ Xᴹ (Subᴬ σ γ₀) (Subᴬ σ γ₁)
 Subᴹ σ γᴹ A x = Tmᴹ (σ _ x) γᴹ
 
+-- displayed algebras
 --------------------------------------------------------------------------------
 
 Tyᴰ : ∀ A {X} → (X → Set) → Tyᴬ A X → Set
@@ -92,6 +95,7 @@ Tmᴰ (app t u) γᴰ = Tmᴰ t γᴰ (Tmᴬ u _) (Tmᴰ u γᴰ)
 Subᴰ : ∀ {Γ Δ}(σ : Sub Γ Δ) → ∀ {X Xᴰ}{γ : Conᴬ Γ X} → Conᴰ Γ {X} Xᴰ γ → Conᴰ Δ Xᴰ (Subᴬ σ γ)
 Subᴰ σ γᴰ A x = Tmᴰ (σ _ x) γᴰ
 
+-- sections
 --------------------------------------------------------------------------------
 
 Tyˢ : ∀ A {X Xᴰ}(Xˢ : ∀ x → Xᴰ x)(α : Tyᴬ A X) → Tyᴰ A Xᴰ α → Set
@@ -110,10 +114,12 @@ Subˢ : ∀ {Γ Δ}(σ : Sub Γ Δ){X Xᴰ Xˢ}{γ : Conᴬ Γ X}{γᴰ : Conᴰ
       → Conˢ Γ {X}{Xᴰ} Xˢ γ γᴰ → Conˢ Δ Xˢ (Subᴬ σ γ) (Subᴰ σ γᴰ)
 Subˢ σ γˢ x = Tmˢ (σ _ x) γˢ
 
+
 --------------------------------------------------------------------------------
 
 module _ (Ω : Con) where
 
+  -- term algebras
   ιᵀ : Set
   ιᵀ = Tm Ω ι
 
@@ -131,7 +137,7 @@ module _ (Ω : Con) where
   Subᵀ : ∀ {Γ Δ}(σ : Sub Γ Δ)(ν : Sub Ω Γ) A x → Conᵀ Δ (σ ∘ ν) A x ≡ Subᴬ σ (Conᵀ Γ ν) A x
   Subᵀ σ ν A x = Tmᵀ (σ A x) ν
 
-  -- weak initiality
+  -- recursors
   module _ (X : Set)(ω : Conᴬ Ω X) where
 
     ιᴿ : ιᵀ → X
@@ -144,7 +150,7 @@ module _ (Ω : Con) where
     Conᴿ : (Γ : Con)(ν : Sub Ω Γ) → Conᴹ Γ ιᴿ (Conᵀ Γ ν) (Subᴬ ν ω)
     Conᴿ Γ ν A x = Tyᴿ A (ν A x)
 
-  -- induction
+  -- eliminators
   module _ (Xᴰ : ιᵀ → Set)(ωᴰ : Conᴰ Ω Xᴰ (Conᵀ Ω id)) where
 
     lem : (t : Tm Ω ι) → Tmᴬ t (Conᵀ Ω id) ≡ t
@@ -166,7 +172,7 @@ module _ (Ω : Con) where
     Conᵉ : (Γ : Con)(ν : Sub Ω Γ) → Conˢ Γ ιᵉ (Subᴬ ν (Conᵀ Ω id)) (Subᴰ ν ωᴰ)
     Conᵉ Γ ν {A} x = Tyᵉ A (ν _ x)
 
-
+-- packing up underlying sorts with extra data
 module _ (Ω : Con) where
 
   Alg : Set₁
@@ -190,13 +196,14 @@ module _ (Ω : Con) where
   Elim : (ωᴰ : DispAlg TmAlg) → Section TmAlg ωᴰ
   Elim (Xᴰ , ωᴰ) = ιᵉ Ω Xᴰ ωᴰ , Conᵉ Ω Xᴰ ωᴰ Ω id
 
+-- natural numbers
 --------------------------------------------------------------------------------
 
 NatSig = ∙ ▶ ι ▶ ι⇒ ι
 NatSyn = TmAlg NatSig
-Nat  = NatSyn .₁
-zero = NatSyn .₂ _ (vs vz)
-suc  = NatSyn .₂ _ vz
+Nat    = NatSyn .₁
+zero   = NatSyn .₂ _ (vs vz)
+suc    = NatSyn .₂ _ vz
 
 NatElim : (ωᴰ : DispAlg _ NatSyn) → ∀ n → ωᴰ .₁ n
 NatElim ωᴰ = Elim NatSig ωᴰ .₁

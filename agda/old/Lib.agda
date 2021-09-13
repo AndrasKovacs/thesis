@@ -1,4 +1,3 @@
-
 {-# OPTIONS --without-K --safe #-}
 
 module Lib where

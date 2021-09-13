@@ -313,6 +313,20 @@ Jacques Carette, Oleg Kiselyov, and Chung-Chieh Shan.
 \newblock In {\em Asian Symposium on Programming Languages and Systems}, pages
   222--238. Springer, 2007.
 
+\bibitem[CO12]{presentation-combinators}
+Jacques Carette and Russell O'Connor.
+\newblock Theory presentation combinators.
+\newblock In Johan Jeuring, John~A. Campbell, Jacques Carette, Gabriel~Dos
+  Reis, Petr Sojka, Makarius Wenzel, and Volker Sorge, editors, {\em
+  Intelligent Computer Mathematics - 11th International Conference, {AISC}
+  2012, 19th Symposium, Calculemus 2012, 5th International Workshop, {DML}
+  2012, 11th International Conference, {MKM} 2012, Systems and Projects, Held
+  as Part of {CICM} 2012, Bremen, Germany, July 8-13, 2012. Proceedings},
+  volume 7362 of {\em Lecture Notes in Computer Science}, pages 202--215.
+  Springer, 2012.
+\newblock \href {https://doi.org/10.1007/978-3-642-31374-5\_14}
+  {\path{doi:10.1007/978-3-642-31374-5\_14}}.
+
 \bibitem[Con19]{initiality-project}
 Initiality~Project Contributors.
 \newblock Initiality project, 2019.

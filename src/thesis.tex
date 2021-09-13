@@ -479,7 +479,7 @@ assistant Agda.
 
 We write a dependent pair type as $(a : A) \times B$, where $B$ may refer to
 $a$.  Pairing is $(t,\,u)$, and projections are $\proj_1$ and
-$\proj_1$. Iterated $\Sigma$-types can written as $(a : A) \times (b : B) \times
+$\proj_2$. Iterated $\Sigma$-types can written as $(a : A) \times (b : B) \times
 C$, for example. We often silently re-associate left-nested $\Sigma$-types to
 the right, e.g.\ write $(a : A) \times (b : B) \times C$ instead of
 $(\mi{ab} : (a : A) \times B) \times C$.
@@ -839,8 +839,8 @@ viewed as bundles of induction motives and methods.
 
 Displayed algebras over some $\gamma : \Alg\,\Gamma$ are equivalent to slices
 over $\gamma$ in the category of $\Gamma$-algebras; we will show this in Chapter
-\ref{chap:fqiit}. A slice $f : \Sub\,\Gamma\,\gamma'\,\gamma$ maps elements of
-$\gamma$'s underlying set to elements in the base algebra. Why do we need
+\ref{chap:fqiit}. A slice $f : \Gamma^M\,\gamma'\,\gamma$ maps elements of
+$\gamma'$'s underlying set to elements in the base algebra. Why do we need
 displayed algebras, then? The main reason is that if we are to eventually
 implement inductive types in a programming language or proof assistant, we need
 to compute induction principles exactly, not merely up to isomorphisms.
@@ -1636,7 +1636,7 @@ A $(\Ty,\,\Tm)$ family supports \textbf{$\Pi$-types} if it supports the followin
 \allowdisplaybreaks
 \begin{alignat*}{3}
   &\Pi           &&: (A : \Ty\,\Gamma) \to \Ty\,(\Gamma\ext A) \to \Ty\,\Gamma\\
-  &\ms{\Pi[]}    &&: (\Pi\,A\,B)[\sigma] \equiv \Pi\,(A[\sigma])\,(B[\sigma\circ\p,\,\q])\\
+  &\Pi[]         &&: (\Pi\,A\,B)[\sigma] \equiv \Pi\,(A[\sigma])\,(B[\sigma\circ\p,\,\q])\\
   &\app          &&: \Tm\,\Gamma\,(\Pi\,A\,B) \to \Tm\,(\Gamma \ext A)\,B\\
   &\lam          &&: \Tm\,(\Gamma \ext A)\,B \to \Tm\,\Gamma\,(\Pi\,A\,B)\\
   &\Pi\beta      &&: \app\,(\lam\,t) \equiv t\\
@@ -1849,14 +1849,14 @@ universes can be closed under type formers. For instance, if $\U$ has $\Nat$,
 we have the following:
 \begin{alignat*}{3}
   &\Nat : \Tm\,\Gamma\,\U
-    \hspace{1em}\mi{zero} : \Tm\,\Gamma\,(\El\,\Nat)
-    \hspace{1em}\mi{suc} : \Tm\,\Gamma\,(\El\,\Nat) \to \Tm\,\Gamma\,(\El\,\Nat)
+    \hspace{1em}\zero : \Tm\,\Gamma\,(\El\,\Nat)
+    \hspace{1em}\suc : \Tm\,\Gamma\,(\El\,\Nat) \to \Tm\,\Gamma\,(\El\,\Nat)
 \end{alignat*}
 \vspace{-2em}
 \begin{alignat*}{3}
   \ms{NatElim} &:\,\,\,(P : \Ty\,(\Gamma\ext n : \El\,\Nat))\\
-  &\to \Tm\,\Gamma\,(P[n \mapsto \mi{zero}])\\
-  &\to \Tm\,(\Gamma\ext n : \El\,\Nat \ext \mi{np} : P[n \mapsto n])\,(P[n \mapsto \mi{suc}\,n]) \\
+  &\to \Tm\,\Gamma\,(P[n \mapsto \zero])\\
+  &\to \Tm\,(\Gamma\ext n : \El\,\Nat \ext \mi{np} : P[n \mapsto n])\,(P[n \mapsto \suc\,n]) \\
   &\to (n : \Tm\,\Gamma\,(\El\,\Nat)) \to \Tm\,\Gamma\,(P[n \mapsto n])
 \end{alignat*}
 If all type formers in $\U$ follow this scheme, $\U$ may be called a
@@ -1884,9 +1884,9 @@ Unfortunately, the exact specification above yields an inconsistent
 solution is to have multiple family structures $(\Ty_i,\,\Tm_i)$, indexed by
 universe levels, and have $\U_i : \Ty_{i + 1}\,\Gamma$ and
 $\Tm_{i+1}\,\Gamma\,\U_i \simeq \Ty_i\,\Gamma$. For a general specification of
-consistent universe hierarchies, see \cite{kovacs2021generalized}. As mentioned in Section
-\ref{sec:universes}, we omit universe indices in the following, and implicitly
-assume ``just enough'' universes for particular purposes.
+consistent universe hierarchies, see \cite{kovacs2021generalized}. We omit
+universe indices in the following, and implicitly assume ``just enough''
+universes for particular purposes.
 
 \begin{mydefinition}
 \textbf{Russell universes} are Coquand universes additionally satisfying
@@ -2277,7 +2277,7 @@ bijective on morphisms; hence it is an embedding.
 For $\gamma : |\Gamma|\,i$, we use $\gamma\lab \blank \rab :
 \Sub\,(\yon\,i)\,\Gamma $ to denote transporting right-to-left along the Yoneda
 lemma. In the other direction we do not really need a notation, since from
-$\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $\sigma\,\id : |\Gamma|\,i$.
+$\sigma : \Sub\,(\yon\,i)\,\Gamma$ we get $|\sigma|\,\id : |\Gamma|\,i$.
 \end{notation}
 
 \subsubsection{Type formers}
@@ -2771,7 +2771,7 @@ theories in Chapters \ref{chap:fqiit} and \ref{chap:iqiit}.
 \end{mydefinition}
 
 \noindent
-We continue to the definition of term algebras. We fix an $\Omega : \Con_1$, and
+We proceed to the definition of term algebras. We fix an $\Omega : \Con_1$, and
 define $\ms{T} : \Ty_0$ as $\SigTm_0\,(\down\!\Omega)\,\iota$.
 \begingroup
 \allowdisplaybreaks
@@ -3093,7 +3093,7 @@ $\Pi$, we can express any closed inductive-inductive type
 is such:
 \begin{alignat*}{3}
   & \emptycon \ext (\mi{Obj} : \U) \ext (\mi{Hom} : \mi{Obj} \funi \mi{Obj} \funi \U)
-      \ext (\mi{id} : \Pi(i : \mi{Obj})\,(\El\,(\mi{Hom}\,i\,i)))n
+      \ext (\mi{id} : \Pi(i : \mi{Obj})\,(\El\,(\mi{Hom}\,i\,i)))
 \end{alignat*}
 These inductive-inductive signatures are more flexible than those in prior
 literature \cite{forsberg-phd}, since we allow type constructors (sorts) and
@@ -3124,11 +3124,12 @@ Now, this is already rather hard to read, even together with a compressed
 notation for multiple $\Pi$ binders.
 \begin{notation}
 For more complex signatures, we may entirely switch to an internal notation,
-where we mostly reuse the conventions in the metatheories. We use $(x :
-a) \to B$ for inductive functions, $(x : A) \toe B$ for external functions,
-but we still write $\Id$ for the identity type and make $\U$ and $\El$
-explicit. In this notation, a signature is just a listing of binders. The category
-signature becomes the following:
+where we mostly reuse the conventions in the metatheories, including implicit
+arguments and implicit quantification. We use $(x : a) \to B$ for inductive
+functions, $(x : A) \toe B$ for external functions, but we still write $\Id$ for
+the identity type and make $\U$ and $\El$ explicit. In this notation, a
+signature is just a listing of binders. The category signature becomes the
+following:
 \begin{alignat*}{3}
   & \ms{Obj} &&: \U\\
   & \ms{Hom} &&: \ms{Obj} \to \ms{Obj} \to \U\\
@@ -3544,7 +3545,7 @@ respectively.
   & \Ty_{\bA}  && : \Con_{\bA}\,\ulGamma \ra \Ty_{\bGamma}\,\ulGamma \ra \Set\\
   & \Tm_{\bA}  && : (\Gamma : \Con_{\bA}\,\ulGamma)\ra \Ty_{\bA}\,\Gamma\,\ulA \ra \Tm_{\bGamma}\,\ulGamma\,\ulA \ra \Set
 \end{alignat*}
-We list select components of $\bA$ below; note how every $\bA$ operation lies
+We list several components of $\bA$ below; note how every $\bA$ operation lies
 over the corresponding $\bGamma$ operation. In our notation with implicit
 arguments, equations in $\bA$ can be written the same way as in $\bGamma$, but
 of course there is extra indexing involved, and the displayed equations are
@@ -3552,9 +3553,9 @@ well-typed because of their counterparts in the base.
 \begingroup
 \allowdisplaybreaks
 \begin{alignat*}{3}
-  & \id_{\bA} &&: \Sub\,\Gamma\,\Gamma\,\ul{\id_{\bGamma}}\\
-  & \blank\circ_{\bA}\blank &&: \Sub\,\Delta\,\Xi\,\ulsigma \to \Sub\,\Gamma\,\Delta\,\uldelta
-    \to \Sub\,\Gamma\,\Xi\,(\ulsigma \circ_{\bGamma} \uldelta)\\
+  & \id_{\bA} &&: \Sub_{\bA}\,\Gamma\,\Gamma\,\ul{\id_{\bGamma}}\\
+  & \blank\circ_{\bA}\blank &&: \Sub_{\bA}\,\Delta\,\Xi\,\ulsigma \to \Sub_{\bA}\,\Gamma\,\Delta\,\uldelta
+    \to \Sub_{\bA}\,\Gamma\,\Xi\,(\ulsigma \circ_{\bGamma} \uldelta)\\
   & \ms{idl}_{\bA} &&:  \id_{\bA} \circ_{\bA} \sigma \equiv \sigma \\
   & \ms{idr}_{\bA} &&:  \sigma \circ_{\bA} \id_{\bA} \equiv \sigma \\
   & \emptycon_{\bA} && : \Con_{\bA}\,\emptycon_{\bGamma}\\
@@ -4002,7 +4003,60 @@ evident parameterized variant of $\blank\ext\blank$:
 \end{alignat*}
 \end{myexample}
 
-\section{Left Adjoints of Substitutions}
+\subsection{Recovering AMDS Interpretations}
+
+We have defined the $\bM$ model in a ``bundled'' fashion, but sometimes we will
+also need to refer to pieces of it. On Figure \ref{fig:fqiit-model} we have a
+summary of the model. On the left, the rows are labeled with components of ToS,
+while on the top we have components of flcwf. The individual rows can be further
+unfolded, as each of them contains multiple components. Likewise the $\Sigma$,
+$\Id$ and $\K$ columns can be unfolded. We get the whole model by filling every
+cell of the unfolded table with a definition. Of course, many of these cells are
+equations between equations, hence trivial by UIP.
+
+This setup is very regular and convenient, because we can extract a displayed
+ToS model from any column, which may depend on columns to the left. The whole
+model is the total model of all columns. For example, the $\Con$ column does not
+depend on anything, so it is a plain model. The $\Ty$ column is displayed over
+$\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
+
+See also Appendix \ref{app:fqii-amds} for a tabular specification of the AMDS
+interpretations.
+
+From each displayed model, we get an eliminator, i.e.\ a family of
+interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
+$\blank^S$ in the table, but in principle we could refer to the eliminators of
+other columns as well. The interpretation functions can be defined in two ways:
+\begin{itemize}
+\item By separately taking the eliminators of each column, and referring to previous
+      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
+      the definition of the $\Ty$ column.
+\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
+      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
+\end{itemize}
+However, the two versions coincide because of the initiality of ToS syntax.
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|  }
+ \hline
+   & \multicolumn{5}{|c|}{cwf} & \multicolumn{3}{c|}{fl}\\
+ \cline{2-9}
+   & $\Con$ & $\Sub$ & $\Ty$ & $\Tm$ & $...$ & $\Sigma$ & $\Id$ & $\K$ \\
+ \hline
+   cwf    & \multirow{5}{2em}{$\blank^A$}&\multirow{5}{2em}{$\blank^M$}&\multirow{5}{2em}{$\blank^D$}&\multirow{5}{2em}{$\blank^S$}& & & & \\
+   $\U$   &                              &              &                  &    & & & & \\
+   $\Id$  &                              &              &                  &    & & & & \\
+   $\Pi$  &                              &              &                  &    & & & & \\
+   $\Pie$ &                              &              &                  &    & & & & \\
+ \hline
+\end{tabular}
+\end{center}
+\caption{The flcwf model of the theory of signatures}
+\label{fig:fqiit-model}
+\end{figure}
+
+\subsection{Left Adjoints of Substitutions}
 \label{sec:fqii-left-adjoint}
 
 In this section we show that if all signatures have initial algebras, then the
@@ -4030,7 +4084,7 @@ The basic idea is the following: the existence of left adjoints is equivalently
 characterized by having an initial object in the comma category
 $\delta/\sem{\nu}$ for each $\delta : \Delta^A$
 \cite[Section~IV]{maclane98categories}. Thus, it is enough to find some
-signature $\Omega$ such that $\sem{\Omega}$ is equivalent to
+signature $\Psi$ such that $\sem{\Psi}$ is equivalent to
 $\delta/\sem{\nu}$, and by assumption we get an initial object. The objects
 of $\delta/\sem{\nu}$ consist of the following:
 \[
@@ -4055,8 +4109,8 @@ Fixing $\Omega : \Con$, we define $\blank^{HM}$ by induction on the ToS.
    \to \Tm\,\Omega\,(A^{HM}\,(t^A\,\gamma_0)\,(t[\gamma_1])\,\gamma^{HM})
 \end{alignat*}
 The interpretation on contexts sums up the difference between the
-``homogeneous'' $\blank^{HM}$ and the current one. In the homogeneous
-interpretation, we have $\Gamma^{HM} : \Gamma^A \to \Gamma^A \to \Set$, in the
+``homogeneous'' $\blank^{M}$ and the current one. In the homogeneous
+interpretation, we have $\Gamma^{M} : \Gamma^A \to \Gamma^A \to \Set$, in the
 heterogeneous one the codomain of the relation is syntactic, and the return type
 as well. We use $\top$ and $\Sigma$ in ToS to interpret contexts:
 \begin{alignat*}{3}
@@ -4358,7 +4412,7 @@ translations and canonicity proofs as well.
 
 Let us use $\ms{TT} : \Ty\,\emptycon$ for the signature of the type theory,
 given as an iterated large $\Sigma$-type. Then, the notion of weak cwf-morphism
-is also expressible in ToS as $\ms{morph} : \Ty\,(\emptycon\ext(M_0 :
+is also expressible in ToS as $\ms{morph} : \Ty\,(\emptycon\,\ext(M_0 :
 \ms{TT})\ext(M_1 : \ms{TT}))$, and the notion of displayed model as well, as
 $\ms{TT}^D : \Ty\,(\emptycon\ext(M : \ms{TT}))$\footnote{We will be also able to automatically derive $\ms{TT}^D$ from $\ms{TT}$, in Section \ref{sec:signature-semantics}.}. Thus, we can give a ``type''
 for the gluing construction, as follows:
@@ -4373,7 +4427,7 @@ from $M_1$ to define the displayed model over $M_0$.
 
 \textbf{Limitations.}
 In the finitary ToS syntax, when defining substitutions we can only ever use
-assumed type constructors. If we assume a $\Sigma$ and $\top$ type formers in
+assumed type constructors. If we assume $\Sigma$ and $\top$ type formers in
 the domain signature of a construction, we might be able to work around the lack
 of $\Sigma$ and $\top$ in $\U$ in the ToS itself. This does not always work
 though; for example, take the substitution with type
@@ -4426,61 +4480,6 @@ some flavor of observational \cite{altenkirch2007observational} or setoid
 semantics would need to be adapted, and we would need to work out additional
 details. For example, we would need to produce extra computation rules which
 explain the behavior of coercion or transport on QIIT constructors.
-
-
-\subsection{Recovering AMDS Interpretations}
-
-We have defined the $\bM$ model in a ``bundled'' fashion, but sometimes we will
-also need to refer to pieces of it. On Figure \ref{fig:fqiit-model} we have a
-summary of the model. On the left, the rows are labeled with components of ToS,
-while on the top we have components of flcwf. The individual rows can be further
-unfolded, as each of them contains multiple components. Likewise the $\Sigma$,
-$\Id$ and $\K$ columns can be unfolded. We get the whole model by filling every
-cell of the unfolded table with a definition. Of course, many of these cells are
-equations between equations, hence trivial by UIP.
-
-This setup is very regular and convenient, because we can extract a displayed
-ToS model from any column, which may depend on columns to the left. The whole
-model is the total model of all columns. For example, the $\Con$ column does not
-depend on anything, so it is a plain model. The $\Ty$ column is displayed over
-$\Con$. The $\Tm$ column depends on $\Con$ and $\Ty$, but it does not depend on $\Sub$.
-
-See also Appendix \ref{app:fqii-amds} for a tabular specification of the AMDS
-interpretations.
-
-From each displayed model, we get an eliminator, i.e.\ a family of
-interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
-$\blank^S$ in the table, but in principle we could refer to the eliminators of
-other columns as well. The interpretation functions can be defined in two ways:
-\begin{itemize}
-\item By separately taking the eliminators of each column, and referring to previous
-      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
-      the definition of the $\Ty$ column.
-\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
-      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
-\end{itemize}
-However, the two versions coincide because of the initiality of ToS syntax.
-
-\begin{figure}
-\begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|  }
- \hline
-   & \multicolumn{5}{|c|}{cwf} & \multicolumn{3}{c|}{fl}\\
- \cline{2-9}
-   & $\Con$ & $\Sub$ & $\Ty$ & $\Tm$ & $...$ & $\Sigma$ & $\Id$ & $\K$ \\
- \hline
-   cwf    & \multirow{5}{2em}{$\blank^A$}&\multirow{5}{2em}{$\blank^M$}&\multirow{5}{2em}{$\blank^D$}&\multirow{5}{2em}{$\blank^S$}& & & & \\
-   $\U$   &                              &              &                  &    & & & & \\
-   $\Id$  &                              &              &                  &    & & & & \\
-   $\Pi$  &                              &              &                  &    & & & & \\
-   $\Pie$ &                              &              &                  &    & & & & \\
- \hline
-\end{tabular}
-\end{center}
-\caption{The flcwf model of the theory of signatures}
-\label{fig:fqiit-model}
-\end{figure}
-
 
 \section{Term Algebras}
 \label{sec:fqiit-term-algebras}
@@ -4840,9 +4839,11 @@ Let us refresh some details about the involved operations. The reader may also
 refer to Appendix \ref{app:fqii-amds} for definitions of the AMDS
 interpretations.
 \begin{itemize}
-\item For $\nu : \Sub\,\Gamma\,\Delta$, we get $\nu^A : \Gamma^A \to \Delta^A$. In the semantics, $\nu$
-  is a functor, and $\nu^A$ is its action on objects. Analogously, for a term $t : \Tm\,\Gamma\,A$, we
-  have $t^A : (\gamma : \Gamma^A) \to A^A\,\gamma$, also an action on objects.
+\item
+  For $\nu : \Sub\,\Omega\,\Gamma$, we get $\nu^A : \Omega^A \to \Gamma^A$. In
+  the semantics, $\nu$ is a functor, and $\nu^A$ is its action on
+  objects. Analogously, for a term $t : \Tm\,\Omega\,A$, we have $t^A : (\gamma
+  : \Omega^A) \to A^A\,\gamma$, also an action on objects.
 \item
   $\Gamma^M$ is the set of $\Gamma$-morphisms. $A : \Ty\,\Gamma$ is a displayed
   flcwf in the semantics. $A^M$ yields sets of displayed morphisms,
@@ -5276,9 +5277,9 @@ sufficient to specify only the notion of model for ToS, and notions of
 ToS-morphisms, initiality and induction can be computed from that. This
 bootstrapping process eliminates the need for either
 \begin{itemize}
-  \item Assuming that the syntax of ToS already exists as a QIIT. This is
-        not too elegant, since we are in the process of building metatheory
-        for QII theories.
+  \item Assuming that the syntax of ToS already exists as a QIIT. Here, the assumed
+        syntax is necessarily ad-hoc, since we are still in the process
+        of building metatheory for QII theories.
   \item Bootstrapping the ToS syntax as ``raw'' syntax, using simple inductive
         types, typing/conversion relations and quotients. This is very tedious and
         should be avoided if possible. See Section \ref{sec:finitary-reductions} for
@@ -5628,7 +5629,7 @@ a raw syntax which only includes normal forms, and to define substitution as
 recursive functions acting on normal forms. This trivializes the conversion
 relation: conversion is simply propositional equality of raw terms. Thus, there
 is no need to quotient by conversion. Note that our raw syntax is infinitary,
-because we have to represent the branching in $\Piinf$. This is fine though: we
+because we have to represent the branching in $\Pie$. This is fine though: we
 only run into the issue of the missing ``choice'' principle if we try to mix
 quotients and infinite branching. Without quotients, infinite branching is not
 an issue.
@@ -5660,7 +5661,7 @@ We summarize the construction of the ToS syntax below. We refer the reader to
 \cite{ind-ind-reduction} for details.
 
 \begin{enumerate}
-\item We define raw syntax by mutual induction. Substitution are in normal form:
+\item We define raw syntax by mutual induction. Substitutions are in normal form:
       they are just lists of raw terms. Variables are also normalized as de Bruijn indices.
       We define the action of substitution by recursion on raw syntax. In \cite{ind-ind-reduction},
       raw syntax is not well-scoped, and substitution is partial, but it would be also possible
@@ -5725,8 +5726,9 @@ categories, which involve indexing by external natural numbers. Contextuality
 does not make much difference in the construction though, since raw syntax is
 always contextual by the inductive nature of raw contexts.
 
-Hence, it is safe to say that any model of a type theory which supports the
-assumptions of De Boer and Brunerie, also supports all closed QIITs.
+Hence, it is safe to say that any model of an extensional type theory which
+supports the assumptions of De Boer and Brunerie, also supports all closed
+QIITs.
 
 \section{Related Work}
 \label{sec:fqii-related-work}
@@ -5759,7 +5761,14 @@ treatment from (2). Notions of bootstrapping and levitation are also
 
 (3) is summarized in the current chapter without any notable change.
 
-\subsubsection{Generalized Algebraic Theories}
+\subsubsection{ToS-style presentations}
+
+Carette and O'Connor \cite{presentation-combinators} presented algebraic
+signatures as contexts in type theories. Altenkirch and Kaposi \cite{ttintt}
+observed that induction methods and motives can be computed as logical predicate
+translations on typing contexts.
+
+\subsubsection{Generalized algebraic theories}
 
 FQII signatures and Cartmell's generalized algebraic theories \cite{gat} are
 close in expressive power, but they do not appear to be equivalent.
@@ -5781,7 +5790,7 @@ the following (pseudo)-GAT has no corresponding FQII signature:
   &...
 \end{alignat*}
 Could we somehow include these? The most convenient way would be to define
-signatures coinductively. However, the would cause a mismatch, that described
+signatures coinductively. However, that would cause a mismatch, that described
 theories are inductive, while the ToS itself is coinductive, which rules out
 levitation and bootstrapping. It is potential future work to investigate such
 coinductive signatures.
@@ -6113,9 +6122,13 @@ $\bs{\Sub\,\Gamma\,\Ty_0}$ morphisms, so we map objects of $\bGamma$ to function
   &\Con_{\bs{\Piinf\,A\,b}}\,\Gamma \defn (\alpha : A) \to \Con_{\bb\,\alpha}\,\Gamma
 \end{alignat*}
 But now we have
-\[(\bs{\Piinf\,A\,b})\,\emptycon_{\bGamma} \equiv (\alpha : A) \to \Con_{\bb\,\alpha}\,\emptycon_{\bGamma}
-   \equiv A \to \top_0\]
-Hence, $(\bs{\Piinf\,A\,b})\,\emptycon_{\bGamma} \not\equiv \top_0$, although
+\begin{alignat*}{3}
+  &(\bs{\Piinf\,A\,b})\,\emptycon_{\bGamma}
+     \equiv (\alpha : A) \to \Con_{\bb\,\alpha}\,\emptycon_{\bGamma}
+     \equiv A \to \top_0
+\end{alignat*}
+Also, $\bemptycon_{\bU} \equiv \top_0$. Hence,
+$(\bs{\Piinf\,A\,b})\,\emptycon_{\bGamma} \not\equiv \top_0$, although
 $(\bs{\Piinf\,A\,b})\,\emptycon_{\bGamma} \simeq \top_0$.
 
 Intuitively, if $\bU$ has no type formers, the terms in $\bU$ are neutral,
@@ -6933,7 +6946,7 @@ types in $\U : \Tys$.
 \end{alignat*}
 $\emptycon_{\bU}$, $\blank\ext_{\bU}\blank$ and $\Id_{\bU}$ are defined using
 the type formers in $\U$. As before, $\K_{\bU}$ is defined simply as a constant
-function.  In $\bEl\,\ba : \bTy\,\bGamma$, we use the $\Id$ type in $Tys$ in
+function.  In $\bEl\,\ba : \bTy\,\bGamma$, we use the $\Id$ type in $\Tys$ in
 morphisms and sections:
 \begin{alignat*}{3}
   &\Con_{\bEl\,\ba}\,\ulGamma && \defn \El\,(\ba\,\ulGamma) \\
@@ -7021,7 +7034,7 @@ here we need to rely on internal morphisms in the signature:
   &\ms{diag} : \Sub\,&&(\emptycon&&\ext(\gamma : \Gamma^A_{\ms{tos}}))\\
   &&&(\emptycon&&\ext (\gamma_0 : \Gamma^A_{\ms{tos}}) \ext (\gamma_1 : \Gamma^A_{\ms{tos}})\\
   &&&&&\ext (f : \Gamma^M_{\ms{tos}}[\gamma_0 \mapsto \gamma_0,\,\gamma_1 \mapsto \gamma_1])\\
-  &&&&&\ext (g : \Gamma^M_{\ms{tos}}[\gamma_0 \mapsto \gamma_1,\,\gamma_1 \mapsto \gamma_0]))\\
+  &&&&&\ext (g : \Gamma^M_{\ms{tos}}[\gamma_0 \mapsto \gamma_0,\,\gamma_1 \mapsto \gamma_1]))\\
   &\rlap{$\ms{diag} \defn (\gamma_0 \mapsto \gamma,\,\gamma_1 \mapsto \gamma,\,f \mapsto \id_{\ms{tos}}[\gamma \mapsto \gamma],\,
            g \mapsto \id_{\ms{tos}}[\gamma \mapsto \gamma]) $}
 \end{alignat*}
@@ -7443,7 +7456,7 @@ from the following:
 \[
   a^E\,\nu : \U^E\,\nu\,(a[\nu]) \equiv a^S\,(\Gamma^E\,\nu)
 \]
-Unfolding definitions and applying both sides to $\alpha$, we the equality of first components:
+Unfolding definitions and applying both sides to $\alpha$, we get the equality of first components:
 \[
   \alpha'^D\,\omega^D \equiv a^S\,(\Gamma^E\,\nu)\,\alpha
 \]
@@ -7685,7 +7698,7 @@ underlying types. The corresponding HIIT will be in fact a QIIT, where every
 inductive sort is set-truncated. While this is better-behaved as syntax, we do
 not get a standard model. Contexts in a model cannot be arbitrary types, because
 in HoTT, types (of a universe) do not form a h-set. In fact, not even h-sets form
-a h-set; they form a groupoid. So we do not get any reasonable notion of standard
+a h-set; they form a h-groupoid. So we do not get any reasonable notion of standard
 interpretation.
 
 2LTT solves this issue in the following way: the embedded syntax is an outer
@@ -7709,7 +7722,7 @@ equality. This choice has an impact on the supported ToS features.
   With weak preservation, we do have elimination for $\Id$. However, the
   semantics does not support strict $\beta\eta$ rules in $\Id$, $\Sigma$,
   $\Piinf$ and $\Pi$.  In short, the problem is that $(\El\,a)^M$ and
-  $(\El\,s)^S$ are defined as inner equality types, so we need to use inner path
+  $(\El\,a)^S$ are defined as inner equality types, so we need to use inner path
   induction in the semantics of eliminators. This implies that $\beta\eta$-rules
   also hold only up to inner paths, but not definitionally. Thus, in the
   ``weak'' case, we may have $\beta\eta$ only up to internal $\Id$.
@@ -7724,7 +7737,7 @@ this chapter, we specify theories of signatures and semantics for both cases.
 
 We work in 2LTT. We assume that $\Ty_0$ is closed under $\Pi$, $\Sigma$, $\top$
 and intensional identity $\blank\!=\!\blank$. We assume the ``based'' path induction principle
-\cite[Section~1.12.1]{hottbook}. Assuming $A : \Ty_0$, $x : A$ and $B : (y : A) \to x = y \to \Ty_0$,
+\cite[Section~1.12.1]{hottbook}. Assuming $A : \Ty_0$, $x : A$ and $P : (y : A) \to x = y \to \Ty_0$,
 we have
 \begin{alignat*}{3}
   & \J_P      &&: P\,x\,\refl \to \{y : A\}(p : x = y) \to P\,y\,p\\
@@ -7835,12 +7848,12 @@ $\Id$ inversion fails. This would entail the following in the ToS:
 In the $\blank^M$ interpretation, we would need to show
 \begin{alignat*}{3}
   &(p^{-1})^M\,\gamma^M : \ap\,(a^M\,\gamma^M)\,((p^{-1})^A\,\gamma_0) \equiv ((p^{-1})^A\,\gamma_1)\\
-  &(p^{-1})^M\,\gamma^M : \ap\,(a^M\,\gamma^M)\, (p^A\,\gamma_0)^{-1} \equiv (p^A\,\gamma_1)^{-1}
+  &(p^{-1})^M\,\gamma^M : \ap\,(a^M\,\gamma^M)\, \big((p^A\,\gamma_0)^{-1}\big) \equiv (p^A\,\gamma_1)^{-1}
 \end{alignat*}
-We have $p^M : \ap\,(a^M\,\gamma^M)\,(p^A\,\gamma_0) \equiv p^A\,\gamma_1$,
+We have $p^M\,\gamma^M : \ap\,(a^M\,\gamma^M)\,(p^A\,\gamma_0) \equiv p^A\,\gamma_1$,
 so we would need to show
 \[
-  \ap\,(a^M\,\gamma^M)\, (p^A\,\gamma_0)^{-1} \equiv (\ap\,(a^M\,\gamma^M)\,(p^A\,\gamma_0))^{-1}
+  \ap\,(a^M\,\gamma^M)\, \big((p^A\,\gamma_0)^{-1}\big) \equiv (\ap\,(a^M\,\gamma^M)\,(p^A\,\gamma_0))^{-1}
 \]
 This is not provable in 2LTT; it is false as a universal statement in the
 initial model (syntax) of the inner theory. It holds in the empty context, where
@@ -8061,7 +8074,7 @@ Recall that in Chapter \ref{chap:iqiit} we dropped sort equations because of
 their non-fibrancy in the semantics. In contrast, there is no issue with sort
 equations here. Sort equations simply become inner paths between types in the
 semantics; if we assume univalence in the inner theory, such paths are
-equivalent to type equivalences. Hence, sort equations in HITTs can be viewed as
+equivalent to type equivalences. Hence, sort equations in HIITs can be viewed as
 shorthands for sort equivalences. Without sort equations, it is still possible
 to write equivalences in signatures, using any of the standard definitions
 \cite[Chapter~4]{hottbook}.
