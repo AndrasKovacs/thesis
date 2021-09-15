@@ -1571,8 +1571,8 @@ to conventional explicit substitution syntax.
 \begin{notation}As De Bruijn indices are hard to read, we will mostly use
 nameful notation for binders. For example, assuming $\Nat : \{\Gamma : \Con\}
 \to \Ty\,\Gamma$ and $\Id : \{\Gamma : \Con\}(A : \Ty\,\Gamma) \to
-\Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma$, we may write $\emptycon \ext
-n : \Nat \ext p : \Id\,\Nat\,n\,n$ for a typing context, instead of using
+\Tm\,\Gamma\,A \to \Tm\,\Gamma\,A \to \Ty\,\Gamma$, we may write $\emptycon\,\ext\,
+n : \Nat\,\ext\,p : \Id\,\Nat\,n\,n$ for a typing context, instead of using
 numbered variables or cwf combinators as in $\emptycon \ext \Nat \ext
 \Id\,\Nat\,\q\,\q$.
 \end{notation}
@@ -6004,14 +6004,13 @@ example would be set truncation for some $A : \Ty_0$:
   &\ms{embed} &&: A \toe \El\,|A|_0 \\
   &\ms{trunc} &&: (x\,y : |A|_0)(p\,q : \Id\,x\,y) \to \El\,(\Id\,p\,q)
 \end{alignat*}
-However, this ends up being redundant in our semantics, since we assume UIP,
-and every semantic underlying type will be a set. Does this mean that recursive
+However, this ends up being redundant in our semantics, since we assume UIP, and
+every semantic underlying type will be a set. Does this mean that recursive
 equations are useless? We do not think so. In the specification of cubical type
 theories, there are \emph{boundary conditions} which can be given as $\Id$
 assumptions \cite{cchm,angiuli2016computational,angiuli2018cartesian}. Also, it
-seems that these conditions cannot be easily contracted away, or expressed
-equivalently without recursive equation. For an example of contraction, the
-signature
+seems that these conditions cannot be easily contracted away. For an example of
+contraction, the signature
 \[\emptycon \ext (A : \U) \ext (c_1 : \El\,A) \ext (c_2 : (x : A) \to \Id\,x\,c_1 \to \El\,A)\]
 can be rewritten to the equivalent
 \[\emptycon \ext (A : \U) \ext (c_1 : \El\,A) \ext (c_2 : \El\,A)\]
@@ -6026,6 +6025,21 @@ signature. However, we cannot mechanically eliminate the $\Id$ from the followin
 \end{alignat*}
 Whether we can reformulate $a$ without the $\Id$ condition depends on what kind
 of equational theory we specify for $B$ in the omitted parts of the signature.
+
+However, recursive equations can be always encoded by internalizing extensional
+equality in signatures. For example:
+\begin{alignat*}{3}
+  &\ms{A}   &&: \U \\
+  &\ms{EqA} &&: \ms{A} \to \ms{A} \to \U\\
+  &\refl    &&: \El\,(\ms{EqA}\,a\,a)\\
+  &\reflect &&: \ms{EqA}\,a_0\,a_1 \to \El\,(\Id\,a_0\,a_1)\\
+  &\UIP     &&: (p\,q : \ms{EqA}\,a_0\,a_1) \to \El\,(\Id\,p\,q)
+\end{alignat*}
+Still, we keep recursive equalities around, since they are more ergonomic than
+the above encoding, and they pose no extra difficulty in the semantics. The
+current formulation of the $\Id$ type will be more useful in Chapter \ref{chap:hiit},
+where higher equalities can be proof-relevant.
+
 \end{myexample}
 
 \begin{myexample}
@@ -6060,6 +6074,8 @@ hierarchy in an extensional TT, to investigate self-description.
 We have seen in Example \ref{ex:presheaf-sig} that $\Ty_0$-valued presheaves have finitary signatures.
 With infinitary signatures, we can also cover monads on $\Ty_0$. We assume a
 universe $\U_0 : \Ty_0$.
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   &\ms{M}              &&: \U_0 \to \U\\
   &\ms{map}       &&: (A \to B) \toe \ms{M}\,A \to \El\,(\ms{M}\,B)\\
@@ -6068,6 +6084,7 @@ universe $\U_0 : \Ty_0$.
   &\ms{return}    &&: A \toe \El\,(\ms{M}\,A)\\
   &\ms{bind}      &&: M\,A \to (A \toinf \ms{M}\,B) \to \El\,(\ms{M}\,B)
 \end{alignat*}
+\endgroup
 We rely on $\toinf$ to specify binding. The $\mi{join}$-based specification
 would not work, since $\ms{M}\,(\ms{M}\,A)$ is not valid in signatures. The above
 signature can be helpful for deriving some of the metatheory of Dijkstra monads
@@ -7139,6 +7156,7 @@ in an ``indexed'' style, but now we can also do constructions in a more
 ``fibered'' style.
 
 \begin{myexample}
+\label{ex:param-translation}
 We may consider a unary parametricity translation in the style of Bernardy,
 Jansson, and Paterson \cite{bernardy12parametricity}, which makes use of the
 small $\Sigma$-type in the theory of signature. We assume $\ms{TT} :
@@ -7601,6 +7619,15 @@ Inductive-Inductive Types'' \cite{iqiit}. We make the following changes:
   \item We add small $\top$ and $\Sigma$ to the ToS, and also their large counterparts
         in Sections \ref{sec:iqii-left-adjoints}-\ref{sec:signature-semantics}.
 \end{itemize}
+
+Recall that we show that arbitrary substitutions have left adjoints. Moeneclaey
+\cite{semicubical} describes sufficient conditions to have right adjoints as
+well: given $t : \Tm\,(\emptycon \ext
+\Gamma^A_{\ms{sig}})\,\Gamma^D_{\ms{sig}}$, we have the context
+$\emptycon\ext\Gamma^A_{\ms{tos}}\ext\Gamma^S_{\ms{tos}}[\id,\,t]$, and then the
+forgetful substitution from this context to $\emptycon\ext\Gamma^A_{\ms{tos}}$
+has a right adjoint. The construction that we gave in
+Example \ref{ex:param-translation} was given with such a $t$ term as well.
 
 Fiore, Pitts and Steenkamp developed QW types
 \cite{inf-qits}, a notion of quotient inductive types that generalizes

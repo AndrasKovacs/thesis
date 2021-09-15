@@ -652,6 +652,15 @@ Saunders MacLane and Ieke Moerdijk.
   theory}.
 \newblock Springer Science \& Business Media, 2012.
 
+\bibitem[Moe21]{semicubical}
+Hugo Moeneclaey.
+\newblock Parametricity and semi-cubical types.
+\newblock In {\em 36th Annual {ACM/IEEE} Symposium on Logic in Computer
+  Science, {LICS} 2021, Rome, Italy, June 29 - July 2, 2021}, pages 1--11.
+  {IEEE}, 2021.
+\newblock \href {https://doi.org/10.1109/LICS52264.2021.9470728}
+  {\path{doi:10.1109/LICS52264.2021.9470728}}.
+
 \bibitem[nc21]{internallogic}
 nLab contributors.
 \newblock Internal logic, 2021.

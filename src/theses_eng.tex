@@ -23,6 +23,8 @@
 \linespread{1.25}
 \geometry{left=3.5cm,right=3.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
 
+\bibliographystyle{alphaurl}
+
 \begin{document}
 \clearpage
 
@@ -83,6 +85,51 @@ results was to develop more expressive inductive types for future proof
 assistants. Thus, our syntaxes and semantics of signatures are close to what
 would be required in practical implementation. However, our results can be also
 viewed in the broader mathematical context of the study of algebraic theories.
+
+\section{Contributions}
+
+The main contributions are summarized in the following four theses.
+
+\subsection*{Thesis 1}
+
+In Chapter 2 we describe a way to use two-level type theory \cite{twolevel} as a
+metalanguage for developing semantics of algebraic signatures. This makes it
+possible to work in a concise internal notation of a type theory, and at the
+same build semantics internally to arbitrary structured categories. For example,
+the signature for natural number objects can be interpreted in any category with
+finite products.
+
+\subsection*{Thesis 2}
+
+We present syntax and semantics for finitary quotient inductive-inductive (FQII)
+signatures in Chapter 3 of the thesis. These are close in expressive power to
+Cartmell's generalized algebraic theories \cite{gat}, but differ in
+formalization and what kind of semantics results and constructions are built
+around them.
+\begin{itemize}
+\item FQII signatures can describe most type theories in the wild, thus
+      providing a model theory for them through the semantics of signatures.
+\item The theory of FQII signatures is specified compactly as a type theory, and
+      it is itself amenable to algebraic specification.
+\item For each signatures a finitely complete category of algebras is given. This
+      category is presented as a cwf (category with families, see \cite{cwfs}) with
+      certain type formers, which makes it possible to exactly compute notions of
+      induction. We show that induction is equivalent to initiality in each category
+      of algebras.
+\item We show that initial algebras can be constructed from the syntax of FQII signatures,
+      by a term algebra construction. In turn, we show that certain fragment of the syntax
+      of FQII signatures can be reduced to basic type formers, thereby reducing some of
+      the initial algebras to basic type formers.
+\item We show that substitutions of signatures can be viewed as model constructions, being
+      functors between categories of algebras in the semantics. Additionally, under the
+      assumption that initial FQII-algebras exist, every such functor has a left adjoint.
+\end{itemize}
+
+\subsection*{Thesis 3}
+
+
+
+
 
 
 \bibliography{references}
