@@ -1,7 +1,6 @@
 
 
 \documentclass[12pt]{article}
-\raggedbottom
 
 \usepackage{geometry}
 \usepackage[utf8]{inputenc}
@@ -89,83 +88,97 @@ szemantikája közel van ahhoz, ami praktikus rendszerekben lenne
 szükséges. Ugyanakkor az eredményeink felhasználhatók általánosabb matematikai
 kontextusban, az algebrai elméletek kutatásában.
 
-\section{Contributions}
+\section{Eredmények}
 
 A fő eredményeket a következőkben foglaljuk össze.
 
-\subsection*{Thesis 1}
+\subsection*{1. Tézis}
 
-In Chapter 3 we describe a way to use two-level type theory \cite{twolevel} as a
-metalanguage for developing semantics of algebraic signatures. This makes it
-possible to work in a concise internal notation of a type theory, and at the
-same build semantics internally to arbitrary structured categories. For example,
-the signature for natural number objects can be interpreted in any category with
-finite products.
+A harmadik fejezetben kifejtjük, hogy a kétszintű típuselmélet \cite{twolevel}
+hogyan használható metanyelvként az algebrai szignatúrák szemantikájához. Ez
+lehetővé teszi, hogy a szemantikát általánosan adjuk meg, internálisan tetszőleges
+strukturált kategóriákban, és ugyanakkor tömör típuselméleti nyelvben
+dolgozzunk. Például a természetes szám objektumok szignatúrája értelmezhető
+tetszőleges olyan kategóriában, ami rendelkezik véges szorzatokkal.
 
-\subsection*{Thesis 2}
+\subsection*{2. Tézis}
 
-We present syntax and semantics for finitary quotient inductive-inductive (FQII)
-signatures in Chapter 4 of the thesis. These are close in expressive power to
-Cartmell's generalized algebraic theories \cite{gat}, but differ in
-formalization and what kind of semantics results and constructions are built
-around them.
+A tézis negyedik fejezetében bemutatjuk a véges aritású kvóciens
+induktív-induktív (FQII, ``finitary quotient inductive-inductive'') szignatúrák
+szintaxisát és szemantikáját. Ezek a szignatúrák közel vannak kifejezőerő
+tekintetében Cartmell általánosított algebrai elméleteihez \cite{gat}, viszont
+jelentős különbségek vannak a formalizációban és a szemantikai konstrukciókban
+és eredményekben.
 \begin{itemize}
-\item FQII signatures can describe most type theories in the wild, thus
-      providing a model theory for them through the semantics of signatures.
-\item The theory of FQII signatures is specified compactly as a type theory, and
-      it is itself amenable to algebraic specification.
-\item For each signatures a finitely complete category of algebras is given. This
-      category is presented as a cwf (category with families, see \cite{cwfs}) with
-      certain type formers, which makes it possible to exactly compute notions of
-      induction. We show that induction is equivalent to initiality in each category
-      of algebras.
-\item We show that initial algebras can be constructed from the syntax of FQII signatures,
-      by a term algebra construction. In turn, we show that certain fragments of the syntax
-      of FQII signatures can be reduced to basic type formers, thereby reducing some of
-      the initial algebras to basic type formers.
-\item We show that substitutions of signatures can be viewed as model constructions, being
-      functors between categories of algebras in the semantics. Additionally, under the
-      assumption that initial FQII-algebras exist, every such functor has a left adjoint.
+\item Az FQII szignatúrák képesek leírni szinte az összes típuselméletet,
+      és így modell-elméletet kapunk hozzájuk, a szignatúrák szemantikáján
+      keresztül.
+\item Az FQII szignatúrák elmélete tömören specifikált mint típuselmélet, és
+      maga is algebrai elmélet.
+\item
+      Minden szignatúrához egy véges limitekkel rendelkező kategóriát rendelünk,
+      amelynek az objektumai algebrák. Ezt a kategóriát egy családos
+      kategóriaként \cite{cwfs} prezentáljuk, ami lehetővé teszi, hogy precízen
+      kiszámoljuk az indukció fogalmát. Megmutatjuk, hogy az indukció ekvivalens
+      az inicialitással minden szignatúra esetén.
+\item
+     Megmutatjuk, hogy az iniciális algebrákat meg lehet konstruálni az FQII
+     szignatúrák szintaxisából, egy term modell konstrukcióval. Továbbá
+     megmutatjuk, hogy az FQII szignatúrák szintaxisának bizonyos töredékei
+     megkonstruálhatók egyszerűbb típusokból.
+\item
+     Megmutatjuk, hogy a szignatúrák közötti párhuzamos helyettesítésekre modell
+     konstrukciókként lehet gondolni, mivel a szemantikában funktorok lesznek
+     algebrák kategóriái között.  Továbbá, feltéve hogy minden iniciális
+     FQII-algebra létezik, minden ilyen funktor jobb adjungált.
 \end{itemize}
 
-\subsection*{Thesis 3}
+\subsection*{3. Tézis}
 
-In Chapter 5, we modify FQII signatures to obtain infinitary quotient
-inductive-inductive signatures. This allows us to describe infinitely branching
-trees as initial algebras.
+Az tézis ötödik fejezetében módosítjuk az FQII szignatúrákat úgy, hogy
+végtelenül elágazó fa struktúrákat is le tudjunk írni az iniciális
+algebrákban. Így kapjuk a végtelen aritású QII szignatúrák elméletét (IQII
+röviden, ``infinitary quotient inductive-inductive'').
 \begin{itemize}
-\item Real numbers, surreal numbers, ordinals and the cumulative hierarchy of sets
-      \cite{hottbook}
-      can be now specified using signatures.
-\item Additionally, theories of FQII and infinitary QII signatures can be themselves
-      described with infinitary QII signatures. This self-description can be utilized
-      to bootstrap the metatheory of theories of signatures, starting from minimal
-      assumptions.
-\item The semantics of signatures is extended to include \emph{iso-fibrancy} of signature
-      types; this means that every construction in the theory of signatures respects
-      isomorphisms of described algebras.
-\item We adapt constructions of term algebras and left adjoint functors to the current setting.
-\item We show that signatures have semantic interpretation internally to the
-  theory of signatures itself. This implies, in particular, that for each
-  signature, the notion of algebra morphisms can be still specified with a
-  signature.
+\item Valós számok, szürreális számok, ordinálisok és a kumulatív halmaz-hierarchiák
+  leírhatók IQII szignatúrák segítségével \cite{hottbook}, ami a véges aritású
+  esetben nem volt lehetséges.
+\item
+  Az FQII és IQII szignatúrák elméletei egyaránt leírhatók IQII szignatúrával.
+  A IQII szignatúrák tehát a saját elméletüket is specifikálják, és ezt arra használjuk,
+  hogy minimalizáljuk a szükséges feltételezéseket az IQII szignatúrák metaelméletének
+  kidolgozásánál.
+\item
+  A szignatúrák szemantikáját kibővítjük a \emph{izo-fibrálás} tulajdonsággal a
+  szignatúra-típusokban. Ez azt jelenti, hogy a szignatúrák elméletében minden
+  konstrukció megőrzi a leírt algebrák izomorfizmusait.
+\item
+  Adaptáljuk a term algebra konstrukciót és a bal adjungált funktorok konstrukcióját
+  a végtelen aritású esetre.
+\item
+  Megmutatjuk, hogy a szignatúrákat lehet szemantikusan értelmezni magában a
+  szignatúrák elméletének szintaxisában is. Egy példát hozva, ez azt
+  eredményezi, hogy minden szignatúrához megkapjuk az algebra-homomorfizmusok
+  specifikációját is szignatúraként.
 \end{itemize}
 
-\subsection*{Thesis 4}
-In Chapter 6, we describe higher inductive-inductive signatures. These differ
-from the previous signatures mostly in their intended semantics, whose context
-is now homotopy type theory \cite{hottbook}, and which allows specified
-equalities to be proof-relevant. The higher-dimensional generalization of types
-and equalities makes semantics more complicated, so we only present enough
-semantics to specify notions of initiality and induction for each
-signature. Additionally, we consider two different notions of algebra morphisms:
-one preserves structure strictly (up to definitional equality), while the other
-preserves structure up to paths.
+\subsection*{4. tézis}
+A hatodik fejezetben leírjuk a magasabb induktív-induktív szignatúrákat. Ezek
+elsősorban a szemantikában különbözek a korábbi szignatúráktól: a metanyelv most
+a homotópia típuselmélet \cite{hottbook}. Míg korábban kizárólag egy-dimenziós
+egyenleteket adhattunk szignatúrákhoz, most tetszőleges magasabb-dimenziós
+utakat tudunk specifikálni, az iniciális algebrák pedig szabadon generált
+omega-groupoidokat adnak meg. A magasabb-dimenziós általánosítás jelentősen
+bonyolítja a szemantikát, ezért éppen csak annyi szemantikát adunk meg, amiből
+az iniciálitás és indukció fogalmai következnek (minden szignatúrához). Továbbá,
+az algebra-morfizmusok két változatát kezeljük: az első szigorúan őrzi meg a
+struktúrákat, azaz definícionális egyenletekkel, míg a másik gyengén, azaz
+a belső intenzionális egyenlőségekkel.
 
-\section{Publications}
+\section{Publikációk}
 
-The above contributions build on and extend the following previous publications,
-all coauthored by the thesis' author.
+A fenti eredmények a következő publikációk tartalmára építenek, amelyek
+társszerzője a jelenlegi tézis szerzője.
 \begin{enumerate}
   \item \emph{A Syntax for Higher Inductive-Inductive Types} \cite{hiit}.
   \item \emph{Signatures and Induction Principles for Higher Inductive-Inductive Types} \cite{hiits}.
@@ -173,8 +186,6 @@ all coauthored by the thesis' author.
   \item \emph{Large and Infinitary Quotient Inductive-Inductive Types} \cite{iqiit}.
   \item \emph{For Finitary Induction-Induction, Induction is Enough} \cite{ind-ind-reduction}.
 \end{enumerate}
-
-
 
 
 \bibliography{references}

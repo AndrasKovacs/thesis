@@ -8787,4 +8787,90 @@ theory.
 
 \backmatter
 \bibliography{references}
+
+\pagebreak
+\section*{Summary}
+
+This thesis develops the usage of certain type theories as specification
+languages for algebraic theories and inductive types. We observe that the
+expressive power of dependent type theories proves useful in the specification
+of more complicated algebraic theories. In the thesis, we describe three type
+theories where each typing context can be viewed as an algebraic signature,
+specifying sorts, operations and equations. These signatures are useful in
+broader mathematical contexts, but we are also concerned with potential
+implementation in proof assistants.
+
+In \textbf{Chapter \ref{chap:2ltt}} we describe a way to use
+two-level type theory \cite{twolevel} as a metalanguage for developing semantics
+of algebraic signatures. This makes it possible to work in a concise internal
+notation of a type theory, and at the same time build semantics internally to
+arbitrary structured categories. For example, the signature for natural number
+objects can be interpreted in any category with finite products.
+
+In \textbf{Chapter \ref{chap:fqiit}} we describe finitary quotient
+inductive-inductive (FQII) signatures. Most type theories themselves can be
+specified with FQII signatures. We build a structured category of algebras for
+each signature, where equivalence of initiality and induction can be shown. We
+additionally present term algebra constructions, constructions of left adjoint
+functors of signature morphisms, and we describe a way to use self-describing
+signatures to minimize necessary metatheoretic assumptions.
+
+In \textbf{Chapter \ref{chap:iqiit}}, we describe infinitary quotient
+inductive-inductive signatures. These allow specification of infinitely
+branching trees as initial algebras. We adapt the semantics from the previous
+chapter. We also revisit term models, left adjoints of signature morphisms and
+self-description of signatures. We also describe how to build semantics of
+signatures internally to the theory of signatures itself, which yields numerous
+ways to build new signatures from existing ones.
+
+In \textbf{Chapter \ref{chap:hiit}}, we describe higher inductive-inductive
+signatures. These differ from previous semantics mostly in that their intended
+semantics is in homotopy type theory \cite{hottbook}, and allows
+higher-dimensional equalities. In this more general setting we only consider
+enough semantics to compute notions of initiality and induction for each signature.
+
+\pagebreak
+\section*{Summary in Hungarian - Magyar összefoglaló}
+
+A tézis fő célja az, hogy kidolgozza bizonyos típuselméletek használatát
+algebrai elméletek és induktív típusok leírásához. Meglátásunk szerint a függő
+típuselméletek kifejezőereje nagyban elősegíti a tömör és általános
+specifikációkat. A tézisben három típuselméletet írunk le, amelyekben a
+típuskörnyezeteket értelmezzük algebrai szignatúraként, ami felsorolja egy
+algebrai elmélet szortjait, műveleteit és egyenleteit. A eredményeink
+felhasználhatók általánosabb matematikai kontextusban, viszont az is célunk,
+hogy elősegítsük az esetleges pratikus implementációt
+tételbizonyító-rendszerekben.
+
+A \textbf{harmadik fejezetben} kifejtjük, hogy a kétszintű típuselmélet \cite{twolevel}
+hogyan használható metanyelvként az algebrai szignatúrák szemantikájához. Ez
+lehetővé teszi, hogy a szemantikát általánosan adjuk meg, internálisan tetszőleges
+strukturált kategóriákban, és ugyanakkor tömör típuselméleti nyelvben
+dolgozzunk. Például a természetes szám objektumok szignatúrája értelmezhető
+tetszőleges olyan kategóriában, ami rendelkezik véges szorzatokkal.
+
+A \textbf{negyedik fejezetben} leírjuk a véges aritású kvóciens
+induktív-induktív (FQII) szignatúrák elméletét. A legtöbb típuselmélet maga is
+leírható FQII szignatúrával. Minden szignatúrához megadjuk az algebrák egy
+strukturált kategóriáját, ahol az inicialitás és az indukció ekvivalenciája
+belátható. Továbbá, bemutatunk term algebra konstrukciókat, bal adjungált
+funktorok konstrukcióját szignatúra-morfizmusokhoz, és bemutatjuk, hogy az
+önmaguk elméletét specifikáló szignatúrák segítségével hogyan minimalizálhatók a
+szükséges metaelméleti feltételezések.
+
+Az \textbf{ötödik fejezetben} leírjuk a végtelen aritású kvóciens
+induktív-induktív szignatúrák elméletét, amivel végtelenül elágazó fa
+struktúrákat is le tudjunk írni az iniciális algebrákban. Adaptáljuk a korábbi
+term algebra konstrukciót, a bal adjungált funktorok konstrukcióját és az
+önmaguk elméletét specifikáló szignatúrák használatát. Továbbá, megadjuk a
+szignatúrák szemantikáját internálisan magában a szignatúrák elméletének a
+szintaxisában, amelynek segítségével sokféleképpen építhetünk új szignatúrákat.
+
+A \textbf{hatodik fejezetben} leírjuk a magasabb induktív-induktív
+szignatúrákat. Ezek elsősorban a szemantikában különbözek a korábbi
+szignatúráktól: a metanyelv most a homotópia típuselmélet \cite{hottbook}, és
+lehetőség van magasabb dimenziós egyenlőségek megadására. Itt csak annyi
+szemantikát adunk meg, amiből az inicialitás és indukció fogalmai kiszámolhatók
+minden szignatúrához.
+
 \end{document}
