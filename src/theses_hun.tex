@@ -1,0 +1,181 @@
+
+
+\documentclass[12pt]{article}
+\raggedbottom
+
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{amsmath}
+\usepackage{cite}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathpartir}
+\usepackage{scalerel}
+\usepackage{stmaryrd}
+\usepackage{authblk}
+\usepackage{todonotes}
+\presetkeys{todonotes}{inline}{}
+\usepackage{bm}
+\usepackage{titlesec}
+\usepackage{graphicx}
+
+\linespread{1.25}
+\geometry{left=3.5cm,right=3.5cm,top=2.5cm,bottom=2.5cm,includehead,includefoot}
+
+\bibliographystyle{alphaurl}
+
+\begin{document}
+\clearpage
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+
+        {\LARGE \textbf{Algebrai elméletek és induktív típusok specifikációja típuselméleti szignatúrákkal}}\\
+        \vspace{1em}
+        {\large \textsc{A Ph.D. disszertáció tézisei}}
+
+        %% \vspace{0.5cm}
+        %% \LARGE
+        %% Thesis Subtitle
+        \vspace{2em}
+
+        \textit{Szerző:}\\
+        {\large Kovács András}\\
+        \vspace{1em}
+        \textit{Témavezető:}\\
+        {\large Kaposi Ambrus}
+
+        \vfill
+        \vspace{4em}
+
+        {\normalsize
+        Eötvös Loránd Tudományegyetem\\
+        Informatika Doktori Iskola\\
+        Doktori iskola vezetője: Csuhaj-Varjú Erzsébet\\
+        Doktori program: Az informatika alapjai és módszertana\\
+        Programvezető: Horváth Zoltán\\}
+        \vspace{1em}
+        \includegraphics[width=0.35\textwidth]{elte_cimer_szines}\\
+        \vspace{1em}
+        {\large 2021 szeptember}
+
+    \end{center}
+\end{titlepage}
+\thispagestyle{empty}
+
+\section{Bevezető}
+
+A tézis fő célja az, hogy kidolgozza bizonyos típuselméletek használatát
+algebrai elméletek és induktív típusok leírásához. Minden ilyen típuselméletben
+a típuskörnyezeteket értelmezzük algebrai szignatúraként, ami felsorolja
+egy algebrai elmélet szortjait, műveleteit és egyenleteit.
+
+A függő típuselméletek kifejezőereje nagyban elősegíti a tömör és általános
+specifikációkat, és lehetővé teszi, hogy a szigatúrák szemantikáját és
+metaelméletét olyan eszközökkel viszgáljuk, amelyek korábbról ismertek a
+típuselméletben.
+
+Három szignatúra-elméletet mutatunk be. Mindhárom esetben lehetőség van az
+elméletek kisebb változtatásaira.
+
+A jelenlegi kutatás kiegészíti és általánosítja az induktív szignatúrák korábbi
+irodalmát a típuselmélet kontextusában. A kutatásunk egyik fontos motivációja az
+volt, hogy nagy kifejezőerejű induktív típusokat fejlesszünk jövőbeli
+tételbizonyító-rendszerekhez. Ebből kifolyólag a szignatúráink szintaxisa és
+szemantikája közel van ahhoz, ami praktikus rendszerekben lenne
+szükséges. Ugyanakkor az eredményeink felhasználhatók általánosabb matematikai
+kontextusban, az algebrai elméletek kutatásában.
+
+\section{Contributions}
+
+A fő eredményeket a következőkben foglaljuk össze.
+
+\subsection*{Thesis 1}
+
+In Chapter 3 we describe a way to use two-level type theory \cite{twolevel} as a
+metalanguage for developing semantics of algebraic signatures. This makes it
+possible to work in a concise internal notation of a type theory, and at the
+same build semantics internally to arbitrary structured categories. For example,
+the signature for natural number objects can be interpreted in any category with
+finite products.
+
+\subsection*{Thesis 2}
+
+We present syntax and semantics for finitary quotient inductive-inductive (FQII)
+signatures in Chapter 4 of the thesis. These are close in expressive power to
+Cartmell's generalized algebraic theories \cite{gat}, but differ in
+formalization and what kind of semantics results and constructions are built
+around them.
+\begin{itemize}
+\item FQII signatures can describe most type theories in the wild, thus
+      providing a model theory for them through the semantics of signatures.
+\item The theory of FQII signatures is specified compactly as a type theory, and
+      it is itself amenable to algebraic specification.
+\item For each signatures a finitely complete category of algebras is given. This
+      category is presented as a cwf (category with families, see \cite{cwfs}) with
+      certain type formers, which makes it possible to exactly compute notions of
+      induction. We show that induction is equivalent to initiality in each category
+      of algebras.
+\item We show that initial algebras can be constructed from the syntax of FQII signatures,
+      by a term algebra construction. In turn, we show that certain fragments of the syntax
+      of FQII signatures can be reduced to basic type formers, thereby reducing some of
+      the initial algebras to basic type formers.
+\item We show that substitutions of signatures can be viewed as model constructions, being
+      functors between categories of algebras in the semantics. Additionally, under the
+      assumption that initial FQII-algebras exist, every such functor has a left adjoint.
+\end{itemize}
+
+\subsection*{Thesis 3}
+
+In Chapter 5, we modify FQII signatures to obtain infinitary quotient
+inductive-inductive signatures. This allows us to describe infinitely branching
+trees as initial algebras.
+\begin{itemize}
+\item Real numbers, surreal numbers, ordinals and the cumulative hierarchy of sets
+      \cite{hottbook}
+      can be now specified using signatures.
+\item Additionally, theories of FQII and infinitary QII signatures can be themselves
+      described with infinitary QII signatures. This self-description can be utilized
+      to bootstrap the metatheory of theories of signatures, starting from minimal
+      assumptions.
+\item The semantics of signatures is extended to include \emph{iso-fibrancy} of signature
+      types; this means that every construction in the theory of signatures respects
+      isomorphisms of described algebras.
+\item We adapt constructions of term algebras and left adjoint functors to the current setting.
+\item We show that signatures have semantic interpretation internally to the
+  theory of signatures itself. This implies, in particular, that for each
+  signature, the notion of algebra morphisms can be still specified with a
+  signature.
+\end{itemize}
+
+\subsection*{Thesis 4}
+In Chapter 6, we describe higher inductive-inductive signatures. These differ
+from the previous signatures mostly in their intended semantics, whose context
+is now homotopy type theory \cite{hottbook}, and which allows specified
+equalities to be proof-relevant. The higher-dimensional generalization of types
+and equalities makes semantics more complicated, so we only present enough
+semantics to specify notions of initiality and induction for each
+signature. Additionally, we consider two different notions of algebra morphisms:
+one preserves structure strictly (up to definitional equality), while the other
+preserves structure up to paths.
+
+\section{Publications}
+
+The above contributions build on and extend the following previous publications,
+all coauthored by the thesis' author.
+\begin{enumerate}
+  \item \emph{A Syntax for Higher Inductive-Inductive Types} \cite{hiit}.
+  \item \emph{Signatures and Induction Principles for Higher Inductive-Inductive Types} \cite{hiits}.
+  \item \emph{Constructing Quotient Inductive-Inductive Types} \cite{kaposi2019constructing}.
+  \item \emph{Large and Infinitary Quotient Inductive-Inductive Types} \cite{iqiit}.
+  \item \emph{For Finitary Induction-Induction, Induction is Enough} \cite{ind-ind-reduction}.
+\end{enumerate}
+
+
+
+
+\bibliography{references}
+\end{document}

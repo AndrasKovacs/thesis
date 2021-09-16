@@ -413,7 +413,8 @@ finite limits. Additionally
         in the semantics.
   \item We present how self-description of signatures can be exploited to minimize metatheoretic
         assumptions.
-  \item We describe ways to construct initial algebras from simple type formers.
+  \item For certain fragments of the theory of signatures, we describe ways to construct
+        initial algebras from simpler type formers.
 \end{itemize}
 
 In \textbf{Chapter \ref{chap:iqiit}}, we describe infinitary quotient
@@ -423,7 +424,11 @@ chapter. We also revisit term models, left adjoints of signature morphisms and
 self-description of signatures. Self-description in particular is significantly
 strengthened, since the full theories of signatures in Chapters
 \ref{chap:fqiit}-\ref{chap:iqiit} can be now described using infinitary quotient
-inductive-inductive signatures.
+inductive-inductive signatures. We also describe how to build semantics of
+signatures internally to the theory of signatures itself. For example, this
+means that for each signature, algebra morphisms are also specified with a
+signature. The full semantics can be internalized in the theory of signatures
+in this manner; this is useful for building new signatures in a generic way.
 
 In \textbf{Chapter \ref{chap:hiit}}, we describe higher inductive-inductive
 signatures. These differ from the previous signatures mostly in their intended
@@ -443,7 +448,7 @@ We list several general references which could be helpful for readers.
       assistant or programming language, such as Agda, Coq, Lean or Idris. In the
       author's view, mechanized formalization is the most effective way to build
       intuition about working in type theories.
-\item We heavily use categories-with-families \cite{cwfs,Hofmann97syntaxand,Dybjer96internaltype}
+\item We often use categories-with-families \cite{cwfs,Hofmann97syntaxand,Dybjer96internaltype}
       throughout the thesis.
 \item We use a modest amount of category theory, for which
       \cite{awodey2010category} should be a sufficient reference.
@@ -1417,7 +1422,7 @@ rather unwieldy. $\mbbC$ is missing many convenience features of type theories.
 \begin{itemize}
 \item
   There are no variables or binders. We are forced to work in a point-free style
-  or chase diagrams; both become difficult to handle after a certain point of
+  or chase diagrams; both become difficult to handle above a certain level of
   complexity.
 \item
   There are no functions, universes or inductive types.
@@ -1842,7 +1847,7 @@ the following data:
   & \U : \Ty\,\Gamma\hspace{2em}\El : \Tm\,\Gamma\,\U \to \Ty\,\Gamma
 \end{alignat*}
 \end{mydefinition}
-This is a weak classifier, since not all $\Ty\,\Gamma$ are necessarily
+This is a weak classifier, since not all elements of $\Ty\,\Gamma$ are necessarily
 represented as terms of the universe. Rather, this kind of universe can be
 viewed as an internal sub-family of $(\Ty,\,\Tm)$. Like families, Tarski
 universes can be closed under type formers. For instance, if $\U$ has $\Nat$,
@@ -2140,7 +2145,7 @@ We review the standard semantics of 2LTT which we use in the rest of the
 thesis. This justifies the metaprogramming view, that 2LTT allows meta-level
 reasoning about an inner theory.
 
-We present it two steps, by assuming progressively more structure in the inner
+We present it in two steps, by assuming progressively more structure in the inner
 theory. First, we only assume a category. This already lets us present a
 presheaf semantics for the outer layer. Then, we assume a cwf as the inner
 theory, which lets us interpret $\Ty_0$ and $\Tm_0$ and also consider inner type
@@ -3251,7 +3256,7 @@ For simple signatures, we only gave semantics in enough detail so that notions
 of recursion and induction could be recovered. We aim to do more now. For each
 signature, we would like to have
 \begin{enumerate}
-  \item A \emph{category} of algebras, with homomorphisms as morphisms.
+  \item A category of algebras, with homomorphisms as morphisms.
   \item A notion of induction, which requires a notion of dependent algebras.
   \item A proof that for algebras, initiality is equivalent to supporting induction.
 \end{enumerate}
@@ -5715,8 +5720,10 @@ The construction follows the 1-5 steps that we described previously in Section \
 \item Quotients by relations valued in $\ms{Prop}$.
 \item Indexed inductive families returning in $\Set$ or in $\ms{Prop}$.
 \end{itemize}
-Notably, UIP is not assumed. It appears that the irrelevance of equalities in
-$\ms{Prop}$ in sufficient to obviate UIP.
+UIP is not assumed, instead the irrelevant equality in $\ms{Prop}$ is used
+everywhere. Although it is only possible to eliminate from such equalities to
+$\ms{Prop}$, this issue is sidestepped by using an essentially algebraic
+specification of models, which is fibered using $\ms{Prop}$ equations.
 
 It is very plausible that this construction can be adapted to our theory of
 closed QII signatures. De Boer and Brunerie construct a complicated open

@@ -92,7 +92,7 @@ The main contributions are summarized in the following four theses.
 
 \subsection*{Thesis 1}
 
-In Chapter 2 we describe a way to use two-level type theory \cite{twolevel} as a
+In Chapter 3 we describe a way to use two-level type theory \cite{twolevel} as a
 metalanguage for developing semantics of algebraic signatures. This makes it
 possible to work in a concise internal notation of a type theory, and at the
 same build semantics internally to arbitrary structured categories. For example,
@@ -102,7 +102,7 @@ finite products.
 \subsection*{Thesis 2}
 
 We present syntax and semantics for finitary quotient inductive-inductive (FQII)
-signatures in Chapter 3 of the thesis. These are close in expressive power to
+signatures in Chapter 4 of the thesis. These are close in expressive power to
 Cartmell's generalized algebraic theories \cite{gat}, but differ in
 formalization and what kind of semantics results and constructions are built
 around them.
@@ -117,7 +117,7 @@ around them.
       induction. We show that induction is equivalent to initiality in each category
       of algebras.
 \item We show that initial algebras can be constructed from the syntax of FQII signatures,
-      by a term algebra construction. In turn, we show that certain fragment of the syntax
+      by a term algebra construction. In turn, we show that certain fragments of the syntax
       of FQII signatures can be reduced to basic type formers, thereby reducing some of
       the initial algebras to basic type formers.
 \item We show that substitutions of signatures can be viewed as model constructions, being
@@ -127,7 +127,49 @@ around them.
 
 \subsection*{Thesis 3}
 
+In Chapter 5, we modify FQII signatures to obtain infinitary quotient
+inductive-inductive signatures. This allows us to describe infinitely branching
+trees as initial algebras.
+\begin{itemize}
+\item Real numbers, surreal numbers, ordinals and the cumulative hierarchy of sets
+      \cite{hottbook}
+      can be now specified using signatures.
+\item Additionally, theories of FQII and infinitary QII signatures can be themselves
+      described with infinitary QII signatures. This self-description can be utilized
+      to bootstrap the metatheory of theories of signatures, starting from minimal
+      assumptions.
+\item The semantics of signatures is extended to include \emph{iso-fibrancy} of signature
+      types; this means that every construction in the theory of signatures respects
+      isomorphisms of described algebras.
+\item We adapt constructions of term algebras and left adjoint functors to the current setting.
+\item We show that signatures have semantic interpretation internally to the
+  theory of signatures itself. This implies, in particular, that for each
+  signature, the notion of algebra morphisms can be still specified with a
+  signature.
+\end{itemize}
 
+\subsection*{Thesis 4}
+In Chapter 6, we describe higher inductive-inductive signatures. These differ
+from the previous signatures mostly in their intended semantics, whose context
+is now homotopy type theory \cite{hottbook}, and which allows specified
+equalities to be proof-relevant. The higher-dimensional generalization of types
+and equalities makes semantics more complicated, so we only present enough
+semantics to specify notions of initiality and induction for each
+signature. Additionally, we consider two different notions of algebra morphisms:
+one preserves structure strictly (up to definitional equality), while the other
+preserves structure up to paths.
+
+\section{Publications}
+
+The above contributions build on and extend the following previous publications,
+all coauthored by the thesis' author.
+\begin{enumerate}
+  \item \emph{A Syntax for Higher Inductive-Inductive Types} \cite{hiit}.
+  \item \emph{Signatures and Induction Principles for Higher Inductive-Inductive Types} \cite{hiits}.
+  \item \emph{Constructing Quotient Inductive-Inductive Types} \cite{kaposi2019constructing}.
+  \item \emph{Large and Infinitary Quotient Inductive-Inductive Types} \cite{iqiit}.
+  \item \emph{For Finitary Induction-Induction, Induction is Enough} \cite{ind-ind-reduction}.
+\end{enumerate}
 
 
 
