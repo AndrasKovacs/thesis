@@ -1,5 +1,5 @@
 
-{-# OPTIONS --without-K --safe #-}
+{-# OPTIONS --without-K #-}
 
 module SimpleSig where
 
@@ -36,7 +36,7 @@ id A = var
 
 [id] : ∀ {Γ A}{t : Tm Γ A} → t [ id ] ≡ t
 [id] {t = var x}   = refl
-[id] {t = app t u} = app & [id] ⊗ [id]
+[id] {t = app t u} = ap app [id] ⊗ [id]
 
 infixr 5 _∘_
 _∘_ : ∀ {Γ Δ Ξ} → Sub Δ Ξ → Sub Γ Δ → Sub Γ Ξ
@@ -162,12 +162,12 @@ module _ (Ω : Con) where
     Tyᵉ : (A : Ty)(t : Tm Ω A) → Tyˢ A ιᵉ (Tmᴬ t (Conᵀ Ω id)) (Tmᴰ t ωᴰ)
     Tyᵉ ι      t   =
         apd⁻¹ ιᵉ (lem t)
-      ◾ J (λ y e → tr Xᴰ (e ⁻¹) (tr Xᴰ e (Tmᴰ t ωᴰ)) ≡ Tmᴰ t ωᴰ) refl _ (lem t)
+      ◾ J (λ y e → tr Xᴰ (e ⁻¹) (tr Xᴰ e (Tmᴰ t ωᴰ)) ≡ Tmᴰ t ωᴰ) refl (lem t)
     Tyᵉ (ι⇒ A) t =
        λ x →
        J (λ x' e → Tyˢ A ιᵉ (Tmᴬ t (Conᵀ Ω id) x') (Tmᴰ t ωᴰ x' (tr Xᴰ e (Tmᴰ x ωᴰ))))
          (Tyᵉ A (app t x))
-         x (lem x)
+         (lem x)
 
     Conᵉ : (Γ : Con)(ν : Sub Ω Γ) → Conˢ Γ ιᵉ (Subᴬ ν (Conᵀ Ω id)) (Subᴰ ν ωᴰ)
     Conᵉ Γ ν {A} x = Tyᵉ A (ν _ x)

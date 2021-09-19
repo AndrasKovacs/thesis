@@ -1,5 +1,5 @@
 
-{-# OPTIONS --without-K --safe #-}
+{-# OPTIONS --without-K #-}
 
 module SimpleSigWithSpine where
 

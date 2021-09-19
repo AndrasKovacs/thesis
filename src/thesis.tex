@@ -8014,14 +8014,12 @@ with strict equality. We list type formers below.
   &\J\beta &&: \Tm\,\Gamma\,(\ID\,(\J\,b\,\mi{pr}\,\refl)\,\mi{pr})
   \end{alignat*}
 \item
-  $\U$ is also closed under $\top$, $\Sigma$, and $\Piinf$. Of these, $\top$ is
-  specified with a strict $\Set$ isomorphism $\Tm\,\Gamma\,(\El\,\top) \simeq \top$,
-  while $\Sigma$ and $\Piinf$ are specified with equivalences up to $\ID$. These
-  are equivalences in the sense of HoTT \cite[Chapter~4]{hottbook}. There are
-  several equivalent formulations of equivalence; we pick the bi-invertible
-  definitions here.
-
-  Thus, $\Sigma$ is specified as follows.
+  $\U$ is also closed under $\top$, $\Sigma$, and $\Piinf$. All of these are
+  specified with equivalences up to $\ID$. These are equivalences in the sense
+  of HoTT \cite[Chapter~4]{hottbook}. There are several equivalent formulations
+  of equivalence; we pick the bi-invertible definitions here. For $\top$, it is
+  enough to have a simplified specification as $\top\!\eta :
+  \Tm\,\Gamma\,(\ID\,t\,\tt)$. $\Sigma$ is specified as follows.
   \begin{alignat*}{3}
    &\ms{\blank\!,\!\blank} &&:
       (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))
@@ -8238,30 +8236,20 @@ of $t^M\,\gamma^M$ and $u^M\,\gamma^M$, which is well-typed up to $p_0$ and $p_1
 \[
   \ap\,(a^M\,\gamma^M)\,p_0 \sqcdot u^M\,\gamma^M = t^M\,\gamma^M \sqcdot p_1
 \]
-Thus, we can again expect that $\J$ is definable for $\Id$. The definition gets
-a bit more complicated than in $\ID$, as in $\blank^M$ and $\blank^S$ we need to generalize
-over values in the inner most $\J$, by returning a function from the $\J$ and
-applying it to the appropriate values.
+Thus, we can again expect that $\J$ is definable for $\Id$. However, the actual
+definitions get highly technical in the $\blank^M$ and $\blank^S$ cases, as we
+have to repeatedly transport along higher paths to make certain eliminations
+well-typed. We refer the reader to the Agda formalization \cite{TODO} for these
+definitions. In the $\blank^A$ and $\blank^D$ cases, the definitions are simple
+enough:
 \begin{alignat*}{3}
-  &(\J\,P\,\mi{pr}\,p)^A\,\gamma   \defn \J\,(\mi{pr}^A\,\gamma)\,(p^A\,\gamma)\\
-  &(\J\,P\,\mi{pr}\,p)^M\,\gamma^M \defn\\
-  &\hspace{2em}\J\,(\J\,(\J\,(\J\,(\lambda\,x\,y.\,y)\,(t^M\,\gamma^M)\,(\mi{pr}^A\,\gamma_1)\,(\mi{pr}^M\,\gamma^M))\,(p^A\,\gamma_0))\,(u^M\,\gamma^M))\,(p^M\,\gamma^M)\\
-  &(\J\,P\,\mi{pr}\,p)^D\,\gamma^D \defn \J\,(\J\,(\mi{pr}^D\,\gamma^D)\,(p^A\,\gamma))\,(p^D\,\gamma^D)\\
-  &(\J\,P\,\mi{pr}\,p)^S\,\gamma^S \defn\\
-  &\hspace{2em}\J\,(\J\,(\J\,(\J\,(\lambda\,x\,y.\,y)\,(t^S\,\gamma^S)\,(\mi{pr}^D\,\gamma^D)\,(\mi{pr}^S\,\gamma^S))\,(p^A\,\gamma))\,(u^S\,\gamma^S))\,(p^S\,\gamma^S)
+  &(\J\,P\,\mi{pr}\,p)^A\,\gamma   &&\defn \J\,(\mi{pr}^A\,\gamma)\,(p^A\,\gamma)\\
+  &(\J\,P\,\mi{pr}\,p)^D\,\gamma^D &&\defn \J\,(\J\,(\mi{pr}^D\,\gamma^D)\,(p^A\,\gamma))\,(p^D\,\gamma^D)
 \end{alignat*}
-\emph{Remark.} Definitions like this probably look far from enlightening, but
-they should be actually helpful for formalization in a proof assistant. The
-essential information, which is somewhat tedious to work out independently, is
-which things to generalize, and in what order to use path induction, and these
-are conveyed above.
-
 Regarding the $\beta$-rule, note that $\refl^M$ and $\refl^S$ are not defined as
 $\refl$, but rather by induction on $t^M\,\gamma^M$ and
 $t^S\,\gamma^S$. Therefore, if we apply $\J$ to $\refl$, the $\blank^M$ and
 $\blank^S$ components do not strictly compute.
-
-
 
 \subsubsection{$\bs{\top}$}
 
@@ -8300,8 +8288,8 @@ does support the specifying equivalence.
 Again, the $\blank^M$ and $\blank^S$ cases change in term formers. Application
 is given by $\happly$:
 \begin{alignat*}{3}
-  &(\appinf\,t\,i)^M\,\gamma^M &&\defn \happly\,(t^M\,\gamma^M)\\
-  &(\appinf\,t\,i)^S\,\gamma^S &&\defn \happly\,(t^S\,\gamma^S)
+  &(\appinf\,t\,i)^M\,\gamma^M &&\defn \happly\,(t^M\,\gamma^M)\,i\\
+  &(\appinf\,t\,i)^S\,\gamma^S &&\defn \happly\,(t^S\,\gamma^S)\,i
 \end{alignat*}
 Abstraction is by $\funext$:
 \begin{alignat*}{3}
@@ -8751,7 +8739,7 @@ theory.
 \begin{alignat*}{3}
   &\blank^S &&: (\Gamma : \Con) \to (\gamma : \Gamma^A) \to \Gamma^A\,\gamma \to \Set\\
   &\blank^S &&: (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,\gamma\,\gamma^D \to \Delta^S\,(\sigma^A\,\gamma)\,(\sigma^D\,\gamma^D)\\
-  &\blank^S &&: (A : \Ty\,\Gamma) \to A^A\,\gamma \to A^D\,\gamma^D \to \Gamma^S\,\gamma\,\gamma^D \to \Set\\
+  &\blank^S &&: (A : \Ty\,\Gamma) \to (\alpha : A^A\,\gamma) \to A^D\,\alpha\,\gamma^D \to \Gamma^S\,\gamma\,\gamma^D \to \Set\\
   &\blank^S &&: (t : \Tm\,\Gamma\,A) \to (\gamma^S : \Gamma^S\,\gamma\,\gamma^D) \to A^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)\,\gamma^S\\
   &\emptycon^S\,\gamma\,\gamma^D &&\defn \top \\
   &\epsilon^S\,\gamma^S &&\defn \tt\\
