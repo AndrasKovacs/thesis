@@ -1,5 +1,5 @@
 
-{-# OPTIONS --without-K --rewriting #-}
+{-# OPTIONS --without-K #-}
 
 module Lib where
 
@@ -30,8 +30,6 @@ record Lift {a} {ℓ} (A : Set a) : Set (a ⊔ ℓ) where
   constructor ↑
   field ↓ : A
 open Lift public
-
-{-# BUILTIN REWRITE _≡_ #-}
 
 infixl 4 _⊗_
 _⊗_ : ∀ {i j}{A : Set i}{B : Set j}{f g : A → B} → f ≡ g → ∀ {x y} → x ≡ y → f x ≡ g y

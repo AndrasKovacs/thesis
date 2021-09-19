@@ -1,5 +1,5 @@
 
-{-# OPTIONS --without-K --postfix-projections --rewriting #-}
+{-# OPTIONS --without-K --postfix-projections #-}
 
 open import Lib
 
