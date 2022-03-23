@@ -1,14 +1,14 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
 \begin{thebibliography}{JVWW06}
 
-\bibitem[AAC{\etalchar{+}}20]{allais20type}
+\bibitem[AAC{\etalchar{+}}21]{allais20type}
 Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
   McKinna.
-\newblock A type and scope safe universe of syntaxes with binding: Their
+\newblock A type- and scope-safe universe of syntaxes with binding: their
   semantics and proofs.
-\newblock {\em CoRR}, abs/2001.11001, 2020.
-\newblock URL: \url{https://arxiv.org/abs/2001.11001}, \href
-  {http://arxiv.org/abs/2001.11001} {\path{arXiv:2001.11001}}.
+\newblock {\em J. Funct. Program.}, 31:e22, 2021.
+\newblock \href {https://doi.org/10.1017/S0956796820000076}
+  {\path{doi:10.1017/S0956796820000076}}.
 
 \bibitem[AAR{\etalchar{+}}94]{adamek1994locally}
 Ji{\v{r}}{\'\i} Ad{\'a}mek, J~Adamek, J~Rosicky, et~al.
@@ -53,7 +53,7 @@ Danil Annenkov, Paolo Capriotti, Nicolai Kraus, and Christian Sattler.
 
 \bibitem[Acz11]{aczel2011voevodsky}
 Peter Aczel.
-\newblock On voevodsky’s univalence axiom.
+\newblock On {Voevodsky}’s univalence axiom.
 \newblock {\em Mathematical Logic: Proof Theory, Constructive Mathematics,
   Samuel R. Buss, Ulrich Kohlenbach, and Michael Rathjen (Eds.). Mathematisches
   Forschungsinstitut Oberwolfach, Oberwolfach}, page 2967, 2011.
@@ -75,8 +75,10 @@ Carlo Angiuli, Kuen-Bang~Favonia Hou, and Robert Harper.
 
 \bibitem[AHW16]{angiuli2016computational}
 Carlo Angiuli, Robert Harper, and Todd Wilson.
-\newblock Computational higher type theory i: Abstract cubical realizability.
-\newblock {\em arXiv preprint arXiv:1604.08873}, 2016.
+\newblock Computational higher type theory {I:} abstract cubical realizability.
+\newblock {\em CoRR}, abs/1604.08873, 2016.
+\newblock URL: \url{http://arxiv.org/abs/1604.08873}, \href
+  {http://arxiv.org/abs/1604.08873} {\path{arXiv:1604.08873}}.
 
 \bibitem[AK79]{adamek}
 Jir{\'{\i}} Ad{\'{a}}mek and V{\'{a}}clav Koubek.
@@ -97,7 +99,7 @@ Thorsten Altenkirch and Ambrus Kaposi.
 
 \bibitem[AKS15]{univalent-categories}
 Benedikt Ahrens, Krzysztof Kapulkin, and Michael Shulman.
-\newblock Univalent categories and the rezk completion.
+\newblock Univalent categories and the {Rezk} completion.
 \newblock {\em Math. Struct. Comput. Sci.}, 25(5):1010--1039, 2015.
 \newblock \href {https://doi.org/10.1017/S0960129514000486}
   {\path{doi:10.1017/S0960129514000486}}.
@@ -124,7 +126,7 @@ Thorsten Altenkirch, Peter Morris, Fredrik~Nordvall Forsberg, and Anton Setzer.
 
 \bibitem[AMM19]{ahrens19from}
 Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
-\newblock From signatures to monads in unimath.
+\newblock From signatures to monads in {UniMath}.
 \newblock {\em J. Autom. Reason.}, 63(2):285--318, 2019.
 \newblock \href {https://doi.org/10.1007/s10817-018-9474-4}
   {\path{doi:10.1007/s10817-018-9474-4}}.
@@ -157,11 +159,10 @@ Andreas Abel, Andrea Vezzosi, and Th{\'{e}}o Winterhalter.
 \newblock {\em Proc. {ACM} Program. Lang.}, 1({ICFP}):33:1--33:30, 2017.
 \newblock \href {https://doi.org/10.1145/3110277} {\path{doi:10.1145/3110277}}.
 
-\bibitem[Awo10]{awodey2010category}
+\bibitem[Awo]{awodey2010category}
 S.~Awodey.
 \newblock {\em Category Theory}.
-\newblock Oxford Logic Guides. OUP Oxford, 2010.
-\newblock URL: \url{http://books.google.co.uk/books?id=-MCJ6x2lC7oC}.
+\newblock Oxford Logic Guides.
 
 \bibitem[Awo18]{awodey18natural}
 Steve Awodey.
@@ -222,8 +223,7 @@ Jean{-}Philippe Bernardy, Patrik Jansson, and Ross Paterson.
 
 \bibitem[BKS21]{bocquet2021induction}
 Rafa{\"e}l Bocquet, Ambrus Kaposi, and Christian Sattler.
-\newblock Induction principles for type theories, internally to presheaf
-  categories.
+\newblock Relative induction principles for type theories.
 \newblock {\em arXiv preprint arXiv:2102.11649}, 2021.
 
 \bibitem[BPT17]{next700}
@@ -282,7 +282,7 @@ Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"{o}}rtberg.
 \bibitem[CD14]{clairambault2014biequivalence}
 Pierre Clairambault and Peter Dybjer.
 \newblock The biequivalence of locally cartesian closed categories and
-  martin-l{\"{o}}f type theories.
+  {Martin}-{L}{\"{o}}f type theories.
 \newblock {\em Math. Struct. Comput. Sci.}, 24(6), 2014.
 \newblock \href {https://doi.org/10.1017/S0960129513000881}
   {\path{doi:10.1017/S0960129513000881}}.
@@ -337,10 +337,10 @@ Thierry Coquand.
 \newblock Canonicity and normalisation for dependent type theory.
 \newblock {\em arXiv preprint arXiv:1810.09367}, 2018.
 
-\bibitem[CS]{capriotti2020higher}
+\bibitem[CS20]{capriotti2020higher}
 Paolo Capriotti and Christian Sattler.
 \newblock Higher categories of algebras for higher inductive definitions.
-\newblock {\em EUTYPES-TYPES 2020-Abstracts}.
+\newblock {\em EUTYPES-TYPES 2020-Abstracts}, 2020.
 
 \bibitem[Dag17]{ornaments}
 Pierre{-}{\'{E}}variste Dagand.
@@ -441,15 +441,13 @@ Peter Gabriel and Friedrich Ulmer.
 
 \bibitem[Hed98]{hedberg}
 Michael Hedberg.
-\newblock A coherence theorem for martin-l{\"{o}}f's type theory.
+\newblock A coherence theorem for {Martin}-{L}{\"{o}}f's type theory.
 \newblock {\em J. Funct. Program.}, 8(4):413--436, 1998.
-\newblock URL:
-  \url{http://journals.cambridge.org/action/displayAbstract?aid=44199}.
 
-\bibitem[Hof95]{hofmann1995extensional}
+\bibitem[Hof95]{hofmann95extensional}
 Martin Hofmann.
-\newblock Extensional concepts in intensional type theory.
-\newblock 1995.
+\newblock {\em Extensional concepts in intensional type theory}.
+\newblock PhD thesis, 1995.
 
 \bibitem[Hof97]{Hofmann97syntaxand}
 Martin Hofmann.
@@ -459,7 +457,7 @@ Martin Hofmann.
 
 \bibitem[HRR14]{udayReynolds}
 Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
-\newblock Logical relations and parametricity - {A} reynolds programme for
+\newblock Logical relations and parametricity - {A} {Reynolds} programme for
   category theory and programming languages.
 \newblock {\em Electron. Notes Theor. Comput. Sci.}, 303:149--180, 2014.
 \newblock \href {https://doi.org/10.1016/j.entcs.2014.02.008}
@@ -468,8 +466,8 @@ Claudio Hermida, Uday~S. Reddy, and Edmund~P. Robinson.
 \bibitem[HS96]{hofmann96groupoidmodel}
 Martin Hofmann and Thomas Streicher.
 \newblock The groupoid interpretation of type theory.
-\newblock In {\em In Venice Festschrift}, pages 83--111. Oxford University
-  Press, 1996.
+\newblock In {\em Venice Festschrift}, pages 83--111. Oxford University Press,
+  1996.
 
 \bibitem[Hub16]{huber-thesis}
 Simon Huber.
@@ -489,7 +487,7 @@ Peter~T Johnstone.
 \bibitem[JVWW06]{gadts}
 Simon L.~Peyton Jones, Dimitrios Vytiniotis, Stephanie Weirich, and Geoffrey
   Washburn.
-\newblock Simple unification-based type inference for gadts.
+\newblock Simple unification-based type inference for {GADTs}.
 \newblock In John~H. Reppy and Julia~L. Lawall, editors, {\em Proceedings of
   the 11th {ACM} {SIGPLAN} International Conference on Functional Programming,
   {ICFP} 2006, Portland, Oregon, USA, September 16-21, 2006}, pages 50--61.
@@ -520,15 +518,12 @@ Oleg Kiselyov.
 
 \bibitem[KK18]{hiit}
 Ambrus Kaposi and Andr{\'a}s Kov{\'a}cs.
-\newblock {A Syntax for Higher Inductive-Inductive Types}.
+\newblock A syntax for higher inductive-inductive types.
 \newblock In H{\'e}l{\`e}ne Kirchner, editor, {\em 3rd International Conference
   on Formal Structures for Computation and Deduction (FSCD 2018)}, volume 108
   of {\em Leibniz International Proceedings in Informatics (LIPIcs)}, pages
   20:1--20:18, Dagstuhl, Germany, 2018. Schloss Dagstuhl--Leibniz-Zentrum fuer
   Informatik.
-\newblock URL: \url{http://drops.dagstuhl.de/opus/volltexte/2018/9190}, \href
-  {https://doi.org/10.4230/LIPIcs.FSCD.2018.20}
-  {\path{doi:10.4230/LIPIcs.FSCD.2018.20}}.
 
 \bibitem[KK20a]{hiits}
 Ambrus Kaposi and Andr{\'{a}}s Kov{\'{a}}cs.
@@ -575,11 +570,16 @@ András Kovács.
 \newblock URL:
   \url{https://github.com/akaposi/hiit-signatures/tree/master/elims-demo}.
 
-\bibitem[Kov21]{kovacs2021generalized}
-András Kovács.
-\newblock Generalized universe hierarchies and first-class universe levels,
-  2021.
-\newblock \href {http://arxiv.org/abs/2103.00223} {\path{arXiv:2103.00223}}.
+\bibitem[Kov22]{kovacs2021generalized}
+Andr{\'{a}}s Kov{\'{a}}cs.
+\newblock Generalized universe hierarchies and first-class universe levels.
+\newblock In Florin Manea and Alex Simpson, editors, {\em 30th {EACSL} Annual
+  Conference on Computer Science Logic, {CSL} 2022, February 14-19, 2022,
+  G{\"{o}}ttingen, Germany (Virtual Conference)}, volume 216 of {\em LIPIcs},
+  pages 28:1--28:17. Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik,
+  2022.
+\newblock \href {https://doi.org/10.4230/LIPIcs.CSL.2022.28}
+  {\path{doi:10.4230/LIPIcs.CSL.2022.28}}.
 
 \bibitem[KvR20]{mutualinductive}
 Ambrus Kaposi and Jakob von Raumer.
@@ -633,18 +633,16 @@ Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.
 \newblock \href {https://doi.org/10.1007/3540543961\_7}
   {\path{doi:10.1007/3540543961\_7}}.
 
+\bibitem[ML]{maclane98categories}
+Saunders Mac~Lane.
+\newblock {\em {Categories for the Working Mathematician}}.
+\newblock Graduate Texts in Mathematics. Springer, 2nd edition, September.
+
 \bibitem[ML84]{martinlof84sambin}
 Per Martin-L{\"o}f.
 \newblock {\em Intuitionistic type theory}, volume~1 of {\em Studies in Proof
   Theory}.
 \newblock Bibliopolis, 1984.
-
-\bibitem[ML98]{maclane98categories}
-Saunders Mac~Lane.
-\newblock {\em {Categories for the Working Mathematician}}.
-\newblock Graduate Texts in Mathematics. Springer, 2nd edition, September 1998.
-\newblock URL:
-  \url{http://www.amazon.com/exec/obidos/redirect?tag=citeulike07-20\&path=ASIN/0387984038}.
 
 \bibitem[MM12]{maclane2012sheaves}
 Saunders MacLane and Ieke Moerdijk.
@@ -673,7 +671,7 @@ Fredrik Nordvall~Forsberg.
 
 \bibitem[PV07]{partialhorn}
 Erik Palmgren and Steven~J. Vickers.
-\newblock Partial horn logic and cartesian categories.
+\newblock Partial {Horn} logic and cartesian categories.
 \newblock {\em Ann. Pure Appl. Log.}, 145(3):314--353, 2007.
 \newblock \href {https://doi.org/10.1016/j.apal.2006.10.001}
   {\path{doi:10.1016/j.apal.2006.10.001}}.
@@ -698,7 +696,7 @@ Jonathan Sterling and Carlo Angiuli.
 
 \bibitem[SAG20]{xtt}
 Jonathan Sterling, Carlo Angiuli, and Daniel Gratzer.
-\newblock A cubical language for bishop sets.
+\newblock A cubical language for {Bishop} sets.
 \newblock {\em CoRR}, abs/2003.01491, 2020.
 \newblock URL: \url{https://arxiv.org/abs/2003.01491}, \href
   {http://arxiv.org/abs/2003.01491} {\path{arXiv:2003.01491}}.
@@ -710,7 +708,6 @@ Gabriel Scherer.
   of the 44th {ACM} {SIGPLAN} Symposium on Principles of Programming Languages,
   {POPL} 2017, Paris, France, January 18-20, 2017}, pages 374--386. {ACM},
   2017.
-\newblock URL: \url{http://dl.acm.org/citation.cfm?id=3009901}.
 
 \bibitem[Shu14]{hott-eat-itself}
 Michael Shulman.
@@ -719,17 +716,7 @@ Michael Shulman.
 \newblock URL:
   \url{https://homotopytypetheory.org/2014/03/03/hott-should-eat-itself/}.
 
-\bibitem[Soj15a]{homotopy-initial}
-Kristina Sojakova.
-\newblock Higher inductive types as homotopy-initial algebras.
-\newblock In Sriram~K. Rajamani and David Walker, editors, {\em Proceedings of
-  the 42nd Annual {ACM} {SIGPLAN-SIGACT} Symposium on Principles of Programming
-  Languages, {POPL} 2015, Mumbai, India, January 15-17, 2015}, pages 31--42.
-  {ACM}, 2015.
-\newblock \href {https://doi.org/10.1145/2676726.2676983}
-  {\path{doi:10.1145/2676726.2676983}}.
-
-\bibitem[Soj15b]{sojakova}
+\bibitem[Soj15]{sojakova}
 Kristina Sojakova.
 \newblock Higher inductive types as homotopy-initial algebras.
 \newblock In {\em Proceedings of the 42Nd Annual ACM SIGPLAN-SIGACT Symposium
@@ -761,7 +748,7 @@ Wouter Swierstra.
 
 \bibitem[TS18]{timany18cumulative}
 Amin Timany and Matthieu Sozeau.
-\newblock Cumulative inductive types in coq.
+\newblock Cumulative inductive types in {Coq}.
 \newblock In H{\'{e}}l{\`{e}}ne Kirchner, editor, {\em 3rd International
   Conference on Formal Structures for Computation and Deduction, {FSCD} 2018,
   July 9-12, 2018, Oxford, {UK}}, volume 108 of {\em LIPIcs}, pages
@@ -789,7 +776,7 @@ Tamara Von~Glehn.
 
 \bibitem[VMA21]{cubicalagda}
 Andrea Vezzosi, Anders M{\"{o}}rtberg, and Andreas Abel.
-\newblock Cubical agda: {A} dependently typed programming language with
+\newblock Cubical {Agda}: {A} dependently typed programming language with
   univalence and higher inductive types.
 \newblock {\em J. Funct. Program.}, 31:e8, 2021.
 \newblock \href {https://doi.org/10.1017/S0956796821000034}
@@ -807,8 +794,8 @@ Vladimir Voevodsky.
 
 \bibitem[WB18]{coqnbe}
 Pawel Wieczorek and Dariusz Biernacki.
-\newblock A coq formalization of normalization by evaluation for
-  martin-l{\"{o}}f type theory.
+\newblock A {Coq} formalization of normalization by evaluation for
+  {Martin}-{L}{\"{o}}f type theory.
 \newblock In June Andronick and Amy~P. Felty, editors, {\em Proceedings of the
   7th {ACM} {SIGPLAN} International Conference on Certified Programs and
   Proofs, {CPP} 2018, Los Angeles, CA, USA, January 8-9, 2018}, pages 266--279.

@@ -649,7 +649,7 @@ $t[\id] = t$ for all $t$. Substitution composition is as follows.
 \end{myexample}
 In short, the current ToS allows signatures which are
 \begin{itemize}
-\item \emph{Single-sorted}: this means that we have a single type constructior, corresponding to $\iota$.
+\item \emph{Single-sorted}: this means that we have a single type constructor, corresponding to $\iota$.
 \item \emph{Closed}: signatures cannot refer to any externally existing type. For example, we cannot write a signature for ``lists of natural number'' in a direct fashion, since there is no way to refer to the type of natural numbers.
 \item \emph{Finitary}: inductive types corresponding to signatures are always
   finitely branching trees. Being closed implies being finitary, since an
@@ -772,7 +772,7 @@ the interpretation of $\iota$.
 \end{mydefinition}
 \begin{myexample} We have the following computation:
 \begin{alignat*}{3}
-  & \hspace{-5em}\rlap{$\Mor\,\{\NatSig\}\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_0,\,\mi{zero_1},\,\mi{suc_1}) \defn$} \\
+  & \hspace{-5em}\rlap{$\Mor\,\{\NatSig\}\,(X_0,\,\mi{zero_0},\,\mi{suc_0})\,(X_1,\,\mi{zero_1},\,\mi{suc_1}) \defn$} \\
            &(X^M : X_0 \to X_1) \\
    \times\,&(X^M\,\mi{zero_0} = \mi{zero_1}) \\
    \times\,&((x : X_0) \to X^M\,(\mi{suc_0}\,x) = \mi{suc_1}\,(X^M\,x))
@@ -1773,7 +1773,7 @@ the other way around, is called \emph{equality reflection}: provably equal terms
 are identified in the metatheory.
 
 Uniqueness of identity proofs (UIP) is often ascribed to the extensional
-identity type (see e.g.\ \cite{hofmann1995extensional}). UIP means that
+identity type (see e.g.\ \cite{hofmann95extensional}). UIP means that
 $\Tm\,\Gamma\,(\Id\,t\,u)$ has at most a single inhabitant up to $\Id$. However,
 UIP is not something which is inherent in the negative specification, instead it
 is inherited from the metatheory. If $\Tm$ forms a homotopy set in the
@@ -2360,7 +2360,7 @@ example from \cite[Section~I.]{maclane2012sheaves}. The reader may refer to
 ibid.\ for an overview of constructions in presheaf categories.
 
 The exponential $\Delta^\Gamma : \Con$ is characterized by the isomorphism
-$\Sub\,(\Gamma \otimes \Delta)\,\Xi\,\simeq\,\Sub\,\Gamma\,(\Xi^\Delta)$, where
+$\Sub\,(\Xi \otimes \Gamma)\,\Delta\,\simeq\,\Sub\,\Xi\,(\Delta^\Gamma)$, where
 we write $\otimes$ for the pointwise product of two presheaves. We can again use
 the Yoneda lemma. We want to define $|\Delta^\Gamma|\,i$, but this is isomorphic
 to $\Sub\,(\yon i)\,(\Delta^\Gamma)$, which should be isomorphic to $\Sub\,(\yon
@@ -3212,7 +3212,7 @@ types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A \to
 \subsubsection{Strict positivity}
 
 Only strictly positive signatures are expressible. Similarly to the case with
-simple signatures, there is no way to abstract over a inductive functions, since
+simple signatures, there is no way to abstract over inductive functions, since
 inductive function domains are in $\U$, and $\U$ has no type formers at
 all. With $\Pie$, we can abstract over functions, but only those which are
 external to a signature and do not depend on internally specified constructors.
@@ -3242,7 +3242,7 @@ defining lists and trees mutually:
   &\ms{Tree} &&: \U\\
   &\ms{nil}  &&: \El\,\ms{List}\\
   &\ms{cons} &&: \ms{Tree} \to \ms{List} \to \El\,\ms{List}\\
-  &\ms{node} &&: \ms{List}\,\ms{Tree} \to \ms{Tree}
+  &\ms{node} &&: \ms{List} \to \ms{Tree}
 \end{alignat*}
 Of course, nested induction would be still desirable because of the code reuse
 that it enables.
@@ -4011,7 +4011,7 @@ evident parameterized variant of $\blank\ext\blank$:
 \subsection{Recovering AMDS Interpretations}
 
 We have defined the $\bM$ model in a ``bundled'' fashion, but sometimes we will
-also need to refer to pieces of it. On Figure \ref{fig:fqiit-model} we have a
+also need to refer to pieces of it. In Figure \ref{fig:fqiit-model} we have a
 summary of the model. On the left, the rows are labeled with components of ToS,
 while on the top we have components of flcwf. The individual rows can be further
 unfolded, as each of them contains multiple components. Likewise the $\Sigma$,
@@ -4331,7 +4331,7 @@ forgetfulness. We define $\sigma$ by listing its component definitions.
 \end{alignat*}
 $\sigma$ is defined as
 \begin{alignat*}{3}
-  &\ms{Fin}  &&\defn \ms{Nat}\\
+  &\ms{Fin}  &&\defn \lambda^{ext}\,\_.\,\ms{Nat}\\
   &\ms{zero} &&\defn \lambda^{ext}\,\_.\,\ms{zero}\\
   &\ms{suc}  &&\defn \lambda^{ext}\,\_.\,\lambda\,n.\,\ms{suc}\,n
 \end{alignat*}
@@ -4820,7 +4820,7 @@ $i \lub j$, and taking homogeneous morphisms between these.
 
 \begin{myexample}
 The $\ms{NatSig} : \Sig_0$ signature gives rise to $\ms{NatSig}^T\,\id :
-\ms{NatSig}^A_1$. This consist of $\ms{Nat} : \Set_1$ together with $\zero$ and
+\ms{NatSig}^A_1$. This consists of $\ms{Nat} : \Set_1$ together with $\zero$ and
 $\suc$. Assuming a recursion principle as described above, and $\Bool : \Set_0$,
 we may define an $\ms{isZero} : \Nat \to \Bool$ function by ``downwards''
 elimination.  We have that $(\Bool,\,\true,\,\lambda\,\_.\,\false) :
@@ -4879,7 +4879,7 @@ contexts, we again simply recurse:
   &\emptycon^R\,\nu           &&\defn \tt\\
   &(\Gamma \ext A)^R(\nu,\,t) &&\defn (\Gamma^R\,\nu,\,A^R\,\nu\,t)
 \end{alignat*}
-Type substitutions with $\sigma : \Sub\,\Gamma\,\Delta$ also follows the same
+Type substitution with $\sigma : \Sub\,\Gamma\,\Delta$ also follows the same
 pattern. The following is well-typed by $\sigma^R\,\nu :
 \Delta^R\,(\sigma\circ\nu) \equiv \sigma^M\,(\Gamma^R\,\nu)$.
 \[ (A[\sigma])^R\,\nu\,t \defn A^R\,(\sigma\circ\nu)\,t \]
@@ -5421,8 +5421,8 @@ initial algebras for each signature in $\Sig_j$.
 
 Ideally, we would like to reduce QIITs to some collection of basic type
 formers. The ToS syntax is far from being a basic type former, it is rather
-large and complicated. Therefore, the remaining job is to reduce the ToS syntax
-to basic type formers.
+large and complicated. Therefore, the remaining job is to construct the ToS
+syntax from simpler types.
 
 We do not attempt here to construct the entire ToS syntax as specified. The
 reason is the following: \cite[Section 9]{lumsdaineShulman} shows that
@@ -5576,8 +5576,8 @@ First, as a moral justification for the usage of raw syntax, the initiality
 construction is indeed mostly pointless. That is because \emph{elaboration}
 comprises the true justification for that. Elaboration is the effective
 algorithm which converts raw syntax to ``core syntax'', i.e.\ typed categorical
-syntax. Given a piece of raw syntax, even if I have done the initiality
-construction, I have no effective way of learning which core syntactic object it
+syntax. Given a piece of raw syntax, even if we have done the initiality
+construction, we have no effective way of learning which core syntactic object it
 corresponds to!  The elaboration literature is mainly about practical
 justifications for using certain raw syntaxes, and it comes with established
 ways to talk about strength and correctness of elaboration algorithms.
@@ -7041,7 +7041,7 @@ signatures from old ones. We give an example application, in the construction of
 colimits.
 
 We would like to use left adjoints of substitutions to build colimits in
-categories of algebras. For this, it enough to build indexed coproducts and
+categories of algebras. For this, it is enough to build indexed coproducts and
 binary coequalizers.
 
 For some $\Gamma : \Con$, we get $\Gamma^A_{\ms{tos}} : \Ty\,\emptycon$. For
@@ -7651,7 +7651,6 @@ Specific examples of infinitary QIITs where introduced in \cite{hottbook}, as
 QIITs for Cauchy real numbers, surreal numbers, and cumulative set hierarchies.
 In \cite{partiality}, a partiality monad is specified as an infinitary QIITs.
 
-
 \chapter{Higher Inductive-Inductive Signatures}
 \label{chap:hiit}
 
@@ -7675,11 +7674,12 @@ as intensional inner equality. This may not seem that dramatic, but note that so
 far we have made very heavy use of UIP and inner equality reflection in the
 semantics, and now these are not available.
 
+
 The more general semantics introduces significant complications. As a result, in
 the following we shall restrict ourselves to the AMDS fragment of the semantics.
 This is sufficient to compute what we mean by induction and initiality (which
 has been called ``homotopy initiality'' in the context of HoTT
-\cite{homotopy-initial}).
+\cite{sojakova}).
 
 Why do not we go further? The main reason is that the natural semantics is
 actually in $(\omega,1)$-categories: we want $(\omega,1)$-categories of
@@ -7688,6 +7688,7 @@ algebras. This requires a different approach and toolset. In particular, in
 semantics of signatures with the notion of identity morphisms already fails.
 The author of this thesis is not versed enough in higher category theory, so we
 leave the exposition of the full semantics to future work.
+
 
 We do note that a higher semantics has been developed by Capriotti and
 Sattler. See \cite{capriotti2020higher} for an abstract; the bulk of the work
@@ -7830,6 +7831,7 @@ From the HoTT book, all higher-inductive types are supported, except
 \end{itemize}
 
 \subsection{Semantics}
+
 
 For each signature $\Gamma$, we wish to compute
 \begin{alignat*}{3}
