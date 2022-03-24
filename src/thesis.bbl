@@ -418,6 +418,13 @@ Marcelo~P. Fiore, Andrew~M. Pitts, and S.~C. Steenkamp.
 \newblock \href {https://doi.org/10.1007/978-3-030-45231-5\_14}
   {\path{doi:10.1007/978-3-030-45231-5\_14}}.
 
+\bibitem[FPS21]{DBLP:journals/corr/abs-2101-02994}
+Marcelo~P. Fiore, Andrew~M. Pitts, and S.~C. Steenkamp.
+\newblock Quotients, inductive types, and quotient inductive types.
+\newblock {\em CoRR}, abs/2101.02994, 2021.
+\newblock URL: \url{https://arxiv.org/abs/2101.02994}, \href
+  {http://arxiv.org/abs/2101.02994} {\path{arXiv:2101.02994}}.
+
 \bibitem[Fre72]{freyd1972aspects}
 Peter Freyd.
 \newblock Aspects of topoi.
@@ -806,6 +813,13 @@ Pawel Wieczorek and Dariusz Biernacki.
 Théo Winterhalter.
 \newblock {\em Formalisation and Meta-Theory of Type Theory}.
 \newblock PhD thesis, University of Nantes, 2020.
+
+\bibitem[XPL{\etalchar{+}}22]{typed-th}
+Ningning Xie, Matthew Pickering, Andres L{\"{o}}h, Nicolas Wu, Jeremy Yallop,
+  and Meng Wang.
+\newblock Staging with class: a specification for typed {Template} {Haskell}.
+\newblock {\em Proc. {ACM} Program. Lang.}, 6({POPL}):1--30, 2022.
+\newblock \href {https://doi.org/10.1145/3498723} {\path{doi:10.1145/3498723}}.
 
 \bibitem[YHLJ09]{multirec}
 Alexey~Rodriguez Yakushev, Stefan Holdermans, Andres L{\"{o}}h, and Johan
