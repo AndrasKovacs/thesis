@@ -109,7 +109,7 @@
 \newcommand{\tr}{\ms{tr}}
 \newcommand{\happly}{\ms{happly}}
 \newcommand{\funext}{\ms{funext}}
-\newcommand{\toind}{\to^{\ms{ind}}}
+\newcommand{\toind}{\to^{\ms{int}}}
 
 \newcommand{\Tys}{\ms{Ty_{sig}}}
 \newcommand{\Tms}{\ms{Tm_{sig}}}
@@ -144,18 +144,29 @@
 \newcommand{\ToS}{\mathsf{ToS}}
 \newcommand{\ext}{\triangleright}
 \newcommand{\emptycon}{\scaleobj{.75}\bullet}
+
 \newcommand{\Pii}{\Pi}
 \newcommand{\funi}{\Rightarrow}
-\newcommand{\fune}{\Rightarrow^{\ms{ext}}}
 \newcommand{\appi}{\mathsf{app}}
 \newcommand{\lami}{\mathsf{lam}}
-\newcommand{\Pie}{\Pi^{\mathsf{ext}}}
-\newcommand{\appe}{\mathsf{app^{ext}}}
-\newcommand{\lame}{\mathsf{lam^{ext}}}
-\newcommand{\toe}{\to^{\ms{ext}}}
-\newcommand{\Piinf}{\Pi^{\mathsf{inf}}}
-\newcommand{\appinf}{\mathsf{app^{inf}}}
-\newcommand{\laminf}{\mathsf{lam^{inf}}}
+
+\newcommand{\fune}{\Rightarrow^{\ms{Ext}}}
+\newcommand{\Pie}{\Pi^{\mathsf{Ext}}}
+\newcommand{\appe}{\mathsf{app^{Ext}}}
+\newcommand{\lame}{\mathsf{lam^{Ext}}}
+\newcommand{\toe}{\to^{\ms{Ext}}}
+\newcommand{\arre}{\Rightarrow^{\mathsf{Ext}}}
+\newcommand{\lambdae}{\lambda^{\ms{Ext}}}
+
+\newcommand{\Piinf}{\Pi^{\mathsf{ext}}}
+\newcommand{\appinf}{\mathsf{app^{ext}}}
+\newcommand{\laminf}{\mathsf{lam^{ext}}}
+\newcommand{\laminfprime}{\mathsf{lam^{ext'}}}
+\newcommand{\toinf}{\to^{\ms{ext}}}
+\newcommand{\lambdainf}{\lambda^{\ms{ext}}}
+\newcommand{\arrinf}{\Rightarrow^{\mathsf{ext}}}
+\newcommand{\bPiinf}{\bs{\Piinf}}
+
 \newcommand{\appitt}{\mathop{{\scriptstyle @}}}
 \newcommand{\Refl}{\mathsf{Refl}}
 \newcommand{\IdU}{\mathsf{IdU}}
@@ -177,10 +188,6 @@
 \newcommand{\lamK}{\mathsf{lam}_{\K}}
 \newcommand{\appK}{\mathsf{app}_{\K}}
 
-\newcommand{\toinf}{\to^{\ms{inf}}}
-\newcommand{\lambdainf}{\lambda^{\ms{inf}}}
-\newcommand{\lambdae}{\lambda^{\ms{ext}}}
-
 \newcommand{\p}{\mathsf{p}}
 \newcommand{\q}{\mathsf{q}}
 \newcommand{\K}{\mathsf{K}}
@@ -188,8 +195,6 @@
 \newcommand{\D}{\mathsf{D}}
 \renewcommand{\S}{\mathsf{S}}
 \newcommand{\arri}{\Rightarrow}
-\newcommand{\arre}{\Rightarrow^{\mathsf{ext}}}
-\newcommand{\arrinf}{\Rightarrow^{\mathsf{inf}}}
 \newcommand{\syn}{\mathsf{syn}}
 \newcommand{\SynSig}{\mathsf{SynSig}}
 \newcommand{\bCon}{\bs{\Con}}
@@ -214,7 +219,6 @@
 \newcommand{\bEl}{\bs{\El}}
 \newcommand{\bPii}{\bs{\Pi}}
 \newcommand{\bPie}{\bs{\Pie}}
-\newcommand{\bPiinf}{\bs{\Piinf}}
 \newcommand{\bappi}{\bs{\mathsf{app}}}
 \newcommand{\blami}{\bs{\mathsf{lam}}}
 \newcommand{\bId}{\bs{\Id}}
@@ -325,6 +329,9 @@
         Eötvös Loránd University\\
         Doctoral School of Informatics\\
         September 2021}
+        \\
+        \vspace{2em}
+        \small{\textsc{DOI: 10.15476/ELTE.2022.070}}
 
     \end{center}
 \end{titlepage}
@@ -560,7 +567,7 @@ thesis in the easiest possible setting, with explicit definitions. The later
 chapters are greatly generalized and expanded compared to the current one, and
 are not feasible (and probably not that useful) to present in full formal
 detail. We also include a complete Agda formalization of the contents of this
-chapter, in less than 200 lines.
+chapter, in around 250 lines.
 
 The mantra throughout this dissertation is the following: algebraic theories are
 specified by typing contexts in certain \emph{theories of signatures}. For each
@@ -650,15 +657,15 @@ $t[\id] = t$ for all $t$. Substitution composition is as follows.
 In short, the current ToS allows signatures which are
 \begin{itemize}
 \item \emph{Single-sorted}: this means that we have a single type constructor, corresponding to $\iota$.
-\item \emph{Closed}: signatures cannot refer to any externally existing type. For example, we cannot write a signature for ``lists of natural number'' in a direct fashion, since there is no way to refer to the type of natural numbers.
+\item \emph{Closed}: signatures cannot refer to any externally existing type. For example, we cannot write a signature for lists of natural numbers in a direct fashion, since there is no way to refer to the type of natural numbers.
 \item \emph{Finitary}: inductive types corresponding to signatures are always
   finitely branching trees. For a counterexample, assuming $\mbb{N}$ as the
   metatheoretical type of natural numbers, $\mi{node} : (\mathbb{N} \to \iota)
   \to \iota$ would specify an infinite branching (if such type was allowed in
-  ToS).
+  the ToS).
 \end{itemize}
 
-\emph{Remark.} We omit $\lambda$-expressions from ToS for the sake of
+\emph{Remark.} We omit $\lambda$-expressions from the ToS for the sake of
 simplicity: this causes terms to be always in normal form (neutral, to be
 precise), and thus we can skip talking about conversion rules. Later, starting
 from Chapter \ref{chap:fqiit} we include proper $\beta\eta$-rules in theories of
@@ -830,7 +837,7 @@ although higher-order functions have relational interpretation, such relations
 do not generally compose. What we eventually aim to have is a category of
 algebras and algebra morphisms, where morphisms do compose. We need a
 \emph{directed} model of the theory of signatures, where every signature becomes
-a category of algebras. The way to achieve this, is to prohibit higher-order
+a category of algebras. The way to achieve this is to prohibit higher-order
 functions, thereby avoiding the polarity issues that prevent a directed
 interpretation for general function types.
 
@@ -1100,32 +1107,31 @@ formalization. We get induction for $\Omega$ as below.
 \end{alignat*}
 \end{mydefinition}
 
-\section{Discussion \& Related Work}
+%% \section{Discussion \& Related Work}
 
-\subsection{Comparison to F-algebras}
+\section{Comparison to Signatures as Endofunctors}
 
-A well-known alternative way for treating inductive types is to use certain
-cocontinuous endofunctors as a more semantic notion of signatures.
-
-For example, single-sorted inductive types can be presented as endofunctors
-which preserve colimits of some ordinal-indexed chains. For instance, if we have
-a $\kappa$-cocontinuous $F : \mbb{C} \to \mbb{C}$, then algebras are given as
-$(X : |\mbb{C}|) \times (\mbb{C}(F\,X,\,X))$, morphisms as commuting squares,
+A well-known alternative definition of algebraic signatures is to view certain
+cocontinuous endofunctors as such. For example, single-sorted signatures can be
+defined to be endofunctors which preserve colimits of some ordinal-indexed
+chains. For instance, if we have a $\kappa$-cocontinuous $F : \mbb{C} \to
+\mbb{C}$, then algebras are given as $(X : |\mbb{C}|) \times
+(\mbb{C}(F\,X,\,X))$, called \emph{F-algebras}, morphisms as commuting squares,
 and Adámek's theorem \cite{adamek} establishes the existence of initial
 algebras.
 
 An advantage of this approach is that we can describe different classes of
 signatures by choosing different $\mbb{C}$ categories:
 \begin{itemize}
-  \item If $\mbb{C}$ is $\mbf{Set}$, we get simple inductive types.
-  \item If $\mbb{C}$ is $\mbf{Set}^I$ for some set $I$, we get indexed inductive types.
-  \item If $\mbb{C}$ is $\mbf{Set}/I$, we get inductive-recursive types.
+  \item If $\mbb{C}$ is $\mbf{Set}$, we get simple inductive theories.
+  \item If $\mbb{C}$ is $\mbf{Set}^I$ for some set $I$, we get indexed inductive signatures.
+  \item If $\mbb{C}$ is $\mbf{Set}/I$, we get inductive-recursive signatures.
 \end{itemize}
 
-Another advantage of $F$-algebras is that signatures are a fairly semantic
-notion: they make sense even if we have no syntactic presentation at hand. That
-said, often we do need syntactic signatures, for use in proof assistants, or
-just to have a convenient notation for a class of cocontinuous functors.
+Another advantage is that signatures are fairly semantic in nature: they make
+sense even if we have no syntactic presentation at hand. That said, often we do
+need syntactic signatures, for use in proof assistants, or just to have a
+convenient notation for a class of cocontinuous functors.
 
 An elegant way of carving out a large class of such functors is to
 consider polynomials as signatures. For example, when working in \textbf{Set}, a
@@ -1161,205 +1167,205 @@ The functors-as-signatures approach gets significantly less convenient as we
 consider more general specifications. The approach of this thesis is to skip the
 middle ground between syntactic signatures and semantic categories of algebras:
 we treat syntactic signatures as a key component, and give direct semantic
-interpretation for them. Although we lose the semantic nature of $F$-algebras,
+interpretation for them. Although we lose the semantic nature of signatures,
 our approach scales extremely well, all the way up to infinitary
 quotient-inductive-inductive types in Chapter \ref{chap:iqiit}, and to some
 extent to higher inductive-inductive types as well in Chapter \ref{chap:hiit}.
 
 If we look back at $\blank^A : \Con \to \Set \to \Set$, we may note that
 $\Gamma^A$ yields a functor, in fact the same functor (up to isomorphism) that
-we would get from an $F$-algebra presentation. However, this is a coincidence in
-the single-sorted case. With the $F$-algebra presentation, we can view $(X :
-|\mbb{C}|) \times (\mbb{C}(F\,X,\,X))$ as specifying the category of algebras as
-the total category of a displayed category (by viewing the $\Sigma$-type here as
-taking total categories; a $\Sigma$ in $\mbf{Cat}$). In our approach, we aim to
-get the displayed categories directly, without talking about functors.
+we would get from an endofunctor presentation. However, this is a coincidence in
+the single-sorted case. We can view $(X : |\mbb{C}|) \times (\mbb{C}(F\,X,\,X))$
+as specifying the category of algebras as the total category of a displayed
+category (by viewing the $\Sigma$-type here as taking total categories; a
+$\Sigma$ in $\mbf{Cat}$). In our approach, we aim to get the displayed
+categories directly, without talking about functors.
 
-\subsection{Generic Programming}
-\label{sec:generic-programming}
+%% \subsection{Generic Programming}
+%% \label{sec:generic-programming}
 
-Let us consider now our signatures and term algebras in the context of generic
-programming. This is largely future work, and we do not elaborate it much. But we
-can draw some preliminary conclusions and make some comparisons.
+%% Let us consider now our signatures and term algebras in the context of generic
+%% programming. This is largely future work, and we do not elaborate it much. But we
+%% can draw some preliminary conclusions and make some comparisons.
 
-If a language can formalize inductive signatures and their semantics, that can
-be viewed as an implementation of generic programming over the described types.
-Compared to a purely mathematical motivation for this formalization, the
-requirements for practical generic programming are a bit more stringent.
-\begin{itemize}
-  \item \emph{Encoding overhead}: there should be an acceptable overhead in
-    program size and performance when using generic representations.  Size
-    blowup can be an issue when writing proofs as well, when types and
-    expressions become too large to mentally parse.
-  \item \emph{Strictness properties}: generic representations should compute as
-    much as possible, ideally in exactly the same way as their non-generic
-    counterparts.
-\end{itemize}
+%% If a language can formalize inductive signatures and their semantics, that can
+%% be viewed as an implementation of generic programming over the described types.
+%% Compared to a purely mathematical motivation for this formalization, the
+%% requirements for practical generic programming are a bit more stringent.
+%% \begin{itemize}
+%%   \item \emph{Encoding overhead}: there should be an acceptable overhead in
+%%     program size and performance when using generic representations.  Size
+%%     blowup can be an issue when writing proofs as well, when types and
+%%     expressions become too large to mentally parse.
+%%   \item \emph{Strictness properties}: generic representations should compute as
+%%     much as possible, ideally in exactly the same way as their non-generic
+%%     counterparts.
+%% \end{itemize}
 
-\subsubsection{Fixpoints of functors}
-There is a sizable literature of using fixpoints of functors in generic
-programming, mainly in Haskell \cite{alacarte,compdata,multirec} and Agda
-\cite{loh11generic,allais20type}. We give a minimal example below for an
-Agda-like implementation.
+%% \subsubsection{Fixpoints of functors}
+%% There is a sizable literature of using fixpoints of functors in generic
+%% programming, mainly in Haskell \cite{alacarte,compdata,multirec} and Agda
+%% \cite{loh11generic,allais20type}. We give a minimal example below for an
+%% Agda-like implementation.
 
-We have an inductive syntax for some strictly positive functors, covering essentially the
-same signatures as $\Con$.
-\begin{alignat*}{3}
-  & \ms{Sig}                &&: \Set \\
-  & \ms{Id}                 &&: \ms{Sig} \\
-  & \ms{K\top}              &&: \ms{Sig} \\
-  & \blank\!\otimes\!\blank &&: \ms{Sig} \to \ms{Sig} \to \ms{Sig} \\
-  & \blank\!\oplus\!\blank  &&: \ms{Sig} \to \ms{Sig} \to \ms{Sig}
-\end{alignat*}
+%% We have an inductive syntax for some strictly positive functors, covering essentially the
+%% same signatures as $\Con$.
+%% \begin{alignat*}{3}
+%%   & \ms{Sig}                &&: \Set \\
+%%   & \ms{Id}                 &&: \ms{Sig} \\
+%%   & \ms{K\top}              &&: \ms{Sig} \\
+%%   & \blank\!\otimes\!\blank &&: \ms{Sig} \to \ms{Sig} \to \ms{Sig} \\
+%%   & \blank\!\oplus\!\blank  &&: \ms{Sig} \to \ms{Sig} \to \ms{Sig}
+%% \end{alignat*}
 
-$\ms{Id}$ codes the identity functor, and $\ms{K\top}$ codes the functor which
-is constantly $\top$. $\blank\!\otimes\!\blank$ and $\blank\!\oplus\!\blank$ are
-pointwise products and coproducts respectively. So we have the evident
-interpretation functions:
-\begin{alignat*}{3}
-  & \llbracket\blank\rrbracket &&: \ms{Sig} \to \Set \to \Set\\
-  & \ms{map} &&: (F : \ms{Sig}) \to (X_0 \to X_1) \to \llbracket F \rrbracket\,X_0 \to \llbracket F \rrbracket\,X_1
-\end{alignat*}
-In Haskell and Agda, the easiest way to get initial algebras is to directly define
-the inductive fixpoint for each assumed $F : \ms{Sig}$:
-\begin{alignat*}{3}
-  & \ms{Fix_F} &&: \Set \\
-  & \ms{con_F} &&: \llbracket F \rrbracket\,\ms{Fix_F} \to \ms{Fix_F}
-\end{alignat*}
-In Haskell, this definition is valid for arbitrary \emph{semantic} $F$ functor
-because there is no termination checking or positivity checking. In Agda, the
-above definition is valid because the positivity checker is willing to look
-inside the definition of $\llbracket\blank\rrbracket$. However, Coq and Lean
-reject this definition. Next we establish weak initiality, by defining the
-recursor:
-\begin{alignat*}{3}
-  & \ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X \\
-  & \ms{rec}\,f\,(\ms{con}\,x) \defn f\,(\ms{map}\,(\ms{rec}\,f)\,x)
-\end{alignat*}
-This is again fine in Haskell, but it unfortunately does not pass Agda's
-termination checker. The most conservative solution is to inline the recursive
-call into $\ms{map}$, so that the definition becomes transparent to termination
-checking.
-\begin{alignat*}{3}
-  &\ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X\\
-  &\ms{rec}\,f\,(\ms{con}\,x) \defn f\,(\ms{maprec}\,f\,x)
-\end{alignat*}
-\begin{alignat*}{3}
-  & \rlap{$\ms{maprec} : \{G\} \to (\llbracket F \rrbracket\,X \to X) \to \llbracket G \rrbracket\,\ms{Fix_F} \to \llbracket G \rrbracket\,X$}\\
-  & \ms{maprec}\,\{\Id\}\,&&f\,x &&\defn \ms{rec}\,f\,x\\
-  & \ms{maprec}\,\{\ms{K\top}\}\,&&f\,x &&\defn x\\
-  & \ms{maprec}\,\{G \otimes H\}\,&&f\,(x,\,y) &&\defn  (\ms{maprec}\,f\,x,\,\ms{maprec}\,f\,y)\\
-  & \ms{maprec}\,\{G \oplus H\}\,&&f\,(\ms{inj_1}\,x) &&\defn \ms{maprec}\,f\,x\\
-  & \ms{maprec}\,\{G \oplus H\}\,&&f\,(\ms{inj_2}\,x) &&\defn \ms{maprec}\,f\,x
-\end{alignat*}
+%% $\ms{Id}$ codes the identity functor, and $\ms{K\top}$ codes the functor which
+%% is constantly $\top$. $\blank\!\otimes\!\blank$ and $\blank\!\oplus\!\blank$ are
+%% pointwise products and coproducts respectively. So we have the evident
+%% interpretation functions:
+%% \begin{alignat*}{3}
+%%   & \llbracket\blank\rrbracket &&: \ms{Sig} \to \Set \to \Set\\
+%%   & \ms{map} &&: (F : \ms{Sig}) \to (X_0 \to X_1) \to \llbracket F \rrbracket\,X_0 \to \llbracket F \rrbracket\,X_1
+%% \end{alignat*}
+%% In Haskell and Agda, the easiest way to get initial algebras is to directly define
+%% the inductive fixpoint for each assumed $F : \ms{Sig}$:
+%% \begin{alignat*}{3}
+%%   & \ms{Fix_F} &&: \Set \\
+%%   & \ms{con_F} &&: \llbracket F \rrbracket\,\ms{Fix_F} \to \ms{Fix_F}
+%% \end{alignat*}
+%% In Haskell, this definition is valid for arbitrary \emph{semantic} $F$ functor
+%% because there is no termination checking or positivity checking. In Agda, the
+%% above definition is valid because the positivity checker is willing to look
+%% inside the definition of $\llbracket\blank\rrbracket$. However, Coq and Lean
+%% reject this definition. Next we establish weak initiality, by defining the
+%% recursor:
+%% \begin{alignat*}{3}
+%%   & \ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X \\
+%%   & \ms{rec}\,f\,(\ms{con}\,x) \defn f\,(\ms{map}\,(\ms{rec}\,f)\,x)
+%% \end{alignat*}
+%% This is again fine in Haskell, but it unfortunately does not pass Agda's
+%% termination checker. The most conservative solution is to inline the recursive
+%% call into $\ms{map}$, so that the definition becomes transparent to termination
+%% checking.
+%% \begin{alignat*}{3}
+%%   &\ms{rec} : (\llbracket F \rrbracket\,X \to X) \to \ms{Fix_F} \to X\\
+%%   &\ms{rec}\,f\,(\ms{con}\,x) \defn f\,(\ms{maprec}\,f\,x)
+%% \end{alignat*}
+%% \begin{alignat*}{3}
+%%   & \rlap{$\ms{maprec} : \{G\} \to (\llbracket F \rrbracket\,X \to X) \to \llbracket G \rrbracket\,\ms{Fix_F} \to \llbracket G \rrbracket\,X$}\\
+%%   & \ms{maprec}\,\{\Id\}\,&&f\,x &&\defn \ms{rec}\,f\,x\\
+%%   & \ms{maprec}\,\{\ms{K\top}\}\,&&f\,x &&\defn x\\
+%%   & \ms{maprec}\,\{G \otimes H\}\,&&f\,(x,\,y) &&\defn  (\ms{maprec}\,f\,x,\,\ms{maprec}\,f\,y)\\
+%%   & \ms{maprec}\,\{G \oplus H\}\,&&f\,(\ms{inj_1}\,x) &&\defn \ms{maprec}\,f\,x\\
+%%   & \ms{maprec}\,\{G \oplus H\}\,&&f\,(\ms{inj_2}\,x) &&\defn \ms{maprec}\,f\,x
+%% \end{alignat*}
 
-Alternatively, we might use \emph{sized types} \cite{abel17normalization}, as
-in \cite{allais20type}. The drawback is dependence on an additional
-language feature which is only supported in Agda, and which has had several
-soundness issues since its introduction; see e.g.\ \cite{agda-sized-issue}.
+%% Alternatively, we might use \emph{sized types} \cite{abel17normalization}, as
+%% in \cite{allais20type}. The drawback is dependence on an additional
+%% language feature which is only supported in Agda, and which has had several
+%% soundness issues since its introduction; see e.g.\ \cite{agda-sized-issue}.
 
-There is yet another possible approach: defining initial algebras as sequential
-colimits, using Adámek's theorem. This approach was taken by Ahrens, Matthes and
-Mörtberg in \cite{ahrens19from}. However, the encoding overhead is excessive,
-and it is practically unusable for generic programming. Another drawback is that
-defining colimits requires quotient types, which are often not available
-natively.
+%% There is yet another possible approach: defining initial algebras as sequential
+%% colimits, using Adámek's theorem. This approach was taken by Ahrens, Matthes and
+%% Mörtberg in \cite{ahrens19from}. However, the encoding overhead is excessive,
+%% and it is practically unusable for generic programming. Another drawback is that
+%% defining colimits requires quotient types, which are often not available
+%% natively.
 
-\subsubsection{W-types}
-Given a polynomial $(S,\,P) : (S : \Set) \times (S \to \Set)$, the corresponding
-W-type is inductively specified as below:
-\begin{alignat*}{3}
-  & \ms{W}_{S,\,P} &&: \Set \\
-  & \ms{sup} &&: (s : S) \to (P\,s \to \ms{W}_{S,\,P}) \to \ms{W}_{S,\,P}
-\end{alignat*}
-If we assume $\top$, $\bot$, $\Bool$, $\Pi$, $\Sigma$, $\ms{W}$-types, universes
-and an intensional identity type, a large class of inductive types can be
-derived, including infinitary and finitary indexed inductive families; this
-was shown by Hugunin \cite{whynotw}. The encoding also yields definitional
-$\beta$-rules for recursion and elimination. However, there is also significant
-encoding overhead here.
-\begin{itemize}
-  \item
-    First, there is a translation from more convenient signatures to $(S,\,P)$ polynomials.
-  \item Then, we take the $\ms{W}_{S\,P}$ type, but we need to additionally
-    restrict it to the \emph{canonical} elements by a predicate, as in $(x :
-    \ms{W}_{S\,P}) \times \ms{canonical}\,x$. This is required because the only
-    way to represent inductive branching is by functions, but functions
-    sometimes contain too many elements up to definitional equality. For
-    example, $\bot \to A$ has infinitely many definitonally distinct
-    inhabitants.
-\end{itemize}
-Also, there is a performance overhead imposed by the mandatory higher-order
-constructors.
+%% \subsubsection{W-types}
+%% Given a polynomial $(S,\,P) : (S : \Set) \times (S \to \Set)$, the corresponding
+%% W-type is inductively specified as below:
+%% \begin{alignat*}{3}
+%%   & \ms{W}_{S,\,P} &&: \Set \\
+%%   & \ms{sup} &&: (s : S) \to (P\,s \to \ms{W}_{S,\,P}) \to \ms{W}_{S,\,P}
+%% \end{alignat*}
+%% If we assume $\top$, $\bot$, $\Bool$, $\Pi$, $\Sigma$, $\ms{W}$-types, universes
+%% and an intensional identity type, a large class of inductive types can be
+%% derived, including infinitary and finitary indexed inductive families; this
+%% was shown by Hugunin \cite{whynotw}. The encoding also yields definitional
+%% $\beta$-rules for recursion and elimination. However, there is also significant
+%% encoding overhead here.
+%% \begin{itemize}
+%%   \item
+%%     First, there is a translation from more convenient signatures to $(S,\,P)$ polynomials.
+%%   \item Then, we take the $\ms{W}_{S\,P}$ type, but we need to additionally
+%%     restrict it to the \emph{canonical} elements by a predicate, as in $(x :
+%%     \ms{W}_{S\,P}) \times \ms{canonical}\,x$. This is required because the only
+%%     way to represent inductive branching is by functions, but functions
+%%     sometimes contain too many elements up to definitional equality. For
+%%     example, $\bot \to A$ has infinitely many definitonally distinct
+%%     inhabitants.
+%% \end{itemize}
+%% Also, there is a performance overhead imposed by the mandatory higher-order
+%% constructors.
 
-\subsubsection{Term algebras}
-The main advantage of the term algebras described in this chapter is that they
-can be defined using plain inductive families, which are available in every
-major dependently typed language. Even in GHC Haskell, the support for
-generalized ADTs \cite{gadts} is sufficient for implementing term algebras. In
-contrast, as we have seen, the direct inductive definition of fixpoints is only
-possible in Agda, while the colimit definition requires quotients and is rather
-heavyweight. Even in Agda, the drawback of the direct fixpoint definition is
-that many generic operations only pass termination checking after manual
-inlining. With term algebras, generic operations can be defined by induction on
-$\Tm\,\Gamma\,A$ in an obviously terminating way.
+%% \subsubsection{Term algebras}
+%% The main advantage of the term algebras described in this chapter is that they
+%% can be defined using plain inductive families, which are available in every
+%% major dependently typed language. Even in GHC Haskell, the support for
+%% generalized ADTs \cite{gadts} is sufficient for implementing term algebras. In
+%% contrast, as we have seen, the direct inductive definition of fixpoints is only
+%% possible in Agda, while the colimit definition requires quotients and is rather
+%% heavyweight. Even in Agda, the drawback of the direct fixpoint definition is
+%% that many generic operations only pass termination checking after manual
+%% inlining. With term algebras, generic operations can be defined by induction on
+%% $\Tm\,\Gamma\,A$ in an obviously terminating way.
 
-For practical usage it makes sense to slightly modify terms. We switch to a
-\emph{spine neutral} definition. We mutually inductively define $\ms{Spine}$ and
-$\Tm$:
-\begin{alignat*}{3}
-  & \ms{Spine} &&: (\Gamma : \Con) \to \Ty \to \Ty \to \Set \\
-  & \epsilon &&: \{A\} \to \ms{Spine}\,\Gamma\,A\,A\\
-  & \blank\!,\!\blank &&: \{B\,C\} \to \Tm\,\Gamma\,\iota \to \ms{Spine}\,\Gamma\,B\,C \to \ms{Spine}\,\Gamma\,(\iota\to B)\,C\\
-  & \Tm  &&: \Con \to \Ty \to \Set \\
-  & \blank\$\blank &&: \{A\,B\} \to \Var\,\Gamma\,A \to \ms{Spine}\,\Gamma\,A\,B \to \Tm\,\Gamma\,B
-\end{alignat*}
-With this representation, a term is always a variable applied to a list of
-arguments. This can be useful, because pattern matching implementations in
-metalanguages (e.g.\ Agda or Idris) are more likely to know about which
-constructors are possible in patterns. Using this, we give here an ad-hoc
-definition of natural numbers in pseudo-Agda.
-\begin{alignat*}{3}
-  &\Nat : \Set && \ms{zero} &&\defn \vz\,\$\,\epsilon\\
-  &\Nat \defn \Tm\,(\emptycon\ext \iota\to \iota \ext \iota)\,\iota\hspace{2em} && \ms{suc}\,n &&\defn \vs\,\vz\,\$\,(n,\,\epsilon)
-\end{alignat*}
-\begin{alignat*}{3}
-  &\hspace{-6.5em}\rlap{$\ms{NatElim} : (P : \Nat \to \Set) \to P\,\ms{zero}\to ((n : \Nat) \to P\,n \to P\,(\ms{suc}\,n))$}\\
-  &\hspace{-6.5em}\rlap{$\hspace{4em}\to (n : \Nat) \to P\,n$}\\
-  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vz\,\$\,\epsilon) &&\defn \ms{pz}\\
-  &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vs\,\vz\,\$\,(n,\,\epsilon)) &&\defn
-    \ms{ps}\,n\,(\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,n)
-\end{alignat*}
-The actual Agda definition can be found in the supplementary formalization, and
-it is pretty much the same as above. We recover the exact same behavior with
-respect to pattern matching as with native inductive definitions.
+%% For practical usage it makes sense to slightly modify terms. We switch to a
+%% \emph{spine neutral} definition. We mutually inductively define $\ms{Spine}$ and
+%% $\Tm$:
+%% \begin{alignat*}{3}
+%%   & \ms{Spine} &&: (\Gamma : \Con) \to \Ty \to \Ty \to \Set \\
+%%   & \epsilon &&: \{A\} \to \ms{Spine}\,\Gamma\,A\,A\\
+%%   & \blank\!,\!\blank &&: \{B\,C\} \to \Tm\,\Gamma\,\iota \to \ms{Spine}\,\Gamma\,B\,C \to \ms{Spine}\,\Gamma\,(\iota\to B)\,C\\
+%%   & \Tm  &&: \Con \to \Ty \to \Set \\
+%%   & \blank\$\blank &&: \{A\,B\} \to \Var\,\Gamma\,A \to \ms{Spine}\,\Gamma\,A\,B \to \Tm\,\Gamma\,B
+%% \end{alignat*}
+%% With this representation, a term is always a variable applied to a list of
+%% arguments. This can be useful, because pattern matching implementations in
+%% metalanguages (e.g.\ Agda or Idris) are more likely to know about which
+%% constructors are possible in patterns. Using this, we give here an ad-hoc
+%% definition of natural numbers in pseudo-Agda.
+%% \begin{alignat*}{3}
+%%   &\Nat : \Set && \ms{zero} &&\defn \vz\,\$\,\epsilon\\
+%%   &\Nat \defn \Tm\,(\emptycon\ext \iota\to \iota \ext \iota)\,\iota\hspace{2em} && \ms{suc}\,n &&\defn \vs\,\vz\,\$\,(n,\,\epsilon)
+%% \end{alignat*}
+%% \begin{alignat*}{3}
+%%   &\hspace{-6.5em}\rlap{$\ms{NatElim} : (P : \Nat \to \Set) \to P\,\ms{zero}\to ((n : \Nat) \to P\,n \to P\,(\ms{suc}\,n))$}\\
+%%   &\hspace{-6.5em}\rlap{$\hspace{4em}\to (n : \Nat) \to P\,n$}\\
+%%   &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vz\,\$\,\epsilon) &&\defn \ms{pz}\\
+%%   &\hspace{-6.5em}\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,(\vs\,\vz\,\$\,(n,\,\epsilon)) &&\defn
+%%     \ms{ps}\,n\,(\ms{NatElim}\,P\,\ms{pz}\,\ms{ps}\,n)
+%% \end{alignat*}
+%% The actual Agda definition can be found in the supplementary formalization, and
+%% it is pretty much the same as above. We recover the exact same behavior with
+%% respect to pattern matching as with native inductive definitions.
 
-$\Rec_\Omega$ and $\Ind_\Omega$ can be adapted to spine neutral terms with minor
-adjustments. But what about the $\beta$-rules which they produce as part of
-their output, are they definitional (i.e.\ proven by $\refl$)? In this chapter
-we do not have a rigorous way of reasoning about definitional equalities; in the
-next chapter we develop such reasoning and show that $\Rec_\Omega$ enjoys
-definitional $\beta$-rules (with or without the spine neutral
-definition).
+%% $\Rec_\Omega$ and $\Ind_\Omega$ can be adapted to spine neutral terms with minor
+%% adjustments. But what about the $\beta$-rules which they produce as part of
+%% their output, are they definitional (i.e.\ proven by $\refl$)? In this chapter
+%% we do not have a rigorous way of reasoning about definitional equalities; in the
+%% next chapter we develop such reasoning and show that $\Rec_\Omega$ enjoys
+%% definitional $\beta$-rules (with or without the spine neutral
+%% definition).
 
-However, $\Ind_\Omega$ only supports propositional $\beta$-rules. The issue is
-the extra transporting in the definition of $\ms{E} : (t : \Tm\,\Omega\,\iota)
-\to X^D\,t$: transports do not strictly commute with constructors. This appears
-to be a point of advantage for the direct fixpoint definition in Agda, as it
-allows generic elimination with strict computation rules.
+%% However, $\Ind_\Omega$ only supports propositional $\beta$-rules. The issue is
+%% the extra transporting in the definition of $\ms{E} : (t : \Tm\,\Omega\,\iota)
+%% \to X^D\,t$: transports do not strictly commute with constructors. This appears
+%% to be a point of advantage for the direct fixpoint definition in Agda, as it
+%% allows generic elimination with strict computation rules.
 
-The term algebra presentation can be easily extended to indexed families. In
-that case, signatures and terms are still definable with basic inductive
-families, without requiring quotients or complicated encodings; see Kaposi and
-von Raumer \cite{mutualinductive}.
+%% The term algebra presentation can be easily extended to indexed families. In
+%% that case, signatures and terms are still definable with basic inductive
+%% families, without requiring quotients or complicated encodings; see Kaposi and
+%% von Raumer \cite{mutualinductive}.
 
-The \emph{sum-of-products} generics by De Vries and Löh \cite{sop} is also
-related. There, signatures for functors are in a normal form: we cannot freely
-take products and coproducts, instead a signature looks very much like a $\Con$
-in this chapter (except in an indexed form). The authors observe that several
-generic programming patterns are easier to express with normalized
-signatures. However, they still use explicit fixpoints as the way to get initial
-algebras.
+%% The \emph{sum-of-products} generics by De Vries and Löh \cite{sop} is also
+%% related. There, signatures for functors are in a normal form: we cannot freely
+%% take products and coproducts, instead a signature looks very much like a $\Con$
+%% in this chapter (except in an indexed form). The authors observe that several
+%% generic programming patterns are easier to express with normalized
+%% signatures. However, they still use explicit fixpoints as the way to get initial
+%% algebras.
 
 \chapter{Semantics in Two-Level Type Theory}
 \label{chap:2ltt}
@@ -1464,7 +1470,7 @@ program, which lives purely in the inner theory.
 
 Before explaining 2LTT-specific features, we review models of type theories
 in general. Variants of 2LTT will be obtained by adding extra features on the
-top of more conventional TTs.
+top of more conventional type theories.
 
 It is also worth to take a more general look at models at this point, because
 the notions presented in this subsection (categories with families, type
@@ -1505,7 +1511,7 @@ in two parts: categories with families and type formers.
 \subsection{Categories With Families}
 
 \begin{mydefinition}
-A \textbf{category with family} (cwf) \cite{Dybjer96internaltype} is a way to
+A \textbf{category with families} (cwf) \cite{Dybjer96internaltype} is a way to
 specify the basic structural rules for contexts, substitutions, types and
 terms. It yields a dependently typed explicit substitution calculus.  A cwf
 consists of the following.
@@ -1535,9 +1541,9 @@ consists of the following.
 
   A family structure is additionally equipped with \emph{context comprehension}
   which consists of a context extension operation $\blank\ext\blank : (\Gamma :
-  \Con) \to \Ty\,\Gamma \to \Con$ together with an isomorphism
+  \Con) \to \Ty\,\Gamma \to \Con$ together with a natural isomorphism
   $\Sub\,\Gamma\,(\Delta\ext A) \simeq ((\sigma : \Sub\,\Gamma\,\Delta) \times
-  \Tm\,\Gamma\,(A[\sigma]))$ which is natural in $\Gamma$.
+  \Tm\,\Gamma\,(A[\sigma]))$.
 \end{itemize}
 \end{mydefinition}
 
@@ -2455,7 +2461,7 @@ the higher-order specification as a context or a closed $\Sigma$-type in the
 standard presheaf model of 2LTT.
 
 In summary, if by ``type formers'' we mean extra structure on $(\Ty_0,\,\Tm_0)$
-which is definable in 2LTT, then \emph{by definition} all such type formers
+which is definable in 2LTT, then by definition all such type formers
 transfer from $\mbbC$ to $(\Ty_0,\,\Tm_0)$. This holds for every type former
 mentioned in this thesis.
 
@@ -2750,6 +2756,7 @@ In general, for finite $A$ type, functions of the form $A \to \Tm_0\,B$ can be
 represented as inner types up to isomorphism; they can be viewed as finite
 products of terms.
 
+
 \emph{Remark.} For infinite $A$ this does not work anymore in our system. In
 \cite{twolevel}, the assumption that this still works with $A \equiv \Nat_1$ is
 an important axiom (``cofibrancy of $\Nat_1$'') which makes it possible to embed
@@ -2904,59 +2911,104 @@ Since $t^T$ yields inner equations, this implies that the displayed algebra
 sections returned by the eliminator are \emph{weak sections}, i.e.\ they contain
 $\beta$-rules expressed in inner equalities.
 
-\section{Discussion}
+\subsection{Strict Elimination}
 
-\subsection{Evaluation}
+If we want to use term algebras in generic programming, having only weak
+$\beta$-rules in elimination is inconvenient. We make a brief digression here,
+to define an alternative eliminator which computes strictly. The idea is to
+specialize the notion of displayed algebras to the term algebra, and likewise
+give a specialized definition for the eliminator function. We fix $\Omega :
+\Con_1$ and $X^D : \Tm_0\,(\SigTm_0\,(\down\!\Omega)\,\iota) \to \Ty_0$.
+\begin{alignat*}{3}
+  & \rlap{$\blank^D : (A : \SigTy_1) \to \Tm_0\,(\SigTm_0\,(\down\!\Omega)\,(\down\!A)) \to \Ty_0$}\\
+  & \iota^D\,       && X^D\,\alpha \defn X^D\,\alpha \\
+  & (\iota\to A)^D\,&& X^D\,\alpha \defn (u : \SigTm_0\,\Omega\,\iota) \to X^D\,u \to A^D\,X^D\,(\alpha\,u)
+\end{alignat*}
+\begin{alignat*}{3}
+  &\Omega^D : \Set\\
+  &\Omega^D \defn \{A : \SigTy_1\}(x : \Tm_0\,(\Var_0\,(\down\!\Omega)\,(\down\!A))) \to \Tm_0\,(A^D\,(\var\,x))
+\end{alignat*}
+\begin{alignat*}{3}
+  & \hspace{-10em}\rlap{$\ms{Elim} : \{A : \SigTy_1\} \to \Omega^D \to  (t : \Tm_0\,(\SigTm_0\,(\down\!\Omega)\,(\down\!A))) \to \Tm_0\,(A^D\,t)$}\\
+  & \hspace{-10em}\ms{Elim}\,\omega^D\,(\var\,x) &&\defn \omega^D\,x\\
+  & \hspace{-10em}\ms{Elim}\,\omega^D\,(\app\,t\,u) &&\defn \ms{Elim}\,\omega^D\,t\,u\,(\ms{Elim}\,\omega^D\,u)
+\end{alignat*}
+Now, $\ms{Elim}\,\{\iota\}$ has type $\Omega^D \to \Tm_0\,((t :
+\SigTm_0\,(\down\!\Omega)\,\iota) \to X^D\,t)$. Since $\Omega^D$ is a finite
+product of inner types, it's isomorphic to an inner type, so we can extract a
+purely inner eliminator:
+\[ \ms{Elim} : (X^D : \SigTm_0\,(\down\!\Omega)\,\iota \to \U_0) \to \Omega^D \to (t : \SigTm_0\,(\down\!\Omega)\,\iota) \to X^D\,t.\]
+Here, $\Omega^D$ specifies induction methods, and the eliminator is defined by
+inner induction on terms. Compare this to the previously constructed weak
+eliminator, where we had to transport the result over $t^T\,\id$. The extra
+transport precluded strict $\beta$-rules in that case, since transports do not
+definitionally compute on inductive constructors in the inner theory.
 
-Let us review how 2LTT addresses the shortcomings that we mentioned in Section
-\ref{sec:2ltt-motivation}.
-\\\\
-\textbf{Generalized semantics.} For this purpose, there is minimal
-technical overhead to using 2LTT; we only need to sprinkle $\Ty_0$ and $\Tm_0$
-around a bit, and we get semantics internally to cwfs (including all finite product
-categories).
-\\\\
-\textbf{Weak vs.\ strict preservation in term algebras.}
-Here, we had to deal with significantly more noise, because of the necessary
-lowerings and their preservation isomorphisms. However, this overhead should be
-compared to reasoning about object-level definitional equality in a deeply
-embedded way, which entails explicitly manipulating abstract syntax and its
-substitutions and weakenings. Compared to that, 2LTT is tremendously easier. One
-could also argue that lowering is an entirely mechanical affair, and we can just
-omit most of it if we are comfortable enough with the formalism.
+However, the weak eliminator construction is overall more regular and scales
+better to more complicated theories of signatures, as we will see in Sections
+\ref{sec:fqiit-term-algebras} and \ref{sec:inf-term-algebras}. Also, in these
+Sections we will assume equality reflection everywhere so weak and strict
+$\beta$-rules will coincide. Another advantage of the weak eliminator
+construction is that it builds on definitions that are already available from
+the semantics of signatures. In contrast, strict eliminators should be connected
+back to the semantics in a separate step: we should show that strict elimination
+yields a displayed algebra section, and that the two definitions of displayed
+algebras are equivalent. We do not detail these here.
 
-\subsection{Recursor vs. Eliminator Construction}
 
-The essential extra detail that we
-had to handle in Section \ref{sec:2ltt-simple-signatures} was the choice between
-strict and weak equations. This choice brings along further implementation
-constraints.
+%% \section{Discussion}
 
-Strict equations are stronger as assumptions because they represent
-definitional equality of inner terms. However, we can only produce strict
-equations by eliminating from outer types. Hence, if we aim to output strict
-equations, we have to assume every dependency in the outer theory, which in turn
-may require using lowering.
+%% \subsection{Evaluation}
 
-Weak equations are easier to produce: strict equality implies weak equality,
-plus we can prove weak equality by inner induction. But we cannot use weak
-equality to transport outer values.
+%% Let us review how 2LTT addresses the shortcomings that we mentioned in Section
+%% \ref{sec:2ltt-motivation}.
+%% \\\\
+%% \textbf{Generalized semantics.} For this purpose, there is minimal
+%% technical overhead to using 2LTT; we only need to sprinkle $\Ty_0$ and $\Tm_0$
+%% around a bit, and we get semantics internally to cwfs (including all finite product
+%% categories).
+%% \\\\
+%% \textbf{Weak vs.\ strict preservation in term algebras.}
+%% Here, we had to deal with significantly more noise, because of the necessary
+%% lowerings and their preservation isomorphisms. However, this overhead should be
+%% compared to reasoning about object-level definitional equality in a deeply
+%% embedded way, which entails explicitly manipulating abstract syntax and its
+%% substitutions and weakenings. Compared to that, 2LTT is tremendously easier. One
+%% could also argue that lowering is an entirely mechanical affair, and we can just
+%% omit most of it if we are comfortable enough with the formalism.
 
-In the recursor construction, we produced strict $\beta$-rules, which trivially
-imply weak $\beta$-rules as well. In contrast, the eliminator construction
-relies essentially on equations produced by $\blank^T$ for inner terms. Can we
-somehow get strict equations from $\blank^T$? This does not seem possible, at
-least without changing the approach in a major way: terms must be inner, or else
-we have no hope of inner recursion/induction. And if terms are inner, then
-$\ms{E}$ must act on arbitrary inner terms, hence $\blank^T$ must do so too.
+%% \subsection{Recursor vs. Eliminator Construction}
 
-It would be interesting to check if there is a possible alternative formulation of
-term algebras and constructed eliminators, which makes it possible to get strict
-eliminators. Looking back to Section \ref{sec:generic-programming}, it appears
-that by using spine neutral terms, we get strict elimination for each
-signature. However, this relies on the Agda implementation of pattern matching
-and structurally recursive definitions, so it would require more work to translate
-these definitions to 2LTT in a generic way.
+%% The essential extra detail that we
+%% had to handle in Section \ref{sec:2ltt-simple-signatures} was the choice between
+%% strict and weak equations. This choice brings along further implementation
+%% constraints.
+
+%% Strict equations are stronger as assumptions because they represent
+%% definitional equality of inner terms. However, we can only produce strict
+%% equations by eliminating from outer types. Hence, if we aim to output strict
+%% equations, we have to assume every dependency in the outer theory, which in turn
+%% may require using lowering.
+
+%% Weak equations are easier to produce: strict equality implies weak equality,
+%% plus we can prove weak equality by inner induction. But we cannot use weak
+%% equality to transport outer values.
+
+%% In the recursor construction, we produced strict $\beta$-rules, which trivially
+%% imply weak $\beta$-rules as well. In contrast, the eliminator construction
+%% relies essentially on equations produced by $\blank^T$ for inner terms. Can we
+%% somehow get strict equations from $\blank^T$? This does not seem possible, at
+%% least without changing the approach in a major way: terms must be inner, or else
+%% we have no hope of inner recursion/induction. And if terms are inner, then
+%% $\ms{E}$ must act on arbitrary inner terms, hence $\blank^T$ must do so too.
+
+%% It would be interesting to check if there is a possible alternative formulation of
+%% term algebras and constructed eliminators, which makes it possible to get strict
+%% eliminators. Looking back to Section \ref{sec:generic-programming}, it appears
+%% that by using spine neutral terms, we get strict elimination for each
+%% signature. However, this relies on the Agda implementation of pattern matching
+%% and structurally recursive definitions, so it would require more work to translate
+%% these definitions to 2LTT in a generic way.
 
 \chapter[Finitary QII Signatures]{Finitary Quotient Inductive-Inductive Signatures}
 \label{chap:fqiit}
@@ -3018,10 +3070,10 @@ A \textbf{model of the theory of signatures} consists of the following.
     \item An \textbf{extensional identity type} $\Id : \Tm\,\Gamma\,A \to
       \Tm\,\Gamma\,A \to \Ty\,\Gamma$, specified by $(\reflect,\,\refl) :
       \Tm\,\Gamma\,(\Id\,t\,u) \simeq (t \equiv u)$.
-    \item An \textbf{inductive function type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
+    \item An \textbf{internal product type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
       \Ty\,(\Gamma\ext\El\,a) \to \Ty\,\Gamma$, specified by
       $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
-    \item An \textbf{external function type} $\Pie : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
+    \item An \textbf{external product type} $\Pie : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
       $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i))$.
   \end{itemize}
 \end{mydefinition}
@@ -3045,7 +3097,7 @@ ToS later in this chapter.
 \begin{myexample}
   Simple inductive signatures can be evidently expressed using $\U$ and
   $\Pi$. By adding a single $\U$ to the signature, we introduce the inductive
-  sort.
+  sort, while $\Pi$ adds an inductive parameter to an entry.
   \begin{alignat*}{3}
     & \ms{NatSig} &&\defn \emptycon \ext (N : \U) \ext (\mi{zero} : \El\,N)
                         \ext (\mi{suc} : \Pi (n : N) (\El\,N))\\
@@ -3055,7 +3107,7 @@ ToS later in this chapter.
   Observe that the domains in $\Pi$ are terms with type $\U$, while the codomains are proper types.
 \end{myexample}
 
-\begin{notation} We write non-dependent function types in ToS as follows.
+\begin{notation} We write non-dependent product types in ToS as follows.
   \begin{itemize}
   \item $a \funi B$ for $\Pi\,(\_ : a)\,B$.
   \item $\mi{Ix} \fune B$ for $\Pie\,\mi{Ix}\,(\lambda\,\_.\,B)$.
@@ -3115,8 +3167,8 @@ notation for multiple $\Pi$ binders.
 \begin{notation}
 For more complex signatures, we may entirely switch to an internal notation,
 where we mostly reuse the conventions in the metatheories, including implicit
-arguments and implicit quantification. We use $(x : a) \to B$ for inductive
-functions, $(x : A) \toe B$ for external functions, but we still write $\Id$ for
+arguments and implicit quantification. We use $(x : a) \to B$ for internal
+products, $(x : A) \toe B$ for external products, but we still write $\Id$ for
 the identity type and make $\U$ and $\El$ explicit. In this notation, a
 signature is just a listing of binders. The category signature becomes the
 following:
@@ -3133,7 +3185,7 @@ following:
 \end{myexample}
 
 \begin{myexample}
-The external function type makes it possible to reference inner types (in 2LTT)
+The external product type makes it possible to reference inner types (in 2LTT)
 in signatures. Here ``external'' is meant relative to a given signature, and
 refers to types and inhabitants which are not introduced inside a signature.
 For example, we give a signature for lists by assuming $A : \Ty_0$ for the
@@ -3197,10 +3249,12 @@ types. That category has elements of $\Ty_0$ as objects and $\Tm_0\,A \to
 \subsubsection{Strict positivity}
 
 Only strictly positive signatures are expressible. Similarly to the case with
-simple signatures, there is no way to abstract over inductive functions, since
-inductive function domains are in $\U$, and $\U$ has no type formers at
-all. With $\Pie$, we can abstract over functions, but only those which are
-external to a signature and do not depend on internally specified constructors.
+simple signatures, there is no way to abstract over internal products, since
+internal products are indexed over $\U$-small types, and $\U$ has no type
+formers at all. With $\Pie$, we can abstract over functions, but only those
+which are external to a signature and do not depend on internally specified
+constructions.
+
 
 \subsubsection{Limitation: nested induction}
 
@@ -3314,11 +3368,11 @@ order as in Definition \ref{def:fqiit-tos}. There is significant overlap in
 names and notations, so we use \textbf{bold} font to disambiguate components of
 $\bM$ from components of other structures. For example, we use $\bs{\sigma :
   \Sub\,\Gamma\,\Delta}$ to denote a substitution in $\bM$, while there could be
-a $\Sub$-named components in other structures under consideration.
+$\Sub$-named components in other structures under consideration.
 
 \subsection{Finite Limit Cwfs}
 
-We define $\bCon : \Set$ as the type of finite limit cwfs. Recall that this
+We define $\bCon : \Set$ as the type of finite limit cwfs (flcwfs). Recall that this
 specifies the objects of the underlying cwf of $\bM$. In the following we
 specify flcwfs and describe some internal constructions.
 
@@ -3601,7 +3655,7 @@ substitution is functorial only up to isomorphism. This is not a critical issue,
 as there are standard solutions for recovering strict substitutions from weak
 ones \cite{kapulkin12simplicial,local-univ,clairambault2014biequivalence}. But
 if we ever need to look inside the definitions in the model, using displayed
-algebras yields a lot less encoding overhead than strictifying pullbacks.
+algebras yields less encoding overhead than strictifying pullbacks.
 
 A term $\bs{t : \Tm\,\Gamma\,A}$ is a displayed flcwf section, which again
 strictly preserves all structure. We use the same notation for the action of
@@ -3635,13 +3689,13 @@ be viewed as a dependent generalization of products of flcwfs.
 component-wise first projection, $\bs{\q}$ is second projection and substitution
 extension $\bs{\blank,\blank}$ is pairing.
 
-With this, we have a cwf of flcws. \emph{Remark:} flcwf itself is algebraic, and
-has a finitary QII signature. Hence, if we succeed building semantics for
-finitary QII signatures, we get ``for free'' an flcwf of flcwfs. Of course, we
-cannot rely on this when we are in the process of defining the $\bM$ model in the
-first place. Checking that the $\bM$ model indeed works, is the somewhat tedious
-task that we have to perform \emph{once}, in order to get semantics for any
-other finitary QII theory.
+With this, we have a cwf of flcws. \emph{Remark:} the theory of flcwfs is itself
+algebraic and has a finitary QII signature. Hence, if we succeed building
+semantics for finitary QII signatures, we get ``for free'' an flcwf of
+flcwfs. Of course, we cannot rely on this when we are in the process of defining
+the $\bM$ model in the first place. Checking that the $\bM$ model indeed works,
+is the somewhat tedious task that we have to perform \emph{once}, in order to
+get semantics for any other finitary QII theory.
 
 \subsection{Type Formers}
 
@@ -3666,7 +3720,7 @@ of the equation. We also need to show $\bs{\Tm\,\Gamma\,(\K\,\Delta)} \equiv
 definition. From $\bK$, we get
 \begin{itemize}
 \item The unit type, defined as $\bK\,\bemptycon : \bTy\,\bGamma$.
-\item Direct products of $\bGamma$ and $\bDelta$, defined as $\bs{\Gamma \ext \K\,\Delta}$.
+\item Categorical products of $\bGamma$ and $\bDelta$, defined as $\bs{\Gamma \ext \K\,\Delta}$.
 \item The ability to define closed type formers as elements of $\bCon$.
 \end{itemize}
 
@@ -3843,7 +3897,7 @@ e.g. both sides have $\Con\,\ulGamma \equiv (\bt\,(\bsigma\,\ulGamma) \equiv
 $\bs{\Tm\,\Gamma\,(\Id\,t\,u)}$ is equivalent to $\bt \equiv \bu$, that is, we
 have reflexivity and equality reflection.
 
-\subsubsection{Inductive function type}
+\subsubsection{Internal product type}
 
 For $\bs{a : \Tm\,\Gamma\,\U}$ and $\bs{B : \Ty\,(\Gamma \ext \El\,a)}$, we aim
 to define $\bs{\Pi\,a\,B : \Ty\,\Gamma}$. This is a dependent product of displayed
@@ -3914,10 +3968,10 @@ currying respectively.  Naturality of $\bs{\Pi}$ and $\bs{\app}$ again follows
 from the fact that flcwf morphisms strictly preserve all structure, and
 substitution is component-wise function composition.
 
-\subsubsection{External function type}
+\subsubsection{External product type}
 
 For $\Ix : \Ty_0$ and $\bB : \Tm_0\,\Ix \to \bs{\Ty\,\Gamma}$, we define
-$\bs{\Pie}\,\Ix\,\bB : \bs{\Ty\,\Gamma}$ as the $\Ix$-indexed direct product of
+$\bs{\Pie}\,\Ix\,\bB : \bs{\Ty\,\Gamma}$ as the $\Ix$-indexed product of
 a family of displayed flcwfs.
 \begin{alignat*}{3}
   & \Con_{\bs{\Pie}\,\Ix\,\bB}\,\ulGamma &&\defn (i : \Tm_0\,\Ix) \to \Con_{\bB\,i}\,\ulGamma\\
@@ -4128,7 +4182,7 @@ work with an external second parameter. $\El^{HM}$ uses the $\Id$ type in ToS:
   & (\El\,a)^{HM} : a^A\,\gamma_0 \to \Tm\,\Omega\,(\El\,(a[\gamma_1])) \to \Ty\,\Omega\\
   & (\El\,a)^{HM}\,\alpha_0\,\alpha_1\,\gamma^{HM} \defn \Id\,(a^{HM}\,\gamma^{HM}\,\alpha_0)\,\alpha_1
 \end{alignat*}
-In $\Pi$ we give the usual pointwise definition, using the external function type:
+In $\Pi$ we give the usual pointwise definition, using the external product type:
 \[
   (\Pi\,a\,B)^{HM}\,t_0\,t_1\,\gamma^{HM} \defn (\alpha : a^A\,\gamma_0) \toe B^{HM}\,(t_0\,\alpha)\,(t_1\,(a^{HM}\,\gamma^{HM}\,\alpha))\,(\gamma^{HM},\,\refl)
 \]
@@ -4138,7 +4192,7 @@ In $\Id$, we reuse the $\Id$ in ToS:
    \to \Tm\,\Omega\,(\Gamma^{HM}\,\gamma_0\,\gamma_1) \to \Ty\,\Omega\\
   &(\Id\,t\,u)^{HM}\,p_0\,p_1\,\gamma^{HM} \defn  \Id\,(t^{HM}\,\gamma^{HM})\,(u^{HM}\,\gamma^{HM})
 \end{alignat*}
-External functions are again external functions.
+External products are again external products.
 \[
   (\Pie\,\ms{Ix}\,B)^{HM}\,t_0\,t_1\,\gamma^{HM} \defn (i : \ms{Ix}) \toe (B\,i)^{HM}\,(t_0\,i)\,(t_1\,i)\,\gamma^{HM}
 \]
@@ -4365,10 +4419,10 @@ to work inside ToS.
 \begin{myexample}
 There is a simple way to show that if a type theory does not support $\eta$ for
 $\Pi$, then function extensionality is not provable in the theory
-\cite{next700}\footnote{It is also possible to show unprovability of function
+\cite{next700}.\footnote{It is also possible to show unprovability of function
 extensionality \emph{assuming} $\eta$ for functions, but in significantly more
 complicated ways. To the author's best knowledge, the set-based polynomial model
-is the easiest solution \cite{von2015polynomials}.}.  Assume some type theory with $\Sigma$,
+is the easiest solution \cite{von2015polynomials}.} Assume some type theory with $\Sigma$,
 $\Pi$, $\Id$ and $\Bool$, and abbreviate its signature as $\ms{TT}$. We define a
 $\sigma : \Sub\,\ms{TT}\,\ms{TT}$ which has identity action everywhere except on
 $\Pi$. There, we have
@@ -4404,7 +4458,7 @@ Let us use $\ms{TT} : \Ty\,\emptycon$ for the signature of the type theory,
 given as an iterated large $\Sigma$-type. Then, the notion of weak cwf-morphism
 is also expressible in ToS as $\ms{morph} : \Ty\,(\emptycon\,\ext(M_0 :
 \ms{TT})\ext(M_1 : \ms{TT}))$, and the notion of displayed model as well, as
-$\ms{TT}^D : \Ty\,(\emptycon\ext(M : \ms{TT}))$\footnote{We will be also able to automatically derive $\ms{TT}^D$ from $\ms{TT}$, in Section \ref{sec:signature-semantics}.}. Thus, we can give a ``type''
+$\ms{TT}^D : \Ty\,(\emptycon\ext(M : \ms{TT})).$\footnote{We will be also able to automatically derive $\ms{TT}^D$ from $\ms{TT}$, in Section \ref{sec:signature-semantics}.} Thus, we can give a ``type''
 for the gluing construction, as follows:
 \begin{alignat*}{3}
   &\Tm\,&&(\emptycon\,\ext (M_0 : \ms{TT}) \ext (M_1 : \ms{TT}) \ext (f : \ms{morph}[M_0 \mapsto M_0,\,M_1 \mapsto M_1]))\\
@@ -4448,9 +4502,9 @@ Equality reflection in the ToS is a complication. If we have ``silent''
 transports along equality reflection, that makes elaboration of surface
 signatures undecidable. We might make transports explicit, which restores
 decidable checking, but that requires the ToS to be deeply embedded in some
-ambient theory\footnote{Equality reflection is simply an equality constructor in
+ambient theory.\footnote{Equality reflection is simply an equality constructor in
 the embedded syntax, and has no bearing on decidability of type checking in the
-metalanguage.}.
+metalanguage.}
 
 Alternatively, we may just drop equality reflection from the ToS, and use
 transport and UIP as primitives. This recovers decidable surface syntax, but now
@@ -4600,7 +4654,7 @@ For levels $i$ and $j$, we have $\bM_{i,j} : \ToS_{(i+1\lub j)+1,j}$ as the
 model where contexts are flcwfs, and objects in the flcwf are algebras.  The
 model is defined in essentially the same way as in Section
 \ref{sec:fqiit-semantics}. The algebras have underlying sets in $\Set_i$ and
-(semantic) external functions have types in $\Set_j$ as domain. Hence, every
+(semantic) external products are indexed over types in $\Set_j$. Hence, every
 algebra in $\bM_{i,j}$ is in $\Set_{i+1\lub j}$.
 \end{mydefinition}
 
@@ -4733,7 +4787,7 @@ identifies provably equal terms. For a simple example, terms with type
 \]
 are quotiented by $\mi{seg}$, which is a provable equation in the context.
 
-\subsubsection{Inductive function type}
+\subsubsection{Internal product type}
 Here we have to convert an inner term with $\Pi$ type to an outer function.
 \begin{alignat*}{3}
   &(\Pi\,a\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)
@@ -4746,7 +4800,7 @@ This is well-typed by $a^T\,\nu :
 a^A\,(\Gamma^T\,\nu)$, which allows us to consider $\alpha$ to be an inner term
 in $\lambda\,\alpha.\,B^T\,(\nu,\,\alpha)\,(t\,\alpha)$.
 
-\subsubsection{External function type}
+\subsubsection{External product type}
 In this case we just recurse through the specifying isomorphism:
 \begin{alignat*}{3}
   &(\Pie\,A\,B)^T : (\nu : \Sub\,\Omega\,\Gamma)
@@ -4905,7 +4959,7 @@ This follows from equality reflection on $e$, together with
   & u^R\,\nu &&: A^R\,\nu\,(u[\nu]) \equiv u^M\,(\Gamma^R\,\nu)
 \end{alignat*}
 
-\subsubsection{Inductive function type}
+\subsubsection{Internal product type}
 We get the following target type after unfolding $(\Pi\,a\,B)^M$:
 \begin{alignat*}{3}
  &(\Pi\,a\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
@@ -4927,7 +4981,7 @@ We have the following typing now:
 \[
   B^R\,(\nu,\,\alpha)\,(t\,\alpha) : B^M\,((t\,\alpha)^A\,(\Omega^T\,\id))\,((t\,\alpha)^A\,\omega)\,(\Gamma^T\,\nu,\,\refl)
 \]
-By the action of $\blank^A$ on inductive function application, we have
+By the action of $\blank^A$ on internal application, we have
 \[
    B^R\,(\nu,\,\alpha)\,(t\,\alpha) :
       B^M\,(t^A\,(\Omega^T\,\id)\,(\alpha^A\,(\Omega^T\,\id)))\,(t^A\,\omega\,(\alpha^A\,\omega))\,(\Gamma^T\,\nu,\,\refl)
@@ -4938,7 +4992,7 @@ exactly the target type. Therefore the definition is:
   (\Pi\,a\,B)^R\,\nu\,t \defn \lambda\,\alpha.\,B^R\,(\nu,\,\alpha)\,(t\,\alpha)
 \]
 
-\subsubsection{External function type}
+\subsubsection{External product type}
 We again simply recurse through the indexing:
 \begin{alignat*}{3}
   & (\Pie\,A\,B)^R : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pie\,A\,(\lambda\,\alpha.\,(B\,\alpha)[\nu])))\\
@@ -4997,7 +5051,7 @@ that $\alpha^A$ preserves $\blank^D$ predicates.
 \]
 This follows from $t^T\,\id : t^A\,(\Omega^T\,\id) \equiv t$ and $a^E\,\nu : (\lambda\,t.\,t^D\,\omega^D) \equiv a^S\,(\Gamma^E\,\nu)$.
 \\\\
-\noindent The \textbf{inductive function} interpretation is defined similarly as before:
+\noindent The \textbf{internal product} interpretation is defined similarly as before:
 \begin{alignat*}{3}
  &(\Pi\,a\,B)^E : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
  & \hspace{2em}\to (\alpha : \Tm\,\Omega\,(\El\,(a[\nu]))) \to B^S\,(t^A\,(\Omega^T\,\id)\,\alpha)\,(t^D\,\omega^D\,(\alpha^D\,\omega^D))\,(\Gamma^E\,\nu,\,\refl)\\
@@ -5409,27 +5463,23 @@ formers. The ToS syntax is far from being a basic type former, it is rather
 large and complicated. Therefore, the remaining job is to construct the ToS
 syntax from simpler types.
 
-We do not attempt here to construct the entire ToS syntax as specified. The
-reason is the following: \cite[Section 9]{lumsdaineShulman} shows that
-infinitary QIITs are not constructible from inductive types and simple
-quotienting with relations. See also \cite[Section~2.2]{ttintt}, where it is
-argued that infinitary quotient inductive types extend the base type theory with
-some form of constructive choice principles.
-
-Recently, Fiore, Pitts and Steenkamp showed that a class of infinitary quotient
-inductive types, called QWI-types, can be reduced to inductive types, quotients
-the axiom of weakly initial sets of covers (WISC)
+We do not attempt here to construct the entire ToS syntax as specified.
+Lumsdaine and Shulman \cite[Section 9]{lumsdaineShulman} showed that infinitary
+QIITs are not constructible from inductive types and simple quotienting with
+relations. Recently, Fiore, Pitts and Steenkamp showed that a class of
+infinitary quotient inductive types, called QWI-types, can be reduced to
+inductive types, quotients the axiom of weakly initial sets of covers (WISC)
 \cite{DBLP:journals/corr/abs-2101-02994}. The setting additionally assumes
 extensional equality and propositional extensionality for an impredicative
-universe of propositions. The infinitary ToS syntax is not a QWI-type, since it
-is inductive-inductive.  Nevertheless, it is a reasonable conjecture that
-infinitary QIITs are also constructible from the WISC principle. We leave this
-to future work.
+universe of propositions. The infinitary ToS syntax is not immediately a
+QWI-type because it is inductive-inductive.  Nevertheless, it is a reasonable
+conjecture that infinitary QIITs are also constructible from the WISC
+principle. We leave this to future work.
 
 In this section we show constructions of certain fragments of the full ToS
-syntax. In the following, we first give a general description of QIIT
-constructions, then describe two specific constructions, for a) finitary
-inductive-inductive signatures b) closed QII signatures.
+syntax. We first give a general description of QIIT constructions, then describe
+two specific constructions, for a) finitary inductive-inductive signatures b)
+closed QII signatures.
 
 \subsection{Finitary QIIT Constructions}
 \label{sec:fqiit-constructions}
@@ -5588,7 +5638,7 @@ theories (with the notable exceptions of our ToS-es), so if we can construct
 closed signatures, we can construct initial models of almost all type theories.
 
 What about generic ways to formalize elaboration algorithms? This seems to be a
-lot more difficult. To the author's knowledge there have not been notable
+lot more difficult. To the author's knowledge there has not been notable
 research in this area. Decidability of conversion is already very hard to
 analyze in a generic way, and the simplest possible bidirectional elaboration
 algorithms rely on decidable conversion. To formalize practically realistic
@@ -5622,9 +5672,9 @@ recursive functions acting on normal forms. This trivializes the conversion
 relation: conversion is simply propositional equality of raw terms. Thus, there
 is no need to quotient by conversion. Note that our raw syntax is infinitary
 because we have to represent the branching in $\Pie$. This is fine though: we
-only run into the issue of the missing ``choice'' principle if we try to mix
-quotients and infinite branching. Without quotients, infinite branching is not
-an issue.
+only run into the issue of the missing choice principle (presumably, the
+WISC principle) if we try to mix quotients and infinite branching. Without
+quotients, infinite branching is not an issue.
 
 Second, we do not include an identity type in ToS. This blocks the other way for
 quotients to enter the picture. With identity types, the generic term model
@@ -5688,7 +5738,7 @@ of ETT with inductive families supports finitary inductive-inductive types.
 
 For closed QIITs, there is unfortunately no direct formalization which
 constructs the ToS. There is one though which is \emph{close enough}, by Menno
-de Boer and Guillaume Brunerie \cite{initiality-agda}, see also De Boer's thesis
+de Boer and Guillaume Brunerie \cite{initiality-agda}; see also De Boer's thesis
 \cite{deboer-initiality}. This constructs a type theory with the following
 features:
 \begin{itemize}
@@ -5730,9 +5780,9 @@ QIITs.
 This chapter is based on the following publications, all coauthored by the
 current thesis' author.
 \begin{enumerate}
-  \item ``Constructing Quotient Inductive-Inductive Types'' \cite{kaposi2019constructing}
-  \item ``Large and Infinitary Quotient Inductive-Inductive Types'' \cite{iqiit}
-  \item ``For Finitary Induction-Induction, Induction is Enough'' \cite{ind-ind-reduction}
+  \item ``Constructing Quotient Inductive-Inductive Types'' \cite{kaposi2019constructing}.
+  \item ``Large and Infinitary Quotient Inductive-Inductive Types'' \cite{iqiit}.
+  \item ``For Finitary Induction-Induction, Induction is Enough'' \cite{ind-ind-reduction}.
 \end{enumerate}
 We summarize the differences and enhancements in this chapter, in comparison to the above
 (1)-(3) sources.
@@ -5920,6 +5970,7 @@ We will look at work related to infinitary QITs in Section
 \ref{sec:iqii-related-work} and at work related to higher inductive types in
 Section \ref{sec:hii-related-work}.
 
+
 \chapter[Infinitary QII Signatures]{Infinitary Quotient Inductive-Inductive Signatures}
 \label{chap:iqiit}
 
@@ -5939,6 +5990,7 @@ the inner theory: $\top$, $\Sigma$, extensional identity $\blank\!=\!\blank$ and
 $\Pi$. Note that $\Pi$ is an extra assumption compared to what we had in the
 finitary case.
 
+
 \begin{mydefinition}
 \label{def:iqiit-tos}
 A \textbf{model of the theory of signatures} consists of the following.
@@ -5952,12 +6004,12 @@ A \textbf{model of the theory of signatures} consists of the following.
           \[(\proj,\,\blank\!,\!\blank) : \Tm\,\Gamma\,(\El\,(\Sigma\,a\,b))\simeq (t : \Tm\,\Gamma\,(\El\,a)) \times \Tm\,\Gamma\,(\El\,(b[\id,\,t]))\]
         \item \textbf{Extensional identity} $\Id : \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,(\El\,a) \to \Tm\,\Gamma\,\U$,
           specified by $(\reflect,\,\refl) : \Tm\,\Gamma\,(\El\,(\Id\,t\,u)) \simeq (t \equiv u)$.
-        \item \textbf{Infinitary functions} $\Piinf : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U$, specified by $(\appinf,\,\laminf) : \Tm\,\Gamma\,(\Piinf\,\mi{Ix}\,b) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i)))$.
+        \item \textbf{Small external product type} $\Piinf : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Tm\,\Gamma\,\U) \to \Tm\,\Gamma\,\U$, specified by $(\appinf,\,\laminf) : \Tm\,\Gamma\,(\Piinf\,\mi{Ix}\,b) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i)))$.
       \end{itemize}
-    \item An \textbf{inductive function type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
+    \item \textbf{Internal product type} $\Pi : (a : \Tm\,\Gamma\,\U) \to
       \Ty\,(\Gamma\ext\El\,a) \to \Ty\,\Gamma$, specified by
       $(\app,\,\lam) : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma \ext \El\,a)\,B$.
-    \item An \textbf{external function type} $\Pie : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
+    \item \textbf{External product type} $\Pie : (\mi{Ix} : \Ty_0) \to (\mi{Ix} \to \Ty\,\Gamma) \to \Ty\,\Gamma$, specified by
       $(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i))$.
   \end{itemize}
 \end{mydefinition}
@@ -5973,8 +6025,9 @@ context in the initial model.
 Let us do a comparison to the finitary case. First, the new signatures do not
 support sort equations, since there is no identity type for arbitrary terms,
 only for terms with types in $\U$. Second, the universe is not empty anymore, it
-supports $\top$, $\Sigma$ and the infinitary function type $\Piinf$, which can
-be viewed as an analogue of $\Pie$ inside $\U$. We look at example signatures.
+supports $\top$, $\Sigma$ and the small external product type $\Piinf$, which
+can be viewed as an analogue of $\Pie$ inside $\U$. We look at example
+signatures.
 
 \begin{myexample}
 Infinitary constructors can be given with $\Piinf$. A classic example is
@@ -5985,14 +6038,14 @@ signature for $P$-branching well-founded trees:
   &\ms{sup} &&: (s : S) \toe (P\,s \toinf W) \to \El\,W
 \end{alignat*}
 Note that since $P\,s \toinf W$ is in $\U$, it can appear on the left side of
-$\to$. Hence the naming ``infinitary'': if $P\,s$ is an infinite type,
-$\ms{sup}$ branches with an infinite number of inductive subtrees. Of course,
-finitary branching can be also expressed with $\Piinf$, but that use case was
-already possible with finitary signatures, by iterating $\to$ finite times.
+$\to$. If $P\,s$ is an infinite type, $\ms{sup}$ branches with an infinite
+number of inductive subtrees. Of course, finitary branching can be also
+expressed with $\Piinf$, but that use case was already possible with finitary
+signatures, by iterating $\to$ finite times.
 \end{myexample}
 
 \begin{myexample} Equations can appear as assumptions now. The simplest
-example is set truncation for some $A : \Ty_0$:
+example is set-truncation for some $A : \Ty_0$:
 \begin{alignat*}{3}
   &|A|_0      &&: \U\\
   &\ms{embed} &&: A \toe \El\,|A|_0 \\
@@ -6045,7 +6098,7 @@ assume an universe $\U_0$ in $\Ty_0$. In the signature, we have
 \begin{alignat*}{3}
   &\ms{Con} &&: \U \\
   &\ms{Ty} &&: \ms{Con} \to \U\\
-  &\Pie &&: \{\Gamma : \ms{Con}\} \to (A : \U_0) \toe (A \toinf \ms{Ty}\,\Gamma) \to \El\,(\ms{Ty}\,\Gamma)\\
+  &\Pie &&: \{\Gamma : \ms{Con}\} \to (A : \U_0) \toe (A \toinf \ms{Ty}\,\Gamma) \to \El\,(\ms{Ty}\,\Gamma)
 \end{alignat*}
 In the signature for infinitary ToS, we have
 \begin{alignat*}{3}
@@ -6697,7 +6750,7 @@ we need to show
 This follows from $\ext$-preservation by $\ba$. Equality reflection and
 $\bs{\refl :} \bId\,\bt\,\bt$ are also evident.
 
-\subsubsection{Infinitary function type}
+\subsubsection{Small external product type}
 
 For $\mi{Ix} : \Ty_0$ and $\bb : \mi{Ix} \ra \bTm\,\bGamma\,\bU$, we aim to define
 $\bPiinf\,\mi{Ix}\,\bb \bs{:} \bTm\,\bGamma\,\bU$. The underlying functions
@@ -6721,7 +6774,7 @@ follows. Note that $\emptycon_{\bU} \equiv \top$ and $\ext_{\bU}$ is $\Sigma$.
   & (\bPiinf\,\mi{Ix}\,\bb)_{\ext}^{-1} && \defn \lambda\,(\Gamma,A)\,i.\,(\bb\,i)_{\ext}^{-1}(\Gamma\,i,\,A\,i)
 \end{alignat*}
 
-\subsubsection{Inductive function type}
+\subsubsection{Internal product type}
 
 For $\boldsymbol{a : \Tm\,\Gamma\,\U}$ and $\boldsymbol{B :
   \Ty\,(\Gamma\ext\El\,a)}$, we aim to define $\boldsymbol{\Pi\,a\,B}
@@ -6767,7 +6820,7 @@ Likewise, $\coh$-s are given by backwards-forwards $\coh$-s. As before,
 $\bs{\appi}$ and $\bs{\lami}$ are defined as currying and uncurrying the
 underlying functions.
 
-\subsubsection{External function type}
+\subsubsection{External product type}
 
 For $\mi{Ix} : \Set_j$ and $\bB : \mi{Ix} \ra \bTy\,\bGamma$, we define
 $\bPie\,\mi{Ix}\,\bB \bs{:} \bTy\,\bGamma$ as the $\mi{Ix}$-indexed direct
@@ -6909,9 +6962,10 @@ For reference, we list type formers in $\Tys$ below.
 \endgroup
 
 \begin{notation}
-We will use the $\blank\!\toe\!\blank$ and $\blank\!\toinf\!\blank$ notations
-in the following for $\Piinf$ and $\Pie$, but additionally we use $\blank\!\toind\!\blank$
-for inductive functions, to disambiguate them from outer functions in 2LTT.
+We will use the $\blank\!\toe\!\blank$ and $\blank\!\toinf\!\blank$ notations in
+the following for $\Piinf$ and $\Pie$, but additionally we use
+$\blank\!\toind\!\blank$ for internal products, to disambiguate them from outer
+functions in 2LTT.
 \end{notation}
 
 We revisit now the flcwf semantics in the new setting. The goal is to produce
@@ -7352,7 +7406,7 @@ For the identity type, we need
 This follows from $t^T\,\nu$, $u^T\,\nu$ and the specifying isomorphism of
 $\Id$.
 
-\subsubsection{Infinitary functions}
+\subsubsection{Small external products}
 This function type follows the same pattern. We define the isomorphism below
 using induction hypotheses and the specifying isomorphism of $\Piinf$.
 \[
@@ -7361,7 +7415,7 @@ using induction hypotheses and the specifying isomorphism of $\Piinf$.
 ((i : \mi{Ix}) \to (b\,i)^A\,(\Gamma\,\nu))
 \]
 
-\subsubsection{Inductive functions}
+\subsubsection{Internal products}
 Inductive functions are interpreted using transport along $a^T\,\nu :
 \Tm\,\Omega\,(\El\,(a[\nu])) \simeq a^A\,(\Gamma^T\,\nu)$:
 \begin{alignat*}{3}
@@ -7370,7 +7424,7 @@ Inductive functions are interpreted using transport along $a^T\,\nu :
   &(\Pii\,a\,B)^T\,\nu\,t \defn \lambda\,\alpha.\,
          B\,(\nu,\,(a^T\,\nu)^{-1}\,\alpha)\,(t\,((a^T\,\nu)^{-1}\,\alpha))
 \end{alignat*}
-\textbf{External functions} are interpreted the same way as in the finitary case.
+\textbf{External products} are interpreted the same way as in the finitary case.
 
 \subsection{Eliminator Construction}
 
@@ -7505,7 +7559,7 @@ In particular, we use that for some $a : \Tm\,\Gamma\,\U$, we have
 \]
 which follows from the definition of $\blank^T$.
 
-\subsubsection{Inductive functions}
+\subsubsection{Internal products}
 In $\Pi$ we likewise transport along the domain isomorphism.
 \begin{alignat*}{3}
  &(\Pi\,a\,B)^E : (\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(\Pi\,(a[\nu])\,(B[\nu\circ\p,\,\q])))\\
@@ -7633,13 +7687,11 @@ forgetful substitution from this context to $\emptycon\ext\Gamma^A_{\ms{tos}}$
 has a right adjoint. The construction that we gave in
 Example \ref{ex:param-translation} was given with such a $t$ term as well.
 
-Fiore, Pitts and Steenkamp developed QW types
-\cite{inf-qits}, a notion of quotient inductive types that generalizes
-W-types. They construct QW-types in Agda, using sized types and ``nested''
-inductive usage of simple quotients. This means using $\blank/\blank$ as an
-external type operator, applied to internal inductive sorts in a signature,
-similarly to how we use lists in the rose tree example in Section
-\ref{sec:fqiit-tos}.
+Fiore, Pitts and Steenkamp investigated infinitary QITs in \cite{inf-qits} and
+\cite{DBLP:journals/corr/abs-2101-02994}. They introduced two signatures for QW
+and QWI types, which generalize W-types and indexed W-types respectively. In the
+latter work, they show that these types can be constructed using the WISC axiom
+(weakly initial sets of covers).
 
 Essentially algebraic theories generalize to the infinitary cases in a
 straightforward way \cite{adamek1994locally}.
@@ -7847,7 +7899,7 @@ tabular manner, together with a listing of ToS components. We discuss these
 in the following.
 
 In \textbf{algebras} and \textbf{displayed algebras} there is no
-complication; all equations holds in these (displayed) models strictly, and we
+complication; all equations hold in these (displayed) models strictly, and we
 do not use equations from induction hypotheses anywhere.
 
 In \textbf{morphisms}, note that all term formers returning in $\El$ specify a
@@ -8043,9 +8095,9 @@ with strict equality. We list type formers below.
   \begin{alignat*}{3}
     &\appinf &&: \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b)) \to ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i)))\\
     &\laminf &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
-    &\ms{lam^{inf'}} &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
+    &\laminfprime &&: ((i : \mi{Ix}) \to \Tm\,\Gamma\,(\El\,(b\,i))) \to \Tm\,\Gamma\,(\El\,(\Piinf\,\mi{Ix}\,b))\\
     &\ms{\beta} &&: \Tm\,\Gamma\,(\ID\,(\appinf\,(\laminf\,t)\,i)\,(t\,i))\\
-    &\ms{\eta}  &&: \Tm\,\Gamma\,(\ID\,(\ms{lam^{inf'}}\,(\appinf\,t))\,t)
+    &\ms{\eta}  &&: \Tm\,\Gamma\,(\ID\,(\laminfprime\,(\appinf\,t))\,t)
   \end{alignat*}
   \endgroup
 
@@ -8056,14 +8108,14 @@ with strict equality. We list type formers below.
   \cite[Chapter~4]{hottbook}.
 
   \item
-  Inductive function type $\Pi : (a : \Tm\,\Gamma\,\U) \to \Ty\,(\Gamma\ext
+  Internal product type $\Pi : (a : \Tm\,\Gamma\,\U) \to \Ty\,(\Gamma\ext
   \El\,a) \to \Ty\,\Gamma$, with the specifying equivalence given up to $\ID$,
   analogously as for $\Sigma$ and $\Piinf$:
   \[
     (\app,\,\lam,\,\lam') : \Tm\,\Gamma\,(\Pi\,a\,B) \simeq \Tm\,(\Gamma\ext \El\,a)\,B
   \]
 
-  \item External function type $\Pie : (\mi{Ix} : \U_0) \to (\mi{Ix} \to
+  \item External product type $\Pie : (\mi{Ix} : \U_0) \to (\mi{Ix} \to
   \Ty\,\Gamma) \to \Ty\,\Gamma$, specified as a strict $\Set$ isomorphism:
   \[(\appe,\,\lame) : \Tm\,\Gamma\,(\Pie\,\mi{Ix}\,B) \simeq ((i : \mi{Ix}) \to \Tm\,\Gamma\,(B\,i))\]
 \end{itemize}

@@ -1,14 +1,5 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{JVWW06}
-
-\bibitem[AAC{\etalchar{+}}21]{allais20type}
-Guillaume Allais, Robert Atkey, James Chapman, Conor McBride, and James
-  McKinna.
-\newblock A type- and scope-safe universe of syntaxes with binding: their
-  semantics and proofs.
-\newblock {\em J. Funct. Program.}, 31:e22, 2021.
-\newblock \href {https://doi.org/10.1017/S0956796820000076}
-  {\path{doi:10.1017/S0956796820000076}}.
+\begin{thebibliography}{CDMM10}
 
 \bibitem[AAR{\etalchar{+}}94]{adamek1994locally}
 Ji{\v{r}}{\'\i} Ad{\'a}mek, J~Adamek, J~Rosicky, et~al.
@@ -124,13 +115,6 @@ Thorsten Altenkirch, Peter Morris, Fredrik~Nordvall Forsberg, and Anton Setzer.
 \newblock \href {https://doi.org/10.1007/978-3-642-22944-2\_6}
   {\path{doi:10.1007/978-3-642-22944-2\_6}}.
 
-\bibitem[AMM19]{ahrens19from}
-Benedikt Ahrens, Ralph Matthes, and Anders M{\"{o}}rtberg.
-\newblock From signatures to monads in {UniMath}.
-\newblock {\em J. Autom. Reason.}, 63(2):285--318, 2019.
-\newblock \href {https://doi.org/10.1007/s10817-018-9474-4}
-  {\path{doi:10.1007/s10817-018-9474-4}}.
-
 \bibitem[AMS07]{altenkirch2007observational}
 Thorsten Altenkirch, Conor McBride, and Wouter Swierstra.
 \newblock Observational equality, now!
@@ -152,12 +136,6 @@ Thorsten Altenkirch and Luis Scoccola.
   {ACM}, 2020.
 \newblock \href {https://doi.org/10.1145/3373718.3394760}
   {\path{doi:10.1145/3373718.3394760}}.
-
-\bibitem[AVW17]{abel17normalization}
-Andreas Abel, Andrea Vezzosi, and Th{\'{e}}o Winterhalter.
-\newblock Normalization by evaluation for sized dependent types.
-\newblock {\em Proc. {ACM} Program. Lang.}, 1({ICFP}):33:1--33:30, 2017.
-\newblock \href {https://doi.org/10.1145/3110277} {\path{doi:10.1145/3110277}}.
 
 \bibitem[Awo]{awodey2010category}
 S.~Awodey.
@@ -201,15 +179,6 @@ Lars Birkedal, Ranald Clouston, Bassel Mannaa, Rasmus~Ejlers M{\o}gelberg,
 Guillaume Brunerie and Menno de~Boer.
 \newblock Formalization of the initiality conjecture, 2020.
 \newblock URL: \url{https://github.com/guillaumebrunerie/initiality}.
-
-\bibitem[BH11]{compdata}
-Patrick Bahr and Tom Hvitved.
-\newblock Compositional data types.
-\newblock In Jaakko J{\"{a}}rvi and Shin{-}Cheng Mu, editors, {\em Proceedings
-  of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
-  2011, Tokyo, Japan, September 19-21, 2011}, pages 83--94. {ACM}, 2011.
-\newblock \href {https://doi.org/10.1145/2036918.2036930}
-  {\path{doi:10.1145/2036918.2036930}}.
 
 \bibitem[BJP10]{bernardy12parametricity}
 Jean{-}Philippe Bernardy, Patrik Jansson, and Ross Paterson.
@@ -355,11 +324,6 @@ Menno de~Boer.
   Dependent Type Theory}.
 \newblock PhD thesis, Department of Mathematics, Stockholm University, 2020.
 
-\bibitem[dev17]{agda-sized-issue}
-Agda developers.
-\newblock Agda issue 2820, 2017.
-\newblock URL: \url{https://github.com/agda/agda/issues/2820}.
-
 \bibitem[DM18]{moeneclaey}
 Peter Dybjer and Hugo Moeneclaey.
 \newblock Finitary higher inductive types in the groupoid model.
@@ -379,15 +343,6 @@ Peter Dybjer and Anton Setzer.
   Science}, pages 129--146. Springer, 1999.
 \newblock \href {https://doi.org/10.1007/3-540-48959-2\_11}
   {\path{doi:10.1007/3-540-48959-2\_11}}.
-
-\bibitem[dVL14]{sop}
-Edsko de~Vries and Andres L{\"{o}}h.
-\newblock True sums of products.
-\newblock In Jos{\'{e}}~Pedro Magalh{\~{a}}es and Tiark Rompf, editors, {\em
-  Proceedings of the 10th {ACM} {SIGPLAN} workshop on Generic programming,
-  {WGP} 2014, Gothenburg, Sweden, August 31, 2014}, pages 83--94. {ACM}, 2014.
-\newblock \href {https://doi.org/10.1145/2633628.2633634}
-  {\path{doi:10.1145/2633628.2633634}}.
 
 \bibitem[Dyb94]{inductivefamilies}
 Peter Dybjer.
@@ -491,17 +446,6 @@ Peter~T Johnstone.
 \newblock {\em Sketches of an elephant: A topos theory compendium}, volume~2.
 \newblock Oxford University Press, 2002.
 
-\bibitem[JVWW06]{gadts}
-Simon L.~Peyton Jones, Dimitrios Vytiniotis, Stephanie Weirich, and Geoffrey
-  Washburn.
-\newblock Simple unification-based type inference for {GADTs}.
-\newblock In John~H. Reppy and Julia~L. Lawall, editors, {\em Proceedings of
-  the 11th {ACM} {SIGPLAN} International Conference on Functional Programming,
-  {ICFP} 2006, Portland, Oregon, USA, September 16-21, 2006}, pages 50--61.
-  {ACM}, 2006.
-\newblock \href {https://doi.org/10.1145/1159803.1159811}
-  {\path{doi:10.1145/1159803.1159811}}.
-
 \bibitem[KHS19]{gluing}
 Ambrus Kaposi, Simon Huber, and Christian Sattler.
 \newblock Gluing for type theory.
@@ -597,15 +541,6 @@ Ambrus Kaposi and Jakob von Raumer.
   23:1--23:21. Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik, 2020.
 \newblock \href {https://doi.org/10.4230/LIPIcs.FSCD.2020.23}
   {\path{doi:10.4230/LIPIcs.FSCD.2020.23}}.
-
-\bibitem[LM11]{loh11generic}
-Andres L{\"{o}}h and Jos{\'{e}}~Pedro Magalh{\~{a}}es.
-\newblock Generic programming with indexed functors.
-\newblock In Jaakko J{\"{a}}rvi and Shin{-}Cheng Mu, editors, {\em Proceedings
-  of the seventh {ACM} {SIGPLAN} workshop on Generic programming, WGP@ICFP
-  2011, Tokyo, Japan, September 19-21, 2011}, pages 1--12. {ACM}, 2011.
-\newblock \href {https://doi.org/10.1145/2036918.2036920}
-  {\path{doi:10.1145/2036918.2036920}}.
 
 \bibitem[LS]{lumsdaineShulman}
 Peter~LeFanu Lumsdaine and Michael Shulman.
@@ -746,13 +681,6 @@ Thomas Streicher.
 \newblock
   \url{http://www.mathematik.tu-darmstadt.de/~streicher/HabilStreicher.pdf}.
 
-\bibitem[Swi08]{alacarte}
-Wouter Swierstra.
-\newblock Data types {\`{a}} la carte.
-\newblock {\em J. Funct. Program.}, 18(4):423--436, 2008.
-\newblock \href {https://doi.org/10.1017/S0956796808006758}
-  {\path{doi:10.1017/S0956796808006758}}.
-
 \bibitem[TS18]{timany18cumulative}
 Amin Timany and Matthieu Sozeau.
 \newblock Cumulative inductive types in {Coq}.
@@ -820,17 +748,5 @@ Ningning Xie, Matthew Pickering, Andres L{\"{o}}h, Nicolas Wu, Jeremy Yallop,
 \newblock Staging with class: a specification for typed {Template} {Haskell}.
 \newblock {\em Proc. {ACM} Program. Lang.}, 6({POPL}):1--30, 2022.
 \newblock \href {https://doi.org/10.1145/3498723} {\path{doi:10.1145/3498723}}.
-
-\bibitem[YHLJ09]{multirec}
-Alexey~Rodriguez Yakushev, Stefan Holdermans, Andres L{\"{o}}h, and Johan
-  Jeuring.
-\newblock Generic programming with fixed points for mutually recursive
-  datatypes.
-\newblock In Graham Hutton and Andrew~P. Tolmach, editors, {\em Proceeding of
-  the 14th {ACM} {SIGPLAN} international conference on Functional programming,
-  {ICFP} 2009, Edinburgh, Scotland, UK, August 31 - September 2, 2009}, pages
-  233--244. {ACM}, 2009.
-\newblock \href {https://doi.org/10.1145/1596550.1596585}
-  {\path{doi:10.1145/1596550.1596585}}.
 
 \end{thebibliography}

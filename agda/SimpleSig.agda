@@ -114,8 +114,8 @@ Subˢ : ∀ {Γ Δ}(σ : Sub Γ Δ){X Xᴰ Xˢ}{γ : Conᴬ Γ X}{γᴰ : Conᴰ
       → Conˢ Γ {X}{Xᴰ} Xˢ γ γᴰ → Conˢ Δ Xˢ (Subᴬ σ γ) (Subᴰ σ γᴰ)
 Subˢ σ γˢ x = Tmˢ (σ _ x) γˢ
 
-
 --------------------------------------------------------------------------------
+
 
 module _ (Ω : Con) where
 
@@ -172,6 +172,9 @@ module _ (Ω : Con) where
     Conᵉ : (Γ : Con)(ν : Sub Ω Γ) → Conˢ Γ ιᵉ (Subᴬ ν (Conᵀ Ω id)) (Subᴰ ν ωᴰ)
     Conᵉ Γ ν {A} x = Tyᵉ A (ν _ x)
 
+
+--------------------------------------------------------------------------------
+
 -- packing up underlying sorts with extra data
 module _ (Ω : Con) where
 
@@ -196,20 +199,48 @@ module _ (Ω : Con) where
   Elim : (ωᴰ : DispAlg TmAlg) → Section TmAlg ωᴰ
   Elim (Xᴰ , ωᴰ) = ιᵉ Ω Xᴰ ωᴰ , Conᵉ Ω Xᴰ ωᴰ Ω id
 
--- natural numbers
---------------------------------------------------------------------------------
+-- Alternative, stricter definition of elimination
+module StricterElim (Ω : Con) where
 
-NatSig = ∙ ▶ ι ▶ ι⇒ ι
-NatSyn = TmAlg NatSig
-Nat    = NatSyn .₁
-zero   = NatSyn .₂ _ (vs vz)
-suc    = NatSyn .₂ _ vz
+  Tyᴰ' : ∀ A → (Tm Ω ι → Set) → Tm Ω A → Set
+  Tyᴰ' ι      Xᴰ t = Xᴰ t
+  Tyᴰ' (ι⇒ A) Xᴰ t = ∀ u → Xᴰ u → Tyᴰ' A Xᴰ (app t u)
 
-NatElim : (ωᴰ : DispAlg _ NatSyn) → ∀ n → ωᴰ .₁ n
-NatElim ωᴰ = Elim NatSig ωᴰ .₁
+  Conᴰ' : (Tm Ω ι → Set) → Set
+  Conᴰ' Xᴰ = ∀ {A}(x : Var _ A) → Tyᴰ' A Xᴰ (var x)
 
-zeroβ : ∀ ωᴰ → NatElim ωᴰ zero ≡ ωᴰ .₂ _ (vs vz)
-zeroβ ωᴰ = refl
+  Tyᵉ' : ∀ {A} (Xᴰ : Tm Ω ι → Set) → Conᴰ' Xᴰ → ∀ t → Tyᴰ' A Xᴰ t
+  Tyᵉ' Xᴰ ωᴰ (var x)   = ωᴰ x
+  Tyᵉ' Xᴰ ωᴰ (app t u) = Tyᵉ' Xᴰ ωᴰ t u (Tyᵉ' Xᴰ ωᴰ u)
 
-sucβ : ∀ n ωᴰ → NatElim ωᴰ (suc n) ≡ ωᴰ .₂ _ vz n (NatElim ωᴰ n)
-sucβ n ωᴰ = Elim NatSig ωᴰ .₂ vz n -- not refl
+  Elim' : ∀ (Xᴰ : Tm Ω ι → Set) → Conᴰ' Xᴰ → (t : Tm Ω ι) → Xᴰ t
+  Elim' = Tyᵉ'
+
+module NatExample where
+
+  NatSig = ∙ ▶ ι ▶ ι⇒ ι
+  NatSyn = TmAlg NatSig
+  Nat    = NatSyn .₁
+  zero   = NatSyn .₂ _ (vs vz)
+  suc    = NatSyn .₂ _ vz
+
+  NatElim : (ωᴰ : DispAlg _ NatSyn) → ∀ n → ωᴰ .₁ n
+  NatElim ωᴰ = Elim NatSig ωᴰ .₁
+
+  zeroβ : ∀ ωᴰ → NatElim ωᴰ zero ≡ ωᴰ .₂ _ (vs vz)
+  zeroβ ωᴰ = refl
+
+  sucβ : ∀ n ωᴰ → NatElim ωᴰ (suc n) ≡ ωᴰ .₂ _ vz n (NatElim ωᴰ n)
+  sucβ n ωᴰ = Elim NatSig ωᴰ .₂ vz n -- not refl
+
+  -- stricter elimination
+  open StricterElim NatSig
+
+  NatElim' : ∀ (P : Nat → Set) → Conᴰ' P → (n : Nat) → P n
+  NatElim' P ωᴰ = Elim' P ωᴰ
+
+  zeroβ' : ∀ P (ωᴰ : Conᴰ' P)  → NatElim' P ωᴰ zero ≡ ωᴰ (vs vz)
+  zeroβ' _ _ = refl
+
+  sucβ' : ∀ P (ms : Conᴰ' P) n → NatElim' P ms (suc n) ≡ ms vz n (NatElim' P ms n)
+  sucβ' P ms n = refl
