@@ -137,10 +137,10 @@ Thorsten Altenkirch and Luis Scoccola.
 \newblock \href {https://doi.org/10.1145/3373718.3394760}
   {\path{doi:10.1145/3373718.3394760}}.
 
-\bibitem[Awo]{awodey2010category}
+\bibitem[Awo10]{awodey2010category}
 S.~Awodey.
 \newblock {\em Category Theory}.
-\newblock Oxford Logic Guides.
+\newblock Oxford Logic Guides. OUP Oxford, 2010.
 
 \bibitem[Awo18]{awodey18natural}
 Steve Awodey.
@@ -475,6 +475,8 @@ Ambrus Kaposi and Andr{\'a}s Kov{\'a}cs.
   of {\em Leibniz International Proceedings in Informatics (LIPIcs)}, pages
   20:1--20:18, Dagstuhl, Germany, 2018. Schloss Dagstuhl--Leibniz-Zentrum fuer
   Informatik.
+\newblock \href {https://doi.org/10.4230/LIPIcs.FSCD.2018.20}
+  {\path{doi:10.4230/LIPIcs.FSCD.2018.20}}.
 
 \bibitem[KK20a]{hiits}
 Ambrus Kaposi and Andr{\'{a}}s Kov{\'{a}}cs.
@@ -581,16 +583,16 @@ Erik Meijer, Maarten~M. Fokkinga, and Ross Paterson.
 \newblock \href {https://doi.org/10.1007/3540543961\_7}
   {\path{doi:10.1007/3540543961\_7}}.
 
-\bibitem[ML]{maclane98categories}
-Saunders Mac~Lane.
-\newblock {\em {Categories for the Working Mathematician}}.
-\newblock Graduate Texts in Mathematics. Springer, 2nd edition, September.
-
 \bibitem[ML84]{martinlof84sambin}
 Per Martin-L{\"o}f.
 \newblock {\em Intuitionistic type theory}, volume~1 of {\em Studies in Proof
   Theory}.
 \newblock Bibliopolis, 1984.
+
+\bibitem[ML98]{maclane98categories}
+Saunders Mac~Lane.
+\newblock {\em {Categories for the Working Mathematician}}.
+\newblock Graduate Texts in Mathematics. Springer, 2nd edition, September 1998.
 
 \bibitem[MM12]{maclane2012sheaves}
 Saunders MacLane and Ieke Moerdijk.
