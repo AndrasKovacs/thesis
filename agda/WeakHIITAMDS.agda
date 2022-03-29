@@ -246,7 +246,7 @@ El a .ˢ _ _ (↑ α) (↑ αᴰ) γˢ  = a .ˢ _ _ γˢ α ≡ αᴰ
 El[] : ∀{Γ Δ}{σ : Sub Γ Δ}{a : Tm Δ U} → El a [ σ ]T ≡ El (a [ σ ])
 El[] = refl
 
--- Inductive functions
+-- Internal products
 --------------------------------------------------------------------------------
 
 Π : ∀{Γ}(a : Tm Γ U)(B : Ty (Γ ▶ El a)) → Ty Γ
@@ -275,71 +275,71 @@ lam t .ˢ _ _ γˢ α  = t .ˢ _ _ (γˢ , refl)
 lam[] : ∀ {Γ Δ}{σ : Sub Γ Δ}{a : Tm Δ U}{B t} → (lam {Δ}{a}{B} t) [ σ ] ≡ lam (t [ σ ∘ wk ,ₛ vz ])
 lam[] = refl
 
--- External functions
+-- External products
 --------------------------------------------------------------------------------
 
-Πᵉˣᵗ : ∀ {Γ}(Ix : Set) → (Ix → Ty Γ) → Ty Γ
-Πᵉˣᵗ Ix B .ᴬ γ            = ∀ i → B i .ᴬ γ
-Πᵉˣᵗ Ix B .ᴹ _ _ f₀ f₁ γᴹ = ∀ i → B i .ᴹ _ _ (f₀ i) (f₁ i) γᴹ
-Πᵉˣᵗ Ix B .ᴰ _ f γᴰ       = ∀ i → B i .ᴰ _ (f i) γᴰ
-Πᵉˣᵗ Ix B .ˢ _ _ f fᴰ γˢ  = ∀ i → B i .ˢ _ _ (f i) (fᴰ i) γˢ
+Πᴱˣᵗ : ∀ {Γ}(Ix : Set) → (Ix → Ty Γ) → Ty Γ
+Πᴱˣᵗ Ix B .ᴬ γ            = ∀ i → B i .ᴬ γ
+Πᴱˣᵗ Ix B .ᴹ _ _ f₀ f₁ γᴹ = ∀ i → B i .ᴹ _ _ (f₀ i) (f₁ i) γᴹ
+Πᴱˣᵗ Ix B .ᴰ _ f γᴰ       = ∀ i → B i .ᴰ _ (f i) γᴰ
+Πᴱˣᵗ Ix B .ˢ _ _ f fᴰ γˢ  = ∀ i → B i .ˢ _ _ (f i) (fᴰ i) γˢ
 
-Πᵉˣᵗ[] : ∀ {Γ Δ}{σ : Sub Γ Δ}{Ix : Set}{B : Ix → Ty Δ} → Πᵉˣᵗ Ix B [ σ ]T ≡ Πᵉˣᵗ Ix (λ i → B i [ σ ]T)
+Πᴱˣᵗ[] : ∀ {Γ Δ}{σ : Sub Γ Δ}{Ix : Set}{B : Ix → Ty Δ} → Πᴱˣᵗ Ix B [ σ ]T ≡ Πᴱˣᵗ Ix (λ i → B i [ σ ]T)
+Πᴱˣᵗ[] = refl
+
+appᴱˣᵗ : ∀ {Γ}{Ix}{B : Ix → Ty Γ} → Tm Γ (Πᴱˣᵗ Ix B) → ∀ i → Tm Γ (B i)
+appᴱˣᵗ t i .ᴬ γ      = t .ᴬ γ i
+appᴱˣᵗ t i .ᴹ _ _ γᴹ = t .ᴹ _ _ γᴹ i
+appᴱˣᵗ t i .ᴰ _ γᴰ   = t .ᴰ _ γᴰ i
+appᴱˣᵗ t i .ˢ _ _ γˢ = t .ˢ _ _ γˢ i
+
+appᴱˣᵗ[] : ∀ {Γ Δ}{σ : Sub Γ Δ}{Ix}{B : Ix → Ty Δ}{t : Tm Δ (Πᴱˣᵗ Ix B)}{i}
+           → appᴱˣᵗ {Δ}{Ix}{B} t i [ σ ] ≡ appᴱˣᵗ {Γ}{Ix}{λ i → B i [ σ ]T} (t [ σ ]) i
+appᴱˣᵗ[] = refl
+
+lamᴱˣᵗ : ∀ {Γ}{Ix}{B : Ix → Ty Γ} → (∀ i → Tm Γ (B i)) → Tm Γ (Πᴱˣᵗ Ix B)
+lamᴱˣᵗ t .ᴬ γ      i = t i .ᴬ γ
+lamᴱˣᵗ t .ᴹ _ _ γᴹ i = t i .ᴹ _ _ γᴹ
+lamᴱˣᵗ t .ᴰ _ γᴰ   i = t i .ᴰ _ γᴰ
+lamᴱˣᵗ t .ˢ _ _ γˢ i = t i .ˢ _ _ γˢ
+
+Πᴱˣᵗβ : ∀ {Γ}{Ix}{B : Ix → Ty Γ}{t : ∀ i → Tm Γ (B i)} → appᴱˣᵗ {Γ}{Ix}{B} (lamᴱˣᵗ {Γ}{Ix}{B} t) ≡ t
+Πᴱˣᵗβ = refl
+
+Πᴱˣᵗη : ∀ {Γ}{Ix}{B : Ix → Ty Γ}{t} → lamᴱˣᵗ {Γ}{Ix}{B} (appᴱˣᵗ {Γ}{Ix}{B} t) ≡ t
+Πᴱˣᵗη = refl
+
+
+-- Small external products
+--------------------------------------------------------------------------------
+
+Πᵉˣᵗ : ∀ {Γ}(Ix : Set) → (Ix → Tm Γ U) → Tm Γ U
+Πᵉˣᵗ Ix b .ᴬ γ          = ∀ i → b i .ᴬ γ
+Πᵉˣᵗ Ix b .ᴹ _ _ γᴹ f i = b i .ᴹ _ _ γᴹ (f i)
+Πᵉˣᵗ Ix b .ᴰ _ γᴰ   f   = ∀ i → b i .ᴰ _ γᴰ (f i)
+Πᵉˣᵗ Ix b .ˢ _ _ γˢ f i = b i .ˢ _ _ γˢ (f i)
+
+Πᵉˣᵗ[] : ∀ {Γ Δ : Con} {σ : Sub Γ Δ} {Ix : Set} {b : Ix → Tm Δ (U {Δ})}
+         → Πᵉˣᵗ Ix b [ σ ] ≡ Πᵉˣᵗ Ix (λ i → b i [ σ ])
 Πᵉˣᵗ[] = refl
-
-appᵉˣᵗ : ∀ {Γ}{Ix}{B : Ix → Ty Γ} → Tm Γ (Πᵉˣᵗ Ix B) → ∀ i → Tm Γ (B i)
-appᵉˣᵗ t i .ᴬ γ      = t .ᴬ γ i
-appᵉˣᵗ t i .ᴹ _ _ γᴹ = t .ᴹ _ _ γᴹ i
-appᵉˣᵗ t i .ᴰ _ γᴰ   = t .ᴰ _ γᴰ i
-appᵉˣᵗ t i .ˢ _ _ γˢ = t .ˢ _ _ γˢ i
-
-appᵉˣᵗ[] : ∀ {Γ Δ}{σ : Sub Γ Δ}{Ix}{B : Ix → Ty Δ}{t : Tm Δ (Πᵉˣᵗ Ix B)}{i}
-           → appᵉˣᵗ {Δ}{Ix}{B} t i [ σ ] ≡ appᵉˣᵗ {Γ}{Ix}{λ i → B i [ σ ]T} (t [ σ ]) i
-appᵉˣᵗ[] = refl
-
-lamᵉˣᵗ : ∀ {Γ}{Ix}{B : Ix → Ty Γ} → (∀ i → Tm Γ (B i)) → Tm Γ (Πᵉˣᵗ Ix B)
-lamᵉˣᵗ t .ᴬ γ      i = t i .ᴬ γ
-lamᵉˣᵗ t .ᴹ _ _ γᴹ i = t i .ᴹ _ _ γᴹ
-lamᵉˣᵗ t .ᴰ _ γᴰ   i = t i .ᴰ _ γᴰ
-lamᵉˣᵗ t .ˢ _ _ γˢ i = t i .ˢ _ _ γˢ
-
-Πᵉˣᵗβ : ∀ {Γ}{Ix}{B : Ix → Ty Γ}{t : ∀ i → Tm Γ (B i)} → appᵉˣᵗ {Γ}{Ix}{B} (lamᵉˣᵗ {Γ}{Ix}{B} t) ≡ t
-Πᵉˣᵗβ = refl
-
-Πᵉˣᵗη : ∀ {Γ}{Ix}{B : Ix → Ty Γ}{t} → lamᵉˣᵗ {Γ}{Ix}{B} (appᵉˣᵗ {Γ}{Ix}{B} t) ≡ t
-Πᵉˣᵗη = refl
-
-
--- Infinitary functions
---------------------------------------------------------------------------------
-
-Πⁱⁿᶠ : ∀ {Γ}(Ix : Set) → (Ix → Tm Γ U) → Tm Γ U
-Πⁱⁿᶠ Ix b .ᴬ γ          = ∀ i → b i .ᴬ γ
-Πⁱⁿᶠ Ix b .ᴹ _ _ γᴹ f i = b i .ᴹ _ _ γᴹ (f i)
-Πⁱⁿᶠ Ix b .ᴰ _ γᴰ   f   = ∀ i → b i .ᴰ _ γᴰ (f i)
-Πⁱⁿᶠ Ix b .ˢ _ _ γˢ f i = b i .ˢ _ _ γˢ (f i)
-
-Πⁱⁿᶠ[] : ∀ {Γ Δ : Con} {σ : Sub Γ Δ} {Ix : Set} {b : Ix → Tm Δ (U {Δ})}
-         → Πⁱⁿᶠ Ix b [ σ ] ≡ Πⁱⁿᶠ Ix (λ i → b i [ σ ])
-Πⁱⁿᶠ[] = refl
 
 -- βη up to ID (using strong funext)
 
-appⁱⁿᶠ : ∀ {Γ}{Ix}{b : Ix → Tm Γ U} → Tm Γ (El (Πⁱⁿᶠ Ix b)) → ∀ i → Tm Γ (El (b i))
-appⁱⁿᶠ t i .ᴬ γ      = ↑ (t .ᴬ γ .↓ i)
-appⁱⁿᶠ t i .ᴹ _ _ γᴹ = happly (t .ᴹ _ _ γᴹ) i
-appⁱⁿᶠ t i .ᴰ _ γᴰ   = ↑ (t .ᴰ _ γᴰ .↓ i)
-appⁱⁿᶠ t i .ˢ _ _ γˢ = happly (t .ˢ _ _ γˢ) i
+appᵉˣᵗ : ∀ {Γ}{Ix}{b : Ix → Tm Γ U} → Tm Γ (El (Πᵉˣᵗ Ix b)) → ∀ i → Tm Γ (El (b i))
+appᵉˣᵗ t i .ᴬ γ      = ↑ (t .ᴬ γ .↓ i)
+appᵉˣᵗ t i .ᴹ _ _ γᴹ = happly (t .ᴹ _ _ γᴹ) i
+appᵉˣᵗ t i .ᴰ _ γᴰ   = ↑ (t .ᴰ _ γᴰ .↓ i)
+appᵉˣᵗ t i .ˢ _ _ γˢ = happly (t .ˢ _ _ γˢ) i
 
-appⁱⁿᶠ[] : ∀ {Γ Δ}{σ : Sub Γ Δ}{Ix}{b : Ix → Tm Δ U}{t : Tm Δ (El (Πⁱⁿᶠ Ix b))}{i}
-           → appⁱⁿᶠ {Δ}{Ix}{b} t i [ σ ] ≡ appⁱⁿᶠ {Γ} {Ix} (t [ σ ]) i
-appⁱⁿᶠ[] = refl
+appᵉˣᵗ[] : ∀ {Γ Δ}{σ : Sub Γ Δ}{Ix}{b : Ix → Tm Δ U}{t : Tm Δ (El (Πᵉˣᵗ Ix b))}{i}
+           → appᵉˣᵗ {Δ}{Ix}{b} t i [ σ ] ≡ appᵉˣᵗ {Γ} {Ix} (t [ σ ]) i
+appᵉˣᵗ[] = refl
 
-lamⁱⁿᶠ : ∀ {Γ}{Ix}{b : Ix → Tm Γ U} → (∀ i → Tm Γ (El (b i))) → Tm Γ (El (Πⁱⁿᶠ Ix b))
-lamⁱⁿᶠ t .ᴬ γ      = ↑ λ i → t i .ᴬ γ .↓
-lamⁱⁿᶠ t .ᴹ _ _ γᴹ = ext λ i → t i .ᴹ _ _ γᴹ
-lamⁱⁿᶠ t .ᴰ _ γᴰ   = ↑ λ i → t i .ᴰ _ γᴰ .↓
-lamⁱⁿᶠ t .ˢ _ _ γˢ = ext λ i → t i .ˢ _ _ γˢ
+lamᵉˣᵗ : ∀ {Γ}{Ix}{b : Ix → Tm Γ U} → (∀ i → Tm Γ (El (b i))) → Tm Γ (El (Πᵉˣᵗ Ix b))
+lamᵉˣᵗ t .ᴬ γ      = ↑ λ i → t i .ᴬ γ .↓
+lamᵉˣᵗ t .ᴹ _ _ γᴹ = ext λ i → t i .ᴹ _ _ γᴹ
+lamᵉˣᵗ t .ᴰ _ γᴰ   = ↑ λ i → t i .ᴰ _ γᴰ .↓
+lamᵉˣᵗ t .ˢ _ _ γˢ = ext λ i → t i .ˢ _ _ γˢ
 
 -- ⊤ : Tm Γ U
 --------------------------------------------------------------------------------

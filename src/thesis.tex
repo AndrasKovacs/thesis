@@ -477,7 +477,7 @@ though, so we summarize dependencies between chapters as follows:
 
 Chapter \ref{chap:simple-inductive-signatures} is fully formalized in Agda, and
 the semantics of weak signatures in Chapter \ref{chap:hiit} is mostly formalized,
-with some omissions and shortcuts. The formalization can be found in \cite{TODO}.
+with some omissions and shortcuts. The formalization can be found in \cite{ak-thesis-agda}.
 
 \section{Notation and Conventions}
 
@@ -1150,12 +1150,12 @@ extensions are required to the idea of $F$-algebras:
 \item
   For inductive-inductive definitions with two sorts, Forsberg gives a
   specification with two functors, and a considerably more complex notion of
-  algebras, involving dialgebras \cite{forsberg-phd}\footnote{However, the
+  algebras, involving dialgebras \cite{forsberg-phd}.\footnote{However, the
   dialgebra specification only covers restricted signatures, where $B : A \to
   \Set$ constructor types may refer to $A : \Set$ constructors, but no other
   dependency is allowed.  There is a more general and yet more complicated
   notion of signature in \cite{forsberg-phd}, which is not anymore represented
-  with functors.}.
+  with functors.}
 \item
   For an arbitrary number of sorts, Altenkirch et
   al.\ \cite{altenkirch18qiit} use a ``list'' of functors, specified mutually
@@ -8302,9 +8302,9 @@ of $t^M\,\gamma^M$ and $u^M\,\gamma^M$, which is well-typed up to $p_0$ and $p_1
 Thus, we can again expect that $\J$ is definable for $\Id$. However, the actual
 definitions get highly technical in the $\blank^M$ and $\blank^S$ cases, as we
 have to repeatedly transport along higher paths to make certain eliminations
-well-typed. We refer the reader to the Agda formalization \cite{TODO} for these
-definitions. In the $\blank^A$ and $\blank^D$ cases, the definitions are simple
-enough:
+well-typed. We refer the reader to the Agda formalization \cite{ak-thesis-agda}
+for these definitions. In the $\blank^A$ and $\blank^D$ cases, the definitions
+are simple enough:
 \begin{alignat*}{3}
   &(\J\,P\,\mi{pr}\,p)^A\,\gamma   &&\defn \J\,(\mi{pr}^A\,\gamma)\,(p^A\,\gamma)\\
   &(\J\,P\,\mi{pr}\,p)^D\,\gamma^D &&\defn \J\,(\J\,(\mi{pr}^D\,\gamma^D)\,(p^A\,\gamma))\,(p^D\,\gamma^D)

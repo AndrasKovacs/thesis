@@ -521,7 +521,7 @@ András Kovács.
 \newblock URL:
   \url{https://github.com/akaposi/hiit-signatures/tree/master/elims-demo}.
 
-\bibitem[Kov22]{kovacs2021generalized}
+\bibitem[Kov22a]{kovacs2021generalized}
 Andr{\'{a}}s Kov{\'{a}}cs.
 \newblock Generalized universe hierarchies and first-class universe levels.
 \newblock In Florin Manea and Alex Simpson, editors, {\em 30th {EACSL} Annual
@@ -531,6 +531,12 @@ Andr{\'{a}}s Kov{\'{a}}cs.
   2022.
 \newblock \href {https://doi.org/10.4230/LIPIcs.CSL.2022.28}
   {\path{doi:10.4230/LIPIcs.CSL.2022.28}}.
+
+\bibitem[Kov22b]{ak-thesis-agda}
+András Kovács.
+\newblock {Agda} supplement to "{Type-Theoretic Signatures for Algebraic
+  Theories and Inductive Types}", 2022.
+\newblock URL: \url{https://github.com/AndrasKovacs/thesis/tree/main/agda}.
 
 \bibitem[KvR20]{mutualinductive}
 Ambrus Kaposi and Jakob von Raumer.
