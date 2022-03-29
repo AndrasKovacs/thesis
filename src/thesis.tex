@@ -1,5 +1,5 @@
 \documentclass[12pt,a4paper,twoside,openany]{book}
-\raggedbottom
+%% \raggedbottom
 
 %% build: latexmk -pdf -pvc thesis.tex
 
@@ -1109,7 +1109,7 @@ formalization. We get induction for $\Omega$ as below.
 
 %% \section{Discussion \& Related Work}
 
-\section{Comparison to Signatures as Endofunctors}
+\section{Comparison to Endofunctors as Signatures}
 
 A well-known alternative definition of algebraic signatures is to view certain
 cocontinuous endofunctors as such. For example, single-sorted signatures can be
@@ -3281,7 +3281,7 @@ defining lists and trees mutually:
   &\ms{Tree} &&: \U\\
   &\ms{nil}  &&: \El\,\ms{List}\\
   &\ms{cons} &&: \ms{Tree} \to \ms{List} \to \El\,\ms{List}\\
-  &\ms{node} &&: \ms{List} \to \ms{Tree}
+  &\ms{node} &&: \ms{List} \to \El\,\ms{Tree}
 \end{alignat*}
 Of course, nested induction would be still desirable because of the code reuse
 that it enables.
@@ -5484,6 +5484,7 @@ closed QII signatures.
 \subsection{Finitary QIIT Constructions}
 \label{sec:fqiit-constructions}
 
+
 The general recipe of constructing finitary QIITs from basic type formers is the
 following. This is more or less adapted from Streicher \cite{streicher93habil}
 and Brunerie et al.\ \cite{brunerie}.
@@ -5494,16 +5495,12 @@ and Brunerie et al.\ \cite{brunerie}.
     the goal QIIT, but there is no indexing involved, constructors only store
     the raw inductive data. For example, the raw syntax of closed ToS would
     include the following:
-    \begin{alignat*}{3}
-      & \Con &&: \Set \\
-      & \Sub &&: \Set \\
-      & \Ty  &&: \Set \\
-      & \Tm  &&: \Set \\
-      & \emptycon &&: \Con \\
-      & \blank\!\ext\!\blank &&: \Con \to \Ty \to \Ty \\
-      & \id &&: \Con \to \Sub \\
-      & \blank\!\circ\!\blank &&: \Con \to \Con \to \Con \to \Sub \to \Sub \to \Sub\\
-      & ... &&
+    \begin{alignat*}{5}
+      & \Con &&: \Set \hspace{3em}&& \emptycon             &&: \Con\\
+      & \Sub &&: \Set && \blank\!\ext\!\blank  &&: \Con \to \Ty \to \Ty \\
+      & \Ty  &&: \Set && \id                   &&: \Con \to \Sub \\
+      & \Tm  &&: \Set && \blank\!\circ\!\blank &&: \Con \to \Con \to \Con \to \Sub \to \Sub \to \Sub\\
+      & ... && &&
     \end{alignat*}
     This can be given by a simple mutual inductive definition, which can be
     represented as an indexed inductive family. Indexed families can be
@@ -6418,6 +6415,8 @@ definition for context morphisms (substitutions) and type morphisms as well.
 \end{mydefinition}
 
 \begin{mydefinition}[Split iso-cleaving for contexts] This lifts a base context isomorphism to a displayed one. It consists of
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \coe &&: \ulGamma \simeq \ulDelta \ra \Con_{\bA}\,\ulGamma \ra \Con_{\bA}\,\ulDelta\\
   & \coh &&: (\ulsigma : \ulGamma \simeq \ulDelta)(\Gamma : \Con_{\bA}\,\ulGamma)
@@ -6428,10 +6427,13 @@ definition for context morphisms (substitutions) and type morphisms as well.
   & \coh^{\circ} && : \coh\,(\ulsigma\circ\uldelta)\,\Gamma \equiv \coh\,\ulsigma\,(\coe\,\uldelta\,\Gamma)
           \circ \coh\,\uldelta\,\Gamma
 \end{alignat*}
+\endgroup
 Here, $\coe$ and $\coh$ abbreviate ``coercion'' and ``coherence'' respectively.
 \end{mydefinition}
 
 \begin{mydefinition}[Split iso-cleaving for types] This consists of
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \coe &&: \ulA \simeq \ulB \ra \Ty_{\bA}\,\Gamma\,\ulA \ra \Ty_{\bA}\,\Gamma\,\ulB\\
   & \coh &&: (\ult : \ulA \simeq \ulB)(A : \Ty_{\bA}\,\Gamma\,\ulA)
@@ -6442,6 +6444,7 @@ Here, $\coe$ and $\coh$ abbreviate ``coercion'' and ``coherence'' respectively.
   & \coh^{\circ} &&: \coh\,(\ult\circ\ulu)\,A \equiv \coh\,\ult\,(\coe\,\ulu\,A)
           \circ \coh\,\ulu\,A
 \end{alignat*}
+\endgroup
 Additionally, for $\sigma : \Sub_{\bA}\,\Gamma\,\Delta\,\ulsigma$, we have
 \begin{alignat*}{3}
   & \coe[] &&: \coe\,(\ult[\ulsigma\circ \p,\q])\,(A[\sigma]) \equiv (\coe\,\ult\,A)[\sigma]\\
@@ -6531,6 +6534,8 @@ $\coe^{\circ}$, $\coh^{\id}$ and $\coh^{\circ}$ laws in $\bA$.
 $\bs{\Tm\,\Gamma\,A} : \Set$ is defined as the type of
 \emph{weak flCwF sections} of $\bA$. The underlying functions of $\bt :
 \bTm\,\bGamma\,\bA$ are as follows:
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \bt : (\ulGamma : \Con_{\bGamma}) \ra \Con_{\bA}\,\ulGamma\\
   & \bt : (\ulsigma : \Sub_{\bGamma}\,\ulGamma\,\ulDelta)
@@ -6539,6 +6544,7 @@ $\bs{\Tm\,\Gamma\,A} : \Set$ is defined as the type of
   & \bt : (\ult : \Tm_{\bGamma}\,\ulGamma\,\ulA) \ra
           \Tm_{\bA}\,(\bt\,\ulGamma)\,(\bt\,\ulA)\,\ult
 \end{alignat*}
+\endgroup
 Such that
 \begin{enumerate}
   \item $\bt\,(\ulA[\ulsigma]) \equiv (\bt\,\ulA)\,[\bt\,\ulsigma]$
@@ -6622,12 +6628,15 @@ iso-cleaving from $\bK$.
 
 $\bs{\El\,a : \Ty\,\Gamma}$ is again the displayed flcwf of
 the elements of $\bs{a : \Tm\,\Gamma\,\U}$. The underlying sets are unchanged:
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   & \Con_{\bEl\,\ba}\,\ulGamma && \defn \Tm_0\,(\ba\,\ulGamma)\\
   & \Sub_{\bEl\,\ba}\,\Gamma\,\Delta\,\ulsigma && \defn \ba\,\ulsigma\,\Gamma \equiv \Delta\\
   & \Ty_{\bEl\,\ba}\,\Gamma\,\ulA && \defn \Tm_0\,(\ba\,\ulA\,\Gamma)\\
   & \Tm_{\bEl\,\ba}\,\Gamma\,A\,\ult && \defn \ba\,\ult\,\Gamma \equiv A
 \end{alignat*}
+\endgroup
 We need to adjust definitions to show that $\bs{\El\,a}$ supports all required
 structure. Previously, all context and type formers were inherited from $\bU$,
 since $\ba$ strictly preserved them. Now, $\ba$ preserves structure up to
@@ -7013,12 +7022,15 @@ $\Ty\,(\emptycon\,\ext|\Con_{\bGamma}|\,\tt\,\ext |\Con_{\bGamma}|\,\tt)$.
 $\bU : \bTy\,\bGamma$ is defined as $\bU : \bCon$, and we take the constant
 displayed flcwf of the definition. Now, we have $\bU : \bCon$ as the flcwf of
 types in $\U : \Tys$.
+\begingroup
+\allowdisplaybreaks
 \begin{alignat*}{3}
   &\Con_{\bU} && \defn \U \\
   &\Sub_{\bU}\,\Gamma\,\Delta && \defn \Gamma \toind \El\,\Delta\\
   &\Ty_{\bU}\,\Gamma && \defn \Gamma \toind \U\\
   &\Tm_{\bU}\,\Gamma\,A && \defn (\gamma : \Gamma) \toind \El\,(A\,\gamma)
 \end{alignat*}
+\endgroup
 $\emptycon_{\bU}$, $\blank\ext_{\bU}\blank$ and $\Id_{\bU}$ are defined using
 the type formers in $\U$. As before, $\K_{\bU}$ is defined simply as a constant
 function.  In $\bEl\,\ba : \bTy\,\bGamma$, we use the $\Id$ type in $\Tys$ in
@@ -8457,7 +8469,7 @@ positivity checking yields of a large class of higher \emph{inductive-inductive}
 types. However, there is no compact theory of signatures (valid specifications
 fall out from positivity/termination checking) nor a categorical semantics.
 
-
+\raggedbottom
 \appendix
 
 \chapter{AMDS interpretation of FQII signatures}
@@ -8902,7 +8914,7 @@ induktív-induktív szignatúrák elméletét, amivel végtelenül elágazó fa
 struktúrákat is le tudjunk írni az iniciális algebrákban. Adaptáljuk a korábbi
 term algebra konstrukciót, a bal adjungált funktorok konstrukcióját és az
 önmaguk elméletét specifikáló szignatúrák használatát. Továbbá, megadjuk a
-szignatúrák szemantikáját internálisan magában a szignatúrák elméletének a
+szignatúrák szemantikáját internálisan a szignatúrák elméletének a
 szintaxisában, amelynek segítségével sokféleképpen építhetünk új szignatúrákat.
 
 A \textbf{hatodik fejezetben} leírjuk a magasabb induktív-induktív
