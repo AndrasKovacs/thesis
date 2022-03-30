@@ -24,6 +24,14 @@
 \usepackage{bm}
 \usepackage{titlesec}
 \usepackage{graphicx}
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+%% https://tex.stackexchange.com/questions/36880/insert-a-blank-page-after-current-page
 
 
 \usepackage{multirow}
@@ -336,9 +344,33 @@
     \end{center}
 \end{titlepage}
 
+\afterpage{\blankpage}
 
-
+\chapter*{Acknowledgements}
 \thispagestyle{empty}
+
+I would like to thank my supervisor Ambrus Kaposi for his support and the
+remarkably low-stress experience throughout my studies, and also for the
+research collaboration which provided ample content for this thesis. Many thanks
+to Tamás Kozsik for being a likewise supportive supervisor in my first year of
+studies, and to Zoltán Horváth for doing a great job providing financial and
+administrative support, and I also want to thank the secretaries at department
+and at the faculty.
+
+I would like to thank my opponents Fredrik Forsberg and Christian Sattler for
+their careful reading and comments on my thesis.
+
+I would like to thank attendees of the Budapest type theory seminar for the many
+discussions over the years, in particular Balázs Kőműves, Péter Diviánszky,
+Gábor Lehel, Gergő Érdi and my fellow PhD students Rafaël Bocquet and István
+Donkó.
+
+I would like to thank everyone in the research community who educated and
+inspired me through various discussions and interactions. I would like to
+express special thanks to my coauthors Thorsten Altenkirch, Nicolai Kraus and
+Ambroise Lafont.
+
+Finally, I would like to thank my parents for their love and support.
 
 \frontmatter
 \tableofcontents{}
