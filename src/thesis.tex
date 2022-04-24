@@ -2867,15 +2867,15 @@ the equality becomes reflexive.
 
 In $\Gamma^R\,\nu\,\{A\}\,x \defn A^R\,(\down\!(\nu\,x))$, we have that
 \[
-  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(A^A_{\to}\,(\down\!(\nu\,x)^A\,(\Omega^A_{\leftarrow}\,\omega)))
+  A^R\,(\down\!(\nu\,x)) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(A^A_{\to}\,(\down\!(\nu\,x)^A\,(\Omega^A_{\leftarrow}\,\omega)))
 \]
 Hence by Lemma \ref{lem:down-compat-alg}, we have
 \[
-  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,((\nu\,x)^A\,\omega)
+  A^R\,(\down\!(\nu\,x)) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,((\nu\,x)^A\,\omega)
 \]
 Hence, by the definition of $\blank^A$ for substitutions:
 \[
-  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(\nu^A\,\omega\,x)
+  A^R\,(\down\!(\nu\,x)) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(\nu^A\,\omega\,x)
 \]
 Which is exactly what is required when we unfold the expected return type:
 \begin{alignat*}{3}
@@ -5500,7 +5500,7 @@ Lumsdaine and Shulman \cite[Section 9]{lumsdaineShulman} showed that infinitary
 QIITs are not constructible from inductive types and simple quotienting with
 relations. Recently, Fiore, Pitts and Steenkamp showed that a class of
 infinitary quotient inductive types, called QWI-types, can be reduced to
-inductive types, quotients the axiom of weakly initial sets of covers (WISC)
+inductive types, quotients and the axiom of weakly initial sets of covers (WISC)
 \cite{DBLP:journals/corr/abs-2101-02994}. The setting additionally assumes
 extensional equality and propositional extensionality for an impredicative
 universe of propositions. The infinitary ToS syntax is not immediately a
@@ -7283,7 +7283,7 @@ This requires the small $\Sigma$-type in ToS. It is possible to rephrase the
 construction without type formers in $\U$; again, Example \ref{ex:gluing} has unary
 parametricity as a special case. However, the fibered version has the advantage
 that contexts are translated to contexts, types to types, and terms to terms,
-which makes it more convenient if we actually want to implement it as program
+which makes it more convenient if we actually want to implement it as a program
 translation. In contrast, the gluing definition of unary parametricity maps
 contexts to types.
 \end{myexample}

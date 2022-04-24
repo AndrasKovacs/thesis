@@ -736,9 +736,8 @@ $\blank^A$ name is overloaded for $\Con$, $\Ty$ and $\Tm$.
 & \hspace{-4em} (\iota\to A)^A\,&&X \defn X \to A^A\,X\\
 & \hspace{-4em} && \\
 & \hspace{-4em} \rlap{$\blank^A : \Con \to \Set \to \Set$}\\
-& \hspace{-4em} \rlap{$\Gamma^A\,X \defn \{A : \Ty\} \to \Var\,\Gamma\,A \to A^A\,X$}
-\end{alignat*}
-\begin{alignat*}{3}
+& \hspace{-4em} \rlap{$\Gamma^A\,X \defn \{A : \Ty\} \to \Var\,\Gamma\,A \to A^A\,X$}\\
+& \hspace{-4em} && \\
 & \hspace{-4em} \rlap{$\blank^A : \Tm\,\Gamma\,A \to \{X : \Set\} \to \Gamma^A\,X \to A^A\,X$}\\
 & \hspace{-4em} (\var\,x)^A\,&&\gamma \defn \gamma\,x\\
 & \hspace{-4em} (\app\,t\,u)^A\,&&\gamma \defn t^A\,\gamma\,(u^A\,\gamma)\\
@@ -912,7 +911,7 @@ interpretation, defined as follows.
   & \rlap{$\blank^D : (\Gamma : \Con)\{X\} \to (X \to \Set) \to \Gamma^A\,X \to \Set$}\\
   & \rlap{$\Gamma^D\,X^D\,\gamma \defn
        \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^D\,X^D\,(\gamma\,x)$}\\
-  & && \\
+  & &&\\
   & \rlap{$\blank^D : (t : \Tm\,\Gamma\,A)
       \to \Gamma^D\,X^D\,\gamma \to A^D\,X^D\,(t^A\,\gamma)$}\\
   & (\var\,x)^D\,&&\gamma^D \defn \gamma^D\,x\\
@@ -948,21 +947,21 @@ Sections of displayed algebras are ``dependent'' analogues of algebra morphisms,
 where the codomain is displayed over the domain.
 
 \begin{alignat*}{3}
-  & \hspace{-7.5em}\rlap{$\blank^S : (A : \Ty)\{X\,X^D\}(X^S : (x : X) \to X^D\,x) \to (\alpha : A^A\,X) \to A^D\,X^D\,\alpha \to \Set$}\\
-  & \hspace{-7.5em}\iota^S\,&&X^S\,\alpha\,\,\alpha^D \defn X^S\,\alpha = \alpha^D \\
-  & \hspace{-7.5em}(\iota\to A)^S\,&&X^S\,\alpha\,\,\alpha^D \defn
+  & \hspace{-6em}\rlap{$\blank^S : (A : \Ty)\{X\,X^D\}(X^S : (x : X) \to X^D\,x) \to (\alpha : A^A\,X) \to A^D\,X^D\,\alpha \to \Set$}\\
+  & \hspace{-6em}\iota^S\,&&X^S\,\alpha\,\,\alpha^D \defn X^S\,\alpha = \alpha^D \\
+  & \hspace{-6em}(\iota\to A)^S\,&&X^S\,\alpha\,\,\alpha^D \defn
   (x : X) \to A^S\,X^S\,(\alpha\,x)\,(\alpha^D\,(X^S\,x))\\
-  & \hspace{-7.5em}&&\\
-  &\hspace{-7.5em}\rlap{$\Con^S : (\Gamma : \Con)\{X\,X^D\}(X^S : (x : X) \to X^D\,x) \to (\gamma : \Gamma^A\,X) \to \Gamma^D\,X^D\,\gamma \to \Set$}\\
-  &\hspace{-7.5em}\rlap{$\Gamma^S\,X^S\,\gamma_0\,\gamma_1 \defn
+  & \hspace{-6em}&&\\
+  &\hspace{-6em}\rlap{$\Con^S : (\Gamma : \Con)\{X\,X^D\}(X^S : (x : X) \to X^D\,x) \to (\gamma : \Gamma^A\,X) \to \Gamma^D\,X^D\,\gamma \to \Set$}\\
+  &\hspace{-6em}\rlap{$\Gamma^S\,X^S\,\gamma_0\,\gamma_1 \defn
     \{A : \Ty\}(x : \Var\,\Gamma\,A) \to A^S\,X^S\,(\gamma_0\,x)\,(\gamma_1\,x)$}\\
-  & \hspace{-7.5em} && \\
-  & \hspace{-7.5em}\rlap{$\blank^S : (t : \Tm\,\Gamma\,A) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to A^S\,X^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)$}\\
-  & \hspace{-7.5em}(\var\,x)^S    &&\gamma^S \defn \gamma^S\,x \\
-  & \hspace{-7.5em}(\app\,t\,u)^S &&\gamma^S \defn t^S\,\gamma^S\,(u^A\,\gamma)\\
-  & \hspace{-7.5em}&& \\
-  & \hspace{-7.5em}\rlap{$\blank^S : (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to \Delta^S\,X^S\,(\sigma^A\,\gamma)\,(\sigma^A\,\gamma^D)$}\\
-  & \hspace{-7.5em} \rlap{$\sigma^S\, \gamma^S\,x = (\sigma\,x)^S\,\gamma^S$}
+  & \hspace{-6em} && \\
+  & \hspace{-6em}\rlap{$\blank^S : (t : \Tm\,\Gamma\,A) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to A^S\,X^S\,(t^A\,\gamma)\,(t^D\,\gamma^D)$}\\
+  & \hspace{-6em}(\var\,x)^S    &&\gamma^S \defn \gamma^S\,x \\
+  & \hspace{-6em}(\app\,t\,u)^S &&\gamma^S \defn t^S\,\gamma^S\,(u^A\,\gamma)\\
+  & \hspace{-6em}&& \\
+  & \hspace{-6em}\rlap{$\blank^S : (\sigma : \Sub\,\Gamma\,\Delta) \to \Gamma^S\,X^S\,\gamma\,\gamma^D \to \Delta^S\,X^S\,(\sigma^A\,\gamma)\,(\sigma^A\,\gamma^D)$}\\
+  & \hspace{-6em} \rlap{$\sigma^S\, \gamma^S\,x = (\sigma\,x)^S\,\gamma^S$}
 \end{alignat*}
 
 \begin{mydefinition}[\textbf{Displayed algebra sections} (``sections'' in short)]
@@ -2875,15 +2874,15 @@ the equality becomes reflexive.
 
 In $\Gamma^R\,\nu\,\{A\}\,x \defn A^R\,(\down\!(\nu\,x))$, we have that
 \[
-  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(A^A_{\to}\,(\down\!(\nu\,x)^A\,(\Omega^A_{\leftarrow}\,\omega)))
+  A^R\,(\down\!(\nu\,x)) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(A^A_{\to}\,(\down\!(\nu\,x)^A\,(\Omega^A_{\leftarrow}\,\omega)))
 \]
 Hence by Lemma \ref{lem:down-compat-alg}, we have
 \[
-  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,((\nu\,x)^A\,\omega)
+  A^R\,(\down\!(\nu\,x)) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,((\nu\,x)^A\,\omega)
 \]
 Hence, by the definition of $\blank^A$ for substitutions:
 \[
-  A^R\,\down\!(\nu\,x) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(\nu^A\,\omega\,x)
+  A^R\,(\down\!(\nu\,x)) : A^M\,\ms{R}\,(A^T\,(\down\!(\nu\,x)))\,(\nu^A\,\omega\,x)
 \]
 Which is exactly what is required when we unfold the expected return type:
 \begin{alignat*}{3}
@@ -5508,7 +5507,7 @@ Lumsdaine and Shulman \cite[Section 9]{lumsdaineShulman} showed that infinitary
 QIITs are not constructible from inductive types and simple quotienting with
 relations. Recently, Fiore, Pitts and Steenkamp showed that a class of
 infinitary quotient inductive types, called QWI-types, can be reduced to
-inductive types, quotients the axiom of weakly initial sets of covers (WISC)
+inductive types, quotients and the axiom of weakly initial sets of covers (WISC)
 \cite{DBLP:journals/corr/abs-2101-02994}. The setting additionally assumes
 extensional equality and propositional extensionality for an impredicative
 universe of propositions. The infinitary ToS syntax is not immediately a
@@ -7291,7 +7290,7 @@ This requires the small $\Sigma$-type in ToS. It is possible to rephrase the
 construction without type formers in $\U$; again, Example \ref{ex:gluing} has unary
 parametricity as a special case. However, the fibered version has the advantage
 that contexts are translated to contexts, types to types, and terms to terms,
-which makes it more convenient if we actually want to implement it as program
+which makes it more convenient if we actually want to implement it as a program
 translation. In contrast, the gluing definition of unary parametricity maps
 contexts to types.
 \end{myexample}
@@ -7748,7 +7747,7 @@ latter work, they show that these types can be constructed using the WISC axiom
 Essentially algebraic theories generalize to the infinitary cases in a
 straightforward way \cite{adamek1994locally}.
 
-Specific examples of infinitary QIITs were introduced in \cite{hottbook}, as
+Specific examples of infinitary QIITs where introduced in \cite{hottbook}, as
 QIITs for Cauchy real numbers, surreal numbers, and cumulative set hierarchies.
 In \cite{partiality}, a partiality monad is specified as an infinitary QIITs.
 

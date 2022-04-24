@@ -2,39 +2,24 @@
 
 open import Relation.Binary.PropositionalEquality
   renaming (cong to ap; sym to infixl 6 _⁻¹; subst to tr; trans to infixr 4 _◾_)
-import Axiom.Extensionality.Propositional as Axiom
 open import Data.Product
- renaming (proj₁ to ₁; proj₂ to ₂)
-open import Data.Unit
+  renaming (proj₁ to ₁; proj₂ to ₂)
 
-coe : {A B : Set} → A ≡ B → A → B
-coe refl x = x
+--------------------------------------------------------------------------------
 
-postulate
-  ext : ∀ {i j} → Axiom.Extensionality i j
+NatAlg : Set
+NatAlg = Σ Set λ N → (N → N) × N
 
--- nat algebra stuff
-Conᴺ : Set
-Conᴺ = Σ Set λ N → (N → N) × N
-
-Subᴺ : Conᴺ → Conᴺ → Set
-Subᴺ (N₀ , s₀ , z₀) (N₁ , s₁ , z₁) =
+NatHom : NatAlg → NatAlg → Set
+NatHom (N₀ , s₀ , z₀) (N₁ , s₁ , z₁) =
   Σ (N₀ → N₁) λ Nᴹ → (∀ x → Nᴹ (s₀ x) ≡ s₁ (Nᴹ x)) × Nᴹ z₀ ≡ z₁
 
-Tyᴺ : Conᴺ → Set
-Tyᴺ (N , s , z) =
-  Σ (N → Set) λ Nᴰ → (∀ {n} → Nᴰ n → Nᴰ (s n)) × Nᴰ z
 
-Tmᴺ : (Γ : Conᴺ) → Tyᴺ Γ → Set
-Tmᴺ (N , s , z) (Nᴰ , sᴰ , zᴰ) =
-  Σ (∀ n → Nᴰ n) λ Nˢ → (∀ n → Nˢ (s n) ≡ sᴰ (Nˢ n)) × Nˢ z ≡ zᴰ
-
-idᴺ : ∀ {Γ} → Subᴺ Γ Γ
-idᴺ {Γ} = (λ n → n) , (λ _ → refl) , refl
-
-
--- Church encoding = term model construction in the set model
+-- Church encoding: term model construction from the impredicative Set model of
+-- signatures.
 --------------------------------------------------------------------------------
+
+-- Select components of the Set model
 
 Conˢ : Set
 Conˢ = Set    -- Set1
@@ -61,7 +46,7 @@ appˢ : ∀ {Γ a B} → Tmˢ Γ (a ⇒ˢ B) → Tmˢ Γ (Elˢ a) → Tmˢ Γ B
 appˢ {Γ}{a}{B} t u = (λ x → t x (u x))
 
 NatSigˢ : Conˢ
-NatSigˢ = Conᴺ
+NatSigˢ = NatAlg
 
 Nˢ : Subˢ NatSigˢ Uˢ
 Nˢ = (λ {(N , _ , _) → N})
@@ -73,6 +58,7 @@ zˢ : Tmˢ NatSigˢ (Elˢ Nˢ)
 zˢ = (λ {(_ , _ , z) → z})
 
 module Church where
+
   N : Set
   N = Tmˢ NatSigˢ (Elˢ Nˢ)
 
@@ -82,12 +68,18 @@ module Church where
   z : N
   z = zˢ
 
-  rec : (Γ : Conᴺ) → Subᴺ (N , s , z) Γ
+  alg : NatAlg
+  alg = N , s , z
+
+  rec : (Γ : NatAlg) → NatHom alg Γ
   rec Γ = (λ n → n Γ) , (λ n → refl) , refl
 
 
--- Awodey-Frey-Speight encoding = term model construction in the graph model
+-- Awodey-Frey-Speight encoding: term model construction in from the
+-- impredicative graph model of ToS.
 --------------------------------------------------------------------------------
+
+-- Select components of the graph model
 
 Conᴳ : Set
 Conᴳ = Σ Conˢ λ A → (A → A → Set)
@@ -122,7 +114,7 @@ appᴳ {Γ}{a}{B} t u =
                    (₂ t f (₁ u x)))
 
 NatSigᴳ : Conᴳ
-NatSigᴳ = NatSigˢ , Subᴺ
+NatSigᴳ = NatSigˢ , NatHom
 
 Nᴳ : Subᴳ NatSigᴳ Uᴳ
 Nᴳ = Nˢ , (λ {(Nᴹ , _ , _) → Nᴹ})
@@ -144,73 +136,12 @@ module AFS where
   z : N
   z = zᴳ
 
-  con : Conᴺ
-  con = N , s , z
+  alg : NatAlg
+  alg = N , s , z
 
-  rec : (Γ : Conᴺ) → Subᴺ con Γ
+  rec : (Γ : NatAlg) → NatHom alg Γ
   rec Γ = (λ n → n .₁ Γ) , (λ _ → refl) , refl
 
-  -- provable, as in the paper
-  unique : ∀ {Γ}{M : Subᴺ (N , s , z) Γ} → M ≡ rec Γ
+  -- provable as in the AFS paper
+  unique : ∀ {Γ}{M : NatHom (N , s , z) Γ} → M ≡ rec Γ
   unique {Γ}{M} = {!!}
-
-
--- Fam model
---------------------------------------------------------------------------------
-
-Conᶠ : Set
-Conᶠ = Σ Conˢ λ A → A → Set
-
-Subᶠ : Conᶠ → Conᶠ → Set
-Subᶠ (A₀ , F₀) (A₁ , F₁) =
-  Σ (A₀ → A₁) λ Aᴹ → ∀ {x} → F₀ x → F₁ (Aᴹ x)
-
-Uᶠ : Conᶠ
-Uᶠ = Set , λ A → A → Set
-
-Tyᶠ : Conᶠ → Set
-Tyᶠ (A , F) =
-  Σ (A → Set) λ Aᴰ → ∀ {x} → Aᴰ x → F x → Set
-
-Tmᶠ : (Γ : Conᶠ) → Tyᶠ Γ → Set
-Tmᶠ (A , F) (Aᴰ , Fᴰ) =
-  Σ (∀ x → Aᴰ x) λ Aˢ → ∀ {x} xx → Fᴰ (Aˢ x) xx
-
-Elᶠ : ∀ {Γ} → Subᶠ Γ Uᶠ → Tyᶠ Γ
-Elᶠ {A , F}(Aᴹ , Fᴹ) = Aᴹ , λ xx f → Fᴹ f xx
-
-_⇒ᶠ_ : ∀ {Γ} → Subᶠ Γ Uᶠ → Tyᶠ Γ → Tyᶠ Γ; infixr 3 _⇒ᶠ_
-a ⇒ᶠ B =
-  (λ x → ₁ a x → ₁ B x) , λ f γᴰ → ∀ {α} → ₂ a γᴰ α → ₂ B (f α) γᴰ
-
-appᶠ : ∀ {Γ a B} → Tmᶠ Γ (a ⇒ᶠ B) → Tmᶠ Γ (Elᶠ a) → Tmᶠ Γ B
-appᶠ {Γ}{a}{B} t u =
-  (λ x → ₁ t x (₁ u x)) , λ γᴰ → ₂ t γᴰ (₂ u γᴰ)
-
-NatSigᶠ : Conᶠ
-NatSigᶠ = Conᴺ , Tyᴺ
-
-Nᶠ : Subᶠ NatSigᶠ Uᶠ
-Nᶠ = Nˢ , λ {(Nᴰ , sᴰ , zᴰ) → Nᴰ}
-
-sᶠ : Tmᶠ NatSigᶠ (Nᶠ ⇒ᶠ Elᶠ Nᶠ)
-sᶠ = sˢ , λ {(Nᴰ , sᴰ , zᴰ) → sᴰ}
-
-zᶠ : Tmᶠ NatSigᶠ (Elᶠ Nᶠ)
-zᶠ = zˢ , λ {(Nᴰ , sᴰ , zᴰ) → zᴰ}
-
-module Fam where
-
-  N : Set
-  N = Tmᶠ NatSigᶠ (Elᶠ Nᶠ)
-
-  s : N → N
-  s n = appᶠ {B = Elᶠ Nᶠ} sᶠ n
-
-  z : N
-  z = zᶠ
-
-  -- is this provable?
-  ind : (A : Tyᴺ (N , s , z)) → Tmᴺ _ A
-  ind (Nᴰ , sᴰ , zᴰ) =
-    (λ n → coe {!!} (n .₂ (Nᴰ , sᴰ , zᴰ))) , {!!} , {!!}
