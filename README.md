@@ -1,3 +1,3 @@
 ## thesis
 
-My PhD thesis. [Pdf](src/thesis.pdf). [Agda supplement](/agda).
+My PhD thesis. [Pdf](https://andraskovacs.github.io/pdfs/phdthesis_compact.pdf). [Agda supplement](/agda).
