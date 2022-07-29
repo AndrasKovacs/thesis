@@ -2492,7 +2492,7 @@ related to contexts and substitutions. For example, consider the specification
 of inner $\Pi$-types in the internal syntax of 2LTT:
 \begin{alignat*}{3}
   &\Pi_0             &&: (A : \Ty_0) \to (\Tm_0\,A \to \Ty_0) \to \Ty_0\\
-  &(\app_0,\,\lam_0) &&: \Pi_0\,A\,B \simeq ((a :\,\Tm_0\,A) \to \,\Tm_0\,(B\,a))
+  &(\app_0,\,\lam_0) &&: \Tm_0\,(\Pi_0\,A\,B) \simeq ((a :\,\Tm_0\,A) \to \,\Tm_0\,(B\,a))
 \end{alignat*}
 We can say that this \emph{defines} what it means for $\mbbC$ to support
 $\Pi$. We recover the usual first-order specification of $\Pi$ by interpreting
