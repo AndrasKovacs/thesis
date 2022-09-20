@@ -4782,7 +4782,7 @@ mentioned before, this is the key part when we map from internal sorts to
 external sets. The levels line up, since in $\syn_j$ we have $\Tm$ returning in $\Set_{j+1}$.
 \begin{alignat*}{3}
   &\U^T : (\nu : \Sub\,\Omega\,\Gamma) \to \Tm\,\Omega\,\U \to
-          \Ty\\
+          \Set_{j+1}\\
   &\U^T\,\nu\,a \defn \Tm\,\Omega\,(\El\,a)
 \end{alignat*}
 For $\El$, we have to define
@@ -4916,7 +4916,7 @@ recursor as $\Omega^R\,\id$.
   &\blank^R &&: (\sigma : \Sub\,\Gamma\,\Delta)&&(\nu : \Sub\,\Omega\,\Gamma) \to \Delta^R\,(\sigma \circ \nu) \equiv \sigma^M\,(\Gamma^R\,\nu)\\
   &\blank^R &&: (A : \Ty\,\Gamma)&&(\nu : \Sub\,\Omega\,\Gamma)(t : \Tm\,\Omega\,(A[\nu]))
      \to A^M\,(t^A\,(\Omega^T\,\id))\,(t^A\,\omega)\,(\Gamma^R\,\nu)\\
-  &\blank^R &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^R\,\nu\,(t[\nu]) \equiv t^A\,(\Gamma^R\,\nu)
+  &\blank^R &&: (t : \Tm\,\Gamma\,A)&&(\nu : \Sub\,\Omega\,\Gamma) \to A^R\,\nu\,(t[\nu]) \equiv t^M\,(\Gamma^R\,\nu)
 \end{alignat*}
 Let us refresh some details about the involved operations. The reader may also
 refer to Appendix \ref{app:fqii-amds} for definitions of the AMDS
