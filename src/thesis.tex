@@ -845,8 +845,8 @@ types:
        (x_0 : X_0)(x_1 : X_1) \to X^R\,x_0\,x_1 \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,x_1)
 \end{alignat*}
 Here, functions are related if they map related inputs to related outputs. If we
-know that $X^M\,\alpha_0\,\alpha_1 \equiv (f\,\alpha_0 = \alpha_1)$ for some $f$
-function, we get
+know that $X^M\,\alpha_0\,\alpha_1 \equiv (f\,\alpha_0 = \alpha_1)$ for some
+function $f$, we get
 \[
   (x_0 : X_0)(x_1 : X_1) \to f\,x_0 = x_1 \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,x_1)
 \]
@@ -982,8 +982,8 @@ We define a predicate which holds if an algebra supports induction.
 \end{mydefinition}
 
 We can observe that $\Inductive\,\{\ms{NatSig}\}\,(X,\,\ms{zero},\,\ms{suc})$
-computes to the usual induction principle for natural numbers, where
-$\beta$-rules are given as propositional equalities. The input $\DispAlg$ is a
+computes to the usual induction principle for natural numbers, but with
+$\beta$-rules given as propositional equalities. The input $\DispAlg$ is a
 bundle of the induction motive and the methods, and the output $\Section$
 contains the $X^S$ eliminator function together with its $\beta$-rules.
 
@@ -7193,7 +7193,7 @@ Of course, we can transport over multiple types, or telescopes of types too, by
 iterated transport. For instance, given $A : \Ty\,\Gamma$, $B : \Ty\,(\Gamma
 \ext A)$, $\alpha : A^A\,\gamma$ and $\beta : B^A\,(\gamma,\,\alpha)$, we can
 transport $\alpha$ first, then transport $\beta$ by
-$(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, if have large $\Sigma$ types
+$(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, if we have large $\Sigma$ types
 in ToS, as $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty \Gamma$,
 that makes iterated transport superfluous.
 

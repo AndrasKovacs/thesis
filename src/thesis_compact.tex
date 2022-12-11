@@ -698,10 +698,7 @@ In short, the current ToS allows signatures which are
 \item \emph{Single-sorted}: this means that we have a single type constructor, corresponding to $\iota$.
 \item \emph{Closed}: signatures cannot refer to any externally existing type. For example, we cannot write a signature for lists of natural numbers in a direct fashion, since there is no way to refer to the type of natural numbers.
 \item \emph{Finitary}: inductive types corresponding to signatures are always
-  finitely branching trees. For a counterexample, assuming $\mbb{N}$ as the
-  metatheoretical type of natural numbers, $\mi{node} : (\mathbb{N} \to \iota)
-  \to \iota$ would specify an infinite branching (if such type was allowed in
-  the ToS).
+  finitely branching trees.
 \end{itemize}
 
 \emph{Remark.} We omit $\lambda$-expressions from the ToS for the sake of
@@ -852,8 +849,8 @@ types:
        (x_0 : X_0)(x_1 : X_1) \to X^R\,x_0\,x_1 \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,x_1)
 \end{alignat*}
 Here, functions are related if they map related inputs to related outputs. If we
-know that $X^M\,\alpha_0\,\alpha_1 \equiv (f\,\alpha_0 = \alpha_1)$ for some $f$
-function, we get
+know that $X^M\,\alpha_0\,\alpha_1 \equiv (f\,\alpha_0 = \alpha_1)$ for some
+function $f$, we get
 \[
   (x_0 : X_0)(x_1 : X_1) \to f\,x_0 = x_1 \to A^R\,X^R\,(\alpha_0\,x_0)\,(\alpha_1\,x_1)
 \]
@@ -989,8 +986,8 @@ We define a predicate which holds if an algebra supports induction.
 \end{mydefinition}
 
 We can observe that $\Inductive\,\{\ms{NatSig}\}\,(X,\,\ms{zero},\,\ms{suc})$
-computes to the usual induction principle for natural numbers, where
-$\beta$-rules are given as propositional equalities. The input $\DispAlg$ is a
+computes to the usual induction principle for natural numbers, but with
+$\beta$-rules given as propositional equalities. The input $\DispAlg$ is a
 bundle of the induction motive and the methods, and the output $\Section$
 contains the $X^S$ eliminator function together with its $\beta$-rules.
 
@@ -1854,8 +1851,13 @@ in the number of $\Bool$ arguments. More generally, Scherer presented a decision
 algorithm for conversion checking with strong finite sums and products in simple
 type theory \cite{scherer17deciding}, which also takes exponential time. If we
 move to natural numbers with definitionally unique recursion, conversion
-checking becomes undecidable, since it would require deciding extensional
-equality of $\Nat$ functions.
+checking becomes undecidable. To illustrate this, consider checking conversion
+between any closed term $t : \Nat \to \Nat$ and the identity function. To cover
+the $\eta$-rule, we would have to decide $t\,\zero \equiv \zero$ and $(n :
+\Tm\,\emptycon\,\Nat) \to t\,(\suc\,n) \equiv \suc\,(t\,n)$. Assuming
+canonicity, this is equivalent to deciding $(n : \mathbb{N}) \to
+t\,(\suc^{n}\,\zero) \equiv (\suc^{n}\,\zero)$, where $\suc^{n}\,\zero$ denotes
+a canonical numeral.
 
 The standard solution is to have dependent elimination principles instead: this
 allows inductive reasoning, canonicity and effectively decidable definitional
@@ -1940,7 +1942,7 @@ Russell-universes. Major implementations of type theories (Coq, Lean, Agda,
 Idris) are all such.
 
 
-\section{Two-Level Type Theory}
+\section{Two-Level Type Theory}\label{sec:2ltt}
 
 \subsection{Models}
 
@@ -2052,7 +2054,8 @@ used features and conventions below.
     enables a higher-order specification: if $B : \Tm_0\,A \to \Ty_0$, then $(x
     : A) \to B\,x : \Ty_0$, and the specifying isomorphism for $\Pi$ can be
     written as $\Tm_0\,((x : A) \to B\,x) \simeq ((x : \Tm_0\,A) \to
-    \Tm_0\,(B\,x))$.
+    \Tm_0\,(B\,x))$. Note that the definition of $\blank\!\simeq\!\blank$
+    requires a meta-level identity type.
     \begin{notation}
       An explicit notation for inner function abstraction would look like
       $\lam_0\,t$ for $t : (x : \Tm_0\,A) \to \Tm_0\,(B\,x)$. This results in
@@ -2484,25 +2487,26 @@ following explanation is adapted from Capriotti \cite[Section
   2.3]{capriotti2017models}.
 
 Generally, a type former in $\mbbC$ transfers to $\hmbbC$ if it can be specified
-in the internal language of $\hmbbC$; if the type former ``always has been'' in
-$\hmbbC$ to begin with. To be describable in $\hmbbC$, a type former needs to be
-natural with respect to $\mbbC$ morphisms. This is also a core idea of HOAS:
-when working in $\hmbbC$, everything is natural, and we can omit boilerplate
-related to contexts and substitutions. For example, consider the specification
-of inner $\Pi$-types in the internal syntax of 2LTT:
+in the internal language of $\hmbbC$. This is also a core idea of HOAS: when
+working in $\hmbbC$, everything is natural, and we can omit boilerplate related
+to contexts and substitutions. Recall from Section \ref{sec:2ltt-internal-syntax}
+the higher-order specification of inner functions:
 \begin{alignat*}{3}
   &\Pi_0             &&: (A : \Ty_0) \to (\Tm_0\,A \to \Ty_0) \to \Ty_0\\
   &(\app_0,\,\lam_0) &&: \Tm_0\,(\Pi_0\,A\,B) \simeq ((a :\,\Tm_0\,A) \to \,\Tm_0\,(B\,a))
 \end{alignat*}
 We can say that this \emph{defines} what it means for $\mbbC$ to support
-$\Pi$. We recover the usual first-order specification of $\Pi$ by interpreting
-the higher-order specification as a context or a closed $\Sigma$-type in the
-standard presheaf model of 2LTT.
-
-In summary, if by ``type formers'' we mean extra structure on $(\Ty_0,\,\Tm_0)$
-which is definable in 2LTT, then by definition all such type formers
-transfer from $\mbbC$ to $(\Ty_0,\,\Tm_0)$. This holds for every type former
-mentioned in this thesis.
+$\Pi$. More precisely:
+\begin{itemize}
+ \item A type former in an object theory is specified with a closed
+       type $A$ in a 2LTT.
+ \item A model of the object theory $\mbbC$ supports a type former $A$ if there is a
+       global section of the $\hmbbC$ interpretation of $A$.
+ \item Thus, if $\mbbC$ supports a type former, it is immediate that
+       the specifying type is inhabited in $\hmbbC$.
+\end{itemize}
+In this thesis we only mention type formers in type theories which
+can be specified in such manner.
 
 \subsection{Functions With Inner Domains}
 \label{sec:functions-with-inner-domains}
@@ -3347,7 +3351,7 @@ initiality of ToS syntax (i.e.\ the recursor).
 Our semantics has a type-theoretic flavor, which is inspired by the cubical set
 model of Martin-Löf type theory by Bezem et al. \cite{cubical}. The idea is
 to avoid strictness issues by starting from basic ingredients which are already
-strict enough. Hence, instead of modeling ToS types as certain slices and
+strict enough. Hence, instead of modeling ToS types as certain morphisms and
 substitution by pullback, we model types as displayed categories with extra
 structure, which naturally support strict reindexing/substitution.
 
@@ -3457,10 +3461,9 @@ equivalent.
 \end{mydefinition}
 
 \begin{theorem}\label{thm:initiality-induction}
-We assume an flcwf $\bGamma$ with weak constant families.
-An object $\Gamma : \Con_{\bGamma}$ supports induction if
-and only if it is initial. Moreover, induction and initiality are both mere
-properties.
+We assume a cwf $\bGamma$ with $\Id$ and weak $\K$.
+An object $\Gamma : \Con_{\bGamma}$ supports induction if and only if it is
+initial. Moreover, induction and initiality are both mere properties.
 \end{theorem}
 
 \begin{proof}
@@ -3490,22 +3493,23 @@ $\reflect\,(\ms{ind}\,(\Id\,(\ms{ind}\,A)\,(\ms{ind'}\,A))) : \ms{ind}\,A \equiv
 
 \begin{theorem}
 \label{thm:flcwf-term-uniqueness}
-$\Tm\,\Gamma\,A$ in an flcwf is propositional when $\Gamma$ is initial.
+$\Tm\,\Gamma\,A$ in an cwf with $\Id$ and weak $\K$ is propositional
+when $\Gamma$ is initial.
 \end{theorem}
 \begin{proof} Assuming $t,\,u : \Tm\,\Gamma\,A$, we have
 $\reflect\,(\ms{ind}\,(\Id\,t\,u)) : t \equiv u$.
 \end{proof}
 
-Note that the above proofs do not rely on $\Sigma$-types in the flcwf, so why do
-we include them in the semantics? One reason is the prior result by Clairmabault
-and Dybjer \cite{clairambault2014biequivalence}, that a slightly different
-formulation of flcwfs is biequivalent to finitely complete categories. More
-concretely, in ibid.\ there is a 2-category of cwfs with $\Sigma$, $\Id$ and
-``democracy'', the last of which is equivalent to the weak formulation of
-constant families. Then, it is shown that this 2-category is biequivalent to the
-2-category of finitely complete categories. Thus, including $\Sigma$ is a good
-deal, as this allows us to connect our semantics back to finitely complete
-categories, which are more common in categorical settings.
+Note that the above proofs do not rely on $\Sigma$-types, so why do we include
+them in the semantics? One reason is the prior result by Clairmabault and Dybjer
+\cite{clairambault2014biequivalence}, that a slightly different formulation of
+flcwfs is biequivalent to finitely complete categories. More concretely, in
+ibid.\ there is a 2-category of cwfs with $\Sigma$, $\Id$ and ``democracy'', the
+last of which is equivalent to the weak formulation of constant families. Then,
+it is shown that this 2-category is biequivalent to the 2-category of finitely
+complete categories. Thus, including $\Sigma$ is a good deal, as this allows us
+to connect our semantics back to finitely complete categories, which are more
+common in categorical settings.
 
 We recover finite limits in an flcwf as follows. The product of $\Gamma$ and
 $\Delta$ is given by $\Gamma \ext \K\,\Delta$, and we get projection and pairing
@@ -3523,13 +3527,13 @@ results from the existing literature in the following.
 
 \begin{mydefinition}[Type categories, c.f.\ {\cite[Section 2.2]{clairambault2014biequivalence}}]
 \label{def:type_categories}
-We work in an flcwf with weak constant families. For each $\Gamma : \Con$, there
-is a category whose objects are types $A : \Ty\,\Gamma$, and morphisms from $A$
-to $B$ are terms $t : \Tm\,(\Gamma\,\ext\,A)\,(B[\p])$. Identity morphisms are
-given by $\q : \Tm\,(\Gamma\,\ext\,A)\,(A[\p])$, and composition $t \circ u$ by
-$t[\p, u]$. The assignment of type categories to contexts extends to a split
-indexed category. For each $\sigma : \Sub\,\Gamma\,\Delta$, there is a functor
-from $\Ty\,\Delta$ to $\Ty\,\Gamma$, which sends $A$ to $A[\sigma]$ and $t :
+We work in a cwf. For each $\Gamma : \Con$, there is a category whose objects
+are types $A : \Ty\,\Gamma$, and morphisms from $A$ to $B$ are terms $t :
+\Tm\,(\Gamma\,\ext\,A)\,(B[\p])$. Identity morphisms are given by $\q :
+\Tm\,(\Gamma\,\ext\,A)\,(A[\p])$, and composition $t \circ u$ by $t[\p, u]$. The
+assignment of type categories to contexts extends to a split indexed
+category. For each $\sigma : \Sub\,\Gamma\,\Delta$, there is a functor from
+$\Ty\,\Delta$ to $\Ty\,\Gamma$, which sends $A$ to $A[\sigma]$ and $t :
 \Tm\,(\Gamma\,\ext\,A)\,(B[\p])$ to $t[\sigma\circ \p, \q]$.
 \end{mydefinition}
 
@@ -3544,9 +3548,10 @@ from $\Ty\,\Delta$ to $\Ty\,\Gamma$, which sends $A$ to $A[\sigma]$ and $t :
   \end{itemize}
 \end{notation}
 
-\begin{theorem}[Equivalence of types and slices, c.f.\ {\cite[Section 2.2]{clairambault2014biequivalence}}]\label{thm:ty-slice}
-Assume that we work in an flcwf $\bGamma$ with weak $\K$. For each $\Gamma : \Con$, the type
-category $\Ty\,\Gamma$ is equivalent to the slice category $\bGamma/\Gamma$.
+\begin{theorem}[Equivalence of type and slice categories, c.f.\ {\cite[Section 2.2]{clairambault2014biequivalence}}]\label{thm:ty-slice}
+Assume that we work in an cwf $\bGamma$ with $\Sigma$, $\Id$ and weak
+$\K$. For each $\Gamma : \Con$, the type category $\Ty\,\Gamma$ is equivalent to
+the slice category $\bGamma/\Gamma$.
 \end{theorem}
 
 \emph{Remark.} In the flcwf of sets where types are $A \to \Set$ families, the
@@ -3687,9 +3692,9 @@ Additionally, type substitution is functorial, i.e.\ $\bs{A[\id]} \equiv \bA$
 and $\bs{A[\sigma \circ \delta]} \equiv \bs{A[\sigma][\delta]}$. This holds
 because the underlying set families are defined by function composition.
 
-\emph{Remark.} Types could be equivalently defined as slices, as objects in
-$\bs{\ms{flcwf}}/\bGamma$, and type substitution could be given as pullback, but in
-that case we would run into the well-known strictness issue, that type
+\emph{Remark.} Types could be equivalently defined as objects in
+$\bs{\ms{flcwf}}/\bGamma$, and type substitution could be given as pullback, but
+in that case we would run into the well-known strictness issue, that type
 substitution is functorial only up to isomorphism. This is not a critical issue,
 as there are standard solutions for recovering strict substitutions from weak
 ones \cite{kapulkin12simplicial,local-univ,clairambault2014biequivalence}. But
@@ -4112,15 +4117,17 @@ interpretations.
 From each displayed model, we get an eliminator, i.e.\ a family of
 interpretation functions. We note $\blank^A$, $\blank^M$, $\blank^D$ and
 $\blank^S$ in the table, but in principle we could refer to the eliminators of
-other columns as well. The interpretation functions can be defined in two ways:
-\begin{itemize}
-\item By separately taking the eliminators of each column, and referring to previous
-      eliminators in each displayed model; e.g.\ referring to the eliminator functions $\blank^A$ in
-      the definition of the $\Ty$ column.
-\item By taking the recursor for the entire model, and projecting out components from the result. E.g.\
-      we get $\blank^A$ by projecting out the first components of the interpretations of ToS objects.
-\end{itemize}
-However, the two versions coincide because of the initiality of ToS syntax.
+other columns as well. The interpretation functions can be in multiple ways.
+
+One extreme choice is to separately take the eliminator for each column, and
+refer to previous eliminators in each displayed model; e.g.\ referring to the
+eliminator functions $\blank^A$ in the definition of the $\Ty$ column.  Another
+extreme choice is to take the recursor for the entire model, then project out
+components from the result.E.g.\ we get $\blank^A$ by projecting out the first
+components of the interpretations of ToS objects.
+
+Generally, we can bundle columns as we like. However, all variations coincide
+because of the initiality of ToS syntax.
 
 \begin{figure}
 \begin{center}
@@ -7200,7 +7207,7 @@ Of course, we can transport over multiple types, or telescopes of types too, by
 iterated transport. For instance, given $A : \Ty\,\Gamma$, $B : \Ty\,(\Gamma
 \ext A)$, $\alpha : A^A\,\gamma$ and $\beta : B^A\,(\gamma,\,\alpha)$, we can
 transport $\alpha$ first, then transport $\beta$ by
-$(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, if have large $\Sigma$ types
+$(\sigma,\,\coh\,\sigma\,\alpha)$.  Alternatively, if we have large $\Sigma$ types
 in ToS, as $\Sigma : (A : \Ty\,\Gamma) \to \Ty\,(\Gamma \ext A) \to \Ty \Gamma$,
 that makes iterated transport superfluous.
 
