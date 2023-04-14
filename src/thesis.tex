@@ -2219,7 +2219,7 @@ sometimes called \emph{restriction}.
 \begin{mydefinition}
 $\sigma : \Sub\,\Gamma\,\Delta$ is a natural transformation from $\Gamma$ to
 $\Delta$. It has action $|\sigma| : |\Gamma|\,i \to |\Delta|\,i$, such that
-$|\sigma|(\gamma\lab f \rab) \equiv (|\sigma|\gamma)$.
+$|\sigma|(\gamma\lab f \rab) \equiv (|\sigma|\gamma)\lab f \rab$.
 \end{mydefinition}
 
 \begin{mydefinition}
@@ -2245,7 +2245,7 @@ $t : \Tm\,\Gamma\,A$ is a section of the displayed presheaf $A$. This is
 again the same notion of section that we have seen before, instantiated for
 presheaves.
 \begin{alignat*}{3}
-  & |t| : (\gamma : |\Gamma|)\,i \to |A|\,\gamma \\
+  & |t| : (\gamma : |\Gamma|\,i) \to |A|\,\gamma \\
   & |t|(\gamma\lab f \rab) \equiv (|t|\gamma)\lab f \rab
 \end{alignat*}
 \end{mydefinition}
@@ -2253,7 +2253,7 @@ presheaves.
 \begin{mydefinition}
 $\Gamma \ext A : \Con$ is the total presheaf of the displayed presheaf $A$. Its action on objects and morphisms is the following.
 \begin{alignat*}{3}
-  &|\Gamma \ext A| &&\defn (\gamma : |\Gamma|) \times |A\,\gamma|\\
+  &|\Gamma \ext A| &&\defn (\gamma : |\Gamma|\,i) \times |A\,\gamma|\\
   &(\gamma,\,\alpha)\lab f \rab &&\defn (\gamma\lab f \rab,\, \alpha\lab f \rab)
 \end{alignat*}
 The $\id$ and $\blank\!\circ\!\blank$ preservation laws follow immediately.
