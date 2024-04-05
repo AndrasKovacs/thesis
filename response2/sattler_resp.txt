@@ -1,0 +1,39 @@
+
+I address "new comments" and "regarding previous comments" below.  I will make
+edits to the version of the thesis which is hosted on my website. I'll fix the
+typos in particular.
+
+- Section 3.2.3: I agree that what I wrote doesn't make a lot of sense. I'll edit this.
+
+- "wrangled in this change": the wording is indeed confusing, I merely meant to write an
+  example for a non-finitary rule there.
+
+- Undecidable Nat eta:
+  That's a good point... For undecidability, I could instead mention this more
+  specific case:
+    - To check that any closed f : Nat -> Nat is convertible to λ x. x,
+      I have to check (f zero ≡ zero) ∧ (∀ (n : Tm ∙ Nat). f (suc n) ≡ suc (f n)),
+      which, assuming canonicity, is equivalent to (∀ (n : ℕ). f (sucⁿ zero) ≡ sucⁿ zero).
+
+- On HOAS type formers in Section 3.4.2:
+
+  It seems that I misunderstood your previous comment, although I don't remember
+  exactly how. I see now the gap & potential confusion between the Π₀ in Section
+  3.3.1 (which is first-order specified, external to 2LTT) and the Π₀ in 3.4.2 (which is a HOAS
+  signature internal to 2LTT).
+
+  As I see, the reason for introducing both kind of Π₀ specs is that in 3.3.1. I
+  only assume a Tarski-style universe in the definition of 2LTT, and I don't
+  assume an extensional identity type with which I could specify beta-rules in an
+  internal HOAS style.
+
+  I will edit this for clarity. I think in order to explain the "lifting" of C
+  type formers to 2LTT, the easiest is to say the following:
+    - A type former over C is specified with a closed type in a 2LTT which has
+      extensional identity. C supports a type former if there's a global section
+      of the PSh C interpretation of the specification.
+    - So, if C supports a type former, it is immediate that the PSh C model of a 2LTT
+      supports the type former.
+
+- Slices, weak constant families:
+  I'll edit these.

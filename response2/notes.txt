@@ -1,0 +1,24 @@
+
+Ty : Set
+Tm : Ty → Set
+
+
+(A : Ty) → (Tm A → Ty) → Ty     (becomes a presheaf)
+
+λ Γ.    (A : Ty Γ) → Ty (Γ ▶ A) → Ty Γ
+
+- A signature is a closed type / cxt
+- Semantics is a presheaf
+- We still need to get a section of the presheaf
+
+Tm ∙ ((A : Ty) → (Tm A → Ty) → Ty)
+
+action : ∀ Γ. ⊤ → (A : Ty Γ) → Ty (Γ ▶ A) → Ty Γ
+
+    Bool  : Ty
+    true  : Tm Bool
+    false :
+
+    List : Ty → Ty
+
+    λ Γ.   ∀ Δ (σ : Sub Δ Γ) → Ty Δ → Ty Δ

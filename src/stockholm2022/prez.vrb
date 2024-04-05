@@ -1,0 +1,24 @@
+\frametitle{Finite Product Signatures}
+\begin{exampleblock}{}
+  \begin{itemize}
+  \item $\Sort \subseteq \Sig \subseteq \Set$
+  \item $\mbbC \subseteq \Set$
+  \item From $\mbbC$, only eliminate to $\mbbC$.
+  \item From $\Sig$ and $\Sort$, only eliminate to $\Sig$.
+  \end{itemize}
+\end{exampleblock}
+New function type:
+\begin{mathpar}
+  \inferrule*{\vdash A : \Sort \\ \vdash B : \Sig}
+             {\vdash A \to B : \Sig}
+\end{mathpar}
+\begin{exampleblock}{}
+  \begin{alignat*}{3}
+    & \ms{NatSig} : \Sig \\
+    & \ms{NatSig :=
+  \end{alignat*}
+\end{exampleblock}
+
+
+
+

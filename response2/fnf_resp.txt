@@ -1,0 +1,45 @@
+
+1.
+
+Such construction is discussed in Section 4.6.3 for the ToS of closed QIITs.
+The construction itself is rather tedious. As to the assumptions for the
+construction, I think that De Boer and Brunerie's assumptions are close to
+minimal; I don't think that we can weaken any of those. Possibly, the use of
+propositional extensionality could be avoided. For infinitary QIITs, I
+conjecture that the construction can be done with the assumption of WISC (weakly
+initial sets of covers); see https://arxiv.org/abs/2101.02994.
+
+2.
+
+In an earlier version of the thesis, I planned to include a section on
+Böhm-Berarducci encodings and also Awodey-Frey-Speight encodings
+(https://arxiv.org/abs/1802.02820), as a generalization of term algebras.  I
+omitted this because I got stuck when trying to interpret the dependent internal
+Pi type is signatures.  However, if we only consider non-dependent internal
+product type (which precludes real inductive-inductive signatures but allows
+indexed induction), then there's a pretty good story about such encodings.
+
+BB-encoding is a term algebra construction, where we don't build things from the
+initial model of ToS but instead from the impredicative Set model. For example,
+the underlying set of the term algebra for Nat is
+
+    Nat := Tm (∙,N : U, z : El N, s : N → El N) (El N)
+
+But when we interpret this in the impredicative Set model, we get
+
+    Nat := (alg : (N : Set) × N × (N → N)) → alg.N
+
+which is exactly the BB encoding. Also, if we do the term model construction
+from the "impredicative graph model" of ToS, we get the Awodey-Frey-Speight
+encoding, which does support elimination, although only targeting the
+impredicative Set universe. In the impredicative graph model, a context is
+modeled as a Set together with a Set-valued relation on it.
+
+3.
+
+For IR, I think that the existing signatures in the literature are already
+pretty close to the style of ToS-es, and probably the style of semantics in my
+thesis could be also adapted. However, I don't think that the term
+algebra construction can be adapted to IR. The ToS of IR definitions is itself
+not IR but just a plain QIIT. Since IR is proof-theoretically very strong, I
+don't think that IR types could be constructed just from a plain QIIT.

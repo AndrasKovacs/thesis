@@ -1,0 +1,67 @@
+
+Sort ⊆ Sig ⊆ Set
+
+⊤           : Sig
+Σ Sig  Sig  : Sig
+Π Sort Sig  : Sig
+Π Set  Sig  : Sig
+Π Set  Sort : Sort
+
+TyCon (Γ : Sig) (A : Γ → Sort) : Set
+
+<_> : ((γ : Γ) → A γ) → TyCon Γ A
+_$_ : TyCon Γ A → (γ : Γ) → A γ
+
+<t$_> ≡ t
+<t>$_ ≡ t
+
+------------------------------------------------------------
+
+Sig := (Con : Sort)
+     × (Ty : Con → Sort)
+     × (∙ : Con)
+     × (ext : (Γ : Con) → Ty Γ → Con)
+
+Con : Set
+Con := TyCon Sig λ M. M.Con
+
+Ty : Con → Set
+Ty Γ := TyCon Sig λ M. M.Ty Γ$M
+
+∙ : Con
+∙ := <λ M. M.∙>
+
+ext : (Γ : Con) → Ty Γ → Con
+ext Γ A := <λ M. M.ext (Γ$M) (A$M)>
+
+Sig := (N : Sort) × (suc : N → N) × (zero : N)
+Nat := TyCon Sig .N
+suc (n : Nat) := <λ M. M.suc n$M>
+zero          := <λ M. M.zero>
+
+------------------------------------------------------------
+-- Well-foundedness?
+-- Recursion?
+
+instead of iso, we can just use definition!
+
+Π : {Γ : Sig} → (Γ → Sort) → Set
+Π {Γ} A = (γ : Γ) → A γ
+
+Nat : Set := Π .Nat
+zero : Nat := .zero
+suc (n : Nat) := λ γ. γ.suc (n γ)
+
+-- Same as Church coding!
+
+
+elim : (P : Nat → Set) → P zero → (∀ n. P n → P (suc n)) → ∀ n. P n
+elim P z s (λ γ. γ.zero)  = z
+elim P z s (λ γ. γ.suc n) = s (λ γ. n) (elim P z s (λ γ. n))
+
+
+
+
+
+
+kkk
