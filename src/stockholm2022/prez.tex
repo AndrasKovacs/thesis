@@ -336,10 +336,10 @@ We work in a type theory with \textbf{four universes}:
  \item $\mbbC$: the category where semantic algebras live (internally).
 \end{enumerate}
 \vspace{1em}
-\textbf{Cumulative hierarchies:}
+\textbf{Russell-style cumulative universes:}
 \begin{alignat*}{3}
-  & \Sort \subseteq \Sig \subseteq \Set \\
-  & \mbbC \subseteq \Set
+  & \Sort \subseteq \Sig \subseteq \Set \hspace{2em} && \Sort : \Sig : \Set\\
+  & \mbbC \subseteq \Set                             && \mbbC : \Set
 \end{alignat*}
 \textbf{Restriction on elimination:}
 \begin{itemize}
